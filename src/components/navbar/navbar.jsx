@@ -2,9 +2,11 @@ import React from 'react';
 import Button from '../../components/button/button';
 import Logo from './_components/logo';
 import ActionButtons from './_components/action-buttons';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
+  const location = useLocation()
+  const route = location.pathname
   return (
     <div className="flex items-center justify-between pr-10 lg:px-20 h-24 bg-[#000] text-primary">
       <div className="px-4 flex space-x-8 items-center">
@@ -13,10 +15,10 @@ const Navbar = () => {
         </div>
         <div className="md:space-x-6 flex">
           <Link to="/">
-            <Button children="Personal" border="none" />
+            <Button children="Personal" backgroundColor={route === '/' ? '#00678F' : 'transparent'} border="none" />
           </Link>
           <Link to="/business">
-            <Button children="Business" backgroundColor="transparent" border="none" />
+            <Button children="Business" backgroundColor={route === '/business' ? '#00678F' : 'transparent'} border="none" />
           </Link>
         </div>
       </div>
