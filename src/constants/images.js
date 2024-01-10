@@ -9,6 +9,10 @@ import clockIcon from '../assets/images/clock-icon.png';
 import costIcon from '../assets/images/cost-icon.png';
 import lockIcon from '../assets/images/lock-icon.png';
 import phoneIcon from '../assets/images/phone-icon.png';
+import Facebook from '../assets/images/facebook.svg'
+import Twitter from '../assets/images/twitter.svg'
+import Instagram from '../assets/images/instagram.svg'
+import Tiktok from '../assets/images/tiktok.svg'
 
 export default {
   logo,
@@ -21,5 +25,9 @@ export default {
   clockIcon,
   costIcon,
   lockIcon,
-  phoneIcon
+  phoneIcon,
+  Facebook,
+  Instagram,
+  Tiktok,
+  Twitter,
 };
