@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 
 const CustomButton = ({
+  width,
   border,
   backgroundColor,
   textColor,
@@ -12,6 +13,7 @@ const CustomButton = ({
   padding,
 }) => {
   const buttonStyle = {
+    width,
     border,
     backgroundColor,
     color: textColor,
@@ -28,6 +30,7 @@ const CustomButton = ({
 };
 
 CustomButton.propTypes = {
+  width: PropTypes.string,
   border: PropTypes.string,
   backgroundColor: PropTypes.string,
   textColor: PropTypes.string,
@@ -43,6 +46,7 @@ CustomButton.defaultProps = {
   textColor: "#ffffff",
   borderRadius: "6px",
   padding: "10px 35px",
+  width: ''
 };
 
 export default CustomButton;

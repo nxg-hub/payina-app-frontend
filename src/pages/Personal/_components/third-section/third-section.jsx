@@ -2,7 +2,9 @@ import React from 'react'
 
 const ThirdSection = () => {
   return (
-    <div>ThirdSection</div>
+    <div>
+      
+    </div>
   )
 }
 
