@@ -12,7 +12,7 @@ import {
 
 const PersonalPage = () => {
   return (
-    <>
+    <div className='overflow-x-hidden'>
       <Navbar />
       <HeroSection />
       <FirstSection />
@@ -22,7 +22,7 @@ const PersonalPage = () => {
       <FifthSection />
       <SixthSection />
       <Footer />
-    </>
+    </div>
   )
 }
 

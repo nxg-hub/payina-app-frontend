@@ -1,37 +1,40 @@
 import React from 'react';
-import Button from '../../../../components/button/button';
+import CustomButton from '../../../../components/button/button';
 import { images } from '../../../../constants';
 import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
   return (
-    <section className="xl:py-20 py-10 xl:pt-0 px-10 bg-primary">
-      <hr className="bg-yellow h-1 w-[87%] mx-auto" />
+    <section className="xl:py-20 py-10 xl:pt-0 px-8 xl:px-10 bg-primary">
+      <hr className="border-none bg-yellow h-1 w-[87%] mx-auto" />
       <div className="md:items-center flex flex-col">
-        <div className="lg:text-5xl md:w-[70%] md:text-center xl:text-[64px] text-5xl flex justify-center font-bold text-lightBlue pt-10 !leading-normal">
-          Elevate Your Finances: Unleash the Future of Business
+        <div className="lg:text-5xl xl:w-1/2 md:text-center xl:text-[64px] text-4xl flex justify-center font-bold text-lightBlue pt-10 !leading-normal">
+        Elevate Your Finances: Unleash the Future of Business.
         </div>
-        <p className="xl:text-xl text-[16px] font-normal xl:w-1/2 text-[#000000] lg:pt-6 pt-4 md:text-center xl:leading-normal leading-8">
-          Revolutionize your business with our advanced solutions, offering seamless transactions,
+        <p className="xl:text-xl text-[16px] font-normal xl:w-1/2 text-[#000] lg:pt-6 pt-4 md:text-center xl:leading-normal leading-8">
+        Revolutionize your business with our advanced solutions, offering seamless transactions,
           real-time analytics, and enhanced financial control. Experience innovation, efficiency,
-          and growth in every aspect of your financial ecosystem
+          and growth in every aspect of your financial ecosystem.
         </p>
-        <div className="flex items-center justify-center xl:w-[35%] gap-4 py-8 xl:pt-10 bg-yellow xl:my-12 rounded-[10px]">
-          <div className="xl:space-x-4 flex">
-            <div className="flex items-center">
-              <Button children="Sign up" padding="10px 90px" />
+        <div className="mt-6 flex items-center justify-center xl:w-[35%] w-auto xl:gap-4 py-6 xl:py-8 xl:pt-10 bg-yellow xl:my-6 xl:mb-12 rounded-[10px]">
+          <div className="xl:space-x-4 xl:gap-0 gap-4 flex">
+            <div className="flex items-center ml-8 xl:ml-0">
+              <CustomButton width="130px" padding="10px 80px">
+                <span>Sign Up</span>
+              </CustomButton>
             </div>
-            <div className="flex items-center">
-              <Button
-                children="Speak to a Consultant"
+            <div className="flex items-center mr-8 xl:mr-0">
+              <CustomButton
+                width="130px"
                 backgroundColor="transparent"
                 textColor="#000"
-                padding="10px 50px"
-              />
+                padding="10px 50px">
+                <span>Speak to a Consultant</span>
+              </CustomButton>
             </div>
           </div>
         </div>
-        <hr className="bg-yellow h-1 w-[87%] mx-auto my-10 xl:my-0" />
+        <hr className="border-none bg-yellow h-1 w-[87%] mx-auto my-10 xl:my-0" />
       </div>
     </section>
   );
