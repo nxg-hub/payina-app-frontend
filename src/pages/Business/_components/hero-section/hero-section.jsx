@@ -19,7 +19,7 @@ const HeroSection = () => {
         <div className="mt-6 flex items-center justify-center xl:w-[35%] w-auto xl:gap-4 py-6 xl:py-8 xl:pt-10 bg-yellow xl:my-6 xl:mb-12 rounded-[10px]">
           <div className="xl:space-x-4 xl:gap-0 gap-4 flex">
             <div className="flex items-center ml-8 xl:ml-0">
-              <CustomButton width="130px" padding="10px 80px">
+              <CustomButton width="130px" padding="10px 80px" className='hover:scale-95 font-extrabold duration-300 center gap-2'>
                 <span>Sign Up</span>
               </CustomButton>
             </div>
