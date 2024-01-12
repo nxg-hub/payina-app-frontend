@@ -22,7 +22,10 @@ const SecondSection = () => {
                     </div>
                   </div>
                 </div>
+
                 <div className="hidden xl:block absolute w-[200px] bottom-[45.35rem] right-[15rem] h-[250px] bg-[#0E8CBD] rounded-b-[10px]" />
+
+                
               </div>
               <div className="mb-10 md:mb-0 h-full order-1 md:p-0 mt-10">
                 <img
