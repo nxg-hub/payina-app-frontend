@@ -25,6 +25,7 @@ const Navbar = () => {
           <Link to="/">
             <Button
               children="Personal"
+              className='hover:scale-95 font-extrabold duration-300 center gap-2'
               backgroundColor={route === '/' ? '#00678F' : 'transparent'}
               textColor={route === '/business' ? '#000' : ''}
               border="none"
@@ -33,6 +34,7 @@ const Navbar = () => {
           <Link to="/business">
             <Button
               children="Business"
+              className='hover:scale-95 font-extrabold duration-300 center gap-2'
               backgroundColor={route === '/business' ? '#00678F' : 'transparent'}
               border="none"
             />
