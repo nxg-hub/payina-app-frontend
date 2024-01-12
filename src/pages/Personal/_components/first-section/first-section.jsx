@@ -7,11 +7,11 @@ const FirstSection = () => {
       <div className="relative">
         <img src={images.sectionOne} alt="transaction" className=" xl:mb-10" />
         <div className="bg-primary p-4 h-[88%] md:px-10 md:py-10 w-[40%] md:h-fit absolute md:right-[1rem] right-[.5rem] md:top-[8rem] top-[3rem] text-lightBlue flex items-center justify-center flex-col rounded-[8.34px]">
-          <span className="uppercase md:text-center text-start text-[.7rem]">
+          <span className="uppercase md:text-center text-start text-[.7rem] xl:text-[1rem]">
             SEAMLESSLY SEND AND RECEIVE MONEY
           </span>
           <hr className="border-none h-4 text-yellow w-full mx-auto" />
-          <p className="md:leading-[224.024%] text-start md:text-center font-medium text-[.6rem] md:text-base ">
+          <p className="md:leading-[224.024%] text-start md:text-center font-medium text-[.6rem] xl:text-[.8rem] md:text-base ">
             Enjoy instant transactions, low fees, and robust security. Experience the convenience of
             a user-friendly platform designed for efficiency, making your financial interactions
             effortless and reliable

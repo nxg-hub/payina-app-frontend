@@ -26,7 +26,7 @@ const CustomButton = ({
     <button
       style={buttonStyle}
       onClick={onClick}
-      className={`hover:scale-95 font-extrabold duration-300 center gap-2 xl:!w-fit`}>
+      className={`hover:scale-95 font-extrabold duration-300 center gap-2 lg:!w-fit`}>
       {children}
     </button>
   );
