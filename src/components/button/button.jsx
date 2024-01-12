@@ -1,6 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
-
+import React from 'react';
+import PropTypes from 'prop-types';
 
 const CustomButton = ({
   width,
@@ -11,6 +10,7 @@ const CustomButton = ({
   onClick,
   children,
   padding,
+  mobile
 }) => {
   const buttonStyle = {
     width,
@@ -19,11 +19,14 @@ const CustomButton = ({
     color: textColor,
     borderRadius,
     padding,
-    cursor: "pointer",
+    cursor: 'pointer'
   };
 
   return (
-    <button style={buttonStyle} onClick={onClick} className="hover:scale-95 font-extrabold duration-300 center gap-2">
+    <button
+      style={buttonStyle}
+      onClick={onClick}
+      className={`hover:scale-95 font-extrabold duration-300 center gap-2 xl:!w-fit`}>
       {children}
     </button>
   );
@@ -37,15 +40,15 @@ CustomButton.propTypes = {
   borderRadius: PropTypes.string,
   onClick: PropTypes.func,
   children: PropTypes.node,
-  padding: PropTypes.string,
+  padding: PropTypes.string
 };
 
 CustomButton.defaultProps = {
-  border: "1px solid #00678F",
-  backgroundColor: "#00678F",
-  textColor: "#ffffff",
-  borderRadius: "6px",
-  padding: "10px 35px",
+  border: '1px solid #00678F',
+  backgroundColor: '#00678F',
+  textColor: '#ffffff',
+  borderRadius: '6px',
+  padding: '10px 35px',
   width: ''
 };
 
