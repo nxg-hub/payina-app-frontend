@@ -9,10 +9,11 @@ import clockIcon from '../assets/images/clock-icon.png';
 import costIcon from '../assets/images/cost-icon.png';
 import lockIcon from '../assets/images/lock-icon.png';
 import phoneIcon from '../assets/images/phone-icon.png';
-import Facebook from '../assets/images/facebook.svg'
-import Twitter from '../assets/images/twitter.svg'
-import Instagram from '../assets/images/instagram.svg'
-import Tiktok from '../assets/images/tiktok.svg'
+import Facebook from '../assets/images/facebook.svg';
+import Twitter from '../assets/images/twitter.svg';
+import Instagram from '../assets/images/instagram.svg';
+import Tiktok from '../assets/images/tiktok.svg';
+import Cicle from '../assets/images/circle.svg';
 
 export default {
   logo,
@@ -30,4 +31,5 @@ export default {
   Instagram,
   Tiktok,
   Twitter,
+  Cicle
 };

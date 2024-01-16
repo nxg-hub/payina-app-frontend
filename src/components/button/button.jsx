@@ -10,7 +10,8 @@ const CustomButton = ({
   onClick,
   children,
   padding,
-  className
+  className,
+  type
 }) => {
   const buttonStyle = {
     width,
@@ -25,6 +26,7 @@ const CustomButton = ({
   return (
     <button
       style={buttonStyle}
+      type={type}
       onClick={onClick}
       className={className}>
       {children}

@@ -14,7 +14,7 @@ const SecondSection = () => {
                     <div className="text-primary font-bold md:leading-normal leading-[35.84px] mx-auto text-xl xl:w-1/2">
                       EXPERIENCE HASSLE-FREE BILL PAYMENTS
                     </div>
-                    <hr className="border-none bg-yellow h-1 w-full xl:mx-auto" />
+                    <hr className="border-none bg-yellow h-1 w-[250px] xl:mx-auto" />
                     <div className="pt-4 text-xl font-medium text-primary leading-8 xl:leading-6 md:leading-[35.84px] w-full">
                       Enjoy the convenience of streamlined transactions, timely reminders, and
                       secure processes, making it the smart choice for effortless financial

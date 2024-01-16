@@ -60,16 +60,16 @@ const Footer = () => {
         <div className="p-10 space-y-10 md:space-y-0 md:text-center md:flex flex-col justify-between md:px-80 md:space-x-20">
           <div className="text-center text-yellow font-extrabold mb-4">Follow Us</div>
           <div className="!ml-0 flex items-center justify-center space-x-6">
-            <Link className="bg-black p-2 rounded-full">
+            <Link className="p-2 rounded-full">
               <img src={images.Facebook} alt="" />
             </Link>
-            <Link className="bg-black p-2 rounded-full">
+            <Link className="p-2 rounded-full">
               <img src={images.Instagram} alt="" />
             </Link>
-            <Link className="bg-black p-2 rounded-full">
+            <Link className="p-2 rounded-full">
               <img src={images.Tiktok} alt="" />
             </Link>
-            <Link className="bg-black p-2 rounded-full">
+            <Link className="p-2 rounded-full">
               <img src={images.Twitter} alt="" />
             </Link>
           </div>

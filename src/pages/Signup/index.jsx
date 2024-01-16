@@ -1,9 +1,13 @@
 import React from 'react';
-import Navbar from '../../components/navbar/navbar';
+import Logo from './_components/logo';
+import SignUpForm from './_components/signup-form';
 
 const Signup = () => {
   return (
-    <div><Navbar /></div>
+    <div className='bg-black h-screen overflow-x-hidden'>
+      <Logo />
+      <SignUpForm />
+      </div>
   )
 };
 
