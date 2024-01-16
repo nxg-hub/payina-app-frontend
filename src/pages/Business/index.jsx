@@ -12,7 +12,7 @@ import {
 
 const BusinessPage = () => {
   return (
-    <div>
+    <div className="overflow-x-hidden">
       <Navbar />
       <HeroSection />
       <FirstSection />

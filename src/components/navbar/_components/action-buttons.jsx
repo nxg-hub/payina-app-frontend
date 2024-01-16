@@ -26,7 +26,7 @@ const ActionButtons = () => {
         <Link to={'/login'}>
           <Button
             children="Login"
-            className='hover:bg-lightBlue hover:scale-95 font-extrabold duration-300 center gap-2'
+            className='hover:!bg-lightBlue hover:!text-primary hover:scale-95 font-extrabold duration-300 center gap-2'
             backgroundColor={
               route === '/login' ? '#00678F' : route === '/business' ? 'transparent' : ''
             }
