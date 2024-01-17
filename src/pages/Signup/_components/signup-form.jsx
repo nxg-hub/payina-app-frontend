@@ -6,6 +6,7 @@ import { SignUpSchema } from '../schemas/signup-schema';
 
 import { PhoneInput, defaultCountries, parseCountry } from 'react-international-phone';
 import 'react-international-phone/style.css';
+import { images } from '../../../constants';
 
 export default function SignUpForm() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -38,6 +39,9 @@ const StepOne = ({ handleChange, next, data }) => {
     <>
       <div className="text-center mt-20 xl:mt-0 text-primary font-extrabold xl:text-5xl text-2xl">
         Sign In to Payina
+      </div>
+      <div className='hidden xl:block absolute top-[-16.5rem] right-[-38.5rem]'>
+      <img src={images.Group} alt="" />
       </div>
       <div className="bg-primary flex flex-col justify-center items-start mx-auto">
         <Formik
@@ -127,6 +131,21 @@ const StepTwo = ({ next }) => {
 `;
   return (
     <div className="p-2 xl:p-10 bg-primary">
+      <div className='hidden xl:block fixed top-[-25.5rem] right-[-40.5rem]'>
+      <img src={images.Group} alt="" />
+      </div>
+      <div className='hidden xl:block fixed top-[-14.5rem] right-[6.5rem]'>
+      <img src={images.Vector3} alt="" />
+      </div>
+      <div className='hidden xl:block fixed top-[12.5rem] right-[20rem] -z-10'>
+      <img src={images.Vector2} alt="" />
+      </div>
+      <div className='hidden xl:block fixed top-[14.6rem] right-[24rem] -z-10'>
+      <img src={images.Vector1} alt="" />
+      </div>
+      <div className='hidden xl:block fixed top-[23rem] right-[6.5rem] -z-10'>
+      <img src={images.Vector2} alt="" />
+      </div>
       <Formik
         initialValues={phone}
         onSubmit={phone.length > 8 && phone.match(phoneRegExp) && handleSubmit}>
@@ -147,6 +166,7 @@ const StepTwo = ({ next }) => {
               buttonClassName="!p-2"
               countrySelectorStyleProps="p-2"
               charAfterDialCode="-"
+              onFocus={true}
             />
             {phone.length > 5 && !phone.match(phoneRegExp) && (
               <span className="text-center text-[#db3a3a] flex justify-center mt-4">
@@ -168,9 +188,20 @@ const StepTwo = ({ next }) => {
 };
 
 const StepThree = ({ next, data }) => {
+  const [codeAlert, setCodeAlert] = useState('')
+  const [isAlertVisible, setIsAlertVisible] = useState(false)
   const handleSubmit = (values) => {
     next(values);
   };
+  const handleCode =(e) => {
+    e.preventDefault()
+    setIsAlertVisible(true)
+   setCodeAlert('Code has been succesfully sent')
+   setTimeout(() => {
+    setIsAlertVisible(false)
+   }, 3000)
+
+  }
   let phoneNumber =
     data.phone?.slice(0, 4) +
     '-' +
@@ -196,15 +227,18 @@ const StepThree = ({ next, data }) => {
             <Form className="w-full justify-center flex items-center flex-col">
               <Field
                 name="phone"
-                type="phone"
+                type="tel"
                 value={formik.values.phone}
+                maxLength={17}
                 className="w-[60%] font-bold text-center mx-auto bg-transparent border-none h-[3.4rem] outline-none text-base xl:text-xl text-gray rounded-[5px] py-6 pb-0 px-[10px]"
               />
               <hr className="border-none bg-[#e80516] h-[1px] w-[180px] mt-2 xl:mx-auto" />
               <CustomButton
                 children="Send Code"
+                onClick={e => handleCode(e)}
                 className="text-sm font-bold mt-10 !py-[1px] !px-[9px] !border-none !rounded-[10px] !bg-[#E80516]"
               />
+              <span className='text-sm text-[#33b444] mt-4'>{isAlertVisible && codeAlert}</span>
               <div className="flex flex-col items-center justify-center">
                 <input
                   className="xl:w-[430px] w-[300px] h-[60px] outline-none border border-[#656666bd] text-start xl:tracking-[61px] tracking-[41px] xl:indent-[1.8rem] indent-[1.4rem] xl:my-10 my-4 xl:mb-0 mt-10 text-sm xl:text-xl"
