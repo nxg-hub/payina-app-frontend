@@ -91,10 +91,10 @@ const Navbar = () => {
             
           </ul>
           <div className="flex space-x-10 absolute bottom-0 my-8">
-            <Link to='signup'>
+            <Link to='/signup'>
             <Button className='hover:bg-lightBlue hover:scale-95 font-extrabold duration-300 center' children='Sign Up' />
             </Link>
-            <Link to='signup'>
+            <Link to='/login'>
            <Button backgroundColor='transparent' className='hover:scale-95 font-extrabold duration-300 center gap-2' children='Login' />
            </Link>
           </div>

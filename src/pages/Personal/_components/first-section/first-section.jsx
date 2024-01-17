@@ -10,7 +10,7 @@ const FirstSection = () => {
           <span className="uppercase md:text-center text-start text-[.7rem] xl:text-[1rem]">
             SEAMLESSLY SEND AND RECEIVE MONEY
           </span>
-          <hr className="border-none bg-yellow h-[.1rem] w-[110px] xl:mx-auto" />
+          <hr className="border-none bg-yellow h-[.1rem] w-[130px] xl:mx-auto" />
           <p className="md:leading-[224.024%] text-start md:text-center font-medium text-[.6rem] xl:text-[1rem] md:text-base ">
             Enjoy instant transactions, low fees, and robust security. Experience the convenience of
             a user-friendly platform designed for efficiency, making your financial interactions
