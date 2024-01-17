@@ -18,6 +18,9 @@ import Group from '../assets/images/group.svg';
 import Vector1 from '../assets/images/vector1.svg';
 import Vector2 from '../assets/images/vector2.svg';
 import Vector3 from '../assets/images/vector3.svg';
+import Vector4 from '../assets/images/vector4.svg';
+import Vector5 from '../assets/images/vector5.svg';
+import Vector6 from '../assets/images/vector6.svg';
 
 export default {
   logo,
@@ -39,6 +42,9 @@ export default {
   Group,
   Vector1,
   Vector2,
-  Vector3
+  Vector3,
+  Vector4,
+  Vector5,
+  Vector6,
 
 };
