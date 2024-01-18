@@ -23,6 +23,10 @@ export default function SignUpForm() {
     <StepTwo next={handleNextStep} />,
     <StepThree next={handleNextStep} data={data} />,
     <StepFour next={handleNextStep} />,
+    <StepFive next={handleNextStep} />,
+    <StepSix next={handleNextStep} />,
+    <StepSeven next={handleNextStep} />,
+    <StepEight next={handleNextStep} />
   ];
 
   return (
@@ -62,6 +66,7 @@ const StepOne = ({ handleChange, next, data }) => {
                   <Field
                     name="email"
                     type="email"
+                    placeholder="Enter Email Address"
                     className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-light text-base text-gray rounded-[5px] py-2 px-[10px]"
                   />
                   <ErrorMessage name="email" component="span" className="text-[#db3a3a]" />
@@ -73,6 +78,7 @@ const StepOne = ({ handleChange, next, data }) => {
                   <Field
                     name="password"
                     type="password"
+                    placeholder="Enter Password"
                     className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-light text-base text-gray rounded-[5px] py-2 px-[10px]"
                   />
                   <ErrorMessage name="password" component="span" className="text-[#db3a3a]" />
@@ -84,6 +90,7 @@ const StepOne = ({ handleChange, next, data }) => {
                   <Field
                     name="confirmPassword"
                     type="password"
+                    placeholder="Confirm Password"
                     className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-light text-base text-gray rounded-[5px] py-2 px-[10px]"
                   />
                   <ErrorMessage
@@ -97,7 +104,7 @@ const StepOne = ({ handleChange, next, data }) => {
                 padding="15px"
                 type="submit"
                 children="Next"
-                className="flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[75%] mx-auto w-[90%] !mb-12 xl:my-12 xl:mb-20"
+                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[75%] mx-auto w-[90%] !mb-12 xl:my-12 xl:mb-20"
               />
             </Form>
           )}
@@ -187,7 +194,7 @@ const StepTwo = ({ next }) => {
               padding="15px"
               type="submit"
               children="Next"
-              className="flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[87%] w-[90%] mx-auto my-10 !mb-12 xl:my-12 xl:mb-20"
+              className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[87%] w-[90%] mx-auto my-10 !mb-12 xl:my-12 xl:mb-20"
             />
           </Form>
         )}
@@ -313,7 +320,7 @@ const StepThree = ({ next, data }) => {
                 padding="15px"
                 type="submit"
                 children="Next"
-                className="flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6"
+                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6"
               />
             </Form>
           )}
@@ -323,8 +330,245 @@ const StepThree = ({ next, data }) => {
   );
 };
 
-const StepFour= ({ next, data }) => {
-  return (    
-    <div className="p-2 xl:p-10 bg-primary">Identification Step</div>
-  )
-}
+const StepFour = ({ next }) => {
+  const handleSubmit = (values) => {
+    next(values);
+  };
+  return (
+    <div className="p-2 xl:p-10 bg-primary">
+      Identification Step
+      <Formik
+        initialValues={{ }}
+        onSubmit={(values) => handleSubmit(values)}>
+        {() => (
+          <Form className="">
+            <CustomButton
+              padding="15px"
+              type="submit"
+              children="Next"
+              className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6"
+            />
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+};
+
+const StepFive = ({ next }) => {
+  const handleSubmit = (values) => {
+    next(values);
+  };
+  return (
+    <div className="p-2 xl:p-10 bg-primary">
+      Personal Details Step
+      <Formik
+        initialValues={{ }}
+        onSubmit={(values) => handleSubmit(values)}>
+        {() => (
+          <Form className="">
+            <CustomButton
+              padding="15px"
+              type="submit"
+              children="Next"
+              className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6"
+            />
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+};
+
+const StepSix = ({ next }) => {
+  const handleSubmit = (values) => {
+    next(values);
+  };
+  return (
+    <div className="p-2 xl:p-10 bg-primary">
+      Face Verification Step
+      <Formik
+        initialValues={{ }}
+        onSubmit={(values) => handleSubmit(values)}>
+        {() => (
+          <Form className="">
+            <CustomButton
+              padding="15px"
+              type="submit"
+              children="Next"
+              className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6"
+            />
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+};
+
+const StepSeven = ({ next }) => {
+  const handleSubmit = (values) => {
+    next(values);
+  };
+  return (
+    <div className="p-2 xl:p-10 bg-primary">
+      Congratulation Step
+      <Formik
+        initialValues={{ }}
+        onSubmit={(values) => handleSubmit(values)}>
+        {() => (
+          <Form className="">
+            <CustomButton
+              padding="15px"
+              type="submit"
+              children="Next"
+              className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6"
+            />
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+};
+
+const StepEight = ({ next }) => {
+  const handleSubmit = (values) => {
+    next(values);
+  };
+  const selectArrow = `
+    select{
+      -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+      border: 1px solid #CCC;
+      border-radius: 4px;
+      padding-right: 1rem;
+      margin-right: 3rem;
+      background-position: calc(100% - 1rem);
+      background-image: url(/dropdown-arrow.svg);
+      background-repeat: no-repeat;
+    }
+   
+    `;
+  return (
+    <>
+      <div className="hidden xl:block fixed top-[-17.5rem] right-[-39.5rem]">
+        <img src={images.Group} alt="" />
+      </div>
+      <div className="hidden md:block fixed top-[-3.5rem] right-[8.5rem] -z-10">
+        <img src={images.Vector3} alt="" />
+      </div>
+      <div className="hidden md:block fixed top-[12.5rem] right-[20rem] -z-10">
+        <img src={images.Vector2} alt="" />
+      </div>
+      <div className="hidden md:block fixed top-[14.6rem] right-[24rem] -z-10">
+        <img src={images.Vector1} alt="" />
+      </div>
+      <div className="hidden md:block fixed top-[35rem] right-[6.5rem] -z-10">
+        <img src={images.Vector2} alt="" />
+      </div>
+      <div className="hidden md:block fixed top-[42rem] right-[7.4rem] -z-10">
+        <img src={images.Vector5} alt="" />
+      </div>
+      <div className="hidden md:block fixed top-[40rem] right-[9.4rem] -z-10">
+        <img src={images.Vector4} alt="" />
+      </div>
+      <div className="hidden md:block fixed top-[31rem] right-[11.6rem] -z-10">
+        <img src={images.Vector6} alt="" />
+      </div>
+      <div className="bg-primary flex flex-col justify-center items-start mx-auto">
+        <Formik
+          initialValues={{ house: '', street: '' }}
+          validationSchema={SignUpSchema}
+          onSubmit={(values) => handleSubmit(values)}>
+          {() => (
+            <Form className="w-full space-y-4">
+              <div className="xl:py-16 p-4 pt-[2.2rem] xl:p-10 xl:pl-[5rem] xl:pr-40 xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
+                <div className="text-lightBlue text-start font-bold xl:text-[32px] text-xl">
+                  Kindly Enter Your Address
+                </div>
+                <div className="xl:w-[120%] flex flex-col space-y-2 ">
+                  <label htmlFor="street" className="text-sm font-normal text-lightBlue">
+                    House Number
+                  </label>
+                  <Field
+                    name="houseNumber"
+                    type="number"
+                    placeholder="Enter House Number"
+                    className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-light text-base text-gray rounded-[5px] py-2 px-[10px]"
+                  />
+                  <ErrorMessage name="houseNumber" component="span" className="text-[#db3a3a]" />
+                </div>
+                <div className="xl:w-[120%] flex flex-col space-y-2 ">
+                  <label htmlFor="password" className="text-sm font-normal text-lightBlue">
+                    Street
+                  </label>
+                  <Field
+                    name="streetName"
+                    type="text"
+                    placeholder="Enter Street Name"
+                    className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-light text-base text-gray rounded-[5px] py-2 px-[10px]"
+                  />
+                  <ErrorMessage name="streetName" component="span" className="text-[#db3a3a]" />
+                </div>
+                <div className="xl:w-[120%] flex flex-col space-y-2 ">
+                  <label htmlFor="password" className="text-sm font-normal text-lightBlue">
+                    State
+                  </label>
+                  <Field
+                    as="select"
+                    name="state"
+                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-[10px] bg-secondary">
+                    <option value="anambra" className="!bg-secondary text-primary font-medium">
+                      Anambra
+                    </option>
+                    <option value="anambra" className="!bg-secondary text-primary font-medium">
+                      Anambra
+                    </option>
+                    <option value="anambra" className="!bg-secondary text-primary font-medium">
+                      Anambra
+                    </option>
+                    <option value="anambra" className="!bg-secondary text-primary font-medium">
+                      Anambra
+                    </option>
+                  </Field>
+                </div>
+                <div className="xl:w-[120%] flex flex-col space-y-2 ">
+                  <label htmlFor="password" className="text-sm font-normal text-lightBlue">
+                    Local Government
+                  </label>
+                  <Field
+                    as="select"
+                    name="state"
+                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-[10px] bg-secondary">
+                    <option value="orumba" className="bg-secondary text-primary font-medium">
+                      Orumba
+                    </option>
+                    <option value="orumba" className="bg-secondary text-primary font-medium">
+                      Orumba
+                    </option>
+                    <option value="orumba" className="bg-secondary text-primary font-medium">
+                      Orumba
+                    </option>
+                    <option value="orumba" className="bg-secondary text-primary font-medium">
+                      Orumba
+                    </option>
+                    <option value="orumba" className="bg-secondary text-primary font-medium">
+                      Orumba
+                    </option>
+                  </Field>
+                </div>
+              </div>
+              <CustomButton
+                padding="15px"
+                type="submit"
+                children="Next"
+                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[75%] mx-auto w-[90%] !mb-12 xl:my-12 xl:mb-20"
+              />
+            </Form>
+          )}
+        </Formik>
+      </div>
+      <style>{selectArrow}</style>
+    </>
+  );
+};
