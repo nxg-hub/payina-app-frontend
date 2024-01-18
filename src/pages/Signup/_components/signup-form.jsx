@@ -475,7 +475,7 @@ const StepEight = ({ next }) => {
       <div className="hidden md:block fixed top-[31rem] right-[11.6rem] -z-10">
         <img src={images.Vector6} alt="" />
       </div>
-      <div className="bg-primary flex flex-col justify-center items-start mx-auto">
+      <div className="bg-primary !mt-24 xl:mt-0 flex flex-col justify-center items-start mx-auto">
         <Formik
           initialValues={{ house: '', street: '' }}
           validationSchema={SignUpSchema}
