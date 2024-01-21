@@ -1,13 +1,13 @@
 import { Form, Formik } from "formik";
 import CustomButton from "../../../components/button/button";
 
-export const StepEleven= ({ next }) => {
+export const StepSixteen = ({ next }) => {
     const handleSubmit = (values) => {
       next(values);
     };
     return (
       <div className="p-2 xl:p-10 bg-primary">
-        Business Details
+        Transaction Pin
         <Formik initialValues={{}} onSubmit={(values) => handleSubmit(values)}>
           {() => (
             <Form className="">
