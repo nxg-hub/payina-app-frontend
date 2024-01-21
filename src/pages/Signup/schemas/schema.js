@@ -1,0 +1,33 @@
+import * as Yup from 'yup';
+
+export const SignUpSchema = Yup.object().shape({
+  email: Yup.string().email('Invalid email address').required('Email is required'),
+  password: Yup.string().min(8, 'Must be 8 characters or more').required('Password is required'),
+  confirmPassword: Yup.string()
+    .min(8, 'Must be 8 characters or more')
+    .oneOf([Yup.ref('password')], 'Passwords must match')
+    .required('Password is required'),
+  
+});
+
+export const BusinessDetailsSchema = Yup.object().shape({
+  business_name: Yup.string().required('Please enter your business name'),
+  business_registered: Yup.array().required('Please select an option'),
+  business_address: Yup.array().required('Please select an option'),
+  business_category: Yup.string().required('Please select a business category'),
+  business_type: Yup.string().required('Please select a business type'),
+  business_number: Yup.string().required('Business Registration Number is Required'),
+  tax_number: Yup.string().required('Tax Identification Number is Required')
+})
+
+export const HomeAdressSchema = Yup.object().shape({
+  house_number: Yup.string().required('House Number is Required').max(3, 'Please enter a valid house number'),
+  street_name: Yup.string().required('Please enter your street name'),
+  state: Yup.string().required('Select your state'),
+  lga: Yup.string().required('Select your local government'),
+})
+
+export const ProofOfResidence = Yup.object().shape({
+  document: Yup.string().required('Please select document type'),
+
+})

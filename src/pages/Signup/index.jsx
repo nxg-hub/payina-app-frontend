@@ -1,6 +1,6 @@
-import React from 'react';
-import Logo from './_components/logo';
-import SignUpForm from './_components/signup-form';
+import Logo from './_components/ui/logo';
+import SignUpForm from './signup-form';
+
 
 const Signup = () => {
   return (
