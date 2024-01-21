@@ -1,7 +1,7 @@
 import { Form, Formik } from 'formik';
 import CustomButton from '../../../components/button/button';
 
-export const StepSeven = ({ next }) => {
+export const StepSeven = ({ next, text }) => {
   const handleSubmit = (values) => {
     next(values);
   };
@@ -18,6 +18,7 @@ export const StepSeven = ({ next }) => {
                 children="Next"
                 className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6"
               />
+              {text}
             </Form>
           )}
         </Formik>
