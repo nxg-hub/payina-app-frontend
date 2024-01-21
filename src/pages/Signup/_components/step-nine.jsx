@@ -117,7 +117,7 @@ export const StepNine = ({ next }) => {
                         <MdOutlineFileUpload size={22} opacity={0.65} />
                         <span className="text-[#E80516]">Upload Document</span>
                       </label>
-                      <span className="text-lightBlue">{document?.name}</span>
+                      <span className="text-lightBlue">{document_details?.name}</span>
                     </div>
                   </div>
                   <CustomButton

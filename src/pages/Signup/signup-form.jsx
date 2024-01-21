@@ -17,7 +17,7 @@ import {
 export default function SignUpForm() {
   const [currentStep, setCurrentStep] = useState(0);
   const [data, setData] = useState({});
-  console.log(data);
+  // console.log(data);
 
   const handleNextStep = (newData) => {
     setData((prev) => ({ ...prev, ...newData }));
