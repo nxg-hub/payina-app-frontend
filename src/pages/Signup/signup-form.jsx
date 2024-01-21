@@ -53,7 +53,7 @@ export default function SignUpForm() {
 
   return (
     <div className="xl:mb-14 space-y-10 xl:w-fit w-full px-6 mx-auto absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
-      {steps[17]}
+      {steps[currentStep]}
     </div>
   );
 }
