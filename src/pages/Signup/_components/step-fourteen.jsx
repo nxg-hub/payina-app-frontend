@@ -64,11 +64,11 @@ export const StepFourteen = ({ next }) => {
           onSubmit={(values) => handleSubmit(values)}>
           {() => (
             <Form className="w-full space-y-4">
-              <div className="xl:py-16 p-4 pt-[2.2rem] xl:p-10 xl:pl-[5rem] xl:pr-40 xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
+              <div className="xl:py-16 p-4 pt-[2.2rem] xl:p-10 xl:px-[3rem] xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
                 <div className="text-lightBlue text-start font-bold xl:text-[32px] text-xl">
                   Kindly Enter Your Business Address
                 </div>
-                <div className="xl:w-[120%] flex flex-col space-y-2 ">
+                <div className="xl:w-full flex flex-col space-y-2 ">
                   <label htmlFor="houseNumber" className="text-sm font-normal text-lightBlue">
                     House Number
                   </label>
@@ -80,7 +80,7 @@ export const StepFourteen = ({ next }) => {
                   />
                   <ErrorMessage name="house_number" component="span" className="text-[#db3a3a]" />
                 </div>
-                <div className="xl:w-[120%] flex flex-col space-y-2 ">
+                <div className="xl:w-full flex flex-col space-y-2 ">
                   <label htmlFor="streetName" className="text-sm font-normal text-lightBlue">
                     Street
                   </label>
@@ -92,7 +92,7 @@ export const StepFourteen = ({ next }) => {
                   />
                   <ErrorMessage name="street_name" component="span" className="text-[#db3a3a]" />
                 </div>
-                <div className="xl:w-[120%] flex flex-col space-y-2 ">
+                <div className="xl:w-full flex flex-col space-y-2 ">
                   <label htmlFor="password" className="text-sm font-normal text-lightBlue">
                     State
                   </label>
@@ -129,7 +129,7 @@ export const StepFourteen = ({ next }) => {
                   </Field>
                   <ErrorMessage name="state" component="span" className="text-[#db3a3a]" />
                 </div>
-                <div className="xl:w-[120%] flex flex-col space-y-2 ">
+                <div className="xl:w-full flex flex-col space-y-2 ">
                   <label htmlFor="local_govt" className="text-sm font-normal text-lightBlue">
                     Local Government
                   </label>
@@ -165,7 +165,7 @@ export const StepFourteen = ({ next }) => {
                 padding="15px"
                 type="submit"
                 children="Next"
-                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 md:w-[95%] xl:w-[75%] mx-auto w-[92%] !mb-12 xl:my-12 xl:mb-20"
+                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 md:w-[96.5%] xl:w-[85%] mx-auto w-[92%] !mb-12 xl:my-12 xl:mb-20"
               />
             </Form>
           )}
