@@ -7,10 +7,10 @@ import { ProofOfResidence } from "../schemas/schema";
 
 
 export const StepNine = ({ next }) => {
-    const [document, setDocument] = useState('');
+    const [document_details, setDocumentDetails] = useState('');
   
-    const handleSubmit = (values) => {
-      next({ document, values });
+    const handleSubmit = (document_type) => {
+      next({ document_details, document_type });
     };
     const selectArrow = `
       select{
@@ -62,10 +62,10 @@ export const StepNine = ({ next }) => {
           <img src={images.Vector6} alt="" />
         </div>
         <div className="bg-primary !mt-24 xl:mt-0 flex flex-col justify-center items-start mx-auto">
-          <Formik initialValues={{ file: '' }} onSubmit={(values) => handleSubmit(values)} validationSchema={ProofOfResidence}>
+          <Formik initialValues={{ file: '' }} onSubmit={(values) => handleSubmit(values.document_type)} validationSchema={ProofOfResidence}>
             {(formik) => (
               <Form className="w-full space-y-4">
-                <div className="xl:pt-16 p-4 pt-[2.2rem] px-20 xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
+                <div className="xl:pt-16 p-4 pt-[2.2rem] xl:px-20 xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
                   <div className="text-lightBlue text-start font-bold xl:text-[32px] text-xl w-5/6 xl:leading-10">
                     Kindly Upload Proof of Residence
                   </div>
@@ -73,7 +73,7 @@ export const StepNine = ({ next }) => {
                   <div className="xl:w-full md:w-[85%] items-start flex flex-col space-y-2 ">
                     <Field
                       as="select"
-                      name="document"
+                      name="document_type"
                       className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-8 bg-secondary">
                       <option
                         name="doumments"
@@ -84,30 +84,30 @@ export const StepNine = ({ next }) => {
                       </option>
                       <option
                         value="bvn"
-                        name="douments"
+                        name="document"
                         className="!bg-secondary text-primary font-medium">
                         BVN
                       </option>
                       <option
                         value="nin"
-                        name="douments"
+                        name="document"
                         className="!bg-secondary text-primary font-medium">
                         NIN
                       </option>
                       <option
                         value="voters-card"
-                        name="documents"
+                        name="document"
                         className="!bg-secondary text-primary font-medium">
                         Voter's Card
                       </option>
                     </Field>
-                    <ErrorMessage name="document" component="span" className="text-[#db3a3a]" />
+                    <ErrorMessage name="document_type" component="span" className="text-[#db3a3a]" />
                     <div className="flex flex-col items-center border rounded-[10px] border-[#006181] w-full text-center p-4 !mt-8">
                       <input
                         id="file"
                         name="file"
                         type="file"
-                        onChange={(e) => setDocument(e.currentTarget.files[0])}
+                        onChange={(e) => setDocumentDetails(e.currentTarget.files[0])}
                         value={formik.values.file}
                       />
   

@@ -28,6 +28,6 @@ export const HomeAdressSchema = Yup.object().shape({
 })
 
 export const ProofOfResidence = Yup.object().shape({
-  document: Yup.string().required('Please select document type'),
+  document_type: Yup.string().required('Please select document type'),
 
 })

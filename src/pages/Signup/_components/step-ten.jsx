@@ -5,14 +5,13 @@ import { images } from '../../../constants';
 import { useState } from 'react';
 
 export const StepTen = ({ next }) => {
-  const [businessRegister, setBusinessRegister] = useState('');
-  const [businessAddress, setBusinessAddress] = useState('');
+  const [business_is_registered, setBusinessRegister] = useState('');
+  const [business_and_home, setBusinessAddress] = useState('');
 
-  const handleSubmit = (values) => {
-    next({ businessAddress, businessRegister, values });
+  const handleSubmit = (business_details) => {
+    next({ business_and_home, business_is_registered, business_details });
   };
   const handleCheck = (value) => {
-    console.log(value);
     setBusinessRegister(value);
   };
   const handleSecondCheck = (value) => {
@@ -100,7 +99,7 @@ export const StepTen = ({ next }) => {
             business_address: []
           }}
           validationSchema={BusinessDetailsSchema}
-          onSubmit={(values) => handleSubmit(values)}>
+          onSubmit={(business_details) => handleSubmit(business_details)}>
           {(formik) => (
             <Form className="xl:w-[600px] w-full space-y-4">
               <div className="xl:pt-8 p-4 pt-[1rem] md:px-12 xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
@@ -120,7 +119,7 @@ export const StepTen = ({ next }) => {
                       name="business_name"
                       type="text"
                       placeholder="Enter Business Name"
-                      className="w-full h-10 md:h-[3.4rem] border border-[#9ca3af] outline-none font-light text-[13px] md:text-base text-gray rounded-[5px] py-2 px-[10px]"
+                      className=" w-full h-10 md:h-[3.4rem] border border-[#9ca3af] outline-none text-[13px] md:text-base font-medium rounded-[5px] py-2 px-[10px]"
                     />
                     <ErrorMessage
                       name="business_name"
@@ -226,7 +225,7 @@ export const StepTen = ({ next }) => {
                           <input
                             name="business_registered"
                             onChange={(e) => handleCheck(e.target.value)}
-                            checked={businessRegister === 'yes'}
+                            checked={business_is_registered === 'yes'}
                             value="yes"
                             className="absolute opacity-0 cursor-pointer h-0 w-0"
                             type="checkbox"
@@ -242,7 +241,7 @@ export const StepTen = ({ next }) => {
                           <input
                             name="business_registered"
                             onChange={(e) => handleCheck(e.target.value)}
-                            checked={businessRegister === 'no'}
+                            checked={business_is_registered === 'no'}
                             value="no"
                             className="absolute opacity-0 cursor-pointer h-0 w-0"
                             type="checkbox"
@@ -306,7 +305,7 @@ export const StepTen = ({ next }) => {
                           <input
                             name="business_registered"
                             onChange={(e) => handleSecondCheck(e.target.value)}
-                            checked={businessAddress === 'yes'}
+                            checked={business_and_home === 'yes'}
                             value="yes"
                             className="absolute opacity-0 cursor-pointer h-0 w-0"
                             type="checkbox"
@@ -321,7 +320,7 @@ export const StepTen = ({ next }) => {
                           <input
                             name="business_registered"
                             onChange={(e) => handleSecondCheck(e.target.value)}
-                            checked={businessAddress === 'no'}
+                            checked={business_and_home === 'no'}
                             value="no"
                             className="absolute opacity-0 cursor-pointer h-0 w-0"
                             type="checkbox"
