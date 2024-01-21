@@ -65,7 +65,7 @@ export const StepFifteen = ({ next }) => {
           <Formik initialValues={{ file: '' }} onSubmit={(values) => handleSubmit(values.document_type)} validationSchema={ProofOfResidence}>
             {(formik) => (
               <Form className="w-full space-y-4">
-                <div className="xl:pt-16 p-4 pt-[2.2rem] xl:px-20 xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
+                <div className="xl:pt-16 p-4 pt-[2.2rem] xl:px-16 xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
                   <div className="text-lightBlue text-start font-bold xl:text-[32px] text-xl w-5/6 xl:leading-10">
                     Confirm Business Address
                   </div>
