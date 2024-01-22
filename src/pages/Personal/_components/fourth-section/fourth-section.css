@@ -1,3 +1,4 @@
+
 .gallery-container {
   margin-top: 300px; /* Added margin of 50px to the container */
 }
@@ -68,7 +69,7 @@
     padding-right:5px;
     padding-bottom:5px;
     height:90px;
-    width:250px;
+    width:150px;
   }
 
   
