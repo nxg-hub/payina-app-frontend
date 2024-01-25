@@ -3,14 +3,14 @@ import CustomButton from "../../../components/button/button";
 import { images } from "../../../constants";
 import { useState } from "react";
 import { MdOutlineFileUpload } from "react-icons/md";
-import { ProofOfResidence } from "../schemas/schema";
+import { BusinessAddressVerification, ProofOfResidence } from "../schemas/schema";
 
 
 export const StepFifteen = ({ next }) => {
-    const [document_details, setDocumentDetails] = useState('');
+    const [businessDocumentDetails, setBusinessDocumentDetails] = useState('');
   
-    const handleSubmit = (document_type) => {
-      next({ document_details, document_type });
+    const handleSubmit = (business_confirm_document) => {
+      next({ businessDocumentDetails, business_confirm_document });
     };
     const selectArrow = `
       select{
@@ -62,7 +62,7 @@ export const StepFifteen = ({ next }) => {
           <img src={images.Vector6} alt="" />
         </div>
         <div className="bg-primary !mt-24 xl:mt-0 flex flex-col justify-center items-start mx-auto">
-          <Formik initialValues={{ file: '' }} onSubmit={(values) => handleSubmit(values.document_type)} validationSchema={ProofOfResidence}>
+          <Formik initialValues={{ file: '' }} onSubmit={(values) => handleSubmit(values.business_confirm_document)} validationSchema={BusinessAddressVerification}>
             {(formik) => (
               <Form className="w-full space-y-4">
                 <div className="xl:pt-16 p-4 pt-[2.2rem] xl:px-16 xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
@@ -73,7 +73,7 @@ export const StepFifteen = ({ next }) => {
                   <div className="xl:w-full md:w-[85%] items-start flex flex-col space-y-2 ">
                     <Field
                       as="select"
-                      name="document_type"
+                      name="business_confirm_document"
                       className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-8 bg-secondary">
                       <option
                         name="doumments"
@@ -101,13 +101,13 @@ export const StepFifteen = ({ next }) => {
                         Voter's Card
                       </option>
                     </Field>
-                    <ErrorMessage name="document_type" component="span" className="text-[#db3a3a]" />
+                    <ErrorMessage name="business_confirm_document" component="span" className="text-[#db3a3a]" />
                     <div className="flex flex-col items-center border rounded-[10px] border-[#006181] w-full text-center p-4 !mt-8">
                       <input
                         id="file"
                         name="file"
                         type="file"
-                        onChange={(e) => setDocumentDetails(e.currentTarget.files[0])}
+                        onChange={(e) => setBusinessDocumentDetails(e.currentTarget.files[0])}
                         value={formik.values.file}
                       />
   
@@ -117,7 +117,7 @@ export const StepFifteen = ({ next }) => {
                         <MdOutlineFileUpload size={22} opacity={0.65} />
                         <span className="text-[#E80516]">Upload Document</span>
                       </label>
-                      <span className="text-lightBlue">{document_details?.name}</span>
+                      <span className="text-lightBlue">{businessDocumentDetails?.name}</span>
                     </div>
                   </div>
                   <CustomButton

@@ -1,12 +1,24 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
-import { HomeAdressSchema } from '../schemas/schema';
+import { BusinessAddressSchema } from '../schemas/schema';
+import { state_local } from '../../../services/state-local';
+import { useEffect, useState } from 'react';
 
 export const StepFourteen = ({ next }) => {
-  const handleSubmit = (values) => {
-    next(values);
+  const [businessState, setBusinessState] = useState('');
+  const [localGovernemnt, setLocalGovernemnt] = useState([]);
+  const handleSubmit = (business_address) => {
+    next({ businessState, business_address });
   };
+
+  useEffect(() => {
+    const currentLga = state_local
+      .filter((lga) => lga.state === businessState)
+      .map((lga) => lga.lgas);
+    setLocalGovernemnt(currentLga[0]);
+  }, [businessState]);
+
   const selectArrow = `
       select{
         -webkit-appearance: none;
@@ -33,7 +45,7 @@ export const StepFourteen = ({ next }) => {
       `;
   return (
     <>
-     <div className="hidden md:block fixed md:top-[-9.5rem] xl:top-[-6.5rem] md:right-[.5rem] xl:right-[-38.5rem]">
+      <div className="hidden md:block fixed md:top-[-9.5rem] xl:top-[-6.5rem] md:right-[.5rem] xl:right-[-38.5rem]">
         <img src={images.Group} alt="" />
       </div>
       <div className="hidden md:block fixed md:-z-10 md:top-[-1.5rem] xl:top-[-1rem] right-[6.5rem]">
@@ -59,9 +71,9 @@ export const StepFourteen = ({ next }) => {
       </div>
       <div className="bg-primary !mt-24 xl:mt-0 flex flex-col justify-center items-start mx-auto">
         <Formik
-          initialValues={{ house_number: '', street_name: '' }}
-          validationSchema={HomeAdressSchema}
-          onSubmit={(values) => handleSubmit(values)}>
+          initialValues={{ business_number: '', business_street_name: '' }}
+          validationSchema={BusinessAddressSchema}
+          onSubmit={(business_address) => handleSubmit(business_address)}>
           {() => (
             <Form className="w-full space-y-4">
               <div className="xl:py-16 p-4 pt-[2.2rem] xl:p-10 xl:px-[3rem] xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
@@ -70,95 +82,91 @@ export const StepFourteen = ({ next }) => {
                 </div>
                 <div className="xl:w-full flex flex-col space-y-2 ">
                   <label htmlFor="houseNumber" className="text-sm font-normal text-lightBlue">
-                    House Number
+                    Business Address Number
                   </label>
                   <Field
-                    name="house_number"
+                    name="business_number"
                     type="text"
                     placeholder="Enter Business Address Steet Number"
                     className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-light text-base text-gray rounded-[5px] py-2 px-[10px]"
                   />
-                  <ErrorMessage name="house_number" component="span" className="text-[#db3a3a]" />
+                  <ErrorMessage
+                    name="business_number"
+                    component="span"
+                    className="text-[#db3a3a]"
+                  />
                 </div>
                 <div className="xl:w-full flex flex-col space-y-2 ">
-                  <label htmlFor="streetName" className="text-sm font-normal text-lightBlue">
+                  <label
+                    htmlFor="business_street_name"
+                    className="text-sm font-normal text-lightBlue">
                     Street
                   </label>
                   <Field
-                    name="street_name"
+                    name="business_street_name"
+                    id="business_street_name"
                     type="text"
                     placeholder="Enter Business Address Steet Name"
                     className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-light text-base text-gray rounded-[5px] py-2 px-[10px]"
                   />
-                  <ErrorMessage name="street_name" component="span" className="text-[#db3a3a]" />
+                  <ErrorMessage
+                    name="business_street_name"
+                    component="span"
+                    className="text-[#db3a3a]"
+                  />
                 </div>
                 <div className="xl:w-full flex flex-col space-y-2 ">
-                  <label htmlFor="password" className="text-sm font-normal text-lightBlue">
+                  <label htmlFor="state" className="text-sm font-normal text-lightBlue">
                     State
                   </label>
                   <Field
                     as="select"
                     name="state"
+                    id="state"
+                    onChange={(e) => setBusinessState(e.target.value)}
                     className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-[10px] bg-secondary">
                     <option
-                      value="null"
-                      name="state"
+                      value="select_business_state"
+                      name="business_state"
                       className="bg-secondary text-primary font-medium selected"
                       selected
                       disabled>
                       Select State
                     </option>
-                    <option
-                      value="anambra"
-                      name="state"
-                      className="!bg-secondary text-primary font-medium">
-                      Anambra
-                    </option>
-                    <option
-                      value="bauchi"
-                      name="state"
-                      className="!bg-secondary text-primary font-medium">
-                      Bauchi
-                    </option>
-                    <option
-                      value="enugu"
-                      name="state"
-                      className="!bg-secondary text-primary font-medium">
-                      Enugu
-                    </option>
+                    {state_local.map(({ state }) => (
+                      <option
+                        key={state}
+                        value={state}
+                        name="state"
+                        className="!bg-secondary text-primary font-medium">
+                        {state}
+                      </option>
+                    ))}
                   </Field>
-                  <ErrorMessage name="state" component="span" className="text-[#db3a3a]" />
                 </div>
                 <div className="xl:w-full flex flex-col space-y-2 ">
-                  <label htmlFor="local_govt" className="text-sm font-normal text-lightBlue">
+                  <label htmlFor="lga" className="text-sm font-normal text-lightBlue">
                     Local Government
                   </label>
                   <Field
                     as="select"
-                    name="lga"
+                    name="business_lga"
                     className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-[10px] bg-secondary">
                     <option
-                      value="null"
-                      name="localg"
-                      className="bg-secondary text-primary font-medium selected"
+                      value="select_business_lga"
+                      name="lga"
+                      className="bg-secondary text-primary font-medium"
                       selected
                       disabled>
                       Select Local Government
                     </option>
-                    <option
-                      value="orumba"
-                      name="localg"
-                      className="bg-secondary text-primary font-medium">
-                      Orumba
-                    </option>
-                    <option
-                      value="ezena"
-                      name="localg"
-                      className="bg-secondary text-primary font-medium">
-                      Ezena
-                    </option>
+                    {localGovernemnt?.map((lga, i) => (
+                      <option value={lga} name="lga" key={i}>
+                        {lga}
+                      </option>
+                    ))}
                   </Field>
-                  <ErrorMessage name="lga" component="span" className="text-[#db3a3a]" />
+                  <ErrorMessage name="business_lga" component="span" className="text-[#db3a3a]" />
                 </div>
               </div>
               <CustomButton
