@@ -21,6 +21,10 @@ import Vector3 from '../assets/images/vector3.svg';
 import Vector4 from '../assets/images/vector4.svg';
 import Vector5 from '../assets/images/vector5.svg';
 import Vector6 from '../assets/images/vector6.svg';
+import Vector7 from '../assets/images/vector7.svg';
+import Vector8 from '../assets/images/vector8.svg';
+import CircleBlack from '../assets/images/circleBlack.png'
+import Rectangle from '../assets/images/rectangle.png'
 
 export default {
   logo,
@@ -46,5 +50,8 @@ export default {
   Vector4,
   Vector5,
   Vector6,
-
+  Vector7,
+  Vector8,
+  Rectangle,
+  CircleBlack,
 };
