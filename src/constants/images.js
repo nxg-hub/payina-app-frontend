@@ -24,7 +24,11 @@ import Vector6 from '../assets/images/vector6.svg';
 import Vector7 from '../assets/images/vector7.svg';
 import Vector8 from '../assets/images/vector8.svg';
 import CircleBlack from '../assets/images/circleBlack.png'
-import Rectangle from '../assets/images/rectangle.png'
+import Rectangle from '../assets/images/rectangle.png';
+import Bank from '../assets/images/bank.svg'
+import Bell from '../assets/images/bell.svg'
+import Headphone from '../assets/images/headphone.svg'
+import Settings from '../assets/images/settings.svg'
 
 export default {
   logo,
@@ -54,4 +58,8 @@ export default {
   Vector8,
   Rectangle,
   CircleBlack,
+  Bank,
+  Bell,
+  Headphone,
+  Settings,
 };

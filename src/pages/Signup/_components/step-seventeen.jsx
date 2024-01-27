@@ -1,10 +1,15 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
 
 export const StepSeventeen = ({ next, data }) => {
   const [business_name, setBusinessName] = useState('');
+  const navigate = useNavigate()
 
+   const handleClick = () => { 
+    navigate('/dashboard')
+   }
   useEffect(() => {
     setBusinessName(data?.business_details?.business_name);
   }, [data]);
@@ -114,7 +119,7 @@ export const StepSeventeen = ({ next, data }) => {
             </div>
           </div>
           <CustomButton
-            // onClick={}
+            onClick={handleClick}
             padding="15px"
             type="submit"
             children="Proceed to Dashboard"
