@@ -39,7 +39,7 @@ export const Navbar = () => {
           <div className="text-nowrap font-medium text-base">Business Account</div>
           <select className="pl-4 pr-8 outline-none border border-lightBlue">
             <option className="capitalize p-2 text-base font-semibold">
-              {userDetails?.business_details?.business_name}Encode Gadgets
+              {userDetails?.business_details?.business_name}
             </option>
           </select>
         </div>
