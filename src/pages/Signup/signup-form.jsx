@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import {
   StepEight,
   StepEleven,
@@ -20,16 +18,10 @@ import {
   StepTwo
 } from './_components';
 
-export default function SignUpForm() {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [data, setData] = useState({});
-  // console.log(data);
+export default function SignUpForm({ data, currentStep, handleNextStep}) {
+  
 
-  const handleNextStep = (newData) => {
-    setData((prev) => ({ ...prev, ...newData }));
-    setCurrentStep((prev) => prev + 1);
-  };
-
+ 
   const steps = [
     <StepOne next={handleNextStep} />,
     <StepTwo next={handleNextStep} />,
