@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
 
-export const StepSeventeen = ({ next, data }) => {
+export const StepSeventeen = ({ data }) => {
   const [business_name, setBusinessName] = useState('');
   const navigate = useNavigate()
 
    const handleClick = () => { 
-    navigate('/dashboard')
+    navigate('/account/dashboard')
    }
   useEffect(() => {
     setBusinessName(data?.business_details?.business_name);
