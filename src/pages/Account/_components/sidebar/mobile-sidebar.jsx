@@ -16,7 +16,7 @@ export const MobileSidebar = () => {
           <img src={images.Profile} alt="profile image" />
           <div className="font-semibold text-xl mt-2">Hi, Jakyyy</div>
         </div>
-        <div className="space-y-[52px] flex flex-col w-full">
+        <div className="space-y-[42px] flex flex-col w-full">
           <Link
             to="/account/dashboard"
             className={`flex items-center space-x-6 ${
