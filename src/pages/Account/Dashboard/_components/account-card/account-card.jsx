@@ -2,12 +2,12 @@ import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../../../../../context/context';
 
 const AccountCard = () => {
-  const [business_name, setBusinessName] = useState('KayCee and Sons Enterprise');
+  const [business_name, setBusinessName] = useState('');
   const { data } = useContext(UserContext);
 
-  //   useEffect(() => {
-  //     setBusinessName(data?.business_details?.business_name);
-  //   }, [data])
+    useEffect(() => {
+      setBusinessName(data?.business_details?.business_name);
+    }, [data])
 
   return (
     <div className="px-4 py-6 mx-auto w-auto ml-0 xl:ml-[19rem] clear-none xl:clear-right">
