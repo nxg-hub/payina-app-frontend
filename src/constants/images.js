@@ -30,6 +30,8 @@ import Bell from '../assets/images/bell.svg'
 import Headphone from '../assets/images/headphone.svg'
 import Settings from '../assets/images/settings.svg'
 
+import Profile from '../assets/images/profile.svg'
+
 export default {
   logo,
   sectionOne,
@@ -62,4 +64,6 @@ export default {
   Bell,
   Headphone,
   Settings,
+  Profile 
+  
 };

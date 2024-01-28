@@ -4,9 +4,14 @@ import Logo from './_components/logo';
 import ActionButtons from './_components/action-buttons';
 import { images } from '../../../../constants';
 import { UserContext } from '../../../../context/context';
+import { GiHamburgerMenu } from 'react-icons/gi';
+import { LuX } from 'react-icons/lu';
+import { Sidebar } from '../sidebar/sidebar';
+import { MobileSidebar } from '../sidebar/mobile-sidebar';
 
 export const Navbar = () => {
   const [userDetails, setUserDetails] = useState();
+  const [toggleMenu, setToggleMenu] = useState(false);
   const { data } = useContext(UserContext);
   console.log(userDetails);
 
@@ -49,6 +54,20 @@ export const Navbar = () => {
         <ActionButtons />
       </div>
       <style>{selectArrow}</style>
+      <div className={`xl:hidden block cursor-pointer ${toggleMenu && 'hidden'}`}>
+        <GiHamburgerMenu color="#000000" fontSize={27} onClick={() => setToggleMenu(true)} />
+      </div>
+      {toggleMenu && (
+        <div className="text-black fixed top-0 left-0 right-0 w-full h-screen backdrop-blur-[2px] transition-all duration-150 flex flex-col z-10 animate-slideLeft xl:hidden">
+        <LuX
+          color="#000000"
+          className="text-2xl absolute top-8 right-8  cursor-pointer"
+          fontSize={30}
+          onClick={() => setToggleMenu(false)}
+        />
+        <MobileSidebar />
+        </div>
+      )}
     </div>
   );
 };
