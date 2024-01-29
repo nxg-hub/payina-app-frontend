@@ -10,7 +10,7 @@ const AccountCard = () => {
     }, [data])
 
   return (
-    <div className="px-4 py-6 mx-auto w-auto ml-0 xl:ml-[19rem] clear-none xl:clear-right">
+    <div className="px-4 py-4 mx-auto w-auto ml-0 xl:ml-[19rem] clear-none xl:clear-right">
       <div className="block text-center md:text-[24px] xl:text-[32px] text-[20px] font-semibold">
         {business_name}
         <span className="text-lightBlue">&nbsp;Dashboard</span>
