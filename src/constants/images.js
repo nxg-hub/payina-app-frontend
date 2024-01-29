@@ -14,6 +14,23 @@ import Twitter from '../assets/images/twitter.svg';
 import Instagram from '../assets/images/instagram.svg';
 import Tiktok from '../assets/images/tiktok.svg';
 import Cicle from '../assets/images/circle.svg';
+import Group from '../assets/images/group.svg';
+import Vector1 from '../assets/images/vector1.svg';
+import Vector2 from '../assets/images/vector2.svg';
+import Vector3 from '../assets/images/vector3.svg';
+import Vector4 from '../assets/images/vector4.svg';
+import Vector5 from '../assets/images/vector5.svg';
+import Vector6 from '../assets/images/vector6.svg';
+import Vector7 from '../assets/images/vector7.svg';
+import Vector8 from '../assets/images/vector8.svg';
+import CircleBlack from '../assets/images/circleBlack.png'
+import Rectangle from '../assets/images/rectangle.png';
+import Bank from '../assets/images/bank.svg'
+import Bell from '../assets/images/bell.svg'
+import Headphone from '../assets/images/headphone.svg'
+import Settings from '../assets/images/settings.svg'
+
+import Profile from '../assets/images/profile.svg'
 
 export default {
   logo,
@@ -31,5 +48,22 @@ export default {
   Instagram,
   Tiktok,
   Twitter,
-  Cicle
+  Cicle,
+  Group,
+  Vector1,
+  Vector2,
+  Vector3,
+  Vector4,
+  Vector5,
+  Vector6,
+  Vector7,
+  Vector8,
+  Rectangle,
+  CircleBlack,
+  Bank,
+  Bell,
+  Headphone,
+  Settings,
+  Profile 
+  
 };

@@ -6,6 +6,7 @@ import Button from '../../components/button/button';
 import Logo from './_components/logo';
 import ActionButtons from './_components/action-buttons';
 import { Link, useLocation } from 'react-router-dom';
+import CustomButton from '../../components/button/button';
 
 const Navbar = () => {
   const [toggleMenu, setToggleMenu] = useState();
@@ -87,23 +88,16 @@ const Navbar = () => {
                 <LuMoveRight />
               </div>
             </li>
-            <li className="m-6 mt-12 cursor-pointer text-primary text-xl">
-              <div className="flex justify-between items-center">
-                <Link to="/signup" className="hover:text-lightBlue font-semibold">
-                  Sign Up
-                </Link>
-                <LuMoveRight />
-              </div>
-            </li>
-            <li className="m-6 mt-12 cursor-pointer text-primary text-xl">
-              <div className="flex justify-between items-center">
-                <Link to="/login" className="hover:text-lightBlue font-semibold">
-                  Login
-                </Link>
-                <LuMoveRight />
-              </div>
-            </li>
+            
           </ul>
+          <div className="flex space-x-10 absolute bottom-0 my-8">
+            <Link to='/signup'>
+            <Button className='hover:bg-lightBlue hover:scale-95 font-extrabold duration-300 center' children='Sign Up' />
+            </Link>
+            <Link to='/login'>
+           <Button backgroundColor='transparent' className='hover:scale-95 font-extrabold duration-300 center gap-2' children='Login' />
+           </Link>
+          </div>
         </div>
       )}
     </div>

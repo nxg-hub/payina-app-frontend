@@ -20,6 +20,15 @@ module.exports = {
     animation: {
       slideBottom: 'slideBottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both'
     },
+    keyframes: {
+      slideLeft: {
+        '0%': { transform: 'translateX(-25%)', transform: 'translateX(-25%)' },
+        '100%': { transform: 'translate(0)' }
+      }
+    },
+    animation: {
+      slideLeft: 'slideLeft 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both'
+    },
     extend: {}
   },
   plugins: []
