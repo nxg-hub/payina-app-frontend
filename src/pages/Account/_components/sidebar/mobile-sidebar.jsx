@@ -10,7 +10,7 @@ export const MobileSidebar = () => {
   const location = useLocation();
   const currentRoute = location.pathname;
   return (
-    <div className="bg-[#CCDFE6] rounded-[10px] px-10 py-4 mt-4 w-[300px] h-[999px] overflow-y-auto">
+    <div className="bg-[#CCDFE6] rounded-[10px] px-10 py-10 mt-4 w-[312px] h-[999px] overflow-y-auto">
       <div className="flex flex-col justify-center items-center">
         <div className="mb-20">
           <img src={images.Profile} alt="profile image" />

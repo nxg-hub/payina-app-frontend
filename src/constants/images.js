@@ -23,14 +23,19 @@ import Vector5 from '../assets/images/vector5.svg';
 import Vector6 from '../assets/images/vector6.svg';
 import Vector7 from '../assets/images/vector7.svg';
 import Vector8 from '../assets/images/vector8.svg';
-import CircleBlack from '../assets/images/circleBlack.png'
+import CircleBlack from '../assets/images/circleBlack.png';
 import Rectangle from '../assets/images/rectangle.png';
-import Bank from '../assets/images/bank.svg'
-import Bell from '../assets/images/bell.svg'
-import Headphone from '../assets/images/headphone.svg'
-import Settings from '../assets/images/settings.svg'
-
-import Profile from '../assets/images/profile.svg'
+import Bank from '../assets/images/bank.svg';
+import Bell from '../assets/images/bell.svg';
+import Headphone from '../assets/images/headphone.svg';
+import Settings from '../assets/images/settings.svg';
+import BalanceSpiral from '../assets/images/balance_spiral.svg';
+import BalanceIcon from '../assets/images/balance_icon.svg';
+import Profile from '../assets/images/profile.svg';
+import AddMoney from '../assets/images/add_money.svg'
+import SendMoney from '../assets/images/send_money.svg'
+import Invoice from '../assets/images/create_invoice.svg'
+import Bills from '../assets/images/bills.svg'
 
 export default {
   logo,
@@ -64,6 +69,11 @@ export default {
   Bell,
   Headphone,
   Settings,
-  Profile 
-  
+  Profile,
+  BalanceIcon,
+  BalanceSpiral,
+  AddMoney,
+  SendMoney,
+  Invoice,
+  Bills
 };

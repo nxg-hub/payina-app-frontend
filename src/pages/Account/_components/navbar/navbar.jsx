@@ -58,7 +58,7 @@ export const Navbar = () => {
         <GiHamburgerMenu color="#000000" fontSize={27} onClick={() => setToggleMenu(true)} />
       </div>
       {toggleMenu && (
-        <div className="text-black fixed top-0 left-0 right-0 w-full h-screen backdrop-blur-[2px] transition-all duration-150 flex flex-col z-10 animate-slideLeft xl:hidden">
+        <div className="text-black fixed top-0 left-0 right-0 w-full h-[150%] mt-[-1rem] backdrop-blur-[2px] transition-all duration-150 flex flex-col z-10 animate-slideLeft xl:hidden">
         <LuX
           color="#000000"
           className="text-2xl absolute top-8 right-8  cursor-pointer"
