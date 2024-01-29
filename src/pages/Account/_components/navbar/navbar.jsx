@@ -39,7 +39,7 @@ export const Navbar = () => {
         <div className="w-40">
           <Logo />
         </div>
-        <div className="md:space-x-6 hidden md:flex text-black text-base font-medium">
+        <div className="md:space-x-6 hidden xl:flex text-black text-base font-medium">
           <img src={images.Bank} />
           <div className="text-nowrap font-medium text-base">Business Account</div>
           <select className="pl-4 pr-8 outline-none border border-lightBlue">
@@ -50,7 +50,7 @@ export const Navbar = () => {
         </div>
       </div>
 
-      <div className="items-center hidden md:flex">
+      <div className="items-center hidden xl:flex">
         <ActionButtons />
       </div>
       <style>{selectArrow}</style>
