@@ -6,7 +6,6 @@ import { images } from '../../../../constants';
 import { UserContext } from '../../../../context/context';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { LuX } from 'react-icons/lu';
-import { Sidebar } from '../sidebar/sidebar';
 import { MobileSidebar } from '../sidebar/mobile-sidebar';
 
 export const Navbar = () => {
@@ -34,7 +33,7 @@ export const Navbar = () => {
       `;
 
   return (
-    <div className="flex items-center justify-between pr-10 h-20 bg-[#CCDFE6] text-primary">
+    <div className="flex items-center justify-between pr-10 h-20 bg-[#CCDFE6] xl:fixed w-full  text-primary">
       <div className="px-6 xl:px-4 flex space-x-16 gap-20 items-center">
         <div className="w-40">
           <Logo />
@@ -58,7 +57,7 @@ export const Navbar = () => {
         <GiHamburgerMenu color="#000000" fontSize={27} onClick={() => setToggleMenu(true)} />
       </div>
       {toggleMenu && (
-        <div className="text-black fixed top-0 left-0 right-0 w-full h-[150%] mt-[-1rem] backdrop-blur-[2px] transition-all duration-150 flex flex-col z-10 animate-slideLeft xl:hidden">
+        <div className="text-black fixed top-0 left-0 right-0 w-full h-[150%] mt-[-1rem] z-50 backdrop-blur-[2px] transition-all duration-150 flex flex-col animate-slideLeft xl:hidden">
         <LuX
           color="#000000"
           className="text-2xl absolute top-8 right-8  cursor-pointer"
