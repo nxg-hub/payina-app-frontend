@@ -36,6 +36,8 @@ import AddMoney from '../assets/images/add_money.svg'
 import SendMoney from '../assets/images/send_money.svg'
 import Invoice from '../assets/images/create_invoice.svg'
 import Bills from '../assets/images/bills.svg'
+import GreenArrow from '../assets/images/green_arrow.svg'
+import RedArrow from '../assets/images/red_arrow.svg'
 
 export default {
   logo,
@@ -75,5 +77,7 @@ export default {
   AddMoney,
   SendMoney,
   Invoice,
-  Bills
+  Bills,
+  RedArrow,
+  GreenArrow
 };
