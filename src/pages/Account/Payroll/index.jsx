@@ -1,12 +1,26 @@
-import { Navbar, Sidebar } from '../_components'
+import { useState } from 'react';
+import { Navbar, Sidebar } from '../_components';
+import SetupPayroll from './_components/setup-payroll';
+import PayrollDetails from './_components/payroll-details';
 
 const Payroll = () => {
-  return (
-    <div className='bg-primary'>
-        <Navbar />
-        <Sidebar/>
-    </div>
-  )
-}
+  const [currentStep, setCurrentStep] = useState(0);
+  const [data, setData] = useState();
+  console.log(data);
+  const handleNextStep = (newData) => {
+    setData((prev) => ({ ...prev, ...newData }));
+    setCurrentStep((prev) => prev + 1);
+  };
 
-export default Payroll
+  const steps = [<SetupPayroll next={handleNextStep} />, <PayrollDetails next={handleNextStep} />];
+
+  return (
+    <div className="bg-primary">
+      <Navbar />
+      <Sidebar />
+      {steps[currentStep]}
+    </div>
+  );
+};
+
+export default Payroll;
