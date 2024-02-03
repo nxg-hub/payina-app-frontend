@@ -31,7 +31,7 @@ function App() {
           path="/signup"
           element={<Signup data={data} currentStep={currentStep} handleNextStep={handleNextStep} />}
         />
-        <Route path="/login " element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/account/dashboard" element={<Dashboard />} />
         <Route path="/account/invoice" element={<Invoice />} />
         <Route path="/account/payroll" element={<Payroll />} />

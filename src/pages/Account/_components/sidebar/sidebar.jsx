@@ -9,7 +9,6 @@ import images from '../../../../constants/images';
 export const Sidebar = () => {
   const location = useLocation();
   const currentRoute = location.pathname;
-  console.log(currentRoute);
   return (
     <div className="bg-[#CCDFE6] float-left rounded-[10px] px-10 py-4 mt-[5.5rem] fixed w-[312px] h-[100vh] xl:block hidden">
       <div className="flex flex-col justify-center items-center">

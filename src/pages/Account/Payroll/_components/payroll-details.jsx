@@ -5,12 +5,8 @@ import { RiDeleteBinLine } from 'react-icons/ri';
 import { PayrollSchema } from '../../schemas/schemas';
 import { useState } from 'react';
 
-const PayrollDetails = ({ next }) => {
-  const [jobRoleFields, setJobRoleFields] = useState([
-    {
-      job_role: ''
-    }
-  ]);
+const PayrollDetails = ({ handleRoleForm, addRole, addEmployeeForm }) => {
+  const [save, setSave] = useState(false)
   const [allowanceFields, setAllowanceFields] = useState([
     {
       allowance_package: '',
@@ -18,16 +14,9 @@ const PayrollDetails = ({ next }) => {
     }
   ]);
 
-  // console.log(allowanceFields);
-
-  const addJobField = () => {
-    setJobRoleFields([
-      ...jobRoleFields,
-      {
-        job_role: ''
-      }
-    ]);
-  };
+const handleSave = () => {
+  setSave(true)
+}
   const addAllowanceField = () => {
     setAllowanceFields([
       ...allowanceFields,
@@ -42,26 +31,28 @@ const PayrollDetails = ({ next }) => {
     rows.splice(index, 1);
     setAllowanceFields(rows);
   };
-  const removeJobRoleFields = (index) => {
-    const rows = [...jobRoleFields];
-    rows.splice(index, 1);
-    setJobRoleFields(rows);
-  };
+
   const handleAllowanceChange = (index, evnt) => {
     const { name, value } = evnt.target;
     const list = [...allowanceFields];
     list[index][name] = value;
     setAllowanceFields(list);
   };
-  const handleJobRoleChange = (index, evnt) => {
-    const { name, value } = evnt.target;
-    const list = [...jobRoleFields];
-    list[index][name] = value;
-    setJobRoleFields(list);
+
+  const handleSubmit = (values) => {
+    handleRoleForm(values);
+    setAllowanceFields([
+      {
+        allowance_package: '',
+        allowance_pay: ''
+      }
+    ]);
   };
-  const handleSubmit = (salary) => {
-    next(salary);
-  };
+ const handleRoleSave = (values) => {
+  addEmployeeForm(values)
+ }
+
+
   const inputArrow = `
       input::-webkit-outer-spin-button,
       input::-webkit-inner-spin-button {
@@ -81,11 +72,17 @@ const PayrollDetails = ({ next }) => {
           <span className="text-base md:text-xl font-medium">Payroll Details</span>
           <Formik
             initialValues={{
-              base_salary: ''
+              base_salary: '',
+              job_role: ''
             }}
             validationSchema={PayrollSchema}
-            onSubmit={(salary) => handleSubmit({ salary, allowanceFields, jobRoleFields })}>
-            {() => (
+            onSubmit={(values, { resetForm }) => {
+            handleSubmit({ values, allowanceFields });
+            save && handleRoleSave({ values, allowanceFields })
+            resetForm({ values: ''})
+            }
+            }>
+            {(formik) => (
               <Form>
                 <div className="flex flex-col  w-full py-4 space-y-4">
                   <div className="flex items-center">
@@ -97,33 +94,18 @@ const PayrollDetails = ({ next }) => {
                     </label>
                     <hr className="border-none bg-lightBlue h-[1px] w-[39%] xl:mr-0 md:mr-14 mr-12 ml-8 " />
                   </div>
-                  {jobRoleFields.map((role, i) => {
-                    const { job_role } = role;
-                    return (
-                      <div key={i}>
-                        <input
-                          id={i}
-                          name="job_role"
-                          value={job_role}
-                          type="text"
-                          onChange={(evnt) => handleJobRoleChange(i, evnt)}
-                          placeholder="Enter Job Title"
-                          className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
-                          required
-                        />
-                      </div>
-                    );
-                  })}
-                  {jobRoleFields.length !== 1 ? (
-                    <RiDeleteBinLine
-                      color="red"
-                      size={20}
-                      className="text-center w-full mx-auto hover:cursor-pointer hover:scale-90 !mt-2 "
-                      onClick={removeJobRoleFields}
-                    />
-                  ) : (
-                    ''
-                  )}
+                  <Field
+                    name="job_role"
+                    type="text"
+                    placeholder="Enter Job Title"
+                    className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                    required
+                  />
+                  <ErrorMessage
+                    name="job_role"
+                    component="span"
+                    className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
+                  />
                 </div>
                 <div className="flex flex-col w-full py-4 space-y-4">
                   <div className="flex items-center">
@@ -162,7 +144,7 @@ const PayrollDetails = ({ next }) => {
                       {allowanceFields.map((allowance, i) => {
                         const { allowance_package, allowance_pay } = allowance;
                         return (
-                          <div className="flex gap-2 py-1">
+                          <div className="flex gap-2 py-1" key={i}>
                             <div className="flex flex-col w-full">
                               <input
                                 name="allowance_package"
@@ -204,20 +186,21 @@ const PayrollDetails = ({ next }) => {
                 <button
                   type="button"
                   onClick={addAllowanceField}
-                  className="flex gap-2 center rounded-[5px] py-2 px-4 w-[140px] md:w-[200px] border border-lightBlue float-right text-xs md:text-base text-nowrap">
+                  className="flex gap-2 center rounded-[5px] py-2 px-4 w-[140px] md:w-[200px] border border-lightBlue text-lightBlue  float-right text-xs md:text-base text-nowrap">
                   <LuPlus size={20} color="#006181" />
                   Add allowance
                 </button>
                 <div className="flex center py-40 gap-4 w-full">
                   <button
-                    type="button"
-                    onClick={addJobField}
+                    type="submit"
+                    onClick={addRole}
                     className="flex gap-2 center rounded-[5px] text-xs md:text-base py-2 border border-lightBlue text-lightBlue w-[300px]">
                     <LuPlus size={20} color="#006181" />
                     Add role
                   </button>
-                  <button
+                  <button 
                     type="submit"
+                    onClick={handleSave}  
                     className="rounded-[5px] text-xs md:text-base  py-2 border border-lightBlue bg-lightBlue w-[300px] text-primary">
                     Save
                   </button>
