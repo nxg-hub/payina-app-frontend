@@ -12,7 +12,7 @@ export const Navbar = () => {
   const [userDetails, setUserDetails] = useState();
   const [toggleMenu, setToggleMenu] = useState(false);
   const { data } = useContext(UserContext);
-  console.log(userDetails);
+  // console.log(userDetails);
 
   useEffect(() => {
     setUserDetails(data);
