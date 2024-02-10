@@ -3,7 +3,7 @@ import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
 import { SignUpSchema } from '../schemas/schema';
 
-export const StepOne = ({ handleChange, next }) => {
+export const StepOne = ({ next }) => {
   const handleSubmit = (values) => {
     next(values);
   };
