@@ -7,8 +7,12 @@ export const StepSeven = ({ next, text }) => {
   };
   return (
     <>
-      <div className="p-2 xl:p-10 bg-primary">
-        Congratulation Step
+      <div className="p-2 xl:p-10  bg-primary text-center w-full ">
+        <div className=''>
+        <p className='text-[32px] font-bold text-secondary pr-0 xl:px-20'>Congratulation! </p> 
+        <p className='pt-[20px]'>Your Identity Has been Verified!</p>
+        </div>
+    
         <Formik initialValues={{}} onSubmit={(values) => handleSubmit(values)}>
           {() => (
             <Form className="">
@@ -18,7 +22,6 @@ export const StepSeven = ({ next, text }) => {
                 children="Next"
                 className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6"
               />
-              {text}
             </Form>
           )}
         </Formik>

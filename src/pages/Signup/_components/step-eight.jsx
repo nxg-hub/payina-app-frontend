@@ -82,7 +82,7 @@ export const StepEight = ({ next }) => {
                 </div>
                 <div className="xl:w-[120%] flex flex-col space-y-2 ">
                   <label htmlFor="streetName" className="text-sm font-normal text-lightBlue">
-                    Street
+                    Street 
                   </label>
                   <Field
                     name="street_name"
