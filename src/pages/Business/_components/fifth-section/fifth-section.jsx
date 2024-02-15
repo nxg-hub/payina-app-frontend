@@ -5,7 +5,7 @@ const FifthSection = () => {
   return <div>
    <div className='bg-lightBlue pt-16 flex flex-col-reverse justify-between lg:flex-row items-center px-16'>
   <div className=''>
-    <img src={section5} alt="" />
+    <img src={section5} alt="" className='pb-10' />
   </div>
   <div className='flex flex-col items-center'>
     <p className='font-bold text-[36px] text-primary md:text-[48px] '>One Login </p>

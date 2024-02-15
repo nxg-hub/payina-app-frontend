@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 
-class Facialrecognition extends Component {
+class FacialRecognition extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      showCamera: false // Initially not showing the camera
+    };
     this.video = React.createRef();
     this.canvas = React.createRef();
-  }
-
-  componentDidMount() {
-    this.startCamera();
   }
 
   startCamera = () => {
@@ -18,6 +17,28 @@ class Facialrecognition extends Component {
         this.video.current.play();
       })
       .catch(err => console.error('Error accessing the camera:', err));
+  }
+
+  componentDidMount() {
+    // Start the camera when the component mounts if showCamera is true
+    if (this.state.showCamera) {
+      this.startCamera();
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // Start or stop the camera based on the state change
+    if (this.state.showCamera !== prevState.showCamera) {
+      if (this.state.showCamera) {
+        this.startCamera();
+      } else {
+        const stream = this.video.current.srcObject;
+        if (stream) {
+          const tracks = stream.getTracks();
+          tracks.forEach(track => track.stop());
+        }
+      }
+    }
   }
 
   captureImage = () => {
@@ -47,17 +68,27 @@ class Facialrecognition extends Component {
   render() {
     return (
       <div>
-        <video ref={this.video} autoPlay></video>
-        <canvas ref={this.canvas} style={{ display: 'none' }}></canvas>
+        {/* Render the camera component only if showCamera is true */}
+        {this.state.showCamera && (
+          <div>
+            <video ref={this.video} autoPlay></video>
+            <canvas ref={this.canvas} style={{ display: 'none' }}></canvas>
+          </div>
+        )}
 
-        {/* Button to capture an image */}
-        <button onClick={this.captureImage}>Capture Image</button>
+        {/* Button to toggle showing the camera */}
+        <button onClick={() => this.setState({ showCamera: true })}>Start Facial Recognition</button>
 
         {/* Input for selecting image files */}
         <input type="file" accept="image/*" onChange={this.handleFileSelect} />
+        
+        {/* Button to capture an image */}
+        {this.state.showCamera && (
+          <button onClick={this.captureImage}>Capture Image</button>
+        )}
       </div>
     );
   }
 }
 
-export default Facialrecognition;
+export default FacialRecognition;

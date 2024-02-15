@@ -24,7 +24,7 @@ export const StepFour = ({ next }) => {
 
   const optionStyle = {
     padding: '0.75rem',
-    height: '50px',
+    height: '',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -34,7 +34,7 @@ export const StepFour = ({ next }) => {
   return (
     <div className="p-2 xl:p-10 bg-primary">
       <div className='leading-[38px]'>
-        <h1 className='text-[32px] font-bold text-secondary'>Kindly Provide Identification</h1>
+        <h1 className='text-secondary text-start  xl:text-[32px] text-xl'>Kindly Provide Identification</h1>
         <p>How would you like us to identify you?</p>
       </div>
      
@@ -59,7 +59,7 @@ export const StepFour = ({ next }) => {
                     name="idType"
                     onChange={handleChange}
                     value={values.idType}
-                    className="w-full p-2 border-[0.5px] border-white bg-secondary text-primary py-4 rounded-md"
+                    className="w-full px-[27px] py-[16px] border-[0.5px] border-[#00678F] rounded-md text-primary  bg-secondary "
                   >
                     <option value="" disabled>Select ID Type</option>
                     {Options.map((option) => (
