@@ -8,8 +8,8 @@ const FourthSection = () => {
      </div> 
     
      <hr className="border-none bg-yellow h-1 mt-4 mb-4  w-[87%] mx-auto" />
-     <div className="xl:py-20 py-20 grid place-content-center">
-        <img src={polygon} className='pb-10' alt="" />
+     <div className="xl:py-20 py-0 grid place-content-center">
+        <img src={polygon} className='pb-10 pt-10' alt="" />
       </div>
 
   

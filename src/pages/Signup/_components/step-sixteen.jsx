@@ -32,7 +32,7 @@ export const StepSixteen = ({ next }) => {
 
   return (
     <div className="p-2 xl:p-10 bg-primary">
-      <h1 className="text-lightBlue text-start  xl:text-[32px] text-xl">Create Your Transaction Pin</h1>
+      <h1 className="text-secondary text-start  xl:text-[32px] text-xl">Create Your Transaction Pin</h1>
       
       <Formik
         initialValues={{ otp: ['', '', '', ''], confirmOtp: ['', '', '', ''] }}
