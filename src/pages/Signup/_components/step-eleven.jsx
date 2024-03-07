@@ -1,26 +1,106 @@
-import { Form, Formik } from "formik";
-import CustomButton from "../../../components/button/button";
+import React from 'react';
+import { Form, Formik, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import CustomButton from '../../../components/button/button';
 
-export const StepEleven= ({ next }) => {
-    const handleSubmit = (values) => {
-      next(values);
-    };
-    return (
-      <div className="p-2 xl:p-10 bg-primary">
-        Business Details
-        <Formik initialValues={{}} onSubmit={(values) => handleSubmit(values)}>
-          {() => (
-            <Form className="">
-              <CustomButton
-                padding="15px"
-                type="submit"
-                children="Next"
-                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6"
-              />
-            </Form>
-          )}
-        </Formik>
-      </div>
-    );
+// Validation schema using Yup
+const validationSchema = Yup.object().shape({
+  businessDescription: Yup.string().required('Business description is required'),
+  numberOfStaff: Yup.string().required('Number of staff is required'),
+  annualIncomeRange: Yup.string().required('Annual income range is required'),
+});
+
+// Sample data for the number of staff and annual income range
+const staffOptions = ['0-9', '10-20', '21-50', '51-100', '101-300'];
+const incomeRangeOptions = ['Less than 100,000', '100,000 - 500,000', '500,001 - 1,000,000', '1,000,001 - 10,000,000','10,000,001 - 50,000,000'];
+
+export const StepEleven = ({ next }) => {
+  const handleSubmit = (values) => {
+    next(values);
   };
-  
+
+  return (
+    <>
+   <div className="bg-primary !mt-24 xl:mt-0  mx-auto">
+      <Formik
+        initialValues={{
+          businessDescription: '',
+          numberOfStaff: '',
+          annualIncomeRange: '',
+        }}
+        validationSchema={validationSchema}
+        onSubmit={(values) => handleSubmit(values)}
+      >
+        {() => (
+          <Form className="">
+            <div  className="xl:py-16 p-4 pt-[2.2rem] xl:p-10 xl:pl-[4rem] xl:pr-40 xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
+            <div className="text-lightBlue text-start font-bold xl:text-[32px] text-xl pr-15" >
+              Enter Business Details
+              </div>
+            <div className="my-2 xl:w-full flex flex-col space-y-2 ">
+              <label htmlFor="businessDescription" className="text-sm font-normal text-lightBlue">
+                Business Description
+              </label>
+              <Field
+                as="textarea"  // Change Field to textarea for multiline input
+                id="businessDescription"
+                name="businessDescription"
+                placeholder="Tell us more about your business"
+                className=" xl:w-[125%] h-[138px] border border-[#9ca3af] outline-none  text-sm text-gray rounded-[5px] py-2 px-[10px] "
+              />
+              <ErrorMessage name="businessDescription" component="div" className="text-[#db3a3a] mt-2 text-sm" />
+            </div>
+
+            <div className="my-2 xl:w-[130%] flex flex-col space-y-2 ">
+              <label htmlFor="numberOfStaff" className="text-white block  text-sm">
+                Number of Staff
+              </label>
+              <Field
+                as="select"
+                id="numberOfStaff"
+                name="numberOfStaff"
+                className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-sm text-gray rounded-[10px] py-2 px-[20px] bg-secondary">
+                <option value="" disabled>Select Number of Staff</option>
+                {staffOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </Field>
+              <ErrorMessage name="numberOfStaff" component="div" className="text-[#db3a3a] mt-2 text-sm" />
+            </div>
+
+            <div className="my-4 xl:w-[130%] flex flex-col space-y-2 ">
+              <label htmlFor="annualIncomeRange" className="text-white block text-sm">
+                Annual Income Range
+              </label>
+              <Field
+                as="select"
+                id="annualIncomeRange"
+                name="annualIncomeRange"
+                className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-sm text-gray rounded-[10px] py-2 px-[10px] bg-secondary">
+                <option value="" disabled>Select Annual Income Range</option>
+                {incomeRangeOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </Field>
+              <ErrorMessage name="annualIncomeRange" component="div" className="text-[#db3a3a] mt-2 text-sm" />
+            </div>
+            </div>
+
+            <CustomButton
+              padding="15px"
+              type="submit"
+              children="Next"
+              className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[80%] w-[90%] mx-auto my-10 !mb-12 xl:mt-4 xl:!mb-6"
+            />
+          </Form>
+        )}
+      </Formik>
+      </div>
+   
+    </>
+  );
+};

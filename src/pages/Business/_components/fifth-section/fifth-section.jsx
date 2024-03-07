@@ -2,11 +2,25 @@ import React from 'react';
 import images from '../../../../constants/images';
 
 const FifthSection = () => {
+<<<<<<< HEAD
   return (
     <div className="flex flex-col justify-center text-left bg-black w-full md:py-12 pb-[15rem] md:pb-[13rem] px-6 xl:px-20 md:px-16">
       <div className="text-primary font-bold text-2xl md:text-3xl xl:text-5xl pb-6">
         Other Ways We Help Your Business
       </div>
+=======
+  return <div>
+   <div className='bg-lightBlue pt-16 flex flex-col-reverse justify-between lg:flex-row items-center px-16'>
+  <div className=''>
+    <img src={section5} alt="" className='pb-10' />
+  </div>
+  <div className='flex flex-col items-center'>
+    <p className='font-bold text-[36px] text-primary md:text-[48px] '>One Login </p>
+    <p className='font-bold text-[36px] text-primary text-center md:text-[48px] '>Infinite Possibilities </p>
+    <button className='bg-[white] w-[200px] rounded-md font-medium md:my-6 my-8 mx-auto py-3 text-[#000]'>Get Started</button>
+  </div>
+</div>
+>>>>>>> e93b99b18222c70ab7aafafc706491d7219f959d
 
       <div className="relative w-full">
         <img

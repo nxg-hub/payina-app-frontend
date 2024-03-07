@@ -1,6 +1,13 @@
-import { Form, Formik } from 'formik';
+import { Form, Formik, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import CustomButton from '../../../components/button/button';
-import Select from 'react-select';
+
+const StepFourValidationSchema = Yup.object().shape({
+  idType: Yup.string().required('Please select an ID type'),
+  identificationNumber: Yup.string()
+    .required('Please enter an identification number')
+    .matches(/^\d+$/, 'Please enter a valid identification number (numeric)'),
+});
 
 export const StepFour = ({ next }) => {
   const handleSubmit = (values) => {
@@ -14,37 +21,21 @@ export const StepFour = ({ next }) => {
     { value: "International Passport", label: "International Passport" },
     { value: "Voters Card", label: "Voters Card" },
   ];
-  // Define custom styles for the Select component
-  const customStyles = {
-    control: (provided) => ({
-      ...provided,
-      padding: '10px 20px', // Adjust the padding as needed
-      backgroundColor:"#00678F"
-    }),
-    menu: (provided) => ({
-      ...provided,
-      padding: '0px', // Set padding for the menu (options)
-    }),
-    option: (provided) => ({
-      ...provided,
-      padding: '20px', // Set padding for each option
-      backgroundColor:"#00678F",
-      color: "white", 
-      display: 'flex',
 
-      borderBottom: '1px solid ', 
-    }),
-     placeholder: (provided) => ({
-      ...provided,
-      color: "white", // Set placeholder text color
-    }),
+  const optionStyle = {
+    padding: '0.75rem',
+    height: '',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottom: '1px solid white',
   };
 
   return (
     <div className="p-2 xl:p-10 bg-primary">
       <div className='leading-[38px]'>
-      <h1 className='text-[32px] font-bold text-secondary'>Kindly Provide Identification</h1>
-      <p>How would you like us to identify you?</p>
+        <h1 className='text-secondary text-start  xl:text-[32px] text-xl'>Kindly Provide Identification</h1>
+        <p>How would you like us to identify you?</p>
       </div>
      
       <div className="">
@@ -54,41 +45,51 @@ export const StepFour = ({ next }) => {
               idType: "",
               identificationNumber: "",
             }}
-            validate={(values) => {
-              const errors = {};
-              if (!values.idType) {
-                errors.idType = "Please select an ID type";
-              }
-              if (!/^\d+$/.test(values.identificationNumber)) {
-                errors.identificationNumber = "Please enter a valid identification number (numeric)";
-              }
-              return errors;
-            }}
+            validationSchema={StepFourValidationSchema}
             onSubmit={(values) => handleSubmit(values)}
           >
             {({ handleChange, values, isValid, dirty }) => (
               <Form className="mt-[30px]">
-                <Select
-                className=''
-                  options={Options}
-                  name="idType"
-                  placeholder="Select ID Type"
-                  onChange={(selectedOption) => {
-                    handleChange("idType")(selectedOption.value);
-                  
-                  }}
-                  styles={customStyles} // Apply custom styles
-                />
+                <div className="my-4">
+                  <label htmlFor="idType" className="text-white block mb-2">
+                  </label>
+                  <Field
+                    as="select"
+                    id="idType"
+                    name="idType"
+                    onChange={handleChange}
+                    value={values.idType}
+                    className="w-full px-[27px] py-[16px] border-[0.5px] border-[#00678F] rounded-md text-primary  bg-secondary "
+                  >
+                    <option value="" disabled>Select ID Type</option>
+                    {Options.map((option) => (
+                      <option
+                        key={option.value}
+                        value={option.value}
+                        style={{ ...optionStyle }}
+                      >
+                        {option.label}
+                      </option>
+                    ))}
+                  </Field>
+                  <ErrorMessage name="idType" component="div" className="text-[#db3a3a] mt-2" />
+                </div>
 
-                <div className="my-[40px] ">
-                  <input
-                  className='w-full px-[27px] py-[16px] border-[0.5px] border-[#006181]  rounded-md '
+                <div className="my-8">
+                  <label htmlFor="identificationNumber" className="text-white block mb-2">
+                  </label>
+                  <Field
                     type="text"
-                    placeholder="Enter Identification Number"
+                    id="identificationNumber"
                     name="identificationNumber"
-                    value={values.identificationNumber}
-                    onChange={handleChange("identificationNumber")}
+                    placeholder="Enter Identification Number"
+                    className='w-full px-[27px] py-[16px] border-[0.5px] border-[#00678F] rounded-md'
                     required
+                  />
+                  <ErrorMessage
+                    name="identificationNumber"
+                    component="div"
+                    className="text-[#db3a3a] mt-2"
                   />
                 </div>
 
