@@ -63,7 +63,7 @@ const InvoiceForm = () => {
                 <label htmlFor="customer.name" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2 w-[10rem] ">Name</label>
                 <Field type="text" name="customer.name" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
                 </div>
-                <ErrorMessage name="customer.name" component="div" className="text-red-500 text-sm mt-1" />
+                <ErrorMessage name="customer.name" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
 
               <div className="mb-4">
@@ -71,7 +71,7 @@ const InvoiceForm = () => {
                 <label htmlFor="customer.email" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2 w-[10rem] ">Email Address</label>
                 <Field type="email" name="customer.email" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
                 </div>
-                <ErrorMessage name="customer.email" component="div" className="text-red-500 text-sm mt-1" />
+                <ErrorMessage name="customer.email" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
 
               <div className="mb-4">
@@ -79,7 +79,7 @@ const InvoiceForm = () => {
                 <label htmlFor="customer.companyName" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2  w-[10rem]">Company Name</label>
                 <Field type="text" name="customer.companyName" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
                 </div>
-                <ErrorMessage name="customer.companyName" component="div" className="text-red-500 text-sm mt-1" />
+                <ErrorMessage name="customer.companyName" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
 
               <div className="mb-6">
@@ -87,7 +87,7 @@ const InvoiceForm = () => {
                 <label htmlFor="customer.contact" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2  w-[10rem]">Contact</label>
                 <Field type="text" name="customer.contact" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
                 </div>
-                <ErrorMessage name="customer.contact" component="div" className="text-red-500 text-sm mt-1" />
+                <ErrorMessage name="customer.contact" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
               <div className='grid place-content-end pb-6'>
               <button type="button" className="text-[10px] sm:text-[13px] md:text-base border border-secondary text-secondary font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
@@ -101,59 +101,59 @@ const InvoiceForm = () => {
               <div className="mb-4">
                 <label htmlFor="invoice.invoiceNumber" className="block text-[10px] sm:text-[13px] md:text-base  font-bold mb-2">Invoice Number</label>
                 <Field type="text" name="invoice.invoiceNumber" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-                <ErrorMessage name="invoice.invoiceNumber" component="div" className="text-red-500 text-sm mt-1" />
+                <ErrorMessage name="invoice.invoiceNumber" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
 
               <div className='grid grid-cols-2 gap-4'>
               <div className="mb-4">
                 <label htmlFor="invoice.dateOfIssue" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">Date of Issue</label>
                 <Field type="date" name="invoice.dateOfIssue" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-                <ErrorMessage name="invoice.dateOfIssue" component="div" className="text-red-500 text-sm mt-1" />
+                <ErrorMessage name="invoice.dateOfIssue" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
 
               <div className="mb-4">
                 <label htmlFor="invoice.dateOfDue" className="block text-[10px] sm:text-[13px] md:text-base mb-2">Date of Due</label>
                 <Field type="date" name="invoice.dateOfDue" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-                <ErrorMessage name="invoice.dateOfDue" component="div" className="text-red-500 text-sm mt-1" />
+                <ErrorMessage name="invoice.dateOfDue" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
               </div>
 
               <div className="mb-4">
                 <label htmlFor="invoice.itemName" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">Item Name</label>
                 <Field type="text" name="invoice.itemName" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-                <ErrorMessage name="invoice.itemName" component="div" className="text-red-500 text-sm mt-1" />
+                <ErrorMessage name="invoice.itemName" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
 
               <div className='grid grid-cols-4 gap-4 '> 
               <div className="mb-4 ">
                 <label htmlFor="invoice.quantity" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">Quantity</label>
                 <Field type="number" name="invoice.quantity" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-                <ErrorMessage name="invoice.quantity" component="div" className="text-red-500 text-sm mt-1" />
+                <ErrorMessage name="invoice.quantity" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
 
               <div className="mb-4">
                 <label htmlFor="invoice.amount" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">Amount</label>
                 <Field type="number" name="invoice.amount" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-                <ErrorMessage name="invoice.amount" component="div" className="text-red-500 text-sm mt-1" />
+                <ErrorMessage name="invoice.amount" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
 
               <div className="mb-4">
                 <label htmlFor="invoice.vat" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">VAT</label>
                 <Field type="number" name="invoice.vat" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-                <ErrorMessage name="invoice.vat" component="div" className="text-red-500 text-sm mt-1" />
+                <ErrorMessage name="invoice.vat" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
 
               <div className="mb-4">
                 <label htmlFor="invoice.total" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">Total</label>
                 <Field type="number" name="invoice.total" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-                <ErrorMessage name="invoice.total" component="div" className="text-red-500 text-sm mt-1" />
+                <ErrorMessage name="invoice.total" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
               </div>
 
               <div className="mb-6">
                 <label htmlFor="invoice.itemDescription" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">Item Description</label>
                 <Field type="text" name="invoice.itemDescription" className="shadow appearance-none border rounded w-full h-[8rem] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-                <ErrorMessage name="invoice.itemDescription" component="div" className="text-red-500 text-sm mt-1" />
+                <ErrorMessage name="invoice.itemDescription" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1 " />
               </div>
               <div className='grid place-content-end pb-4'>
                 <div className='pb-6'>
