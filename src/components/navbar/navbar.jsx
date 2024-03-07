@@ -14,10 +14,7 @@ const Navbar = () => {
   const route = location.pathname;
 
   return (
-    <div
-      className={`flex items-center justify-between pr-10 lg:px-20 h-24 bg-[#000] text-primary ${
-        route === '/business' ? 'bg-primary' : route === '/' ? 'bg-[#000]' : ''
-      }`}>
+    <div className="flex items-center justify-between pr-10 lg:px-20 h-24 bg-[#000] text-primary">
       <div className="px-6 xl:px-4 flex space-x-8 items-center">
         <div className="w-40">
           <Logo />
@@ -26,16 +23,15 @@ const Navbar = () => {
           <Link to="/">
             <Button
               children="Personal"
-              className='hover:scale-95 font-extrabold duration-300 center gap-2'
+              className="hover:scale-95 font-extrabold duration-300 center gap-2"
               backgroundColor={route === '/' ? '#00678F' : 'transparent'}
-              textColor={route === '/business' ? '#000' : ''}
               border="none"
             />
           </Link>
           <Link to="/business">
             <Button
               children="Business"
-              className='hover:scale-95 font-extrabold duration-300 center gap-2'
+              className="hover:scale-95 font-extrabold duration-300 center gap-2"
               backgroundColor={route === '/business' ? '#00678F' : 'transparent'}
               border="none"
             />
@@ -88,15 +84,22 @@ const Navbar = () => {
                 <LuMoveRight />
               </div>
             </li>
-            
           </ul>
           <div className="flex space-x-10 absolute bottom-0 my-8">
-            <Link to='/signup'>
-            <Button className='hover:bg-lightBlue hover:scale-95 font-extrabold duration-300 center' children='Sign Up' />
+            <Link to="/signup">
+              <Button
+                className="hover:bg-lightBlue hover:scale-95 font-extrabold duration-300 center"
+                children="Sign Up"
+              />
             </Link>
-            <Link to='/login'>
-           <Button backgroundColor='transparent' className='hover:scale-95 font-extrabold duration-300 center gap-2' children='Login' />
-           </Link>
+            <Link to="/login">
+              <Button
+                backgroundColor="transparent"
+                textColor={'#fff'}
+                className="hover:scale-95 text-primary font-extrabold duration-300 center gap-2"
+                children="Login"
+              />
+            </Link>
           </div>
         </div>
       )}
