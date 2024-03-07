@@ -5,13 +5,13 @@ import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
   return (
-    <section className="xl:py-20 py-10 xl:pt-0 px-8 xl:px-10 bg-primary">
+    <section className="xl:py-20 py-10 xl:pt-0 px-8 xl:px-10 bg-black   ">
       <hr className="border-none bg-yellow h-1 w-[87%] mx-auto" />
       <div className="md:items-center flex flex-col">
         <div className="lg:text-5xl xl:w-[60%] md:text-center xl:text-[64px] text-4xl flex justify-center font-bold text-lightBlue pt-10 !leading-normal">
         Elevate Your Finances: Unleash the Future of Business.
         </div>
-        <p className="xl:text-xl text-[16px] font-normal xl:w-1/2 text-[#000] lg:pt-6 pt-4 md:text-center xl:leading-normal leading-8">
+        <p className="xl:text-xl text-[16px] font-normal xl:w-1/2 text-[#fff] lg:pt-6 pt-4 md:text-center xl:leading-normal leading-8">
         Revolutionize your business with our advanced solutions, offering seamless transactions,
           real-time analytics, and enhanced financial control. Experience innovation, efficiency,
           and growth in every aspect of your financial ecosystem.

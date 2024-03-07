@@ -39,6 +39,25 @@ import Bills from '../assets/images/bills.svg'
 import GreenArrow from '../assets/images/green_arrow.svg'
 import RedArrow from '../assets/images/red_arrow.svg'
 import PayrollIcon from '../assets/images/payroll_icon.png'
+import SecondBusiness from '../assets/images/second_business.png'
+import FirstBusiness from '../assets/images/first_business.png'
+import CVS from '../assets/images/cvs_logo.png'
+import Google from '../assets/images/google_logo.png'
+import Nivea from '../assets/images/nivea_logo.png'
+import Netflix from '../assets/images/netflix_logo.png'
+import Hermes from '../assets/images/hermes.png'
+import Sap from '../assets/images/sap.png'
+import Phillips from '../assets/images/phillips.png'
+import Zillow from '../assets/images/zillow.png'
+import Ge from '../assets/images/ge.png'
+import Zara from '../assets/images/zara.png'
+import Huawei from '../assets/images/huawei.png'
+import Lock from '../assets/images/lock.png'
+import Transfer from '../assets/images/transfer.png'
+import Mobile from '../assets/images/mobile.png'
+import BusinessPayroll from '../assets/images/business_payroll.png'
+import BusinessSignatory from '../assets/images/business_signatory.png'
+import Revenue from '../assets/images/revenue.png'
 
 export default {
   logo,
@@ -81,5 +100,25 @@ export default {
   Bills,
   RedArrow,
   GreenArrow,
-  PayrollIcon
+  PayrollIcon,
+  FirstBusiness,
+  SecondBusiness,
+  CVS,
+  Nivea,
+  Netflix,
+  Google,
+  Hermes,
+  Sap,
+  Zillow,
+  Phillips,
+  Ge,
+  Zara,
+  Huawei,
+  Lock,
+  Mobile,
+  Transfer,
+  BusinessPayroll,
+  BusinessSignatory,
+  Revenue
+  
 };
