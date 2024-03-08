@@ -3,7 +3,7 @@ import images from '../../../../constants/images';
 
 const FifthSection = () => {
   return (
-    <div className="flex flex-col justify-center text-left bg-black w-full md:py-12 pb-[15rem] md:pb-[13rem] px-6 xl:px-20 md:px-16">
+    <div className="flex flex-col justify-center text-left bg-black w-full md:py-12 pb-[15rem] md:pb-[13rem] py-6 px-6 xl:px-20 md:px-16">
       <div className="text-primary font-bold text-2xl md:text-3xl xl:text-5xl pb-6">
         Other Ways We Help Your Business
       </div>
