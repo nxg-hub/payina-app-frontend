@@ -7,7 +7,7 @@ import RedArrow from './../../../../assets/images/red_arrow.svg'
 
 const Thirdsection = () => {
   return (
-    <div className="md:px-[.7rem] pb-4 w-auto md:clear-right ml-5 md:ml-2 xl:ml-[19.5rem] mr-5 md:mr-3">
+    <div className="md:px-[.7rem] pb-4 w-auto md:clear-right ml-5 md:ml-2 xl:ml-[19.5rem] mr-5 md:mr-3 shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px]">
      
     <div className=" font-bold py-2 text-sm md:text-[18px]">
      Recent Invoices
