@@ -1,4 +1,5 @@
 import React from 'react';
+import {FaPlus} from 'react-icons'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
@@ -56,7 +57,7 @@ const InvoiceForm = () => {
       >
         {formik => (
           <Form className="bg-white  rounded px-4 pt-0 pb-8 mb-4 ">
-            <fieldset className="mb-6 shadow-md pt-0 px-4 rounded-md border-t  ">
+            <fieldset className="mb-6 shadow pt-0 px-4 rounded-md   ">
               <legend className="text-xl font-semibold mb-4 pt-11">Customer Information</legend>
               <div className="mb-4">
                 <div className='flex'>
@@ -91,12 +92,15 @@ const InvoiceForm = () => {
               </div>
               <div className='grid place-content-end pb-6'>
               <button type="button" className="text-[10px] sm:text-[13px] md:text-base border border-secondary text-secondary font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+               <div>
+                <img src="" alt="" />
+               </div>
                 Add Customer
               </button>
               </div>
             </fieldset>
 
-            <fieldset className="mb-6 shadow-md  pt-0 px-4 rounded-md  border-t">
+            <fieldset className="mb-6 shadow  pt-0 px-4 rounded-md  ">
               <legend className=" text-[16px] md:text-[21px] font-semibold mb-4 pt-11 ">Invoice Details</legend>
               <div className="mb-4">
                 <label htmlFor="invoice.invoiceNumber" className="block text-[10px] sm:text-[13px] md:text-base  font-bold mb-2">Invoice Number</label>
