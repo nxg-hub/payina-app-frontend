@@ -145,7 +145,7 @@ const InvoiceForm = () => {
                 <Field type="number" name="invoice.vat" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
                 <ErrorMessage name="invoice.vat" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
-
+ 
               <div className="mb-4">
                 <label htmlFor="invoice.total" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">Total</label>
                 <Field type="number" name="invoice.total" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
