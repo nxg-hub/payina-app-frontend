@@ -47,7 +47,7 @@ export const StepSixteen = ({ next }) => {
                 {[0, 1, 2, 3].map(index => (
                   <Field
                     key={index}
-                    type="text"
+                    type="password"
                     name={`otp[${index}]`}
                     maxLength="1"
                     className="form-input w-12 mr-2 p-[10px] outline-none text-center border border-secondary rounded-full "
@@ -62,7 +62,7 @@ export const StepSixteen = ({ next }) => {
                 {[0, 1, 2, 3].map(index => (
                   <Field
                     key={index}
-                    type="text"
+                    type="password"
                     name={`confirmOtp[${index}]`}
                     maxLength="1"
                     className="form-input w-12 mr-2 p-[10px] outline-none text-center border border-secondary rounded-full "

@@ -11,6 +11,8 @@ import Payroll from './pages/Account/Payroll';
 import Transaction from './pages/Account/Transaction';
 import Inventory from './pages/Account/Inventory';
 import Settings from './pages/Account/Settings';
+import Createinvoice from './pages/Account/Invoice/_components/Createinvoice';
+
 
 function App() {
   const location = useLocation();
@@ -34,6 +36,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/account/dashboard" element={<Dashboard />} />
         <Route path="/account/invoice" element={<Invoice />} />
+        <Route path="invoice/createinvoice" element={<Createinvoice />} />
         <Route path="/account/payroll" element={<Payroll />} />
         <Route path="/account/transaction" element={<Transaction />} />
         <Route path="/account/inventory" element={<Inventory />} />
