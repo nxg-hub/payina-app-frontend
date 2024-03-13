@@ -3,7 +3,7 @@ import { images } from '../../../../constants';
 const FourthSection = () => {
   return (
     <div className="flex flex-col justify-center text-center bg-black w-full py-4">
-      <div className="text-[#FFCB05] font-bold text-3xl md:text-4xl xl:text-5xl">
+      <div className="text-[#FFCB05] font-bold text-3xl md:text-4xl xl:text-5xl pl-8 md:pl-0">
         Why They Trust Us
       </div>
       <div className="flex xl:flex-row flex-col xl:space-y-0 space-y-8 text-primary md:px-10 p-4 xl:py-10">
