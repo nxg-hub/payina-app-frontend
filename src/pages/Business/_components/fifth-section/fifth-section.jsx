@@ -15,18 +15,17 @@ const FifthSection = () => {
           alt=""
         />
         <div className="absolute top-[50%] md:top-[60%] w-[70%] md:w-[40%] xl:w-[30%] px-2 md:px-6 md:space-y-4 ">
-          <div className="font-bold md:text-2xl xl:text-4xl">Set Up Payroll</div>
-          <div className="font-medium text-xs md:text-base">
+          <div className="font-bold md:text-2xl xl:text-4xl text-sm">Set Up Payroll</div>
+          <div className="font-medium text-[.65rem] md:text-base">
             Set Up payroll in three easy steps and automatically pay your staff as at when due with
             Payina
           </div>
         </div>
 
-        <div className="absolute md:top-[95%] top-[130%] md:left-[59%] left-[42%] px-6 md:space-y-4 w-[60%] md:w-[30%] z-50 text-right">
-          <div className="font-bold md:text-2xl xl:text-4xl">Set Up Payroll</div>
-          <div className="font-medium text-xs xl:text-base">
-            Set Up payroll in three easy steps and automatically pay your staff as at when due with
-            Payina
+        <div className="absolute md:top-[95%] top-[127%] md:left-[49%] left-[35%] px-6 md:space-y-4 w-[70%] md:w-[40%] z-50 text-right">
+          <div className="font-bold md:text-2xl xl:text-4xl text-sm">Manage Account Signatories</div>
+          <div className="font-medium text-[.65rem] xl:text-base">
+            Easily setup multiple signatories to your companies coporate account. Fostering faster access to funds for business activites.
           </div>
         </div>
         <img

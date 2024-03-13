@@ -45,7 +45,7 @@ const Navbar = () => {
 
       <div className="xl:hidden block cursor-pointer">
         <GiHamburgerMenu
-          color={route === '/' ? '#fff' : route === '/business' ? '#000' : ''}
+          color='#fff'
           fontSize={27}
           onClick={() => setToggleMenu(true)}
         />
