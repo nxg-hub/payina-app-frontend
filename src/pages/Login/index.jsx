@@ -1,10 +1,14 @@
-import React from 'react'
-import Navbar from '../../components/navbar/navbar'
+import React from 'react';
+import Logo from './_components/ui/logo';
+import LoginForm from './_components/form';
 
 const Login = () => {
   return (
-    <div><Navbar /></div>
-  )
-}
+    <div className="bg-black h-screen overflow-x-hidden">
+      <Logo />
+      <LoginForm />
+    </div>
+  );
+};
 
-export default Login
+export default Login;
