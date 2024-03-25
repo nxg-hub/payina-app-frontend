@@ -1,94 +1,91 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 
-class FacialRecognition extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showCamera: false // Initially not showing the camera
-    };
-    this.video = React.createRef();
-    this.canvas = React.createRef();
-  }
+const FacialRecognition = ({ onImageCapture }) => {
+  const [showCamera, setShowCamera] = useState(false); // Initially not showing the camera
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
 
-  startCamera = () => {
+  const startCamera = () => {
     navigator.mediaDevices.getUserMedia({ video: true })
       .then(stream => {
-        this.video.current.srcObject = stream;
-        this.video.current.play();
+        videoRef.current.srcObject = stream;
+        videoRef.current.play();
       })
       .catch(err => console.error('Error accessing the camera:', err));
-  }
+  };
 
-  componentDidMount() {
-    // Start the camera when the component mounts if showCamera is true
-    if (this.state.showCamera) {
-      this.startCamera();
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    // Start or stop the camera based on the state change
-    if (this.state.showCamera !== prevState.showCamera) {
-      if (this.state.showCamera) {
-        this.startCamera();
-      } else {
-        const stream = this.video.current.srcObject;
-        if (stream) {
-          const tracks = stream.getTracks();
-          tracks.forEach(track => track.stop());
-        }
-      }
-    }
-  }
-
-  captureImage = () => {
-    const canvas = this.canvas.current;
+  const captureImage = () => {
+    const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
-    context.drawImage(this.video.current, 0, 0, canvas.width, canvas.height);
+    context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
 
     // Convert the canvas image to a data URL
     const imageDataURL = canvas.toDataURL('image/png');
     
     // Pass the image data URL to the parent component or perform further processing
-    this.props.onImageCapture(imageDataURL);
-  }
+    onImageCapture(imageDataURL);
+  };
 
-  handleFileSelect = (event) => {
+  const handleFileSelect = (event) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (event) => {
         const imageDataURL = event.target.result;
-        this.props.onImageCapture(imageDataURL);
+        onImageCapture(imageDataURL);
       };
       reader.readAsDataURL(file);
     }
-  }
+  };
 
-  render() {
-    return (
-      <div>
-        {/* Render the camera component only if showCamera is true */}
-        {this.state.showCamera && (
+  useEffect(() => {
+    // Start the camera when the component mounts if showCamera is true
+    if (showCamera) {
+      startCamera();
+    }
+  }, [showCamera]);
+
+  const validationSchema = Yup.object().shape({
+    image: Yup.mixed().required('Image is required'),
+  });
+
+  return (
+    <Formik
+      initialValues={{ image: '' }}
+      validationSchema={validationSchema}
+      onSubmit={() => {
+        captureImage();
+      }}
+    >
+      {({ errors, touched }) => (
+        <Form>
           <div>
-            <video ref={this.video} autoPlay></video>
-            <canvas ref={this.canvas} style={{ display: 'none' }}></canvas>
+            {/* Render the camera component only if showCamera is true */}
+            {showCamera && (
+              <div>
+                <video ref={videoRef} autoPlay></video>
+                <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+              </div>
+            )}
+
+            {/* Button to toggle showing the camera */}
+            <button type="button" onClick={() => setShowCamera(true)}>Start Facial Recognition</button>
+
+            {/* Input for selecting image files */}
+            <Field type="file" name="image" accept="image/*" onChange={handleFileSelect} />
+            <ErrorMessage name="image" component="div" />
+
+            {/* Button to capture an image */}
+            {showCamera && (
+              <button type="submit">Capture Image</button>
+            )}
           </div>
-        )}
-
-        {/* Button to toggle showing the camera */}
-        <button onClick={() => this.setState({ showCamera: true })}>Start Facial Recognition</button>
-
-        {/* Input for selecting image files */}
-        <input type="file" accept="image/*" onChange={this.handleFileSelect} />
-        
-        {/* Button to capture an image */}
-        {this.state.showCamera && (
-          <button onClick={this.captureImage}>Capture Image</button>
-        )}
-      </div>
-    );
-  }
-}
+        </Form>
+      )}
+    </Formik>
+  );
+};
 
 export default FacialRecognition;
