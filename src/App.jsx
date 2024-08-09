@@ -12,6 +12,8 @@ import Transaction from './pages/Account/Transaction';
 import Inventory from './pages/Account/Inventory';
 import Settings from './pages/Account/Settings';
 import Createinvoice from './pages/Account/Invoice/_components/Createinvoice';
+import Paybills from './pages/paybills/Paybills';
+import Airtime from './pages/airtime/Airtime';
 
 
 function App() {
@@ -33,6 +35,7 @@ function App() {
           path="/signup"
           element={<Signup data={data} currentStep={currentStep} handleNextStep={handleNextStep} />}
         />
+        <Route path="/paybills" element={<Paybills />} />
         <Route path="/login" element={<Login />} />
         <Route path="/account/dashboard" element={<Dashboard />} />
         <Route path="/account/invoice" element={<Invoice />} />
@@ -41,6 +44,7 @@ function App() {
         <Route path="/account/transaction" element={<Transaction />} />
         <Route path="/account/inventory" element={<Inventory />} />
         <Route path="/account/settings" element={<Settings />} />
+        <Route path="/airtime" element={<Airtime />} />
         <Route
           path={currentRoute}
           element={

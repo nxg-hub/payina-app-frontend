@@ -9,7 +9,8 @@
   font-family: 'Manrope', sans-serif;
 }
 
-body {
+* body {
+  background-color : black;
   overflow-x: hidden;
 }
 
