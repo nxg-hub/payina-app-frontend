@@ -10,7 +10,8 @@ const ActionButtons = () => {
       <div className="flex xl:space-x-6">
         <Link href={'/pricing'} className="xl:flex items-center hidden">
           <div className="hover:scale-95 font-extrabold duration-300 flex text-primary">
-            Features
+            <button className=" duration-500 transition-all mt-10 px-10
+        py-3 rounded-[10px] text-white border-2 border-lightBlue hover:bg-yellow my-10">Paybills</button>
           </div>
         </Link>
       </div>

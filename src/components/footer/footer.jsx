@@ -4,10 +4,10 @@ import { images } from '../../constants';
 
 const Footer = () => {
   return (
-    <footer className="flex flex-col md:flex p-10 md:justify-center bg-lightBlue">
+    <footer className="flex flex-col md:flex p-5 md:justify-center bg-lightBlue">
       <div className="md:flex justify-start md:gap-20 md:space-x-28 md:px-0 md:py-20">
         <div className="flex-col space-y-6 flex text-[#3d2e7c] md:ml-6">
-          <div className="pt-10 text-yellow text-[20px]">Company</div>
+          <div className="p-5 text-yellow text-[20px]">Company</div>
           <div className="text-[16px] space-y-4 text-primary font-semibold">
             <Link>About Us</Link>
             <hr className="text-yellow w-[10%] py-2 xl:w-[20%]" />

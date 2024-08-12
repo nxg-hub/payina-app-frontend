@@ -8,6 +8,7 @@ import ActionButtons from './_components/action-buttons';
 import { Link, useLocation } from 'react-router-dom';
 import CustomButton from '../../components/button/button';
 
+
 const Navbar = () => {
   const [toggleMenu, setToggleMenu] = useState();
   const location = useLocation();
@@ -77,9 +78,13 @@ const Navbar = () => {
               </div>
             </li>
             <li className="m-6 mt-12 cursor-pointer text-primary text-xl">
-              <div className="flex justify-between items-center">
+              {/* <div className="flex justify-between items-center">
                 <Link to="#" className="hover:text-lightBlue font-semibold">
                   Features
+                </Link> */}
+                 <div className="flex justify-between items-center">
+                <Link to="/paybills" className="hover:text-lightBlue font-semibold">
+                  Paybills
                 </Link>
                 <LuMoveRight />
               </div>
