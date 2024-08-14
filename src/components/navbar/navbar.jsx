@@ -83,7 +83,7 @@ const Navbar = () => {
                   Features
                 </Link> */}
                  <div className="flex justify-between items-center">
-                <Link to="/paybills" className="hover:text-lightBlue font-semibold">
+                <Link to="/paybills" className=" hover:text-lightBlue font-semibold">
                   Paybills
                 </Link>
                 <LuMoveRight />

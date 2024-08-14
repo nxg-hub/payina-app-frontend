@@ -1,8 +1,11 @@
 import React from 'react'
 
 const Airtime = () => {
-    return <div>hi Airtime</div>
-    s
+    return (
+        <div>
+            
+        </div>
+    )
 }
 
 export default Airtime
