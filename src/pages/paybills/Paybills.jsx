@@ -15,7 +15,7 @@ const Paybills = () => {
         <Navbar />
         <div className=" w-full h-screen  text-center ">
             <div className="w-[80%] h-1 border-none mr-auto ml-auto 
-            mt-[-10px] mb-40 bg-yellow">
+            mt-[-2px] mb-40 bg-yellow">
             </div>
                 <p className=" mt-[-100px] text-lightBlue font-sans text-6xl font-bold">
                 Buy Data, Airtime and Pay</p> 
@@ -61,7 +61,7 @@ const Paybills = () => {
                 </div>
                     </div>
                 
-                <div className=" flex px-20 flex-1 pt-20 pb-10 text-white justify-between items-right">
+                <div className="flex px-20 flex-1 pt-20 pb-10 text-white justify-between items-right">
                             <Cards  icon= <IoCallOutline size={30}color="white" /> title="Buy Airtime"/>
                             <Cards icon= <IoWifi size={30} color="white" /> title="Buy Data" />
                             <Cards icon= <RiCurrencyFill  size={30} color="white" /> title=" PayBills"/>
