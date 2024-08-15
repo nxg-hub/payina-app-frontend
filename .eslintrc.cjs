@@ -19,6 +19,7 @@ module.exports = {
     ],
     "react/react-in-jsx-scope": "off",
     "no-unexpected-multiline": "off",
+    "no-restricted-syntax": "off",
     
     
   },

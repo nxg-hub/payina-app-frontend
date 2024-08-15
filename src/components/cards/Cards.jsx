@@ -1,5 +1,5 @@
 import React from 'react'
- import PropTypes from 'prop-types'
+ import propTypes from 'prop-types'
 
 
 
@@ -8,11 +8,12 @@ const Cards = ({ src, alt, icon, title}) => {
   return (
     
     <div className=" container">
-    <div className=" flex w-[358.72px] hover:bg-yellow h-[115.9px]  bg-lightBlue  
+    <div className=" flex w-[358.72px] h-[115.9px]   bg-lightBlue hover:bg-neutral
     relative rounded-[5px] justify-center items-center
      before:content-[''] before:absolute before:w-[100%] before:h-[5px] before:top-0
-             before:rounded-[50px] before:border-4 before:bg-primary hover:before:bg-yellow
-              before:cursor-pointer before:origin-right before:duration-200 before:transition-colors">
+             before:rounded-[50px] before:border-4 before:bg-primary hover:before:border-yellow
+              before:cursor-pointer before:origin-right 
+               before:transition-all before:duration-300">
      
      <div className=" w-[40px] h-[40px] border-2 rounded-full flex justify-center
        items-center bg-lightBlue">
@@ -27,10 +28,10 @@ const Cards = ({ src, alt, icon, title}) => {
 
 export default Cards
 
-Cards.PropTypes = {
-  src: PropTypes.string.isRequired,
-  icon: PropTypes.node.isRequired,
-  title: PropTypes.string.isRequired,
+Cards.propTypes = {
+  src: propTypes.string.isRequired,
+  icon: propTypes.node.isRequired,
+  title: propTypes.string.isRequired,
 };
 
  
