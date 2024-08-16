@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Button from '../../button/button';
+import Paybills from '../../../pages/paybills/Paybills';
 
 const ActionButtons = () => {
   const location = useLocation();
@@ -10,14 +11,23 @@ const ActionButtons = () => {
       <div className="flex xl:space-x-6">
         <Link href={'/pricing'} className="xl:flex items-center hidden">
           <div className="hover:scale-95 font-extrabold duration-300 flex text-primary">
-            <button className=" duration-500 transition-all mt-10 px-10
-        py-3 rounded-[10px] text-white border-none bg-lightBlue hover:bg-neutral
-         my-10">Paybills</button>
+            
           </div>
         </Link>
       </div>
+      
+      
+      
 
       <div className="flex lg-space-x-4 gap-4 items-center">
+        <Link to={'/paybills'}>
+        <Button 
+          children="Paybills"
+          className="'hover:bg-lightBlue hover:scale-95 font-extrabold duration-300 center gap-2"
+          backgroundColor='#00678f'
+        />
+        
+        </Link>
         <Link to={'/signup'}>
           <Button
             children="Sign Up"

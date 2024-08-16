@@ -82,9 +82,12 @@ const Navbar = () => {
                 <Link to="#" className="hover:text-lightBlue font-semibold">
                   Features
                 </Link> */}
-                 <div className="flex justify-between items-center">
-                <Link to="/paybills" className=" hover:text-lightBlue font-semibold">
-                  Paybills
+                 <div className="flex space-x-10 absolute bottom-0 my-8">
+                <Link to="/paybills" >
+                  <Button
+                  className="hover:bg-lightBlue hover:scale-95 font-extrabold duration-300 center"
+                  children="Paybills"
+                />
                 </Link>
                 <LuMoveRight />
               </div>
