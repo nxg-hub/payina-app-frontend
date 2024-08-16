@@ -67,7 +67,9 @@ const Paybills = () => {
                            <Link to="/airtime">
                             <Cards  icon= <IoCallOutline size={30}color="white" /> title="Buy Airtime"/>
                             </Link>
+                            <Link to="/card">
                             <Cards icon= <IoWifi size={30} color="white" /> title="Buy Data" />
+                            </Link>
                             <Cards icon= <RiCurrencyFill  size={30} color="white" /> title=" PayBills"/>
                 </div>
                 <div className="mt-4">
