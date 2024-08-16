@@ -6,6 +6,7 @@ import { IoCallOutline } from "react-icons/io5";
 import { IoWifi } from "react-icons/io5";
 import { RiCurrencyFill } from "react-icons/ri";
 import { moneyBack, support, watchIcon } from '../../constants/images';
+import { Link, useLocation } from 'react-router-dom';
 
 
 const Paybills = () => {
@@ -55,15 +56,20 @@ const Paybills = () => {
                     alt="moneyback"
                     className="py-5"
                     />
-                    <h2 className="pt-2 pl-2">100% Refund if value <br />
+                    <h2 className="pt-2 pl-2">100% Refund if value <br /> 
                     is not delivered</h2>
                 </div>
                 </div>
                     </div>
                 
                 <div className="flex px-20 flex-1 pt-20 pb-10 text-white justify-between items-right">
+                           
+                           <Link to="/airtime">
                             <Cards  icon= <IoCallOutline size={30}color="white" /> title="Buy Airtime"/>
+                            </Link>
+                            <Link to="/card">
                             <Cards icon= <IoWifi size={30} color="white" /> title="Buy Data" />
+                            </Link>
                             <Cards icon= <RiCurrencyFill  size={30} color="white" /> title=" PayBills"/>
                 </div>
                 <div className="mt-4">
