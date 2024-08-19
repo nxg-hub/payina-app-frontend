@@ -2,18 +2,40 @@ import { Form, Formik, Field, ErrorMessage } from 'formik';
 import CustomButton from '../../../components/button/button';
 import * as Yup from 'yup';
 
-export const StepSixteen = ({ next }) => {
-  const handleSubmit = (values) => {
+export const StepSixteen = ({ next, email }) => {
+  const handleSubmit = async (values) => {
     // Merge OTP and Confirm OTP values into strings
     const otpValue = values.otp.join('');
     const confirmOtpValue = values.confirmOtp.join('');
 
     // Check if OTP and Confirm OTP match
     if (otpValue === confirmOtpValue) {
-      // Assuming next(values) will handle form submission
-      next(values);
+      const requestData = {
+        pin: otpValue,
+        verifyPin: confirmOtpValue,
+        email: email, // Pass the email from previous steps
+      };
+
+      try {
+        const response = await fetch(import.meta.env.VITE_TRANSACTION_PIN_ENDPOINT, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestData),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log('Pin set successfully:', result);
+          next(result);
+        } else {
+          console.error('Failed to set pin:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error setting pin:', error);
+      }
     } else {
-      // Handle case where OTP and Confirm OTP do not match
       console.log('Transaction Pins do not match.');
     }
   };

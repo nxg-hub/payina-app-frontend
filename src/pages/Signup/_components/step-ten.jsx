@@ -6,16 +6,36 @@ import { useState } from 'react';
 
 export const StepTen = ({ next }) => {
   const [business_is_registered, setBusinessRegister] = useState('');
+  const [loading, setLoading] = useState(false);
   const [business_and_home, setBusinessAddress] = useState('');
 
-  const handleSubmit = (business_details) => {
-    next({ business_and_home, business_is_registered, business_details });
+  const handleSubmit = async (business_details) => {
+    setLoading(true);
+     const businessData = {
+      businessName: business_details.businessName,
+      businessAddress: business_details.businessAddress,
+      businessCategory: business_details.businessCategory,
+      businessType: business_details.businessType,
+      businessRegNumber: business_is_registered === 'yes' ? business_details.businessRegNumber : null,
+      tin_No: business_is_registered === 'yes' ? business_details.tin_No : null,
+    };
+    try {
+      // console.log('Submitting business data:', businessData);
+
+     
+      next(businessData, 13); // Passes the data and directs to step 13
+    } catch (error) {
+      console.error('Error submitting business data:', error);
+    }
   };
   const handleCheck = (value) => {
     setBusinessRegister(value);
   };
   const handleSecondCheck = (value) => {
     setBusinessAddress(value);
+    if (business_and_home=== 'yes') {
+      next( HomeAddress , 11);
+    }
   };
 
   const selectArrow = `
@@ -92,14 +112,16 @@ export const StepTen = ({ next }) => {
       <div className="mb-10 bg-primary xl:mt-0 flex flex-col justify-center items-start mx-auto">
         <Formik
           initialValues={{
-            business_name: '',
-            tax_number: '',
-            business_number: '',
+            businessName: '',
+            tin_No: '',
+            businessRegNumber: '',
+            businessCategory: '',
+            businessType: '',
             business_registered: [],
-            business_address: []
+            business_address: [{}]
           }}
-          validationSchema={BusinessDetailsSchema}
-          onSubmit={(business_details) => handleSubmit(business_details)}>
+          // validationSchema={BusinessDetailsSchema}
+          onSubmit={handleSubmit}>
           {(formik) => (
             <Form className="xl:w-[600px] w-full space-y-4">
               <div className="xl:pt-8 p-4 pt-[1rem] md:px-12 xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
@@ -110,107 +132,132 @@ export const StepTen = ({ next }) => {
                 <div className="xl:w-full md:w-[85%] items-start flex flex-col space-y-2 ">
                   <div className="w-full flex flex-col space-y-2 ">
                     <label
-                      htmlFor="business_name"
+                      htmlFor="businessName"
                       className="text-xs md:text-sm font-normal text-[#1A1D1F] opacity-75
                       ">
                       Business Name
                     </label>
                     <Field
-                      name="business_name"
+                      name="businessName"
                       type="text"
                       placeholder="Enter Business Name"
                       className=" w-full h-10 md:h-[3.4rem] border border-[#9ca3af] outline-none text-[13px] md:text-base font-medium rounded-[5px] py-2 px-[10px]"
                     />
                     <ErrorMessage
-                      name="business_name"
+                      name="businessName"
                       component="span"
                       className="text-[#db3a3a] text-xs md:text-sm"
                     />
                   </div>
                   <div className="w-full flex flex-col space-y-2 ">
                     <label
-                      htmlFor="business_category"
+                      htmlFor="businessCategory"
                       className="text-xs md:text-sm font-normal text-[#1A1D1F] opacity-75">
                       {' '}
                       Business Category{' '}
                     </label>
                     <Field
                       as="select"
-                      name="business_category"
+                      name="businessCategory"
                       className="text-primary w-full h-10 md:h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-xs md:text-base text-gray rounded-[5px] py-2 px-8 bg-secondary">
                       <option
-                        name="business_category"
-                        value="null"
+                        name="businessCategory"
+                        value=""
                         className="!bg-secondary text-primary text-xs md:text-base font-medium"
                         selected
                         disabled>
                         Select Business Category
                       </option>
                       <option
-                        value="bvn"
-                        name="business_category"
+                        value="information-technology"
+                        name="businessCategory"
                         className="!bg-secondary text-primary text-xs md:text-base font-medium">
-                        BVN
+                        Information Technology
                       </option>
                       <option
-                        value="nin"
-                        name="business_category"
+                        value="e-commerce"
+                        name="businessCategory"
                         className="!bg-secondary text-primary text-sm md:text-base font-medium">
-                        NIN
+                        E-commerce
                       </option>
                       <option
-                        value="voters-card"
-                        name="business_category"
+                        value="real-estate"
+                        name="businessCategory"
                         className="!bg-secondary text-primary text-sm md:text-base font-medium">
-                        Voter's Card
+                        Real Estate
+                      </option>
+                      <option
+                        value="agriculture-and-farming"
+                        name="businessCategory"
+                        className="!bg-secondary text-primary text-sm md:text-base font-medium">
+                        Agriculture and Farming
+                      </option>
+                      <option
+                        value="retail-and-wholesale"
+                        name="businessCategory"
+                        className="!bg-secondary text-primary text-sm md:text-base font-medium">
+                        Retail and Wholesale
                       </option>
                     </Field>
                     <ErrorMessage
-                      name="business_category"
+                      name="businessCategory"
                       component="span"
                       className="text-[#db3a3a] text-sm"
                     />
                   </div>
+                  <div className="my-2">
+              <label htmlFor="other" className="text-secondary block mb-2 w-full text-sm">
+                Other
+              </label>
+              <Field
+                type="text"
+                id="other"
+                name="other"
+                placeholder="Enter Your Business category"
+                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+              />
+              <ErrorMessage name="email" component="div" className="text-[#db3a3a] mt-2 text-sm" />
+            </div>
                   <div className="w-full flex flex-col space-y-2 ">
                     <label
-                      htmlFor="business_type"
+                      htmlFor="businessType"
                       className="text-xs md:text-sm font-normal text-[#1A1D1F] opacity-75">
                       {' '}
                       Business Type{' '}
                     </label>
                     <Field
                       as="select"
-                      name="business_type"
+                      name="businessType"
                       className="text-primary w-full h-10 md:h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-xs md:text-base text-gray rounded-[5px] py-2 px-8 bg-secondary">
                       <option
-                        name="business_type"
-                        value="null"
+                        name="businessType"
+                        value=""
                         className="!bg-secondary text-primary text-sm md:text-base font-medium"
                         selected
                         disabled>
                         Select Business Type
                       </option>
                       <option
-                        value="bvn"
-                        name="business_type"
+                        value="ltd"
+                        name="businessType"
                         className="!bg-secondary text-primary text-sm md:text-base font-medium">
-                        BVN
+                        LTD
                       </option>
                       <option
-                        value="nin"
-                        name="business_type"
+                        value="plc"
+                        name="businessType"
                         className="!bg-secondary text-primary text-sm md:text-base font-medium">
-                        NIN
+                        PLC
                       </option>
                       <option
-                        value="voters-card"
-                        name="business_type"
+                        value="ngo"
+                        name="businessType"
                         className="!bg-secondary text-primary text-sm md:text-base font-medium">
-                        Voter's Card
+                        NGO
                       </option>
                     </Field>{' '}
                     <ErrorMessage
-                      name="business_type"
+                      name="businessType"
                       component="span"
                       className="text-[#db3a3a] text-sm"
                     />
@@ -258,43 +305,49 @@ export const StepTen = ({ next }) => {
                         />
                       </div>
                     </div>
-                  </div>
-                  <div className="w-full flex flex-col space-y-2 ">
-                    <label
-                      htmlFor="business_number"
-                      className="text-xs md:text-sm font-normal text-[#1A1D1F] opacity-75">
-                      Business Registration Number
-                    </label>
-                    <Field
-                      name="business_number"
-                      type="text"
-                      placeholder="Enter Business Registration Number"
-                      className="w-full h-10 md:h-[3.4rem] border border-[#9ca3af] outline-none font-light text-[13px] md:text-base text-gray rounded-[5px] py-2 px-[10px]"
-                    />
-                    <ErrorMessage
-                      name="business_number"
-                      component="span"
-                      className="text-[#db3a3a] text-xs md:text-sm"
-                    />
-                  </div>
-                  <div className="w-full flex flex-col space-y-2 ">
-                    <label
-                      htmlFor="tax_number"
-                      className="text-xs md:text-sm font-normal text-[#1A1D1F] opacity-75">
-                      Tax Identification Number
-                    </label>
-                    <Field
-                      name="tax_number"
-                      type="text"
-                      placeholder="Enter Tax Identification Number"
-                      className="w-full h-10 md:h-[3.4rem] border border-[#9ca3af] outline-none font-light text-[13px] md:text-base text-gray rounded-[5px] py-2 px-[10px]"
-                    />
-                    <ErrorMessage
-                      name="tax_number"
-                      component="span"
-                      className="text-[#db3a3a] text-xs md:text-sm"
-                    />
-                  </div>
+                    </div>
+                 
+                {business_is_registered === 'yes' && (
+                  <>
+                    <div className="w-full flex flex-col space-y-2 ">
+                      <label
+                        htmlFor="businessRegNumber"
+                        className="text-xs md:text-sm font-normal text-[#1A1D1F] opacity-75">
+                        Business Registration Number
+                      </label>
+                      <Field
+                        name="businessRegNumber"
+                        type="text"
+                        placeholder="Enter Business Registration Number"
+                        className="w-full h-10 md:h-[3.4rem] border border-[#9ca3af] outline-none font-light text-[13px] md:text-base text-gray rounded-[5px] py-2 px-[10px]"
+                      />
+                      <ErrorMessage
+                        name="businessRegNumber"
+                        component="span"
+                        className="text-[#db3a3a] text-xs md:text-sm"
+                      />
+                    </div>
+                    <div className="w-full flex flex-col space-y-2 ">
+                      <label
+                        htmlFor="tin_No"
+                        className="text-xs md:text-sm font-normal text-[#1A1D1F] opacity-75">
+                        Tax Identification Number
+                      </label>
+                      <Field
+                        name="tin_No"
+                        type="text"
+                        placeholder="Enter Tax Identification Number"
+                        className="w-full h-10 md:h-[3.4rem] border border-[#9ca3af] outline-none font-light text-[13px] md:text-base text-gray rounded-[5px] py-2 px-[10px]"
+                      />
+                      <ErrorMessage
+                        name="tin_No"
+                        component="span"
+                        className="text-[#db3a3a] text-xs md:text-sm"
+                      />
+                    </div>
+                  </>
+                )}
+          
                   <div className="flex flex-col space-y-6 mx-auto items-center justify-center">
                     <div className="pb-2 flex  items-center justify-center flex-col">
                       <label className="text-center text-xs md:text-sm font-normal text-[#1A1D1F] opacity-75">
@@ -342,9 +395,10 @@ export const StepTen = ({ next }) => {
                 <CustomButton
                   padding="10px 15px"
                   type="submit"
-                  children="Next"
+                  children={loading ? 'loading...' : 'Next'}
                   className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 mx-auto md:mx-0 w-full md:w-[85%] xl:w-full !mt-0 xl:mb-0"
-                />
+                  disabled={loading}
+                 />
               </div>
             </Form>
           )}
@@ -352,5 +406,5 @@ export const StepTen = ({ next }) => {
       </div>
       <style>{selectArrow}</style>
     </>
-  );
+);
 };

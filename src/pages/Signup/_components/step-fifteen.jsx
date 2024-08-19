@@ -1,138 +1,176 @@
-import { ErrorMessage, Field, Form, Formik } from "formik";
+import React from "react";
+import { Form, Formik, Field, ErrorMessage, FieldArray } from "formik";
+import * as Yup from "yup";
 import CustomButton from "../../../components/button/button";
-import { images } from "../../../constants";
-import { useState } from "react";
-import { MdOutlineFileUpload } from "react-icons/md";
-import { BusinessAddressVerification, ProofOfResidence } from "../schemas/schema";
 
+const StepFifteenValidationSchema = Yup.object().shape({
+  signatories: Yup.array().of(
+    Yup.object().shape({
+      name: Yup.string().required("Name is required"),
+      emailAddress: Yup.string().email("Invalid email address").required("Email address is required"),
+      phoneNumber: Yup.string()
+        .matches(/^[0-9]+$/, "Phone number must only contain digits")
+        .min(10, "Phone number must be at least 10 digits")
+        .max(15, "Phone number can't exceed 15 digits")
+        .required("Phone number is required"),
+    })
+  ),
+});
 
-export const StepFifteen = ({ next }) => {
-    const [businessDocumentDetails, setBusinessDocumentDetails] = useState('');
-  
-    const handleSubmit = (business_confirm_document) => {
-      next({ businessDocumentDetails, business_confirm_document });
-    };
-    const selectArrow = `
-      select{
-        -webkit-appearance: none;
-       -moz-appearance: none;
-            appearance: none;
-        border: 1px solid #CCC;
-        border-radius: 4px;
-        padding-right: 1rem;
-        margin-right: 3rem;
-        background-position: calc(100% - 1rem);
-        background-image: url(/dropdown-arrow.svg);
-        background-repeat: no-repeat;
+export const StepFifteen = ({ next, email }) => {
+  const handleSubmit = async (values) => {
+    try {
+      // Fetch customerId using the provided email
+      const customerId = await authenticateEmail(email);
+      
+      if (!customerId) {
+        console.error('Failed to fetch customer ID.');
+        return;
       }
-  
-      input[type='file'] {
-        opacity: 0;
-        width: 0.1px;
-        height: 0.1px;
-        position: absolute;
-      }
+
+      // Set corporateCustomerId to the fetched customerId
+      const corporateCustomerId = customerId;
+      // console.log('Corporate Customer ID:', corporateCustomerId);
+
+      const requestBody = {
+        corporateCustomerId: corporateCustomerId,
+        signatories: values.signatories.map((signatory) => ({
+          name: signatory.name,
+          phoneNumber: signatory.phoneNumber,
+          email: signatory.emailAddress,
+        })),
+      };
      
-      `;
-  
-    return (
-      <>
-        <div className="hidden xl:block fixed top-[-12.5rem] right-[-37.5rem]">
-          <img src={images.Group} alt="" />
-        </div>
-        <div className="hidden md:block fixed top-[-1.5rem] right-[8.5rem] -z-10">
-          <img src={images.Vector3} alt="" />
-        </div>
-        <div className="hidden md:block fixed top-[12.5rem] right-[20rem] -z-10">
-          <img src={images.Vector2} alt="" />
-        </div>
-        <div className="hidden md:block fixed top-[14.6rem] right-[24rem] -z-10">
-          <img src={images.Vector1} alt="" />
-        </div>
-        <div className="hidden md:block fixed top-[30rem] right-[6.5rem] -z-10">
-          <img src={images.Vector2} alt="" />
-        </div>
-        <div className="hidden md:block fixed top-[35rem] right-[7.4rem] -z-10">
-          <img src={images.Vector5} alt="" />
-        </div>
-        <div className="hidden md:block fixed top-[35rem] right-[9.4rem] -z-10">
-          <img src={images.Vector4} alt="" />
-        </div>
-        <div className="hidden md:block fixed top-[30rem] right-[11.6rem] -z-10">
-          <img src={images.Vector6} alt="" />
-        </div>
-        <div className="bg-primary !mt-24 xl:mt-0 flex flex-col justify-center items-start mx-auto">
-          <Formik initialValues={{ file: '' }} onSubmit={(values) => handleSubmit(values.business_confirm_document)} validationSchema={BusinessAddressVerification}>
-            {(formik) => (
-              <Form className="w-full space-y-4">
-                <div className="xl:pt-16 p-4 pt-[2.2rem] xl:px-16 xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
-                  <div className="text-lightBlue text-start font-bold xl:text-[32px] text-xl w-5/6 xl:leading-10">
-                    Confirm Business Address
-                  </div>
-  
-                  <div className="xl:w-full md:w-[85%] items-start flex flex-col space-y-2 ">
-                    <Field
-                      as="select"
-                      name="business_confirm_document"
-                      className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-8 bg-secondary">
-                      <option
-                        name="doumments"
-                        className="!bg-secondary text-primary font-medium"
-                        disabled
-                        selected>
-                        Select Document
-                      </option>
-                      <option
-                        value="bvn"
-                        name="document"
-                        className="!bg-secondary text-primary font-medium">
-                        BVN
-                      </option>
-                      <option
-                        value="nin"
-                        name="document"
-                        className="!bg-secondary text-primary font-medium">
-                        NIN
-                      </option>
-                      <option
-                        value="voters-card"
-                        name="document"
-                        className="!bg-secondary text-primary font-medium">
-                        Voter's Card
-                      </option>
-                    </Field>
-                    <ErrorMessage name="business_confirm_document" component="span" className="text-[#db3a3a]" />
-                    <div className="flex flex-col items-center border rounded-[10px] border-[#006181] w-full text-center p-4 !mt-8">
-                      <input
-                        id="file"
-                        name="file"
-                        type="file"
-                        onChange={(e) => setBusinessDocumentDetails(e.currentTarget.files[0])}
-                        value={formik.values.file}
-                      />
-  
-                      <label
-                        htmlFor="file"
-                        className="cursor-pointer font-bold flex items-center flex-col">
-                        <MdOutlineFileUpload size={22} opacity={0.65} />
-                        <span className="text-[#E80516]">Upload Document</span>
-                      </label>
-                      <span className="text-lightBlue">{businessDocumentDetails?.name}</span>
-                    </div>
-                  </div>
-                  <CustomButton
-                    padding="15px"
-                    type="submit"
-                    children="Next"
-                    className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 mx-auto md:mx-0 w-full md:w-[85%] xl:w-full !mb-12 xl:my-12 xl:mb-20"
-                  />
-                </div>
-              </Form>
-            )}
-          </Formik>
-        </div>
-        <style>{selectArrow}</style>
-      </>
-    );
+      const response = await fetch(import.meta.env.VITE_ADD_SIGNATORIES_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+       
+      });
+
+      // console.log('Uploaded Data:',requestBody );
+      const textResponse = await response.text();
+
+      try {
+        
+        const jsonResponse = JSON.parse(textResponse);
+        if (response.ok) {
+          console.log('Signatories registered successfully:', jsonResponse);
+          next(jsonResponse); 
+        } else {
+          console.error('Failed to register signatories:', response.status, jsonResponse);
+        }
+      } catch (error) {
+        
+        if (response.ok) {
+          console.log('Signatories registered successfully:', textResponse);
+          next();
+        } else {
+          console.error('Failed to register signatories:', response.status, textResponse);
+        }
+      }
+    } catch (error) {
+      console.error('Error registering signatories:', error);
+    }
   };
-  
+  // Function to authenticate email and fetch customerId
+  const authenticateEmail = async (email) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_GET_USER_BY_EMAIL_ENDPOINT}?email=${encodeURIComponent(email)}`);
+      if (response.ok) {
+        const data = await response.json();
+        return data.customerId; // Return the customerId
+      } else {
+        console.error('Failed to authenticate email:', response.statusText);
+        return null;
+      }
+    } catch (error) {
+      console.error('Error authenticating email:', error);
+      throw error;
+    }
+  };
+
+  return (
+    <div className="p-2 xl:p-10 bg-primary">
+      <div className="xl:text-[32px] text-xl text-lightBlue text-start font-bold pr-0 xl:pr-20 ">Provide Signatories Details</div> 
+      <Formik
+        initialValues={{
+          signatories: [{ name: "", emailAddress: "", phoneNumber: "" }],
+
+        }}
+        validationSchema={StepFifteenValidationSchema}
+        onSubmit={(values) => handleSubmit(values)}
+      >
+     {({ values }) => (
+          <Form>
+            <FieldArray name="signatories">
+              {({ insert, remove, push }) => (
+                <div>
+                  {values.signatories.length > 0 &&
+                    values.signatories.map((signatory, index) => (
+                      <div className="my-4" key={index}>
+                        <div>
+                          <label htmlFor={`signatories.${index}.name`} className="text-white block mb-2">Name</label>
+                          <Field
+                            name={`signatories.${index}.name`}
+                            placeholder="Enter name"
+                            className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[10px] py-2 px-[10px]"
+                          />
+                          <ErrorMessage name={`signatories.${index}.name`} component="div" className="text-[#db3a3a] mt-2" />
+                        </div>
+
+                        <div>
+                          <label htmlFor={`signatories.${index}.emailAddress`} className="text-white block mb-2">Email Address</label>
+                          <Field
+                            name={`signatories.${index}.emailAddress`}
+                            placeholder="Enter email address"
+                            className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[10px] py-2 px-[10px]"
+                          />
+                          <ErrorMessage name={`signatories.${index}.emailAddress`} component="div" className="text-[#db3a3a] mt-2" />
+                        </div>
+
+                        <div>
+                          <label htmlFor={`signatories.${index}.phoneNumber`} className="text-white block mb-2">Phone Number</label>
+                          <Field
+                            name={`signatories.${index}.phoneNumber`}
+                            placeholder="Enter phone number"
+                            className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[10px] py-2 px-[10px]"
+                          />
+                          <ErrorMessage name={`signatories.${index}.phoneNumber`} component="div" className="text-[#db3a3a] mt-2" />
+                        </div>
+
+                        <div className="flex justify-between mt-4 space-x-2">
+                          <button
+                          type="button"
+                          className="px-2 py-1  !text-lightBlue xl:text-[15px] !border-none !bg-yellow rounded text-sm font-extrabold duration-300 "
+                          onClick={() => remove(index)}
+                           >
+                           Remove Signatory
+                        </button>
+                        <button
+                        type="button"
+                        className="px-2 py-1  !text-lightBlue xl:text-[15px] !border-none !bg-yellow rounded text-sm font-extrabold duration-300 "
+                        onClick={() => push({ name: "", emailAddress: "", phoneNumber: "" })}
+                        >
+                        Add Another Signatory
+                      </button>
+                      </div>
+                       </div>
+                    ))}
+                </div>
+              )}
+            </FieldArray>
+            <CustomButton
+              padding="15px"
+              type="submit"
+              children="Next"
+              className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6"
+            />
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+};
