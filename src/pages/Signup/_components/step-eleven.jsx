@@ -1,106 +1,221 @@
-import React from 'react';
-import { Form, Formik, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
 import CustomButton from '../../../components/button/button';
+import { images } from '../../../constants';
+import { BusinessAddressSchema } from '../schemas/schema';
+import { state_local } from '../../../services/state-local';
+import { useEffect, useState } from 'react';
 
-// Validation schema using Yup
-const validationSchema = Yup.object().shape({
-  businessDescription: Yup.string().required('Business description is required'),
-  numberOfStaff: Yup.string().required('Number of staff is required'),
-  annualIncomeRange: Yup.string().required('Annual income range is required'),
-});
+export const StepEleven = ({ next, HomeAddress, }) => {
+  const [businessState, setBusinessState] = useState('');
+  const [loading, setLoading] = useState(false);
 
-// Sample data for the number of staff and annual income range
-const staffOptions = ['0-9', '10-20', '21-50', '51-100', '101-300'];
-const incomeRangeOptions = ['Less than 100,000', '100,000 - 500,000', '500,001 - 1,000,000', '1,000,001 - 10,000,000','10,000,001 - 50,000,000'];
+  const [localGovernment, setLocalGovernment] = useState([]);
 
-export const StepEleven = ({ next }) => {
-  const handleSubmit = (values) => {
-    next(values);
-  };
+  const handleSubmit = (business_address) => {
+    setLoading(true);
+    const BusinessAddress = {
+      businessHouseNumber: business_address.businessHouseNumber,
+      businessStreetName: business_address.businessStreetName,
+      businessState: business_address.businessState,
+      businessLGA: business_address.businessLGA,
+    };
+    try {
+          // console.log('Submitting business add.:', BusinessAddress);
 
+    next(BusinessAddress , 13);
+    
+  } catch (error) {
+    console.error('Error submitting business data:', error);
+  }
+};
+
+useEffect(() => {
+  if (HomeAddress && HomeAddress.state) {
+    setBusinessState(HomeAddress.state);
+  }
+
+  const currentLga = state_local
+    .filter((lga) => lga.state === businessState)
+    .map((lga) => lga.lgas);
+
+  setLocalGovernment(currentLga[0]);
+}, [businessState, HomeAddress]);
+
+  const selectArrow = `
+      select{
+        -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+        border: 1px solid #CCC;
+        border-radius: 4px;
+        padding-right: 1rem;
+        margin-right: 3rem;
+        background-position: calc(100% - 1rem);
+        background-image: url(/dropdown-arrow.svg);
+        background-repeat: no-repeat;
+      }
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0
+      }
+  
+      input[type=number] {
+        -moz-appearance: textfield;
+      }
+     
+      `;
   return (
     <>
-   <div className="bg-primary !mt-24 xl:mt-0  mx-auto">
-      <Formik
-        initialValues={{
-          businessDescription: '',
-          numberOfStaff: '',
-          annualIncomeRange: '',
-        }}
-        validationSchema={validationSchema}
-        onSubmit={(values) => handleSubmit(values)}
-      >
-        {() => (
-          <Form className="">
-            <div  className="xl:py-16 p-4 pt-[2.2rem] xl:p-10 xl:pl-[4rem] xl:pr-40 xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
-            <div className="text-lightBlue text-start font-bold xl:text-[32px] text-xl pr-15" >
-              Enter Business Details
-              </div>
-            <div className="my-2 xl:w-full flex flex-col space-y-2 ">
-              <label htmlFor="businessDescription" className="text-sm font-normal text-lightBlue">
-                Business Description
-              </label>
-              <Field
-                as="textarea"  // Change Field to textarea for multiline input
-                id="businessDescription"
-                name="businessDescription"
-                placeholder="Tell us more about your business"
-                className=" xl:w-[125%] h-[138px] border border-[#9ca3af] outline-none  text-sm text-gray rounded-[5px] py-2 px-[10px] "
-              />
-              <ErrorMessage name="businessDescription" component="div" className="text-[#db3a3a] mt-2 text-sm" />
-            </div>
-
-            <div className="my-2 xl:w-[130%] flex flex-col space-y-2 ">
-              <label htmlFor="numberOfStaff" className="text-white block  text-sm">
-                Number of Staff
-              </label>
-              <Field
-                as="select"
-                id="numberOfStaff"
-                name="numberOfStaff"
-                className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-sm text-gray rounded-[10px] py-2 px-[20px] bg-secondary">
-                <option value="" disabled>Select Number of Staff</option>
-                {staffOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </Field>
-              <ErrorMessage name="numberOfStaff" component="div" className="text-[#db3a3a] mt-2 text-sm" />
-            </div>
-
-            <div className="my-4 xl:w-[130%] flex flex-col space-y-2 ">
-              <label htmlFor="annualIncomeRange" className="text-white block text-sm">
-                Annual Income Range
-              </label>
-              <Field
-                as="select"
-                id="annualIncomeRange"
-                name="annualIncomeRange"
-                className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-sm text-gray rounded-[10px] py-2 px-[10px] bg-secondary">
-                <option value="" disabled>Select Annual Income Range</option>
-                {incomeRangeOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </Field>
-              <ErrorMessage name="annualIncomeRange" component="div" className="text-[#db3a3a] mt-2 text-sm" />
-            </div>
-            </div>
-
-            <CustomButton
-              padding="15px"
-              type="submit"
-              children="Next"
-              className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[80%] w-[90%] mx-auto my-10 !mb-12 xl:mt-4 xl:!mb-6"
-            />
-          </Form>
-        )}
-      </Formik>
+      <div className="hidden md:block fixed md:top-[-9.5rem] xl:top-[-6.5rem] md:right-[.5rem] xl:right-[-38.5rem]">
+        <img src={images.Group} alt="" />
       </div>
-   
+      <div className="hidden md:block fixed md:-z-10 md:top-[-1.5rem] xl:top-[-1rem] right-[6.5rem]">
+        <img src={images.Vector3} alt="" />
+      </div>
+      <div className="hidden md:block fixed md:top-[8rem] xl:top-[12.5rem] right-[20rem] -z-10">
+        <img src={images.Vector2} alt="" />
+      </div>
+      <div className="hidden md:block fixed md:top-[10.5rem] xl:top-[14.6rem] right-[24rem] -z-10">
+        <img src={images.Vector1} alt="" />
+      </div>
+      <div className="hidden md:block fixed md:top-[15rem] xl:top-[23rem] right-[6.5rem] -z-10">
+        <img src={images.Vector2} alt="" />
+      </div>
+      <div className="hidden md:block fixed md:top-[22rem] xl:top-[30rem] right-[7.4rem] -z-10">
+        <img src={images.Vector5} alt="" />
+      </div>
+      <div className="hidden md:block fixed md:top-[20rem] xl:top-[27.5rem] right-[9.4rem] -z-10">
+        <img src={images.Vector4} alt="" />
+      </div>
+      <div className="hidden md:block fixed md:top-[11.5rem] xl:top-[19rem] right-[10.6rem] -z-10">
+        <img src={images.Vector6} alt="" />
+      </div>
+      <div className="bg-primary !mt-24 xl:mt-0 flex flex-col justify-center items-start mx-auto">
+        <Formik
+              initialValues={{
+               businessHouseNumber:  '',
+               businessStreetName: '',
+               businessState: '',
+               businessLGA:  '',
+             }}   
+       validationSchema={BusinessAddressSchema}
+      onSubmit={handleSubmit}>
+        {({ values, handleChange }) => (
+            <Form className="w-full space-y-4">
+              <div className="xl:py-16 p-4 pt-[2.2rem] xl:p-10 xl:px-[3rem] xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
+                <div className="text-lightBlue text-start font-bold xl:text-[32px] text-xl">
+                  Kindly Enter Your Business Address
+                </div>
+                <div className="xl:w-full flex flex-col space-y-2 ">
+                  <label htmlFor="businessHouseNumber" className="text-sm font-normal text-lightBlue">
+                    Business Address Number
+                  </label>
+                  <Field
+                    name="businessHouseNumber"
+                    type="text"
+                    placeholder="Enter Business Address Steet Number"
+                    className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-light text-base text-gray rounded-[5px] py-2 px-[10px]"
+                  />
+                  <ErrorMessage
+                    name="businessHouseNumber"
+                    component="span"
+                    className="text-[#db3a3a]"
+                  />
+                </div>
+                <div className="xl:w-full flex flex-col space-y-2 ">
+                  <label
+                    htmlFor="businessStreetName"
+                    className="text-sm font-normal text-lightBlue">
+                    Street
+                  </label>
+                  <Field
+                    name="businessStreetName"
+                    id="businessStreetName"
+                    type="text"
+                    placeholder="Enter Business Address Steet Name"
+                    className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-light text-base text-gray rounded-[5px] py-2 px-[10px]"
+                  />
+                  <ErrorMessage
+                    name="businessStreetName"
+                    component="span"
+                    className="text-[#db3a3a]"
+                  />
+                </div>
+                <div className="xl:w-full flex flex-col space-y-2 ">
+                  <label htmlFor="businessState" className="text-sm font-normal text-lightBlue">
+                    State
+                  </label>
+                  <Field
+                    as="select"
+                    name="businessState"
+                  id="businessState"
+                  onChange={(e) => {
+                    handleChange(e);
+                    setBusinessState(e.target.value);
+                  }}
+                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-[10px] bg-secondary">
+                    <option
+                    value=""
+                    disabled
+                  >
+                    Select State
+                  </option>
+                  {state_local.map(({ state }) => (
+                    <option
+                      key={state}
+                      value={state}
+                      className="!bg-secondary text-primary font-medium">
+                      {state}
+                    </option>
+                  ))}
+                </Field>
+                <ErrorMessage
+                  name="businessState"
+                  component="span"
+                  className="text-[#db3a3a]"
+                />
+              </div>
+              <div className="xl:w-full flex flex-col space-y-2 ">
+                <label htmlFor="businessLGA" className="text-sm font-normal text-lightBlue">
+                  Local Government
+                </label>
+                <Field
+                  as="select"
+                  name="businessLGA"
+                  className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-[10px] bg-secondary"
+                >
+                  <option
+                    value=""
+                    disabled
+                  >
+                    Select Local Government
+                  </option>
+                  {localGovernment?.map((lga, i) => (
+                    <option value={lga} key={i}>
+                      {lga}
+                    </option>
+                  ))}
+                </Field>
+                <ErrorMessage
+                  name="businessLGA"
+                  component="span"
+                  className="text-[#db3a3a]"
+                />
+              </div>
+              </div>
+              <CustomButton
+                padding="15px"
+                type="submit"
+                children={loading ? 'loading...' : 'Next'}
+                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 md:w-[96.5%] xl:w-[85%] mx-auto w-[92%] !mb-12 xl:my-12 xl:mb-20"
+                disabled={loading}
+              />
+            </Form>
+          )}
+        </Formik>
+      </div>
+      <style>{selectArrow}</style>
     </>
   );
 };

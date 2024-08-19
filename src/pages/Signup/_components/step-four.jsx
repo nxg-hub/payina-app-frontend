@@ -1,6 +1,8 @@
 import { Form, Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import CustomButton from '../../../components/button/button';
+import { useState } from 'react';
+
 
 const StepFourValidationSchema = Yup.object().shape({
   idType: Yup.string().required('Please select an ID type'),
@@ -10,16 +12,47 @@ const StepFourValidationSchema = Yup.object().shape({
 });
 
 export const StepFour = ({ next }) => {
-  const handleSubmit = (values) => {
-    next(values);
+  const [apiError, setApiError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (values) => {
+    const requestBody = JSON.stringify({ bvn: values.identificationNumber });
+    // console.log('Request Body:', requestBody);
+    setLoading(true);
+    try {
+      const response = await fetch(import.meta.env.VITE_BVN_VERIFY_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: requestBody,
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        next({
+          ...values,
+          firstName: data.firstName, 
+          lastName: data.lastName,
+          gender: data.gender,
+          dob: data.dob,
+        });
+        } else {
+        setApiError(data.message || 'Verification failed. Please try again.');
+      }
+    } catch (error) {
+      setApiError('An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const Options = [
     { value: "BVN", label: "BVN" },
-    { value: "National ID", label: "National ID" },
-    { value: "Drivers License", label: "Drivers License" },
-    { value: "International Passport", label: "International Passport" },
-    { value: "Voters Card", label: "Voters Card" },
+    // { value: "National ID", label: "National ID" },
+    // { value: "Drivers License", label: "Drivers License" },
+    // { value: "International Passport", label: "International Passport" },
+    // { value: "Voters Card", label: "Voters Card" },
   ];
 
   const optionStyle = {
@@ -74,7 +107,6 @@ export const StepFour = ({ next }) => {
                   </Field>
                   <ErrorMessage name="idType" component="div" className="text-[#db3a3a] mt-2" />
                 </div>
-
                 <div className="my-8">
                   <label htmlFor="identificationNumber" className="text-white block mb-2">
                   </label>
@@ -93,10 +125,12 @@ export const StepFour = ({ next }) => {
                   />
                 </div>
 
+                {apiError && <div className="text-red-500 mb-4">{apiError}</div>}
+                
                 <CustomButton
                   padding="15px"
                   type="submit"
-                  children="Next"
+                  children={loading ? 'Loading...' : 'Next'}
                   className={`hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6 ${
                     !(isValid && dirty) ? "opacity-50 cursor-not-allowed" : ""
                   }`}

@@ -1,22 +1,61 @@
 import { Field, Form, Formik } from 'formik';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
 
 export const StepThree = ({ next, data }) => {
   const [codeAlert, setCodeAlert] = useState('');
   const [isAlertVisible, setIsAlertVisible] = useState(false);
-  const handleSubmit = (values) => {
-    next(values);
+  const [otpError, setOtpError] = useState('');
+  const [canResendCode, setCanResendCode] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setCanResendCode(true);
+    }, 30000); // 30 seconds
+
+    return () => clearTimeout(timer); 
+  }, []);
+
+  const handleSubmit = async (values) => {
+    try {
+      const response = await fetch(import.meta.env.VITE_VALIDATE_OTP_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ otp: values.otp })
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        next(values); 
+      } else {
+        setOtpError(data.message || 'Invalid OTP');
+      }
+    } catch (error) {
+      setOtpError('An error occurred. Please try again.');
+    }
   };
+
   const handleCode = (e) => {
     e.preventDefault();
     setIsAlertVisible(true);
-    setCodeAlert('Code has been succesfully sent');
+    setCodeAlert('Code has been successfully sent');
+    setCanResendCode(false); // Reset the resend code state
+
+    // Restart the timer for the resend code
+    const timer = setTimeout(() => {
+      setCanResendCode(true);
+    }, 30000);
+
     setTimeout(() => {
       setIsAlertVisible(false);
     }, 3000);
+
+    return () => clearTimeout(timer); 
   };
+
   const otpInput = `
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
@@ -27,6 +66,7 @@ export const StepThree = ({ next, data }) => {
     input[type=number] {
       -moz-appearance: textfield;
     }`;
+  
   let phoneNumber =
     data.phone?.slice(0, 4) +
     '-' +
@@ -82,11 +122,15 @@ export const StepThree = ({ next, data }) => {
                 className="w-[60%] font-bold text-center mx-auto bg-transparent border-none h-[3.4rem] outline-none text-base xl:text-xl text-gray rounded-[5px] py-6 pb-0 px-[10px]"
               />
               <hr className="border-none bg-[#e80516] h-[1px] w-[180px] mt-2 xl:mx-auto" />
-              <CustomButton
-                children="Send Code"
-                onClick={(e) => handleCode(e)}
-                className="text-sm font-bold mt-10 !py-[1px] !px-[9px] !border-none !rounded-[10px] !bg-[#E80516]"
-              />
+              {canResendCode ? (
+                <CustomButton
+                  children="Resend Code"
+                  onClick={(e) => handleCode(e)}
+                  className="text-sm font-bold mt-10 !py-[1px] !px-[9px] !border-none !rounded-[10px] !bg-[#E80516]"
+                />
+              ) : (
+                <span className="text-sm text-gray-500 mt-10">You can resend the code in 30 seconds.</span>
+              )}
               <span className="text-sm text-[#33b444] mt-4">{isAlertVisible && codeAlert}</span>
               <div className="flex flex-col items-center justify-center">
                 <input
@@ -96,7 +140,7 @@ export const StepThree = ({ next, data }) => {
                   type="number"
                   temp=""
                   maxLength={6}
-                  oninput="validity.valid ? this.temp = value : value = this.temp"
+                  onInput="validity.valid ? this.temp = value : value = this.temp"
                   onChange={formik.handleChange}
                   value={formik.values.otp}
                   autoFocus
@@ -122,14 +166,15 @@ export const StepThree = ({ next, data }) => {
                   </span>
                 </div>
               </div>
+              {otpError && <span className="text-red-500 mt-4">{otpError}</span>}
               <span className="font-bold text-center mt-10 leading-4 text-sm tracking-[0.28px] text-[#006181]">
                 Enter Code
               </span>
               <CustomButton
-                padding="15px"
-                type="submit"
-                children="Next"
-                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6"
+                 padding="15px"
+                 type="submit"
+                 children="Next"
+                 className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[87%] w-[90%] mx-auto my-10 !mb-12 xl:my-12 xl:mb-20"
               />
             </Form>
           )}

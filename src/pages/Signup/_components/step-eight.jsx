@@ -6,20 +6,32 @@ import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
 import { HomeAddressSchema } from '../schemas/schema';
 
-export const StepEight = ({ next }) => {
+export const StepEight = ({ next, }) => {
   const [countries, setCountries] = useState([]);
   const [currentState, setCurrentState] = useState('');
-  const [localGovernemnt, setLocalGovernemnt] = useState([]);
+  const [localGovernment, setLocalGovernment] = useState([]);
 
   const handleSubmit = (address_details) => {
-    next({currentState, address_details});
-  };
+    const HomeAddress = {
+      houseNumber: address_details.houseNumber , 
+      street: address_details.street,
+      state: address_details.state, 
+      lga: address_details.lga
+    };
+
+     try {
+    next(HomeAddress, 11);
+  }
+  catch (error) {
+    console.error('Error submitting add. data:', error);
+  }
+};
 
   useEffect(() => {
     const currentLga = state_local
       .filter((lga) => lga.state === currentState)
       .map((lga) => lga.lgas);
-    setLocalGovernemnt(currentLga[0]);
+    setLocalGovernment(currentLga[0]);
   }, [currentState]);
 
   useEffect(() => {
@@ -83,41 +95,41 @@ export const StepEight = ({ next }) => {
       </div>
       <div className="bg-primary !mt-24 xl:mt-0 flex flex-col justify-center items-start mx-auto">
         <Formik
-          initialValues={{ house_number: '', street_name: '' }}
+          initialValues={{ houseNumber: '', street: '',state: '', lga: ''  }}
           validationSchema={HomeAddressSchema}
           onSubmit={(address_details) => handleSubmit(address_details)}>
           {(formik) => (
             <Form className="w-full space-y-2">
               <div className="xl:py-16 p-4 pt-[2.2rem] xl:p-10 xl:pl-[5rem] xl:pr-40 xl:w-auto w-full m-auto xl:space-y-4 space-y-4 pb-2 xl:pb-6">
                 <div className="text-lightBlue text-start font-bold xl:text-[32px] text-xl">
-                  Kindly Enter Your Address
+                Kindly Enter Your Address
                 </div>
                 <div className="xl:w-[120%] flex flex-col space-y-2 ">
                   <label htmlFor="houseNumber" className="text-sm font-normal text-lightBlue">
                     House Number
                   </label>
                   <Field
-                    name="house_number"
+                    name="houseNumber"
                     type="text"
                     placeholder="Enter House Number"
                     className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-light text-base text-gray rounded-[5px] py-2 px-[10px]"
                   />
-                  <ErrorMessage name="house_number" component="span" className="text-[#db3a3a]" />
+                  <ErrorMessage name="houseNumber" component="span" className="text-[#db3a3a]" />
                 </div>
                 <div className="xl:w-[120%] flex flex-col space-y-2 ">
-                  <label htmlFor="streetName" className="text-sm font-normal text-lightBlue">
+                  <label htmlFor="street" className="text-sm font-normal text-lightBlue">
                     Street 
                   </label>
                   <Field
-                    name="street_name"
+                    name="street"
                     type="text"
                     placeholder="Enter Street Name"
                     className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-light text-base text-gray rounded-[5px] py-2 px-[10px]"
                   />
-                  <ErrorMessage name="street_name" component="span" className="text-[#db3a3a]" />
+                  <ErrorMessage name="street" component="span" className="text-[#db3a3a]" />
                 </div>
                 <div className="xl:w-[120%] flex flex-col space-y-2 ">
-                  <label htmlFor="password" className="text-sm font-normal text-lightBlue">
+                  <label htmlFor="country" className="text-sm font-normal text-lightBlue">
                     Country
                   </label>
                   <Field
@@ -125,18 +137,15 @@ export const StepEight = ({ next }) => {
                     name="country"
                     className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-[10px] bg-secondary">
                     <option
-                      value="select_country"
-                      name="countries"
-                      className="bg-secondary text-primary font-medium selected"
-                      selected
+                      value=""
                       disabled>
                       Select Country
                     </option>
-                    {countries?.map(({ value, key }) => (
+                    {Array.isArray(countries) && countries.map(({ value, key }) => (
+
                       <option
                         key={key}
                         value={value}
-                        name="countries"
                         className="!bg-secondary text-primary font-medium">
                         {value}
                       </option>
@@ -151,13 +160,14 @@ export const StepEight = ({ next }) => {
                   <Field
                     as="select"
                     name="state"
-                    onChange={(e) => setCurrentState(e.target.value)}
+                    onChange={(e) => {
+                      setCurrentState(e.target.value);
+                      formik.setFieldValue("state", e.target.value);
+                    }}
+                    value={formik.values.state}
                     className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-[10px] bg-secondary">
                     <option
-                      value="select_state"
-                      name="state"
-                      className="bg-secondary text-primary font-medium selected"
-                      selected
+                      value=""
                       disabled>
                       Select State
                     </option>
@@ -165,18 +175,14 @@ export const StepEight = ({ next }) => {
                       <option
                         key={state}
                         value={state}
-                        name="state"
                         className="!bg-secondary text-primary font-medium">
                         {state}
                       </option>
                     ))}
                   </Field>
-                  {/* {currentState == '' &&   <span className="text-[#db3a3a]">Please enter your state</span>
-                    // <ErrorMessage name="state" component="span" className="text-[#db3a3a]" />
-                  } */}
                 </div>
                 <div className="xl:w-[120%] flex flex-col space-y-2 ">
-                  <label htmlFor="local_govt" className="text-sm font-normal text-lightBlue">
+                  <label htmlFor="lga" className="text-sm font-normal text-lightBlue">
                     Local Government
                   </label>
                   <Field
@@ -184,15 +190,12 @@ export const StepEight = ({ next }) => {
                     name="lga"
                     className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-[10px] bg-secondary">
                     <option
-                      value="select_lga"
-                      name="lga"
-                      className="bg-secondary text-primary font-medium"
-                      selected
+                      value=""
                       disabled>
                       Select Local Government
                     </option>
-                    {localGovernemnt?.map((lga, i) => (
-                      <option value={lga} name="lga">
+                    {localGovernment?.map((lga, i) => (
+                      <option key={i} value={lga} className="!bg-secondary text-primary font-medium">
                         {lga}
                       </option>
                     ))}

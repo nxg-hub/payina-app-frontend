@@ -1,17 +1,49 @@
 import { Form, Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import CustomButton from '../../../components/button/button';
+import { useState } from 'react';
 
 const StepFiveValidationSchema = Yup.object().shape({
-  fullname: Yup.string().required('Fullname is required'),
-  dateOfBirth: Yup.string().required('Date of Birth is required'),
-  gender: Yup.string().required('Gender is required'),
   username: Yup.string().required('Username is required'),
 });
+export const StepFive = ({ next, bvnData, email, initialValues}) => {
+  const [apiError, setApiError] = useState('');
+  const [loading, setLoading] = useState(false);
+  
+  const handleSubmit = async (values) => {
+    setLoading(true);
+    setApiError('');
 
-export const StepFive = ({ next }) => {
-  const handleSubmit = (values) => {
-    next(values);
+    try {
+      const response = await fetch(import.meta.env.VITE_SAVE_USERNAME_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          payinaUserName: values.username,
+          gender: bvnData.gender,
+          email: email,
+          firstName: bvnData.firstName,
+          lastName: bvnData.lastName,
+          dob: bvnData.dob,
+          bvn: initialValues.identificationNumber,
+          accountType: 'corporate',
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        next(values);
+      } else {
+        setApiError(data.message || 'Failed to save username. Please try again.');
+      }
+    } catch (error) {
+      setApiError('An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -21,78 +53,93 @@ export const StepFive = ({ next }) => {
       </div>
       <Formik
         initialValues={{
-          fullname: '',
-          dateOfBirth: '',
-          gender: '',
-          username: '',
+          username: '',      
         }}
         validationSchema={StepFiveValidationSchema}
         onSubmit={(values) => handleSubmit(values)}
       >
-        {() => (
+        {({ isValid, dirty }) => (
           <Form className="mt-8">
             <div className="my-2">
-              <label htmlFor="fullname" className="text-secondary block mb-4 w-full text-sm ">
-                Fullname
+              <label htmlFor="firstName" className="text-secondary block mb-4 w-full text-sm">
+                First Name
               </label>
               <Field
                 type="text"
-                id="fullname"
-                name="fullname"
-                placeholder="Enter Your fullname"
-                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none   text-gray rounded-[5px] py-2 px-[10px] "
+                id="firstName"
+                name="firstName"
+                value={bvnData.firstName}
+                readOnly
+                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
               />
-              <ErrorMessage name="fullname" component="div" className="text-[#db3a3a] mt-2 text-sm " />
             </div>
 
             <div className="my-2">
-              <label htmlFor="dateOfBirth" className="text-secondary  block mb-2 w-full text-sm ">
-                Date of Birth
+              <label htmlFor="lastName" className="text-secondary block mb-4 w-full text-sm">
+                Last Name
               </label>
               <Field
-                type="text" // You can use "text" or any other suitable input type
-                id="dateOfBirth"
-                name="dateOfBirth"
-                placeholder="Enter Your date of birth"
-                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none   text-gray rounded-[5px] py-2 px-[10px] "
+                type="text"
+                id="lastName"
+                name="lastName"
+                value={bvnData.lastName}
+                readOnly
+                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
               />
-              <ErrorMessage name="dateOfBirth" component="div" className="text-[#db3a3a] mt-2 text-sm " />
             </div>
 
-            <div className="my-4">
-              <label htmlFor="gender" className="block mb-2 w-full text-secondary text-sm  ">
+            <div className="my-2">
+              <label htmlFor="gender" className="text-secondary block mb-4 w-full text-sm">
                 Gender
               </label>
-              {/* You can use a different input type, like radio buttons or text input */}
               <Field
                 type="text"
                 id="gender"
                 name="gender"
-                placeholder="Enter Your gender"
-                className=" text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none    text-gray rounded-[5px] py-2 px-[10px] "
+                value={bvnData.gender}
+                readOnly
+                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
               />
-              <ErrorMessage name="gender" component="div" className="text-[#db3a3a] mt-2 text-sm " />
+            </div>
+
+            <div className="my-2">
+              <label htmlFor="dob" className="text-secondary block mb-4 w-full text-sm">
+                Date of Birth
+              </label>
+              <Field
+                type="text"
+                id="dob"
+                name="dob"
+                value={bvnData.dob}
+                readOnly
+                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+              />
             </div>
 
             <div className="my-4">
-              <label htmlFor="username" className="text-secondary block mb-2 w-full text-sm  ">
+              <label htmlFor="username" className="text-secondary block mb-2 w-full text-sm">
                 Username
               </label>
               <Field
                 type="text"
                 id="username"
                 name="username"
-                placeholder="Enter Your username"
-                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none    text-gray rounded-[5px] py-2 px-[10px] "
+                placeholder="Enter Your Username"
+                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
               />
-              <ErrorMessage name="username" component="div" className="text-[#db3a3a] mt-2 text-sm " />
+              <ErrorMessage name="username" component="div" className="text-[#db3a3a] mt-2 text-sm" />
             </div>
+
+            {apiError && <div className="text-red-500 mb-4">{apiError}</div>}
 
             <CustomButton
               padding="15px"
               type="submit"
-              children="Next"
-              className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6"
+              children={loading ? 'Saving...' : 'Next'}
+              className={`hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6 ${
+                !(isValid && dirty) ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+              disabled={!(isValid && dirty) || loading}
             />
           </Form>
         )}
