@@ -4,8 +4,14 @@ import { images } from '../../../constants';
 import { SignUpSchema } from '../schemas/schema';
 
 export const StepOne = ({ next }) => {
+  const savedEmail = localStorage.getItem('userEmail') || ''; // Fallback to an empty string if no email is stored
+
   const handleSubmit = (values) => {
+
+    // localStorage.setItem('currentStep', 1); 
+    localStorage.setItem('userEmail', values.email); 
     next(values);
+
   };
   return (
     <>
@@ -17,7 +23,7 @@ export const StepOne = ({ next }) => {
       </div>
       <div className="bg-primary flex flex-col justify-center items-start mx-auto">
         <Formik
-          initialValues={{ email: '', password: '', confirmPassword: '' }}
+          initialValues={{ email: savedEmail, password: '', confirmPassword: '' }}
           validationSchema={SignUpSchema}
           onSubmit={(values) => handleSubmit(values)}>
           {() => (
@@ -48,6 +54,9 @@ export const StepOne = ({ next }) => {
                     placeholder="Enter Password"
                     className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-light text-base text-gray rounded-[5px] py-2 px-[10px]"
                   />
+                   {/* Helper Text for Password Instructions */}
+                 <span className="text-xs text-gray-500">Password should contain alphabets and numbers (alphanumeric)</span>
+  
                   <ErrorMessage name="password" component="span" className="text-[#db3a3a]" />
                 </div>
                 <div className="xl:w-[120%] flex flex-col space-y-2 ">

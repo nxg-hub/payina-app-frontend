@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+
 
 import {
   StepEight,
@@ -31,12 +33,81 @@ export default function SignUpForm() {
     businessRegNumber: '',
     businessCategory: '',
     businessType: '',  });
+    const { step } = useParams(); // Get step from URL
+
   const [currentStep, setCurrentStep] = useState(0);
 
+  useEffect(() => {
+    const savedStep = localStorage.getItem('signupStep');
+
+    // Check if essential data (like email and password) is present
+    const isEssentialDataMissing = !data.email || !data.password;
+
+    if (isEssentialDataMissing) {
+      // If essential data is missing, reset to step 1 (index 0)
+      setCurrentStep(0);
+      localStorage.removeItem('signupStep'); // Clear the saved step
+    } else if (step) {
+      // If URL contains a step, use that step
+      setCurrentStep(parseInt(step, 10));
+    } else if (savedStep) {
+      // If localStorage contains a step, use it
+      setCurrentStep(parseInt(savedStep, 10));
+    }
+  }, [step, data]);
+
+  // Function to handle step progression
   const handleNextStep = (newData) => {
-    setData((prevData) => ({ ...prevData, ...newData }));
-    setCurrentStep((prevStep) => prevStep + 1);
+    setData((prevData) => ({
+      ...prevData,
+      ...newData,
+    }));
+
+    setCurrentStep((prevStep) => {
+      const nextStep = prevStep + 1;
+
+      // Save the next step to localStorage
+      localStorage.setItem('signupStep', nextStep);
+
+      return nextStep;
+    });
   };
+
+
+//  useEffect(() => {
+//     const savedStep = localStorage.getItem('signupStep');
+
+//     // Check if essential data (like email and password) is present in data
+//     const isEssentialDataMissing = !data.email || !data.password;
+
+//     if (isEssentialDataMissing) {
+//       // If email or password is missing, start from step 1
+//       setCurrentStep(0);
+//       localStorage.removeItem('signupStep'); // Clear saved step if the essential data is missing
+//     } else if (step) {
+//       // If there's a step in the URL, use that step
+//       setCurrentStep(parseInt(step));
+//     } else if (savedStep) {
+//       // If there's a saved step and essential data exists, set the saved step
+//       setCurrentStep(parseInt(savedStep));
+//     }
+//   }, [step, data]);
+
+
+  
+
+//   const handleNextStep = (newData) => {
+//     setData((prevData) => ({ ...prevData, ...newData }));
+//     setCurrentStep((prevStep) => {
+//       const nextStep = prevStep + 1;
+
+//        // Save the current step to localStorage
+//     localStorage.setItem('signupStep', nextStep);
+
+//     return nextStep;
+//   });
+// };
+  
 
   const steps = [
     <StepOne next={handleNextStep} />,
@@ -58,6 +129,7 @@ export default function SignUpForm() {
     <StepSeven next={handleNextStep} text="You Have Successfully Set Your Pin" />,
     <StepSeventeen next={handleNextStep} data={data}  />,
   ];
+
 
   return (
     <div className="xl:mb-14 space-y-10 xl:w-fit w-full px-6 mx-auto absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">

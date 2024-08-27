@@ -45,6 +45,7 @@ export const StepFive = ({ next, bvnData, email, initialValues}) => {
       setLoading(false);
     }
   };
+  localStorage.setItem('currentStep', 5);
 
   return (
     <div className="p-2 xl:p-[74px] bg-primary">

@@ -46,6 +46,7 @@ export const StepFour = ({ next }) => {
       setLoading(false);
     }
   };
+  localStorage.setItem('currentStep', 4);
 
   const Options = [
     { value: "BVN", label: "BVN" },

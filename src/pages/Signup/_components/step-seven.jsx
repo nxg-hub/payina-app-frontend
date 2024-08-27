@@ -5,6 +5,8 @@ export const StepSeven = ({ next, text }) => {
   const handleSubmit = (values) => {
     next(values);
   };
+  localStorage.setItem('currentStep', 7);
+
   return (
     <>
       <div className="p-2 xl:p-10  bg-primary text-center w-full ">

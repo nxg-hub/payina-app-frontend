@@ -16,6 +16,7 @@ import Paybills from './pages/paybills/Paybills';
 import Airtime from './pages/airtime/Airtime';
 
 
+
 function App() {
   const location = useLocation();
   const currentRoute = location.pathname;
@@ -25,8 +26,14 @@ function App() {
 
   const handleNextStep = (newData) => {
     setData((prev) => ({ ...prev, ...newData }));
-    setCurrentStep((prev) => prev + 1);
-  };
+    setCurrentStep((prev) => {
+      const nextStep = prev + 1;
+      // Save progress in localStorage
+      localStorage.setItem('signupStep', nextStep);
+      return nextStep;
+    });
+      };
+      
 
   return (
     <UserContext.Provider value={{ data, setData }}>
@@ -34,6 +41,12 @@ function App() {
         <Route
           path="/signup"
           element={<Signup data={data} currentStep={currentStep} handleNextStep={handleNextStep} />}
+        />
+
+         {/* Dynamic route for incomplete signup step */}
+         <Route
+  path="/signup"
+  element={<Signup data={data} handleNextStep={handleNextStep} />}
         />
         <Route path="/paybills" element={<Paybills />} />
         <Route path="/login" element={<Login />} />

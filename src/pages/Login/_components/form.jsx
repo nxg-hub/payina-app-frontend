@@ -1,14 +1,17 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import CustomButton from '../../../components/button/button';
 import { LoginSchema } from '../schemas/schema';
+import { useNavigate } from 'react-router-dom';
 import { images } from '../../../constants';
 import { useState } from 'react';
 
 const LoginForm = ({ next }) => {
   const [loginDetails, setLoginDetails] = useState();
-  //   console.log(loginDetails);
+  const navigate = useNavigate()
 
   const handleSubmit = async (values) => {
+    localStorage.setItem('userEmail', values.email); 
+
     setLoginDetails(values);
 
     const requestData = {
@@ -27,8 +30,19 @@ console.log (requestData)
 
       if (response.ok) {
         const result = await response.json();
-        console.log('Log in successful:', result);
-        next();
+        const token = result.data;
+        localStorage.setItem('authToken', token);
+        console.log('Log in successful:', token);
+        const signupStep = localStorage.getItem('signupStep');
+        const totalSteps = 17; // assuming you have 17 steps in total
+        
+        if (signupStep && parseInt(signupStep) < totalSteps) {
+          // If signup is incomplete, redirect to the last step the user was on
+          navigate('/signup');
+        } else {
+          // If signup is complete, proceed to the dashboard
+          navigate('/account/dashboard');
+        }
       } else {
         console.error('Failed to log in:', response.statusText);
       }

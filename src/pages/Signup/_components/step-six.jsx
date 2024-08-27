@@ -49,6 +49,7 @@ export const StepSix = ({ next, email }) => {  // Ensure email is passed as a pr
       setLoading(false);
     }
   };
+  localStorage.setItem('currentStep', 6);
 
   return (
     <div className="p-2 xl:p-10 bg-primary">
