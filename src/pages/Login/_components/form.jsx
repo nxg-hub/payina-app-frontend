@@ -61,7 +61,7 @@ const LoginForm = ({ next }) => {
         }
       } else {
         const errorText = await response.text();
-        setErrorMessage(`Failed to log in: ${errorText}`);
+        setErrorMessage(`Failed to log in: ${errorText.message}`);
       }
     } catch (error) {
       setErrorMessage(`Error logging in: ${error.message}`);
