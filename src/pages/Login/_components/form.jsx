@@ -49,7 +49,7 @@ const LoginForm = ({ next }) => {
           });
 
           if (levelResponse.ok) {
-            const levelData = await levelResponse.json();
+            const levelData = await levelResponse.text();
             localStorage.setItem('registrationLevel', levelData);
             console.log('Registration level fetched and stored:', levelData);
           } else {
