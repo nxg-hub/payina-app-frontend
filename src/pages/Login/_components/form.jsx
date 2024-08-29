@@ -57,7 +57,7 @@ const LoginForm = ({ next }) => {
           }
 
           console.log('Log in successful:', token);
-          useAuth(); // Invoke the next callback if provided
+          next(); // Invoke the next callback if provided
         } else {
           setErrorMessage('Login failed: Invalid token structure');
         }
@@ -72,7 +72,7 @@ const LoginForm = ({ next }) => {
       setIsLoading(false);
     }
   };
-
+  useAuth();
   return (
       <div className="md:w-[40%] mx-10 md:mx-auto md:py-10">
         <div className="text-center mt-20 xl:mt-0 text-primary font-extrabold xl:text-5xl text-2xl py-10">
