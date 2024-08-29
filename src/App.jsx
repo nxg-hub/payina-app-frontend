@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Routes, Route, BrowserRouter, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Routes, Route, BrowserRouter, useLocation, useNavigate } from 'react-router-dom';
 import PersonalPage from './pages/Personal';
 import BusinessPage from './pages/Business';
 import Signup from './pages/Signup';
@@ -19,35 +19,72 @@ import Airtime from './pages/airtime/Airtime';
 
 function App() {
   const location = useLocation();
+  const navigate = useNavigate();
   const currentRoute = location.pathname;
   const [data, setData] = useState({});
   const [currentStep, setCurrentStep] = useState(0);
   // console.log(data);
 
+  // const handleNextStep = (newData) => {
+  //   setData((prev) => ({ ...prev, ...newData }));
+  //   setCurrentStep((prev) => {
+  //     const nextStep = prev + 1;
+  //     // Save progress in localStorage
+  //     localStorage.setItem('signupStep', nextStep);
+  //     return nextStep;
+  //   });
+  //     };
+  useEffect(() => {
+    const fetchUserStep = async () => {
+      try {
+        const response = await axios.get(import.meta.env.VITE_REG_LEVEL_ENDPOINT, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+          },
+        });
+
+        const savedStep = response.data.registrationLevel;
+        console.log(savedStep);
+
+        if (savedStep) {
+          setCurrentStep(savedStep);
+          if (savedStep < 17) {
+            navigate('/signup');
+          } else {
+            navigate('/account/dashboard');
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user step:', error);
+      }
+    };
+
+    fetchUserStep();
+  }, [navigate]);
+
   const handleNextStep = (newData) => {
     setData((prev) => ({ ...prev, ...newData }));
-    setCurrentStep((prev) => {
-      const nextStep = prev + 1;
-      // Save progress in localStorage
-      localStorage.setItem('signupStep', nextStep);
-      return nextStep;
-    });
-      };
-      
+    setCurrentStep((prev) => prev + 1);
+  };
 
   return (
     <UserContext.Provider value={{ data, setData }}>
       <Routes>
+
         <Route
-          path="/signup"
-          element={<Signup data={data} currentStep={currentStep} handleNextStep={handleNextStep} />}
+            path="/signup"
+            element={<Signup data={data} currentStep={currentStep} handleNextStep={handleNextStep} />}
         />
+        {/*<Route*/}
+        {/*  path="/signup"*/}
+        {/*  element={<Signup data={data} currentStep={currentStep} handleNextStep={handleNextStep} />}*/}
+        {/*/>*/}
 
          {/* Dynamic route for incomplete signup step */}
-         <Route
-  path="/signup"
-  element={<Signup data={data} handleNextStep={handleNextStep} />}
-        />
+  {/*       <Route*/}
+  {/*path="/signup"*/}
+  {/*element={<Signup data={data} handleNextStep={handleNextStep} />}*/}
+  {/*      />*/}
         <Route path="/paybills" element={<Paybills />} />
         <Route path="/login" element={<Login />} />
         <Route path="/account/dashboard" element={<Dashboard />} />

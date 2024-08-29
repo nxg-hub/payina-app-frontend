@@ -19,8 +19,6 @@ const LoginForm = ({ next }) => {
 
   const handleSubmit = async (values) => {
     setIsLoading(true);
-    setErrorMessage(''); // Clear any existing error messages
-
     localStorage.setItem('userEmail', values.email);
 
     const requestData = {
@@ -28,17 +26,8 @@ const LoginForm = ({ next }) => {
       password: values.password,
     };
 
-    console.log(requestData);
-
-    const endpoint = import.meta.env.VITE_LOGIN_USER_ENDPOINT;
-    if (!endpoint) {
-      setErrorMessage('Login endpoint is not defined');
-      setIsLoading(false);
-      return;
-    }
-
     try {
-      const response = await fetch(endpoint, {
+      const response = await fetch(import.meta.env.VITE_LOGIN_USER_ENDPOINT, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -53,22 +42,7 @@ const LoginForm = ({ next }) => {
         if (token) {
           localStorage.setItem('authToken', token);
           console.log('Log in successful:', token);
-
-          // Retrieve and parse the currentStep
-          const currentStep = parseInt(localStorage.getItem('currentStep') || '0', 10);
-          const totalSteps = 17; // assuming you have 17 steps in total
-
-          console.log('currentStep:', currentStep); // Debugging line
-          console.log('totalSteps:', totalSteps); // Debugging line
-
-          // If registration is incomplete, redirect to the last step the user was on
-          if (currentStep < totalSteps) {
-            navigate('/signup');
-          } else {
-            // If registration is complete, proceed to the dashboard
-            navigate('/account/dashboard');
-          }
-
+          navigate('/'); // Redirect to the root, which will trigger App.jsx to handle further navigation
           next(); // Invoke the next callback if provided
         } else {
           setErrorMessage('Login failed: Invalid token structure');
