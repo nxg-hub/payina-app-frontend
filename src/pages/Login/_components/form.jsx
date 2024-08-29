@@ -49,19 +49,26 @@ const LoginForm = ({ next }) => {
       if (response.ok) {
         const result = await response.json();
         const token = result?.data;
+
         if (token) {
           localStorage.setItem('authToken', token);
           console.log('Log in successful:', token);
-          const signupStep = localStorage.getItem('currentStep');
+
+          // Retrieve and parse the currentStep
+          const currentStep = parseInt(localStorage.getItem('currentStep') || '0', 10);
           const totalSteps = 17; // assuming you have 17 steps in total
 
-          if (signupStep && parseInt(signupStep) < totalSteps) {
-            // If signup is incomplete, redirect to the last step the user was on
+          console.log('currentStep:', currentStep); // Debugging line
+          console.log('totalSteps:', totalSteps); // Debugging line
+
+          // If registration is incomplete, redirect to the last step the user was on
+          if (currentStep < totalSteps) {
             navigate('/signup');
           } else {
-            // If signup is complete, proceed to the dashboard
+            // If registration is complete, proceed to the dashboard
             navigate('/account/dashboard');
           }
+
           next(); // Invoke the next callback if provided
         } else {
           setErrorMessage('Login failed: Invalid token structure');
@@ -71,14 +78,9 @@ const LoginForm = ({ next }) => {
         const message = parseXML(errorText);
         setErrorMessage(`Failed to log in: ${message}`);
       }
-    } catch (error) {
-      setErrorMessage(`Error logging in: ${error.message}`);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
-  return (
+
+      return (
       <div className="md:w-[40%] mx-10 md:mx-auto md:py-10">
         <div className="text-center mt-20 xl:mt-0 text-primary font-extrabold xl:text-5xl text-2xl py-10">
           Login to Payina
