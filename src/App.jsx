@@ -48,6 +48,12 @@ function App() {
   useEffect(() => {
     const fetchUserStep = async () => {
       try {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+          // No token, handle unauthenticated state (e.g., redirect to landing page)
+          navigate('/');
+          return;
+        }
         const response = await axios.get(import.meta.env.VITE_REG_LEVEL_ENDPOINT, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('authToken')}`,
