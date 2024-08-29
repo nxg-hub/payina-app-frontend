@@ -3,6 +3,7 @@ import CustomButton from '../../../components/button/button';
 import { LoginSchema } from '../schemas/schema';
 import { useState } from 'react';
 import { images } from '../../../constants';
+import {useAuth} from "../../../useAuth";
 
 const parseXML = (xml) => {
   const parser = new DOMParser();
@@ -56,7 +57,7 @@ const LoginForm = ({ next }) => {
           }
 
           console.log('Log in successful:', token);
-          next(); // Invoke the next callback if provided
+          useAuth(); // Invoke the next callback if provided
         } else {
           setErrorMessage('Login failed: Invalid token structure');
         }

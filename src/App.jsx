@@ -19,8 +19,6 @@ import {useAuth} from "./useAuth";
 
 
 function App() {
-
-  useAuth();
   const location = useLocation();
   const currentRoute = location.pathname;
   const [data, setData] = useState({});
