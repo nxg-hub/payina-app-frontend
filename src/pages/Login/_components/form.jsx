@@ -38,7 +38,7 @@ console.log (requestData)
         
         if (signupStep && parseInt(signupStep) < totalSteps) {
           // If signup is incomplete, redirect to the last step the user was on
-          navigate('/signup');
+          navigate('/account/dashboard');
         } else {
           // If signup is complete, proceed to the dashboard
           navigate('/account/dashboard');
