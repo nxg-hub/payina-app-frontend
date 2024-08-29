@@ -19,7 +19,7 @@ export function useAuth() {
 
         if (token) {
             const savedStep = REGISTRATION_LEVELS[registrationLevel] || 0;
-
+console.log(savedStep);
             if (savedStep < 5) { // Adjust this number based on your logic
                 navigate('/signup');
             } else {
