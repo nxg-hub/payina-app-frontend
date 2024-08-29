@@ -16,6 +16,16 @@ import Paybills from './pages/paybills/Paybills';
 import Airtime from './pages/airtime/Airtime';
 import axios from 'axios';
 
+const REGISTRATION_LEVELS = {
+  BVN_VERIFICATION_DOCUMENT_UPLOAD: 0,
+  BVN_DETAILS_CONFIRMATION: 1,
+  FACIAL_CAPTURE_AND_UPLOAD: 2,
+  CORPORATE_PROFILE_UPDATE: 3,
+  SET_TRANSACTION_PIN: 4,
+  KYC_COMPLETED: 5,
+  // Add more mappings if necessary
+};
+
 
 
 function App() {
@@ -44,19 +54,25 @@ function App() {
           },
         });
 
-        const savedStep = response.data;
-        console.log(savedStep);
+        const registrationLevel = response.data;
+        console.log('registrationLevel:', registrationLevel); // Debugging line
 
-        if (savedStep) {
-          setCurrentStep(savedStep);
-          if (savedStep < 17) {
-            navigate('/signup');
-          } else {
-            navigate('/account/dashboard');
-          }
+        // Convert registration level string to step index
+        const savedStep = REGISTRATION_LEVELS[registrationLevel] || 0;
+
+        console.log('savedStep:', savedStep); // Debugging line
+
+        setCurrentStep(savedStep);
+
+        // Navigate based on the step
+        if (savedStep < 17) {
+          navigate('/signup');
+        } else {
+          navigate('/account/dashboard');
         }
       } catch (error) {
         console.error('Error fetching user step:', error);
+        navigate('/signup'); // Default to signup if there's an error
       }
     };
 
