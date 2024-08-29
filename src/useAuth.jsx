@@ -12,7 +12,7 @@ const REGISTRATION_LEVELS = {
     // Add more levels as needed
 };
 
-const useAuth = () => {
+export function useAuth(){
     const navigate = useNavigate();
 
     const checkUserRegistrationLevel = async () => {
@@ -49,7 +49,7 @@ const useAuth = () => {
     }, []);
 
     return { checkUserRegistrationLevel };
-};
+}
 
 export default useAuth;
 
