@@ -78,9 +78,14 @@ const LoginForm = ({ next }) => {
         const message = parseXML(errorText);
         setErrorMessage(`Failed to log in: ${message}`);
       }
+    } catch (error) {
+      setErrorMessage(`Error logging in: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-
-      return (
+  return (
       <div className="md:w-[40%] mx-10 md:mx-auto md:py-10">
         <div className="text-center mt-20 xl:mt-0 text-primary font-extrabold xl:text-5xl text-2xl py-10">
           Login to Payina
