@@ -26,7 +26,7 @@ export function useAuth() {
                 navigate('/account/dashboard');
             }
         } else {
-            navigate('/');
+            navigate('/login');
         }
     }, [navigate]);
 }
