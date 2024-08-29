@@ -44,7 +44,7 @@ function App() {
           },
         });
 
-        const savedStep = response.data.registrationLevel;
+        const savedStep = response.registrationLevel;
         console.log(savedStep);
 
         if (savedStep) {
