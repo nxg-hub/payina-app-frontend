@@ -33,7 +33,7 @@ export function useAuth(){
             const registrationLevel = response.data;
             const step = REGISTRATION_LEVELS[registrationLevel] || 0;
 
-            if (step < 17) { // assuming 17 is the completion level
+            if (step < 17) {
                 navigate('/signup');
             } else {
                 navigate('/account/dashboard');
