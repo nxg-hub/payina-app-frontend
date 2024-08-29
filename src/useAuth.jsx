@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const REGISTRATION_LEVELS = {
+
     BVN_VERIFICATION_DOCUMENT_UPLOAD: 0,
-    BVN_DETAILS_CONFIRMATION: 1,
+    BVN_DETAILS_CONFIRMATION_SAVE_USERNAME: 1,
     FACIAL_CAPTURE_AND_UPLOAD: 2,
-    CORPORATE_PROFILE_UPDATE: 3,
-    SET_TRANSACTION_PIN: 4,
-    KYC_COMPLETED: 5,
+    CORPORATE_PROFILE_UPDATE_SET_PIN:3,
+    KYC_COMPLETED:4,
     // Add more levels as needed
 };
 
