@@ -21,6 +21,16 @@ import {
   StepTwelve,
   StepTwo
 } from './_components';
+import axios from "axios";
+
+const REGISTRATION_LEVELS = {
+  BVN_VERIFICATION_DOCUMENT_UPLOAD: 0,
+  BVN_DETAILS_CONFIRMATION: 1,
+  FACIAL_CAPTURE_AND_UPLOAD: 2,
+  CORPORATE_PROFILE_UPDATE: 3,
+  SET_TRANSACTION_PIN: 4,
+  KYC_COMPLETED: 5,
+};
 
 
 export default function SignUpForm() {
@@ -36,6 +46,26 @@ export default function SignUpForm() {
     const { step } = useParams(); // Get step from URL
 
   const [currentStep, setCurrentStep] = useState(0);
+
+  useEffect(() => {
+    const fetchRegistrationLevel = async () => {
+      try {
+        // Simulate fetching registration level from the backend
+        const response = await axios.get(import.meta.env.VITE_REG_LEVEL_ENDPOINT); // Adjust the API endpoint accordingly
+        const result = await response;
+        const registrationLevel = result.data;
+
+        // Convert registration level to step index
+        const stepIndex = REGISTRATION_LEVELS[registrationLevel] || 0;
+        setCurrentStep(stepIndex);
+      } catch (error) {
+        console.error('Error fetching registration level:', error);
+        setCurrentStep(0); // Default to the first step on error
+      }
+    };
+
+    fetchRegistrationLevel();
+  }, []);
 
   useEffect(() => {
     const savedStep = localStorage.getItem('signupStep');
