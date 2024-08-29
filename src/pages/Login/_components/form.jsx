@@ -52,7 +52,7 @@ const LoginForm = ({ next }) => {
         if (token) {
           localStorage.setItem('authToken', token);
           console.log('Log in successful:', token);
-          const signupStep = localStorage.getItem('signupStep');
+          const signupStep = localStorage.getItem('currentStep');
           const totalSteps = 17; // assuming you have 17 steps in total
 
           if (signupStep && parseInt(signupStep) < totalSteps) {
