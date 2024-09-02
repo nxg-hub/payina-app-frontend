@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React from 'react';
 import Navbar from '../../components/navbar/navbar';
-import { tansIcon } from '../../constants/images';
+import tansIcon from '../../assets/images/tansIcon.png';
 import Footer from '../../components/footer/footer';
 
 const Thanks = () => {
