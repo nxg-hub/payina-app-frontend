@@ -14,6 +14,14 @@ import Settings from './pages/Account/Settings';
 import Createinvoice from './pages/Account/Invoice/_components/Createinvoice';
 import Paybills from './pages/paybills/Paybills';
 import Airtime from './pages/airtime/Airtime';
+import Card from './pages/card/Card';
+import Ren from './pages/ren/Ren';
+import Thanks from './pages/thanks/Thanks';
+import Data from './pages/data/Data';
+import Plans from './pages/plans/Plans';
+import Planb from './pages/planb/Planb';
+import Renew from './pages/renew/Renew';
+
 
 
 function App() {
@@ -45,6 +53,13 @@ function App() {
         <Route path="/account/inventory" element={<Inventory />} />
         <Route path="/account/settings" element={<Settings />} />
         <Route path="/airtime" element={<Airtime />} />
+        <Route path="/card" element={<Card />} />
+        <Route path="/ren"  element={<Ren />} />
+        <Route path="/thanks" element={<Thanks />} />
+        <Route path="/data" element={<Data />} />
+        <Route path="/plans" element={<Plans />} />
+        <Route path="/planb" element={<Planb />} />
+        <Route path="/renew" element={<Renew />} />
         <Route
           path={currentRoute}
           element={

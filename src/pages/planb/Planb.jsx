@@ -1,18 +1,17 @@
-import React from 'react';
+import React from 'react'
 import Navbar from '../../components/navbar/navbar';
 import  { Link} from  'react-router-dom';
 import Footer from '../../components/footer/footer';
 
 
 
-
-const Card = () => {
+const Planb = () => {
     return (
-      <section className="text-primary w-full h-screen">
-       <Navbar className="pt-6" />
+        <section className="text-primary">
+        <Navbar className="pt-6" />
        <div className=" container">
         <div className="w-[80%] h-1 border-none mr-auto ml-auto 
-            mt-[-2px] mb-7 bg-yellow">
+            mt-[-2px] mb-8 bg-yellow">
             </div>
             <button className="text-primary mt-[25] text-left p-10 border-none rounded-[5px]
              w-[64%] bg-neutral px-4 py-2">Review your Order
@@ -21,7 +20,7 @@ const Card = () => {
              <p className="pt-8  pr-5 text-sm">Product</p> 
               <div className=" w-[42%] mt-24 h-1  ml-5 border-none
                      bg-yellow"></div>
-               <p className="pt-8 pl-5 text-sm">Airtime</p>
+               <p className="pt-8 pl-5 text-sm">Data</p>
             </div>
             <div className=" flex px-5 gap-4">
              <p className="pt-8  pr-5 text-sm">Network</p>
@@ -39,10 +38,10 @@ const Card = () => {
              <p className="pt-8 pl-5 text-sm">Amount</p>
               <div className=" w-[40%] mt-24 h-[1] border-none
                      bg-yellow"></div>
-               <p className="pt-8 pl-14 text-sm">200</p>
+               <p className="pt-8 pl-14 text-sm">500</p>
             </div>
             <div>
-               <Link to="/ren" >
+               <Link to="/renew" >
                  <button className="text-primary mb-10 text-left px-16 py-4 
                     border-none rounded-[5px] bg-lightBlue cursor-pointer
                      hover:bg-neutral transition-all duration-200 ">
@@ -51,11 +50,11 @@ const Card = () => {
                     </Link>
             </div>
            </div>
-           <div className="pt[-10]">
+           <div className="mt-10">
               <Footer />
               </div>
-            </section>
+        </section>
     )
 }
 
-export default Card
+export default Planb

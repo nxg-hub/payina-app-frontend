@@ -61,7 +61,7 @@ import Revenue from '../assets/images/revenue.png'
 export {default as watchIcon} from "../assets/images/watchIcon.png"
 export {default as support} from "../assets/images/support.png"
 export {default as moneyBack} from "../assets/images/moneyBack.png"
-
+export {default as tansIcon} from "../assets/images/tansIcon.png"
 
 
 export default {
@@ -125,5 +125,6 @@ export default {
   BusinessPayroll,
   BusinessSignatory,
   Revenue
+
   
 };
