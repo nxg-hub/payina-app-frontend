@@ -15,11 +15,6 @@ import Createinvoice from './pages/Account/Invoice/_components/Createinvoice';
 import Paybills from './pages/paybills/Paybills';
 import Airtime from './pages/airtime/Airtime';
 import Card from './pages/card/Card'
-import Ren from './pages/ren/Ren';
-import Thanks from './pages/thanks/Thanks';
-import Data from './pages/data/Data';
-import Plans from './pages/plans/Plans';
-import Planb from './pages/planb/Planb';
 import Renew from './pages/renew/Renew';
 import {useAuth} from "./useAuth";
 
