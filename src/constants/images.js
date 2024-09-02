@@ -62,6 +62,12 @@ export {default as watchIcon} from "../assets/images/watchIcon.png"
 export {default as support} from "../assets/images/support.png"
 export {default as moneyBack} from "../assets/images/moneyBack.png"
 export {default as tansIcon} from "../assets/images/tansIcon.png"
+export {default as bet1} from "../assets/images/bet1.png"
+export {default as bet2} from "../assets/images/bet2.png"
+export {default as bet3} from "../assets/images/bet3.png"
+export {default as bet4} from "../assets/images/bet4.png"
+export {default as bet5} from "../assets/images/bet5.png"
+export {default as bet6} from "../assets/images/bet6.png"
 
 
 export default {

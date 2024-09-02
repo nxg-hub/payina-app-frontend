@@ -23,7 +23,8 @@ import Plans from './pages/plans/Plans';
 import Planb from './pages/planb/Planb';
 import Renew from './pages/renew/Renew';
 import {useAuth} from "./useAuth";
-
+import Betone from './pages/betone/Betone';
+import Bettwo from './pages/bettwo/Bettwo';
 
 
 
@@ -75,6 +76,8 @@ function App() {
         <Route path="/plans" element={<Plans />} />
         <Route path="/planb" element={<Planb />} />
         <Route path="/renew" element={<Renew />} />
+        <Route path="/betone" element={<Betone />} />
+        <Route path="/bettwo" element={<Bettwo />} />
         <Route
           path={currentRoute}
           element={

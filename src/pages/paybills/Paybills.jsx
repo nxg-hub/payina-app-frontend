@@ -70,7 +70,9 @@ const Paybills = () => {
                             <Link to="/data">
                             <Cards icon= <IoWifi size={30} color="white" /> title="Buy Data" />
                             </Link>
+                            <Link to="/betone">
                             <Cards icon= <RiCurrencyFill  size={30} color="white" /> title=" PayBills"/>
+                            </Link>
                 </div>
                 <div className="mt-4">
                  <Footer  />
