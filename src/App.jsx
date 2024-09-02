@@ -14,6 +14,7 @@ import Settings from './pages/Account/Settings';
 import Createinvoice from './pages/Account/Invoice/_components/Createinvoice';
 import Paybills from './pages/paybills/Paybills';
 import Airtime from './pages/airtime/Airtime';
+<<<<<<< HEAD
 import Card from './pages/card/Card';
 import Ren from './pages/ren/Ren';
 import Thanks from './pages/thanks/Thanks';
@@ -21,6 +22,9 @@ import Data from './pages/data/Data';
 import Plans from './pages/plans/Plans';
 import Planb from './pages/planb/Planb';
 import Renew from './pages/renew/Renew';
+=======
+import {useAuth} from "./useAuth";
+>>>>>>> 11d304f7fb6e6e81a2bfe41d6a51e7071310c741
 
 
 
@@ -33,8 +37,14 @@ function App() {
 
   const handleNextStep = (newData) => {
     setData((prev) => ({ ...prev, ...newData }));
-    setCurrentStep((prev) => prev + 1);
-  };
+    setCurrentStep((prev) => {
+      const nextStep = prev + 1;
+      // Save progress in localStorage
+      localStorage.setItem('signupStep', nextStep);
+      return nextStep;
+    });
+      };
+
 
   return (
     <UserContext.Provider value={{ data, setData }}>
@@ -42,6 +52,12 @@ function App() {
         <Route
           path="/signup"
           element={<Signup data={data} currentStep={currentStep} handleNextStep={handleNextStep} />}
+        />
+
+         {/* Dynamic route for incomplete signup step */}
+         <Route
+  path="/signup"
+  element={<Signup data={data} handleNextStep={handleNextStep} />}
         />
         <Route path="/paybills" element={<Paybills />} />
         <Route path="/login" element={<Login />} />
@@ -69,10 +85,10 @@ function App() {
               <BusinessPage />
             ) : (
               ''
-            ) 
+            )
           }
         />
-      
+
       </Routes>
     </UserContext.Provider>
   );

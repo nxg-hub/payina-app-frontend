@@ -11,6 +11,8 @@ export const StepTwo = ({ next, initialValues }) => {
   const [message, setMessage] = useState('');
    
   const handleSubmit = async (values) => {
+    localStorage.setItem('currentStep', 2);
+
 
     try {
       const payload = {
@@ -34,6 +36,9 @@ export const StepTwo = ({ next, initialValues }) => {
       // console.log('Data:', data);
 
       setMessage('Registration successful');
+      localStorage.setItem('currentStep', 2);
+      
+
       next({ ...initialValues, phone });
     } else {
       const errorMessage = await response.text(); 

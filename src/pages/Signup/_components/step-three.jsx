@@ -29,6 +29,8 @@ export const StepThree = ({ next, data }) => {
       const data = await response.json();
 
       if (response.ok) {
+        localStorage.setItem('currentStep', 3); 
+
         next(values); 
       } else {
         setOtpError(data.message || 'Invalid OTP');
@@ -104,10 +106,11 @@ export const StepThree = ({ next, data }) => {
       </div>
       <div className="bg-primary flex flex-col justify-center items-start py-4 xl:py-8 px-4 xl:px-20">
         <div className="text-lightBlue text-start font-bold xl:text-[32px] w-full xl:w-[450px] leading-9 text-xl">
-          Kindly Confirm Your Phone Number
+          A verification code has been sent to your email address
         </div>
         <span className="font-light mt-5 leading-5 text-sm xl:text-base">
-          We’ll send a verification code to your phone number
+          Kindly confirm your Phone Number
+          We can resend a verification code to your phone number
         </span>
         <Formik
           initialValues={{ phone: phoneNumber, otp: '' }}

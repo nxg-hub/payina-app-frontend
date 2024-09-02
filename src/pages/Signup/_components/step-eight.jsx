@@ -21,6 +21,8 @@ export const StepEight = ({ next, }) => {
 
      try {
     next(HomeAddress, 11);
+    localStorage.setItem('currentStep', 8);
+
   }
   catch (error) {
     console.error('Error submitting add. data:', error);

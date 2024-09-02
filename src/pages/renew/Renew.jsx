@@ -33,7 +33,7 @@ const Renew = () => {
                         className="border-2 mt-2 mb-3 border-slate-300 rounded-[5px] px-2 py-1 border-primary bg-black text-slate-600"
                         />
                      </div>
-                     <div className="md:flex flex-1   text-primary gap-6 mt-8  w-[300px]  ">
+                     <div className="md:flex flex-1  text-primary gap-6 mt-8  w-[300px]  ">
                         <input type="number" placeholder="MM" 
                         className="border-2 mb-5 md:static border-sslate-300 text-xs pl-2 px-24 py-2 rounded-[5px]  border-primary bg-black text-slate-600"
                         />
