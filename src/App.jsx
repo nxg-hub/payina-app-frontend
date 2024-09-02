@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Routes, Route, BrowserRouter, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import PersonalPage from './pages/Personal';
 import BusinessPage from './pages/Business';
 import Signup from './pages/Signup';
@@ -14,11 +14,13 @@ import Settings from './pages/Account/Settings';
 import Createinvoice from './pages/Account/Invoice/_components/Createinvoice';
 import Paybills from './pages/paybills/Paybills';
 import Airtime from './pages/airtime/Airtime';
-import Card from './pages/card/Card'
+import Card from './pages/card/Card';
+import Ren from './pages/ren/Ren';
+import Thanks from './pages/thanks/Thanks';
+import Data from './pages/data/Data';
+import Plans from './pages/plans/Plans';
+import Planb from './pages/planb/Planb';
 import Renew from './pages/renew/Renew';
-import {useAuth} from "./useAuth";
-
-
 
 function App() {
   const location = useLocation();
@@ -35,8 +37,7 @@ function App() {
       localStorage.setItem('signupStep', nextStep);
       return nextStep;
     });
-      };
-
+  };
 
   return (
     <UserContext.Provider value={{ data, setData }}>
@@ -46,11 +47,8 @@ function App() {
           element={<Signup data={data} currentStep={currentStep} handleNextStep={handleNextStep} />}
         />
 
-         {/* Dynamic route for incomplete signup step */}
-         <Route
-  path="/signup"
-  element={<Signup data={data} handleNextStep={handleNextStep} />}
-        />
+        {/* Dynamic route for incomplete signup step */}
+        <Route path="/signup" element={<Signup data={data} handleNextStep={handleNextStep} />} />
         <Route path="/paybills" element={<Paybills />} />
         <Route path="/login" element={<Login />} />
         <Route path="/account/dashboard" element={<Dashboard />} />
@@ -62,6 +60,11 @@ function App() {
         <Route path="/account/settings" element={<Settings />} />
         <Route path="/airtime" element={<Airtime />} />
         <Route path="/card" element={<Card />} />
+        <Route path="/ren" element={<Ren />} />
+        <Route path="/thanks" element={<Thanks />} />
+        <Route path="/data" element={<Data />} />
+        <Route path="/plans" element={<Plans />} />
+        <Route path="/planb" element={<Planb />} />
         <Route path="/renew" element={<Renew />} />
         <Route
           path={currentRoute}
@@ -75,7 +78,6 @@ function App() {
             )
           }
         />
-
       </Routes>
     </UserContext.Provider>
   );

@@ -4,7 +4,7 @@ import Navbar from '../../components/navbar/navbar';
 import Footer from '../../components/footer/footer';
 import { Link } from 'react-router-dom';
 
-const Renew = () => {
+const Ren = () => {
   return (
     <section>
       <Navbar />
@@ -22,7 +22,7 @@ const Renew = () => {
             <label className="py-4">Amount Payable</label>
             <input
               type="number"
-              placeholder="#500"
+              placeholder="#200"
               className="border-2 border-slate-300 rounded-[5px] px-2 py-1
                          border-primary bg-black text-primary mb-3"
             />
@@ -43,7 +43,7 @@ const Renew = () => {
               className="border-2 mt-2 mb-3 border-slate-300 rounded-[5px] px-2 py-1 border-primary bg-black text-slate-600"
             />
           </div>
-          <div className="md:flex flex-1  text-primary gap-6 mt-8  w-[300px]  ">
+          <div className="md:flex flex-1   text-primary gap-6 mt-8  w-[300px]  ">
             <input
               type="number"
               placeholder="MM"
@@ -75,4 +75,4 @@ const Renew = () => {
   );
 };
 
-export default Renew;
+export default Ren;
