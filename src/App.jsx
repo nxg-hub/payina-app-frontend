@@ -62,11 +62,6 @@ function App() {
         <Route path="/account/settings" element={<Settings />} />
         <Route path="/airtime" element={<Airtime />} />
         <Route path="/card" element={<Card />} />
-        <Route path="/ren"  element={<Ren />} />
-        <Route path="/thanks" element={<Thanks />} />
-        <Route path="/data" element={<Data />} />
-        <Route path="/plans" element={<Plans />} />
-        <Route path="/planb" element={<Planb />} />
         <Route path="/renew" element={<Renew />} />
         <Route
           path={currentRoute}
