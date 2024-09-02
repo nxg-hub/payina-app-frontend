@@ -17,7 +17,6 @@ const incomeRangeOptions = ['Less than 100,000', '100,000 - 500,000', '500,001 -
 export const StepThirteen = ({ next, email, initialValues }) => {
   const handleSubmit = async (values) => {
     const customerId = await authenticateEmail(email); // Ensure email is passed correctly
-
   console.log('Authenticated User ID:', customerId);
 
     // Combine previous data with the current step's data

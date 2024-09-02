@@ -1,7 +1,7 @@
-import React from 'react';
-import Navbar from '../../components/navbar/navbar';
-import Footer from '../../components/footer/footer';
-import Cards from '../../components/cards/Cards';
+import React from 'react'
+import Navbar from '../../components/navbar/navbar'
+import Footer from '../../components/footer/footer'
+import Cards from '../../components/cards/Cards'
 import { IoCallOutline } from "react-icons/io5";
 import { IoWifi } from "react-icons/io5";
 import { RiCurrencyFill } from "react-icons/ri";
@@ -67,7 +67,7 @@ const Paybills = () => {
                            <Link to="/airtime">
                             <Cards  icon= <IoCallOutline size={30}color="white" /> title="Buy Airtime"/>
                             </Link>
-                            <Link to="/data">
+                            <Link to="/card">
                             <Cards icon= <IoWifi size={30} color="white" /> title="Buy Data" />
                             </Link>
                             <Cards icon= <RiCurrencyFill  size={30} color="white" /> title=" PayBills"/>

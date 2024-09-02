@@ -23,16 +23,16 @@ const ActionButtons = () => {
         <Link to={'/paybills'}>
         <Button 
           children="Paybills"
-          className='hover:!bg-lightBlue hover:scale-95 font-extrabold duration-300 center gap-2'
-          
+          className="'hover:bg-lightBlue hover:scale-95 font-extrabold duration-300 center gap-2"
+          backgroundColor='#00678f'
         />
         
         </Link>
         <Link to={'/signup'}>
           <Button
             children="Sign Up"
-            className='hover:!bg-lightBlue hover:scale-95 font-extrabold duration-300 center gap-2'
-            backgroundColor="transparent"
+            className='hover:bg-lightBlue hover:scale-95 font-extrabold duration-300 center gap-2'
+            backgroundColor='#00678f'
           />
         </Link>
         <Link to={'/login'}>

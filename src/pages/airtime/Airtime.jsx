@@ -3,7 +3,6 @@ import Navbar from '../../components/navbar/navbar'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown} from "@fortawesome/free-solid-svg-icons";
 import Footer from '../../components/footer/footer';
-import  { Link} from  'react-router-dom';
 
 
 const Airtime = () => {
@@ -30,9 +29,9 @@ const Airtime = () => {
                      </div>
                      <div className="flex flex-col w-[64%] ">
                         <label className="py-4">Network</label>
-                        <div className=" cursor-pointer  ">
+                        <div className=" cursor-pointer ">
                          <FontAwesomeIcon icon={faChevronDown} color="teal" className=" absolute 
-                           pl-[53%] md:pl-[56%]  min-w-1 py-4 "  />
+                           pl-[56%] min-w-1 py-4"  />
                         <input type="text" placeholder="Choose Network "
                       className="border-2 rounded-[5px]  px-5 py-2 border-primary
                        bg-black text-slate-600 w-full" />
@@ -52,13 +51,11 @@ const Airtime = () => {
                         
                         />
                      </div>
-                     <Link to="/card">
                     <button className="text-primary mb-10 text-left px-16 py-4 
                     border-none rounded-[5px] bg-lightBlue cursor-pointer
                      hover:bg-neutral transition-all duration-200 ">
                         Proceed
                     </button>
-                    </Link>
              </form>
          </div>
           <div className="pt[-10]">
