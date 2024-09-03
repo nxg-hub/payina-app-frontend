@@ -32,42 +32,16 @@ import Settings from '../assets/images/settings.svg';
 import BalanceSpiral from '../assets/images/balance_spiral.svg';
 import BalanceIcon from '../assets/images/balance_icon.svg';
 import Profile from '../assets/images/profile.svg';
-import AddMoney from '../assets/images/add_money.svg'
-import SendMoney from '../assets/images/send_money.svg'
-import Invoice from '../assets/images/create_invoice.svg'
-import Bills from '../assets/images/bills.svg'
-import GreenArrow from '../assets/images/green_arrow.svg'
-import RedArrow from '../assets/images/red_arrow.svg'
-import PayrollIcon from '../assets/images/payroll_icon.png'
-import SecondBusiness from '../assets/images/second_business.png'
-import FirstBusiness from '../assets/images/first_business.png'
-import CVS from '../assets/images/cvs_logo.png'
-import Google from '../assets/images/google_logo.png'
-import Nivea from '../assets/images/nivea_logo.png'
-import Netflix from '../assets/images/netflix_logo.png'
-import Hermes from '../assets/images/hermes.png'
-import Sap from '../assets/images/sap.png'
-import Phillips from '../assets/images/phillips.png'
-import Zillow from '../assets/images/zillow.png'
-import Ge from '../assets/images/ge.png'
-import Zara from '../assets/images/zara.png'
-import Huawei from '../assets/images/huawei.png'
-import Lock from '../assets/images/lock.png'
-import Transfer from '../assets/images/transfer.png'
-import Mobile from '../assets/images/mobile.png'
-import BusinessPayroll from '../assets/images/business_payroll.png'
-import BusinessSignatory from '../assets/images/business_signatory.png'
-import Revenue from '../assets/images/revenue.png'
-export {default as watchIcon} from "../assets/images/watchIcon.png"
-export {default as support} from "../assets/images/support.png"
-export {default as moneyBack} from "../assets/images/moneyBack.png"
-export {default as tansIcon} from "../assets/images/tansIcon.png"
-export {default as bet1} from "../assets/images/bet1.png"
-export {default as bet2} from "../assets/images/bet2.png"
-export {default as bet3} from "../assets/images/bet3.png"
-export {default as bet4} from "../assets/images/bet4.png"
-export {default as bet5} from "../assets/images/bet5.png"
-export {default as bet6} from "../assets/images/bet6.png"
+export { default as watchIcon } from '../assets/images/watchIcon.png';
+export { default as support } from '../assets/images/support.png';
+export { default as moneyBack } from '../assets/images/moneyBack.png';
+export { default as tansIcon } from '../assets/images/tansIcon.png';
+export { default as bet1 } from '../assets/images/bet1.png';
+export { default as bet2 } from '../assets/images/bet2.png';
+export { default as bet3 } from '../assets/images/bet3.png';
+export { default as bet4 } from '../assets/images/bet4.png';
+export { default as bet5 } from '../assets/images/bet5.png';
+export { default as bet6 } from '../assets/images/bet6.png';
 import AddMoney from '../assets/images/add_money.svg';
 import SendMoney from '../assets/images/send_money.svg';
 import Invoice from '../assets/images/create_invoice.svg';
@@ -95,10 +69,6 @@ import BusinessPayroll from '../assets/images/business_payroll.png';
 import BusinessSignatory from '../assets/images/business_signatory.png';
 import Revenue from '../assets/images/revenue.png';
 import TansIcon from '../assets/images/tansIcon.png';
-export { default as watchIcon } from '../assets/images/watchIcon.png';
-export { default as support } from '../assets/images/support.png';
-export { default as moneyBack } from '../assets/images/moneyBack.png';
-
 
 export default {
   logo,
