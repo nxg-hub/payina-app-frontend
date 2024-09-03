@@ -5,7 +5,11 @@ const FirstSection = () => {
   return (
     <div className="bg-[#000] flex justify-center items-center xl:pb-4">
       <div className="relative">
-        <img src={images.Revenue} alt="transaction" className="py-12 px-10 md:py-16 md:px-20 xl:mb-10" />
+        <img
+          src={images.Revenue}
+          alt="transaction"
+          className="py-12 px-10 md:py-16 md:px-20 xl:mb-10"
+        />
         <div className="bg-primary p-4 h-[60%] md:px-4 md:py-10 w-[30%] md:w-[30%] md:h-fit absolute md:left-[12%] left-[12%] md:top-[20%] top-[3.5rem] text-lightBlue flex items-center justify-center flex-col rounded-[8.34px]">
           <span className="uppercase md:text-center text-start text-[6px] xl:text-[1rem] md:text-[.9rem]">
             SEAMLESSLY SEND AND RECEIVE MONEY
@@ -23,4 +27,3 @@ const FirstSection = () => {
 };
 
 export default FirstSection;
-

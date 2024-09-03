@@ -12,7 +12,7 @@ import {
 
 const PersonalPage = () => {
   return (
-    <div className='overflow-x-hidden'>
+    <div className="overflow-x-hidden">
       <Navbar />
       <HeroSection />
       <FirstSection />
@@ -23,7 +23,7 @@ const PersonalPage = () => {
       <SixthSection />
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default PersonalPage
+export default PersonalPage;
