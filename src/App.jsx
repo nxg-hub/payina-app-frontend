@@ -22,6 +22,12 @@ import Plans from './pages/plans/Plans';
 import Planb from './pages/planb/Planb';
 import Renew from './pages/renew/Renew';
 
+import {useAuth} from "./useAuth";
+import Betone from './pages/betone/Betone';
+import Bettwo from './pages/bettwo/Bettwo';
+import Bethree from './pages/bethree/Bethree';
+import Befour from './pages/befour/Befour
+
 function App() {
   const location = useLocation();
   const currentRoute = location.pathname;
@@ -46,6 +52,11 @@ function App() {
           element={<Signup data={data} currentStep={currentStep} handleNextStep={handleNextStep} />}
         />
 
+        
+         <Route
+         path="/signup"
+         element={<Signup data={data} handleNextStep={handleNextStep} />}
+        />
         {/* Dynamic route for incomplete signup step */}
         <Route path="/signup" element={<Signup data={data} handleNextStep={handleNextStep} />} />
         <Route path="/paybills" element={<Paybills />} />
@@ -65,6 +76,10 @@ function App() {
         <Route path="/plans" element={<Plans />} />
         <Route path="/planb" element={<Planb />} />
         <Route path="/renew" element={<Renew />} />
+        <Route path="/betone" element={<Betone />} />
+        <Route path="/bettwo" element={<Bettwo />} />
+        <Route path="/bethree" element={<Bethree />} />
+        <Route path="/befour" element={<Befour />} />
         <Route
           path={currentRoute}
           element={

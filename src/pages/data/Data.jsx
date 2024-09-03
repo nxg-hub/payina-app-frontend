@@ -48,6 +48,7 @@ const Data = () => {
                        bg-black text-slate-600 w-full"
               />
             </div>
+            
           </div>
           <div className="flex flex-col w-[64%] ">
             <label className="py-4">Phone</label>
@@ -60,6 +61,7 @@ const Data = () => {
           <Link to="/plans">
             <button
               className="text-primary mb-10 mt-10 text-left px-16 py-4 
+
                     border-none rounded-[5px] bg-lightBlue cursor-pointer
                      hover:bg-neutral transition-all duration-200 ">
               Proceed
@@ -75,3 +77,5 @@ const Data = () => {
 };
 
 export default Data;
+
+       
