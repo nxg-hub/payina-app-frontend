@@ -19,14 +19,14 @@ const Bethree = () => {
             <div className="flex-col text-primary mr-6 mt-4  w-[300px]  ">
             <label className="-mb-2">Platform</label>
                  <input type="text" placeholder="Bet 9ja" 
-                 className="border-2 mb-5 md:static border-sslate-300 text-xs pl-2 px-52 py-2 
+                 className="border-2 mb-5 md:static border-primary text-xs pl-2 px-52 py-2 
                   mt-2 rounded-[5px]  border-primary bg-black text-slate-600"
                         />
             </div>
             <div className="flex-col text-primary  mt-4 ml-6 w-[300px]  ">
                <label className="">Custom Ref</label>
                  <input type="text" placeholder="Enter Your Customer ID" 
-                 className="border-2 mb-5 md:static border-sslate-300 text-xs pl-2 px-52 py-2 rounded-[5px]
+                 className="border-2 mb-5 md:static border-primary text-xs pl-2 px-52 py-2 rounded-[5px]
                  mt-2  border-primary bg-black text-slate-600"
                         />
             </div>
@@ -34,14 +34,14 @@ const Bethree = () => {
                      <div className="flex text-primary flex-col w-[64%] ">
                         <label className="py-3">Amount Payable</label>
                         <input type="number" placeholder="#500" 
-                        className="border-2 border-slate-300 rounded-[5px] px-2 py-2
+                        className="border-2 border-primary rounded-[5px] px-2 py-2
                          border-primary bg-black text-primary text-xs mb-3"
                         />
                      </div>
                      <div className="flex text-primary flex-col w-[64%] ">
                         <label className="pt-4">Card Number</label>
                         <input type="text" placeholder="Enter Card Number" 
-                        className="border-2 mt-2 mb-2 border-slate-300 rounded-[5px] px-2 py-2
+                        className="border-2 mt-2 mb-2 border-primary rounded-[5px] px-2 py-2
                          text-xs border-primary bg-black text-slate-600"
                         />
                      </div>
@@ -54,10 +54,10 @@ const Bethree = () => {
                      </div>
                      <div className="md:flex flex-1  text-primary gap-6 mt-8  w-[300px]  ">
                         <input type="number" placeholder="MM" 
-                        className="border-2 mb-5 md:static border-sslate-300 text-xs pl-2 px-24 py-2 rounded-[5px]  border-primary bg-black text-slate-600"
+                        className="border-2 mb-5 md:static border-primary text-xs pl-2 px-24 py-2 rounded-[5px]  border-primary bg-black text-slate-600"
                         />
                         <input type="number" placeholder="YY" 
-                        className=" border-slate-300 mb-5 md:static text-xs pl-2 py-2 px-24 border-2 rounded-[5px]  border-primary bg-black text-slate-600"
+                        className=" border-primary mb-5 md:static text-xs pl-2 py-2 px-24 border-2 rounded-[5px]  border-primary bg-black text-slate-600"
                         />
                         <input type="number" placeholder="CVV" 
                         className="border-2 text-xs mb-5 md:static border-slate-300 rounded-[5px] pl-2 px-24 py-2 border-primary bg-black text-slate-600"

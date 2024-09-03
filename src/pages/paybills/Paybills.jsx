@@ -23,11 +23,11 @@ const Paybills = () => {
                  <p className="pt-5 py-12 text-lightBlue text-6xl  font-sans font-bold">
                  Bills Instantly</p> 
             
-                <p className=" text-2xl font-sans font-bold  text-primary">
+                <p className="hidden md:block text-2xl font-sans font-bold  text-primary">
                 We Guarantee</p>
-                <div className="mt-4 w-[50%] h-1 border-none mr-auto ml-auto
+                <div className=" hidden md:block mt-4 w-[50%] h-1 border-none mr-auto ml-auto
                     mb-40 bg-yellow">
-                        <div className="  pt-10 flex-1 font-bold flex justify-between items-center my-10">
+                        <div className="  pt-10 flex-1 font-bold hidden md:flex justify-between items-center my-10">
                 <div className=" flex pr-20 flex-col items-center text-center relative  text-primary">
                     <img 
                     height={64}
@@ -62,17 +62,22 @@ const Paybills = () => {
                 </div>
                     </div>
                 
-                <div className="flex px-20 flex-1 pt-20 pb-10 text-white justify-between items-right">
-                           
+                <div className=" flex-1 md:flex px-20 md:pt-20 pb-10 text-white justify-between items-right">
+                           <div className="pb-7 md:static">
                            <Link to="/airtime">
                             <Cards  icon= <IoCallOutline size={30}color="white" /> title="Buy Airtime"/>
                             </Link>
+                            </div>
+                            <div className="pb-7 md:static">
                             <Link to="/data">
                             <Cards icon= <IoWifi size={30} color="white" /> title="Buy Data" />
                             </Link>
+                            </div>
+                            
                             <Link to="/betone">
                             <Cards icon= <RiCurrencyFill  size={30} color="white" /> title=" PayBills"/>
                             </Link>
+                            
                 </div>
                 <div className="mt-4">
                  <Footer  />

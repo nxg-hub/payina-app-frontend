@@ -20,29 +20,29 @@ const Befour = () => {
              <p className="pt-8  pr-5 text-sm">Product</p> 
               <div className=" w-[42%] mt-24 h-1  ml-5 border-none
                      bg-yellow"></div>
-               <p className="pt-8 pl-5 text-sm">Bet</p>
+               <p className="pt-8 text-sm">Bet</p>
             </div>
             <div className=" flex px-5 gap-4">
              <p className="pt-8  pr-5 text-sm">Platform</p>
               <div className=" w-[42%] mt-24 ml-5 h-1 border-none
                      bg-yellow"></div>
-               <p className="pt-8 pl-5 text-sm">Bet 9ja</p>
+               <p className="pt-8  text-sm">Bet 9ja</p>
             </div>
             <div className=" flex   gap-4">
-             <p className="pt-8 pl-5 text-sm">Custom Ref</p>
-              <div className=" w-[42%] mt-24 h-1 border-none
-                  ml-3   bg-yellow"></div>
+             <p className="pt-8 pl-5 pr-5  text-sm">Custom Ref</p>
+              <div className=" w-[41%] mt-24 h-1 border-none
+                    pl-32 bg-yellow"></div>
                <p className="pt-8 text-sm">37294585</p>
             </div>
             <div className=" flex justify-start  gap-4">
              <p className="pt-8 pl-5 text-sm">Amount</p>
               <div className=" w-[40%] mt-24 h-[1] border-none
                      bg-yellow"></div>
-               <p className="pt-8 pl-20 text-sm">500</p>
+               <p className="pt-8 pl-14 text-sm">500</p>
             </div>
             <div>
                <Link to="/thanks" >
-                 <button className="text-primary mb-10 mt-3 text-left px-16 py-4 
+                 <button className="text-primary mb-10  mt-3 text-left px-16 py-4 
                     border-none rounded-[5px] bg-lightBlue cursor-pointer
                      hover:bg-neutral transition-all duration-200 ">
                         Proceed
@@ -55,11 +55,10 @@ const Befour = () => {
               </div>
         </section>
     )
-
-
-
-
-
 }
+
+
+
+
 
 export default Befour

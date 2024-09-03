@@ -26,64 +26,64 @@ const Bettwo = () => {
                 <div className="flex gap-36">
                     <div className="flex-col">
                     <img 
-                    height={64}
-                    width={64}
+                    height={58}
+                    width={58}
                     src={bet3}
                     alt=""
-                    className="py-4"
+                    
                     />
                     <p>Bet 9ja</p>
                     </div>
                     <div className="flex-col">
                     <img 
-                    height={64}
-                    width={64}
+                    height={58}
+                    width={58}
                     src={bet6}
                     alt=""
-                    className="py-4"
+                    
                     />
                     <p>Sporty</p>
                     </div>
                     
                    <div className="flex-col">
                     <img 
-                    height={64}
-                    width={64}
+                    height={58}
+                    width={58}
                     src={bet5}
                     alt=""
-                    className="py-4"
+               
                     />
                     <p>1x Bet</p>
                    </div>
                 </div>
-                 <div className="flex gap-36">
+                 <div className="flex mt-10 gap-36">
                    <div className="flex-col">
                      <img 
-                    height={64}
-                    width={64}
+                    height={58}
+                    width={58}
                     src={bet4}
                     alt=""
-                    className="py-4"
+                    
                     />
                     <p>Naira Bet</p>
                    </div>
                    <div className="flex-col">
                      <img 
-                    height={64}
-                    width={64}
+                    height={58}
+                    width={58}
                     src={bet1}
                     alt="bet-icon"
-                    className="py-4"
+                    
                     />
                     <p>22 Bet</p>
                 </div>
                 <div className="flex-col">
                      <img 
-                    height={64}
-                    width={64}
+                    height={58}
+                    width={58}
                     src={bet2}
                     alt="bet-icon"
-                    className="py-4"
+                    
                     />
                     <p>Bet King</p>
                 </div>
