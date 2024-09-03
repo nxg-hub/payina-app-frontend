@@ -21,9 +21,10 @@ const Bettwo = () => {
              w-[64%] bg-neutral mb-3 px-4 py-2">Want to enjoy discounts?  
                 <span className="text-yellow"> Register</span> or <span className=" text-yellow">
                      Login</span> </button>
-            <p className="text-primary mb-10">Hot Plans</p>
-            <div className="flex gap-64 mb-10 text-primary">
-                <div className="">
+            <p className="text-primary mb-3 mt-2">Popular Platforms</p>
+            <div className="mb-10 text-lightBlue">
+                <div className="flex gap-36">
+                    <div className="flex-col">
                     <img 
                     height={64}
                     width={64}
@@ -31,6 +32,9 @@ const Bettwo = () => {
                     alt=""
                     className="py-4"
                     />
+                    <p>Bet 9ja</p>
+                    </div>
+                    <div className="flex-col">
                     <img 
                     height={64}
                     width={64}
@@ -38,57 +42,71 @@ const Bettwo = () => {
                     alt=""
                     className="py-4"
                     />
-                   <img 
+                    <p>Sporty</p>
+                    </div>
+                    
+                   <div className="flex-col">
+                    <img 
                     height={64}
                     width={64}
                     src={bet5}
                     alt=""
                     className="py-4"
                     />
+                    <p>1x Bet</p>
+                   </div>
                 </div>
-                 <div className="">
-                    <img 
+                 <div className="flex gap-36">
+                   <div className="flex-col">
+                     <img 
                     height={64}
                     width={64}
                     src={bet4}
                     alt=""
                     className="py-4"
                     />
-            
-                 
-                    <img 
+                    <p>Naira Bet</p>
+                   </div>
+                   <div className="flex-col">
+                     <img 
                     height={64}
                     width={64}
                     src={bet1}
-                    alt=""
+                    alt="bet-icon"
                     className="py-4"
                     />
-                    <img 
+                    <p>22 Bet</p>
+                </div>
+                <div className="flex-col">
+                     <img 
                     height={64}
                     width={64}
                     src={bet2}
                     alt="bet-icon"
                     className="py-4"
                     />
+                    <p>Bet King</p>
+                </div>
                  </div>
             </div>
-             <div className="flex mt-2">
+             <div className="flex-col">
+                <p className="text-primary">Choose Preferred platform</p>
           <button
             className="text-black text-sm text-left p-10 border-none rounded-[5px]
-             w-[64%] bg-primary mb-3 mt-10 px-4 py-2">2.5GB  
-                 <span className=" pl-36 md:pl-72 m">#500
-             </span>
+             w-[64%] bg-primary mb-3 mt-3 px-4 py-2">Bet King  
+                 
+             
                 <FontAwesomeIcon icon={faChevronDown} color="teal" className=" absolute 
-             pl-[16%] md:pl-[28%] min-w-1 items-center mt-1 cursor-pointer"  />
+             pl-[16%] md:pl-[51%] min-w-1 items-center mt-1 cursor-pointer"  />
            </button>
         </div>
-        
+        <Link to="/bethree" >
          <button className="text-primary mb-10 mt-5 text-left px-16 py-4 
          border-none rounded-[5px] bg-lightBlue cursor-pointer
          hover:bg-neutral transition-all duration-200 ">
         Proceed
      </button> 
-     
+     </Link>
   </div>
   <div className="mt-2">
    <Footer /> 

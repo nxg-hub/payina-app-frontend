@@ -42,7 +42,7 @@ const Betone = () => {
                         className="border-2  border-primary rounded-[5px] px-5 py-2 border-primary bg-black text-slate-600"
                         />
                         </div>
-                        <Link to="/plans">
+                        <Link to="/bettwo">
                          <button className="text-primary mb-10 mt-10 text-left px-16 py-4 
                     border-none rounded-[5px] bg-lightBlue cursor-pointer
                      hover:bg-neutral transition-all duration-200 ">

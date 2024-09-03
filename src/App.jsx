@@ -14,7 +14,6 @@ import Settings from './pages/Account/Settings';
 import Createinvoice from './pages/Account/Invoice/_components/Createinvoice';
 import Paybills from './pages/paybills/Paybills';
 import Airtime from './pages/airtime/Airtime';
-
 import Card from './pages/card/Card';
 import Ren from './pages/ren/Ren';
 import Thanks from './pages/thanks/Thanks';
@@ -25,6 +24,8 @@ import Renew from './pages/renew/Renew';
 import {useAuth} from "./useAuth";
 import Betone from './pages/betone/Betone';
 import Bettwo from './pages/bettwo/Bettwo';
+import Bethree from './pages/bethree/Bethree';
+import Befour from './pages/befour/Befour';
 
 
 
@@ -56,8 +57,8 @@ function App() {
 
          {/* Dynamic route for incomplete signup step */}
          <Route
-  path="/signup"
-  element={<Signup data={data} handleNextStep={handleNextStep} />}
+    path="/signup"
+    element={<Signup data={data} handleNextStep={handleNextStep} />}
         />
         <Route path="/paybills" element={<Paybills />} />
         <Route path="/login" element={<Login />} />
@@ -78,6 +79,8 @@ function App() {
         <Route path="/renew" element={<Renew />} />
         <Route path="/betone" element={<Betone />} />
         <Route path="/bettwo" element={<Bettwo />} />
+        <Route path="/bethree" element={<Bethree />} />
+        <Route path="/befour" element={<Befour />} />
         <Route
           path={currentRoute}
           element={
