@@ -24,11 +24,7 @@ const CustomButton = ({
   };
 
   return (
-    <button
-      style={buttonStyle}
-      type={type}
-      onClick={onClick}
-      className={className}>
+    <button style={buttonStyle} type={type} onClick={onClick} className={className}>
       {children}
     </button>
   );

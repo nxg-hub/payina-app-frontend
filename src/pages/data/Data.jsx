@@ -48,7 +48,6 @@ const Data = () => {
                        bg-black text-slate-600 w-full"
               />
             </div>
-            
           </div>
           <div className="flex flex-col w-[64%] ">
             <label className="py-4">Phone</label>
@@ -77,5 +76,3 @@ const Data = () => {
 };
 
 export default Data;
-
-       

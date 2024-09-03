@@ -50,7 +50,7 @@ const Footer = () => {
               children="Subscribe"
               textColor="#006181"
               width="100%"
-              className='hover:scale-95 font-extrabold duration-300 center gap-2 w-full'
+              className="hover:scale-95 font-extrabold duration-300 center gap-2 w-full"
             />
           </div>
         </div>

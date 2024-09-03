@@ -6,7 +6,7 @@ import { PayrollSchema } from '../../schemas/schemas';
 import { useState } from 'react';
 
 const PayrollDetails = ({ handleRoleForm, addRole, addEmployeeForm }) => {
-  const [save, setSave] = useState(false)
+  const [save, setSave] = useState(false);
   const [allowanceFields, setAllowanceFields] = useState([
     {
       allowance_package: '',
@@ -14,9 +14,9 @@ const PayrollDetails = ({ handleRoleForm, addRole, addEmployeeForm }) => {
     }
   ]);
 
-const handleSave = () => {
-  setSave(true)
-}
+  const handleSave = () => {
+    setSave(true);
+  };
   const addAllowanceField = () => {
     setAllowanceFields([
       ...allowanceFields,
@@ -48,10 +48,9 @@ const handleSave = () => {
       }
     ]);
   };
- const handleRoleSave = (values) => {
-  addEmployeeForm(values)
- }
-
+  const handleRoleSave = (values) => {
+    addEmployeeForm(values);
+  };
 
   const inputArrow = `
       input::-webkit-outer-spin-button,
@@ -77,11 +76,10 @@ const handleSave = () => {
             }}
             validationSchema={PayrollSchema}
             onSubmit={(values, { resetForm }) => {
-            handleSubmit({ values, allowanceFields });
-            save && handleRoleSave({ values, allowanceFields })
-            resetForm({ values: ''})
-            }
-            }>
+              handleSubmit({ values, allowanceFields });
+              save && handleRoleSave({ values, allowanceFields });
+              resetForm({ values: '' });
+            }}>
             {(formik) => (
               <Form>
                 <div className="flex flex-col  w-full py-4 space-y-4">
@@ -198,9 +196,9 @@ const handleSave = () => {
                     <LuPlus size={20} color="#006181" />
                     Add role
                   </button>
-                  <button 
+                  <button
                     type="submit"
-                    onClick={handleSave}  
+                    onClick={handleSave}
                     className="rounded-[5px] text-xs md:text-base  py-2 border border-lightBlue bg-lightBlue w-[300px] text-primary">
                     Save
                   </button>

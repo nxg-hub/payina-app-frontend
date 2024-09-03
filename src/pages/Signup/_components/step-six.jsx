@@ -10,16 +10,16 @@ const uploadImage = async (imageFile, email) => {
 
     const response = await fetch(import.meta.env.VITE_UPLOAD_IMAGE_ENDPOINT, {
       method: 'POST',
-      body: formData, 
+      body: formData
     });
 
     if (!response.ok) {
       throw new Error(`Server error: ${response.statusText}`);
     }
 
-    const data = await response.text(); 
+    const data = await response.text();
     try {
-      const jsonData = JSON.parse(data); 
+      const jsonData = JSON.parse(data);
       return jsonData;
     } catch (jsonError) {
       console.error('Failed to parse JSON:', jsonError);
@@ -31,7 +31,8 @@ const uploadImage = async (imageFile, email) => {
   }
 };
 
-export const StepSix = ({ next, email }) => {  // Ensure email is passed as a prop
+export const StepSix = ({ next, email }) => {
+  // Ensure email is passed as a prop
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState('');
 
@@ -40,9 +41,9 @@ export const StepSix = ({ next, email }) => {  // Ensure email is passed as a pr
     setApiError('');
 
     try {
-      const imageFile = values.passport[0]; 
-      await uploadImage(imageFile, email);  // Pass the email to uploadImage function
-      next(values); 
+      const imageFile = values.passport[0];
+      await uploadImage(imageFile, email); // Pass the email to uploadImage function
+      next(values);
     } catch (error) {
       setApiError(error.message || 'An error occurred. Please try again.');
     } finally {
@@ -53,16 +54,14 @@ export const StepSix = ({ next, email }) => {  // Ensure email is passed as a pr
 
   return (
     <div className="p-2 xl:p-10 bg-primary">
-      <h1 className='text-lightBlue text-start xl:text-[32px] text-xl font-bold pb-4 w-[85%]'>
+      <h1 className="text-lightBlue text-start xl:text-[32px] text-xl font-bold pb-4 w-[85%]">
         Let’s Get Your Facial Profile!
       </h1>
       <p className="w-[84%]">
-        Make sure all parts of your face are well lit. Ensure all parts of your face are visible and not covered by objects.
+        Make sure all parts of your face are well lit. Ensure all parts of your face are visible and
+        not covered by objects.
       </p>
-      <Formik
-        initialValues={{ passport: null }}
-        onSubmit={handleSubmit}
-      >
+      <Formik initialValues={{ passport: null }} onSubmit={handleSubmit}>
         {({ setFieldValue, isSubmitting }) => (
           <Form className="mt-8">
             <div className="my-2">
@@ -75,11 +74,15 @@ export const StepSix = ({ next, email }) => {  // Ensure email is passed as a pr
                 name="passport"
                 accept="image/*"
                 onChange={(event) => {
-                  setFieldValue("passport", event.currentTarget.files);
+                  setFieldValue('passport', event.currentTarget.files);
                 }}
                 className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
               />
-              <ErrorMessage name="passport" component="div" className="text-[#db3a3a] mt-2 text-sm" />
+              <ErrorMessage
+                name="passport"
+                component="div"
+                className="text-[#db3a3a] mt-2 text-sm"
+              />
             </div>
 
             {apiError && <div className="text-red-500 mb-4">{apiError}</div>}

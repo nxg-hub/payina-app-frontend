@@ -25,12 +25,12 @@ const BalanceCard = () => {
                 <span className="flex" onClick={handleIconClick}>
                   <GrFormViewHide
                     className={`hover:cursor-pointer ${hideIcon ? 'hidden' : 'block'}`}
-                    color='#000000'
+                    color="#000000"
                   />
                   <GrFormViewHide
                     onClick={handleIconClick}
                     className={`hover:cursor-pointer ${hideIcon ? 'hidden' : 'block'}`}
-                    color='#000000'
+                    color="#000000"
                   />
                 </span>
               )}

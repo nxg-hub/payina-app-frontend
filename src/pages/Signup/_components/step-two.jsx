@@ -5,47 +5,45 @@ import { PhoneInput, defaultCountries, parseCountry } from 'react-international-
 import 'react-international-phone/style.css';
 import CustomButton from '../../../components/button/button';
 
-
 export const StepTwo = ({ next, initialValues }) => {
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
-   
-  const handleSubmit = async (values) => {
 
+  const handleSubmit = async (values) => {
     try {
       const payload = {
         phoneNumber: phone,
         password: initialValues.password,
         confirmPassword: initialValues.confirmPassword,
         userType: 'corporate',
-        email: initialValues.email,
+        email: initialValues.email
       };
-        
+
       const response = await fetch(import.meta.env.VITE_REGISTER_USER_ENDPOINT, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(payload)
       });
-      
-    if (response.ok && response.headers.get('Content-Type')?.includes('application/json')) {
-      const data = await response.json();
-      // console.log('Data:', data);
 
-      setMessage('Registration successful');
-      next({ ...initialValues, phone });
-    } else {
-      const errorMessage = await response.text(); 
-      console.error('Error message:', errorMessage);
-      setMessage('Registration failed: ' + (response.statusText || 'Unknown error'));
+      if (response.ok && response.headers.get('Content-Type')?.includes('application/json')) {
+        const data = await response.json();
+        // console.log('Data:', data);
+
+        setMessage('Registration successful');
+        next({ ...initialValues, phone });
+      } else {
+        const errorMessage = await response.text();
+        console.error('Error message:', errorMessage);
+        setMessage('Registration failed: ' + (response.statusText || 'Unknown error'));
+      }
+    } catch (error) {
+      setMessage('An error occurred');
+      console.error('An error occurred:', error);
     }
-  } catch (error) {
-    setMessage('An error occurred');
-    console.error('An error occurred:', error);
-  }
-};
-  
+  };
+
   const phoneRegExp =
     /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
 
@@ -91,13 +89,13 @@ export const StepTwo = ({ next, initialValues }) => {
         <img src={images.Vector6} alt="" />
       </div>
       <Formik
-        initialValues={{phoneNumber: '' }}
+        initialValues={{ phoneNumber: '' }}
         onSubmit={(values, { setSubmitting }) => {
           handleSubmit(values);
           setSubmitting(false);
         }}
-        enable enableReinitialize
-      >
+        enable
+        enableReinitialize>
         {() => (
           <Form>
             <PhoneInput
@@ -108,14 +106,14 @@ export const StepTwo = ({ next, initialValues }) => {
               className="xl:w-[500px] !w-full xl:px-[1.95rem] px-[1.2rem] py-6 h-20 countryButton"
               inputClassName="!w-[125%] xl:w-full !text-base xl:!text-xl"
               style={{
-                'ReactInternationalPhoneHeight': '500px',
+                ReactInternationalPhoneHeight: '500px',
                 '--react-international-phone-flag-width': '54px',
                 '--react-international-phone-border-radius': '5px'
               }}
               buttonClassName="!p-2"
               countrySelectorStyleProps="p-2"
               // charAfterDialCode=""
-              onFocus={() => {}} 
+              onFocus={() => {}}
             />
             {phone.length > 5 && !phone.match(phoneRegExp) && (
               <span className="text-center text-[#db3a3a] flex justify-center mt-4">
@@ -123,9 +121,7 @@ export const StepTwo = ({ next, initialValues }) => {
               </span>
             )}
             {message && (
-              <div className="text-center text-[#db3a3a] flex justify-center mt-4">
-                {message}
-              </div>
+              <div className="text-center text-[#db3a3a] flex justify-center mt-4">{message}</div>
             )}
             <CustomButton
               padding="15px"

@@ -1,9 +1,9 @@
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import CustomButton from "../../../components/button/button";
-import { images } from "../../../constants";
-import { useState } from "react";
-import { MdOutlineFileUpload } from "react-icons/md";
-import { BusinessAddressVerification } from "../schemas/schema";
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import CustomButton from '../../../components/button/button';
+import { images } from '../../../constants';
+import { useState } from 'react';
+import { MdOutlineFileUpload } from 'react-icons/md';
+import { BusinessAddressVerification } from '../schemas/schema';
 
 const uploadDocument = async (documentFile, email) => {
   try {
@@ -13,7 +13,7 @@ const uploadDocument = async (documentFile, email) => {
 
     const response = await fetch(import.meta.env.VITE_UPLOAD_BUSINESS_DOCUMENT_ENDPOINT, {
       method: 'POST',
-      body: formData,
+      body: formData
     });
     const data = await response.text();
 
@@ -38,12 +38,12 @@ export const StepTwelve = ({ next, email }) => {
 
   const handleSubmit = async (values) => {
     setLoading(true);
-    setApiError("");
+    setApiError('');
     try {
       const response = await uploadDocument(businessDocumentDetails, email);
       next({
         businessDocumentDetails: response,
-        business_confirm_document: values.business_confirm_document,
+        business_confirm_document: values.business_confirm_document
       });
     } catch (error) {
       setApiError(error.message);
@@ -103,8 +103,7 @@ export const StepTwelve = ({ next, email }) => {
         <Formik
           initialValues={{ business_confirm_document: '' }}
           onSubmit={handleSubmit}
-          validationSchema={BusinessAddressVerification}
-        >
+          validationSchema={BusinessAddressVerification}>
           {(formik) => (
             <Form className="w-full space-y-4">
               <div className="xl:pt-16 p-4 pt-[2.2rem] xl:px-16 xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
@@ -115,19 +114,11 @@ export const StepTwelve = ({ next, email }) => {
                   <Field
                     as="select"
                     name="business_confirm_document"
-                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-8 bg-secondary"
-                  >
-                    <option
-                      value=""
-                      className="!bg-secondary text-primary font-medium"
-                      disabled
-                    >
+                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-8 bg-secondary">
+                    <option value="" className="!bg-secondary text-primary font-medium" disabled>
                       Select Document
                     </option>
-                    <option
-                      value="utility-bill"
-                      className="!bg-secondary text-primary font-medium"
-                    >
+                    <option value="utility-bill" className="!bg-secondary text-primary font-medium">
                       Utility Bill
                     </option>
                   </Field>
@@ -144,14 +135,13 @@ export const StepTwelve = ({ next, email }) => {
                       type="file"
                       onChange={(e) => {
                         setBusinessDocumentDetails(e.currentTarget.files[0]);
-                        formik.setFieldValue("file", e.currentTarget.files[0]);
+                        formik.setFieldValue('file', e.currentTarget.files[0]);
                       }}
                     />
 
                     <label
                       htmlFor="document"
-                      className="cursor-pointer font-bold flex items-center flex-col"
-                    >
+                      className="cursor-pointer font-bold flex items-center flex-col">
                       <MdOutlineFileUpload size={22} opacity={0.65} />
                       <span className="text-[#E80516]">Upload Document</span>
                     </label>
@@ -161,14 +151,12 @@ export const StepTwelve = ({ next, email }) => {
                 <CustomButton
                   padding="15px"
                   type="submit"
-                  children={loading ? "Uploading..." : "Next"}
+                  children={loading ? 'Uploading...' : 'Next'}
                   className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 mx-auto md:mx-0 w-full md:w-[85%] xl:w-full !mb-12 xl:my-12 xl:mb-20"
                   disabled={loading}
                 />
               </div>
-              {apiError && (
-                <div className="text-red-500 text-center">{apiError}</div>
-              )}
+              {apiError && <div className="text-red-500 text-center">{apiError}</div>}
             </Form>
           )}
         </Formik>

@@ -13,16 +13,16 @@ export const StepSixteen = ({ next, email }) => {
       const requestData = {
         pin: otpValue,
         verifyPin: confirmOtpValue,
-        email: email, // Pass the email from previous steps
+        email: email // Pass the email from previous steps
       };
 
       try {
         const response = await fetch(import.meta.env.VITE_TRANSACTION_PIN_ENDPOINT, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
           },
-          body: JSON.stringify(requestData),
+          body: JSON.stringify(requestData)
         });
 
         if (response.ok) {
@@ -41,32 +41,35 @@ export const StepSixteen = ({ next, email }) => {
   };
 
   const validationSchema = Yup.object().shape({
-    otp: Yup.array().of(Yup.string().matches(/^\d$/, 'Transaction Pin digit must be a single digit')).required('Transaction Pin is required'),
-    confirmOtp: Yup.array().of(Yup.string().matches(/^\d$/, 'Confirm Transaction Pin digit must be a single digit')).required('Confirm Transaction Pin is required')
-      .test(
-        'match',
-        'Transaction Pins do not match',
-        function(value) {
-          return this.parent.otp.join('') === value.join('');
-        }
-      ),
+    otp: Yup.array()
+      .of(Yup.string().matches(/^\d$/, 'Transaction Pin digit must be a single digit'))
+      .required('Transaction Pin is required'),
+    confirmOtp: Yup.array()
+      .of(Yup.string().matches(/^\d$/, 'Confirm Transaction Pin digit must be a single digit'))
+      .required('Confirm Transaction Pin is required')
+      .test('match', 'Transaction Pins do not match', function (value) {
+        return this.parent.otp.join('') === value.join('');
+      })
   });
 
   return (
     <div className="p-2 xl:p-10 bg-primary">
-      <h1 className="text-secondary text-start  xl:text-[32px] text-xl">Create Your Transaction Pin</h1>
-      
+      <h1 className="text-secondary text-start  xl:text-[32px] text-xl">
+        Create Your Transaction Pin
+      </h1>
+
       <Formik
         initialValues={{ otp: ['', '', '', ''], confirmOtp: ['', '', '', ''] }}
         validationSchema={validationSchema}
-        onSubmit={(values) => handleSubmit(values)}
-      >
+        onSubmit={(values) => handleSubmit(values)}>
         {({ isSubmitting }) => (
           <Form className="space-y-4">
             <div className="flex flex-col">
-              <label htmlFor="otp" className="font-semibold pt-8">Enter Transaction Pin:</label>
+              <label htmlFor="otp" className="font-semibold pt-8">
+                Enter Transaction Pin:
+              </label>
               <div className="flex justify-between py-4 ml">
-                {[0, 1, 2, 3].map(index => (
+                {[0, 1, 2, 3].map((index) => (
                   <Field
                     key={index}
                     type="password"
@@ -79,9 +82,11 @@ export const StepSixteen = ({ next, email }) => {
               <ErrorMessage name="otp" className="text-[#db3a3a]" />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="confirmOtp" className="font-semibold">Confirm Transaction Pin:</label>
+              <label htmlFor="confirmOtp" className="font-semibold">
+                Confirm Transaction Pin:
+              </label>
               <div className="flex justify-between py-4">
-                {[0, 1, 2, 3].map(index => (
+                {[0, 1, 2, 3].map((index) => (
                   <Field
                     key={index}
                     type="password"

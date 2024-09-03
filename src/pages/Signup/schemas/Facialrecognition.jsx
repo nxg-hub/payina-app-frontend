@@ -8,12 +8,13 @@ const FacialRecognition = ({ onImageCapture }) => {
   const canvasRef = useRef(null);
 
   const startCamera = () => {
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then(stream => {
+    navigator.mediaDevices
+      .getUserMedia({ video: true })
+      .then((stream) => {
         videoRef.current.srcObject = stream;
         videoRef.current.play();
       })
-      .catch(err => console.error('Error accessing the camera:', err));
+      .catch((err) => console.error('Error accessing the camera:', err));
   };
 
   const captureImage = () => {
@@ -23,7 +24,7 @@ const FacialRecognition = ({ onImageCapture }) => {
 
     // Convert the canvas image to a data URL
     const imageDataURL = canvas.toDataURL('image/png');
-    
+
     // Pass the image data URL to the parent component or perform further processing
     onImageCapture(imageDataURL);
   };
@@ -48,7 +49,7 @@ const FacialRecognition = ({ onImageCapture }) => {
   }, [showCamera]);
 
   const validationSchema = Yup.object().shape({
-    image: Yup.mixed().required('Image is required'),
+    image: Yup.mixed().required('Image is required')
   });
 
   return (
@@ -57,8 +58,7 @@ const FacialRecognition = ({ onImageCapture }) => {
       validationSchema={validationSchema}
       onSubmit={() => {
         captureImage();
-      }}
-    >
+      }}>
       {({ errors, touched }) => (
         <Form>
           <div>
@@ -71,16 +71,16 @@ const FacialRecognition = ({ onImageCapture }) => {
             )}
 
             {/* Button to toggle showing the camera */}
-            <button type="button" onClick={() => setShowCamera(true)}>Start Facial Recognition</button>
+            <button type="button" onClick={() => setShowCamera(true)}>
+              Start Facial Recognition
+            </button>
 
             {/* Input for selecting image files */}
             <Field type="file" name="image" accept="image/*" onChange={handleFileSelect} />
             <ErrorMessage name="image" component="div" />
 
             {/* Button to capture an image */}
-            {showCamera && (
-              <button type="submit">Capture Image</button>
-            )}
+            {showCamera && <button type="submit">Capture Image</button>}
           </div>
         </Form>
       )}

@@ -12,18 +12,18 @@ const LoginForm = ({ next }) => {
     setLoginDetails(values);
 
     const requestData = {
-      email: values.email, 
+      email: values.email,
       password: values.password
     };
-console.log (requestData)
+    console.log(requestData);
     try {
       const response = await fetch(import.meta.env.VITE_LOGIN_USER_ENDPOINT, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(requestData),
-        });
+        body: JSON.stringify(requestData)
+      });
 
       if (response.ok) {
         const result = await response.json();
@@ -34,7 +34,7 @@ console.log (requestData)
       }
     } catch (error) {
       console.error('Error logging in:', error);
-  }
+    }
   };
 
   return (
@@ -81,13 +81,12 @@ console.log (requestData)
                   <ErrorMessage name="password" component="span" className="text-[#db3a3a]" />
                 </div>
                 <CustomButton
-                padding="15px"
-                type="submit"
-                children="Log in"
-                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[120%] mx-auto w-[100%] !mb-12 xl:my-12 xl:mb-20"
-              />
+                  padding="15px"
+                  type="submit"
+                  children="Log in"
+                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[120%] mx-auto w-[100%] !mb-12 xl:my-12 xl:mb-20"
+                />
               </div>
-             
             </Form>
           )}
         </Formik>
@@ -97,6 +96,6 @@ console.log (requestData)
 };
 
 LoginForm.defaultProps = {
-  next: () => {},
+  next: () => {}
 };
 export default LoginForm;

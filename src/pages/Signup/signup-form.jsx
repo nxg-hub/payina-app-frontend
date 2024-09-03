@@ -20,17 +20,27 @@ import {
   StepTwo
 } from './_components';
 
-
 export default function SignUpForm() {
-  const [data, setData] = useState({ email: '', bvnData: {}, password: '', confirmPassword: '',  identificationNumber: "", houseNumber: '', 
-    street: '',state: '', lga: '',  businessHouseNumber: '',
-    businessStreetName:  '',
-    businessState:  '',
-    businessLGA:  '', businessName: '',
+  const [data, setData] = useState({
+    email: '',
+    bvnData: {},
+    password: '',
+    confirmPassword: '',
+    identificationNumber: '',
+    houseNumber: '',
+    street: '',
+    state: '',
+    lga: '',
+    businessHouseNumber: '',
+    businessStreetName: '',
+    businessState: '',
+    businessLGA: '',
+    businessName: '',
     tin_No: '',
     businessRegNumber: '',
     businessCategory: '',
-    businessType: '',  });
+    businessType: ''
+  });
   const [currentStep, setCurrentStep] = useState(0);
 
   const handleNextStep = (newData) => {
@@ -43,20 +53,20 @@ export default function SignUpForm() {
     <StepTwo next={handleNextStep} initialValues={data} />,
     <StepThree next={handleNextStep} data={data} />,
     <StepFour next={handleNextStep} />,
-    <StepFive next={handleNextStep} bvnData={data}  initialValues={data} email={data.email} />,
-    <StepSix next={handleNextStep}  email={data.email}/>,
+    <StepFive next={handleNextStep} bvnData={data} initialValues={data} email={data.email} />,
+    <StepSix next={handleNextStep} email={data.email} />,
     <StepSeven next={handleNextStep} text="Your Identity Has been Verified!" />,
     <StepEight next={handleNextStep} />,
     <StepNine next={handleNextStep} email={data.email} />,
     <StepTen next={handleNextStep} />,
-    <StepEleven next={handleNextStep} data={data}/>,
+    <StepEleven next={handleNextStep} data={data} />,
     <StepTwelve next={handleNextStep} email={data.email} />,
-    <StepThirteen next={handleNextStep}email={data.email} initialValues={data} />,
+    <StepThirteen next={handleNextStep} email={data.email} initialValues={data} />,
     <StepFourteen next={handleNextStep} />,
-    <StepFifteen next={handleNextStep} email={data.email}/>,
-    <StepSixteen next={handleNextStep} email={data.email}/>,
+    <StepFifteen next={handleNextStep} email={data.email} />,
+    <StepSixteen next={handleNextStep} email={data.email} />,
     <StepSeven next={handleNextStep} text="You Have Successfully Set Your Pin" />,
-    <StepSeventeen next={handleNextStep} data={data}  />,
+    <StepSeventeen next={handleNextStep} data={data} />
   ];
 
   return (

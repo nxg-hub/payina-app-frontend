@@ -13,7 +13,5 @@ export {
   ThirdSection,
   FourthSection,
   FifthSection,
-  SixthSection,
-
-
+  SixthSection
 };

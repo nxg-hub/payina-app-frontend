@@ -1,12 +1,12 @@
-import { Navbar, Sidebar } from '../_components'
+import { Navbar, Sidebar } from '../_components';
 
 const Settings = () => {
   return (
-    <div className='bg-primary'>
-        <Navbar />
-        <Sidebar/>
+    <div className="bg-primary">
+      <Navbar />
+      <Sidebar />
     </div>
-  )
-}
+  );
+};
 
-export default Settings
+export default Settings;
