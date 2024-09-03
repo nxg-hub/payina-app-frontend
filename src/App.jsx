@@ -50,7 +50,6 @@ function App() {
           element={<Signup data={data} currentStep={currentStep} handleNextStep={handleNextStep} />}
         />
 
-        <Route path="/signup" element={<Signup data={data} handleNextStep={handleNextStep} />} />
         {/* Dynamic route for incomplete signup step */}
         <Route path="/signup" element={<Signup data={data} handleNextStep={handleNextStep} />} />
         <Route path="/paybills" element={<Paybills />} />
