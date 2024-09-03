@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Routes, Route, BrowserRouter, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import PersonalPage from './pages/Personal';
 import BusinessPage from './pages/Business';
 import Signup from './pages/Signup';
@@ -55,10 +55,10 @@ function App() {
           element={<Signup data={data} currentStep={currentStep} handleNextStep={handleNextStep} />}
         />
 
-         {/* Dynamic route for incomplete signup step */}
+        
          <Route
-    path="/signup"
-    element={<Signup data={data} handleNextStep={handleNextStep} />}
+         path="/signup"
+         element={<Signup data={data} handleNextStep={handleNextStep} />}
         />
         <Route path="/paybills" element={<Paybills />} />
         <Route path="/login" element={<Login />} />
