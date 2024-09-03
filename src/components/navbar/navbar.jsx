@@ -87,7 +87,6 @@ const Navbar = () => {
                   <Button
                   className="hover:bg-lightBlue hover:scale-95 font-extrabold duration-300 center"
                   children="Paybills"
-                  backgroundColor="transparent"
                 />
                 </Link>
                 <LuMoveRight />
@@ -98,7 +97,6 @@ const Navbar = () => {
             <Link to="/signup">
               <Button
                 className="hover:bg-lightBlue hover:scale-95 font-extrabold duration-300 center"
-                backgroundColor="transparent"
                 children="Sign Up"
               />
             </Link>

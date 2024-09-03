@@ -1,17 +1,19 @@
-import React from 'react'
-import Navbar from '../../components/navbar/navbar'; 
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
+import Navbar from '../../components/navbar/navbar';
 import Footer from '../../components/footer/footer';
-import  { Link} from  'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Renew = () => {
-    return (
-        <section>
-           <Navbar />
-             <div className=" container">
-        <div className="w-[80%] h-1 border-none mr-auto ml-auto 
-            mt-[-2px] mb-7 bg-yellow">
-            </div>
+  return (
+    <section>
+      <Navbar />
+      <div className=" container">
+        <div
+          className="w-[80%] h-1 border-none mr-auto ml-auto 
+            mt-[-2px] mb-7 bg-yellow"></div>
         <form>
+
              <button className="text-primary text-left p-10 border-none rounded-[5px]
              w-[64%] bg-neutral px-4 py-2">Review Your Order </button>
                      <div className="flex text-primary flex-col w-[64%] ">
@@ -49,19 +51,22 @@ const Renew = () => {
                          border-primary bg-black text-slate-600"
                         />
                      </div>
-                    <Link to="/thanks" >
-                    <button className="text-primary mt-7 mb-12 text-left px-16 py-4 
+                    <Link to="/thanks">
+            <button
+              className="text-primary mt-7 mb-12 text-left px-16 py-4 
+
                     border-none rounded-[5px] bg-lightBlue cursor-pointer
                      hover:bg-neutral transition-all duration-200 ">
-                        Proceed
-                    </button>
-                    </Link>
-             </form>
+              Proceed
+            </button>
+          </Link>
+        </form>
+      </div>
+      <Footer />
+    </section>
+  );
+};
 
-            </div>
-            <Footer />
-        </section>
-    )
-}
+export default Renew;
 
-export default Renew
+        

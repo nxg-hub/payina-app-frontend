@@ -2,15 +2,15 @@ import React from 'react';
 import Navbar from '../../components/navbar/navbar';
 import Footer from '../../components/footer/footer';
 import Cards from '../../components/cards/Cards';
-import { IoCallOutline } from "react-icons/io5";
-import { IoWifi } from "react-icons/io5";
-import { RiCurrencyFill } from "react-icons/ri";
+import { IoCallOutline } from 'react-icons/io5';
+import { IoWifi } from 'react-icons/io5';
+import { RiCurrencyFill } from 'react-icons/ri';
 import { moneyBack, support, watchIcon } from '../../constants/images';
-import { Link, useLocation } from 'react-router-dom';
-
+import { Link } from 'react-router-dom';
 
 const Paybills = () => {
   return (
+
         
         <section>
         <Navbar />
@@ -82,27 +82,12 @@ const Paybills = () => {
                 <div className="mt-4">
                  <Footer  />
                 </div>
-        
-            </div>
-       
+   </div>
     </section>
   );
-  };
+};
 
-
-
-
-
-
-
-
-
-
-
-
-
+export default Paybills;
         
+
     
-
-
-export default Paybills

@@ -30,7 +30,7 @@ export const StepFifteen = ({ next, email }) => {
 
       // Set corporateCustomerId to the fetched customerId
       const corporateCustomerId = customerId;
-      console.log('Corporate Customer ID:', corporateCustomerId);
+      // console.log('Corporate Customer ID:', corporateCustomerId);
 
       const requestBody = {
         corporateCustomerId: corporateCustomerId,

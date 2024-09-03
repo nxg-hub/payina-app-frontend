@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Routes, Route, BrowserRouter, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import PersonalPage from './pages/Personal';
 import BusinessPage from './pages/Business';
 import Signup from './pages/Signup';
@@ -21,13 +21,12 @@ import Data from './pages/data/Data';
 import Plans from './pages/plans/Plans';
 import Planb from './pages/planb/Planb';
 import Renew from './pages/renew/Renew';
+
 import {useAuth} from "./useAuth";
 import Betone from './pages/betone/Betone';
 import Bettwo from './pages/bettwo/Bettwo';
 import Bethree from './pages/bethree/Bethree';
-import Befour from './pages/befour/Befour';
-
-
+import Befour from './pages/befour/Befour
 
 function App() {
   const location = useLocation();
@@ -44,8 +43,7 @@ function App() {
       localStorage.setItem('signupStep', nextStep);
       return nextStep;
     });
-      };
-
+  };
 
   return (
     <UserContext.Provider value={{ data, setData }}>
@@ -60,6 +58,8 @@ function App() {
          path="/signup"
          element={<Signup data={data} handleNextStep={handleNextStep} />}
         />
+        {/* Dynamic route for incomplete signup step */}
+        <Route path="/signup" element={<Signup data={data} handleNextStep={handleNextStep} />} />
         <Route path="/paybills" element={<Paybills />} />
         <Route path="/login" element={<Login />} />
         <Route path="/account/dashboard" element={<Dashboard />} />
@@ -71,7 +71,7 @@ function App() {
         <Route path="/account/settings" element={<Settings />} />
         <Route path="/airtime" element={<Airtime />} />
         <Route path="/card" element={<Card />} />
-        <Route path="/ren"  element={<Ren />} />
+        <Route path="/ren" element={<Ren />} />
         <Route path="/thanks" element={<Thanks />} />
         <Route path="/data" element={<Data />} />
         <Route path="/plans" element={<Plans />} />
@@ -93,7 +93,6 @@ function App() {
             )
           }
         />
-
       </Routes>
     </UserContext.Provider>
   );

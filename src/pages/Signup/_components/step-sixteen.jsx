@@ -23,14 +23,11 @@ export const StepSixteen = ({ next, email }) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(requestData),
-          mode: 'no-cors',
         });
 
         if (response.ok) {
           const result = await response.json();
           console.log('Pin set successfully:', result);
-           // Clear signup progress after setting the PIN
-           localStorage.removeItem('signupStep');
           next(result);
         } else {
           console.error('Failed to set pin:', response.statusText);
