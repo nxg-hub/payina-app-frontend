@@ -27,7 +27,6 @@ function App() {
   const currentRoute = location.pathname;
   const [data, setData] = useState({});
   const [currentStep, setCurrentStep] = useState(0);
-  // console.log(data);
 
   const handleNextStep = (newData) => {
     setData((prev) => ({ ...prev, ...newData }));
