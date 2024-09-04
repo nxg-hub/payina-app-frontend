@@ -4,7 +4,7 @@ import { LoginSchema } from '../schemas/schema';
 // import { useNavigate } from 'react-router-dom';
 import { images } from '../../../constants';
 import { useState } from 'react';
-import { useAuth } from 'src/useAuth';
+import { useAuth } from '../../../useAuth';
 
 const parseXML = (xml) => {
   const parser = new DOMParser();
