@@ -43,12 +43,10 @@ export default function SignUpForm() {
     businessType: ''
   });
   const [currentStep, setCurrentStep] = useState(0);
-
   // const handleNextStep = (newData) => {
   //   setData((prevData) => ({ ...prevData, ...newData }));
   //   setCurrentStep((prevStep) => prevStep + 1);
   // };
-
   useEffect(() => {
     const savedStep = localStorage.getItem('currentStep');
     if (savedStep) {
