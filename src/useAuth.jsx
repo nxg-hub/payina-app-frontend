@@ -9,7 +9,6 @@ const REGISTRATION_LEVELS = {
   FACIAL_CAPTURE_AND_UPLOAD: 3,
   CORPORATE_PROFILE_UPDATE_SET_PIN: 4,
   KYC_COMPLETED: 5
-  // Add more levels as needed
 };
 
 export function useAuth() {
@@ -32,6 +31,8 @@ export function useAuth() {
 
       const registrationLevel = response.data;
       const step = REGISTRATION_LEVELS[registrationLevel] || 0;
+
+      localStorage.setItem('currentStep', step);
 
       if (step < 17) {
         navigate('/signup');
