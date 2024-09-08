@@ -76,11 +76,5 @@ const Bethree = () => {
             <Footer />
         </section>
     )
-
-
-
-
-
 }
-
 export default Bethree

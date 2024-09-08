@@ -52,12 +52,12 @@ const Betone = () => {
                     </button>
                     </Link>
             </form>
-            <div>
+            
+            </div>
+
+        <div>
                 <Footer />
             </div>
-            </div>
-
-
         </section>
     )
 }

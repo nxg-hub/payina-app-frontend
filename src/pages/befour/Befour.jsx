@@ -56,9 +56,4 @@ const Befour = () => {
         </section>
     )
 }
-
-
-
-
-
 export default Befour
