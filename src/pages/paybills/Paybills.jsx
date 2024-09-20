@@ -11,11 +11,12 @@ import { Link } from 'react-router-dom';
 
 const Paybills = () => {
   return (
+
     <section>
       <Navbar />
       <div className=" w-full h-screen  text-center ">
         <div
-          className="w-[80%] h-1 border-none mr-auto ml-auto 
+          className="w-[80%] h-1 border-none mr-auto ml-auto
             mt-[-2px] mb-40 bg-yellow"></div>
         <p className=" mt-[-100px] text-lightBlue font-sans text-6xl font-bold">
           Buy Data, Airtime and Pay
@@ -45,22 +46,20 @@ const Paybills = () => {
           </div>
         </div>
 
-        <div className=" flex-1 md:flex px-20 md:pt-20 pb-10 text-white justify-between items-right">
-          <div className="pb-7 md:static">
-            <Link to="/airtime">
-              <Cards icon=<IoCallOutline size={30} color="white" /> title="Buy Airtime" />
-            </Link>
-          </div>
-          <div className="pb-7 md:static">
-            <Link to="/data">
-              <Cards icon=<IoWifi size={30} color="white" /> title="Buy Data" />
-            </Link>
-          </div>
+        <div className="flex flex-col items-center justify-center px-20 md:pt-20 pb-10 text-white lg:flex lg:items-center lg:justify-center lg:flex-row lg:gap-6">
+          <Link to="/airtime" className="pb-7 lg:pb-0 lg:w-1/3">
+            <Cards icon={<IoCallOutline size={30} color="white" />} title="Buy Airtime" />
+          </Link>
 
-          <Link to="/betone">
-            <Cards icon=<RiCurrencyFill size={30} color="white" /> title=" PayBills" />
+          <Link to="/data" className="pb-7 lg:pb-0 lg:w-1/3">
+            <Cards icon={<IoWifi size={30} color="white" />} title="Buy Data" />
+          </Link>
+
+          <Link to="/betone" className="lg:w-1/3">
+            <Cards icon={<RiCurrencyFill size={30} color="white" />} title="Pay Bills" />
           </Link>
         </div>
+
         <div className="mt-4">
           <Footer />
         </div>

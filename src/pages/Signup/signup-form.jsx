@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import {
   StepEight,
@@ -43,24 +42,10 @@ export default function SignUpForm() {
     businessType: ''
   });
   const [currentStep, setCurrentStep] = useState(0);
-  // const handleNextStep = (newData) => {
-  //   setData((prevData) => ({ ...prevData, ...newData }));
-  //   setCurrentStep((prevStep) => prevStep + 1);
-  // };
-  useEffect(() => {
-    const savedStep = localStorage.getItem('currentStep');
-    if (savedStep) {
-      setCurrentStep(Number(savedStep)); // Ensure saved step is a number
-    }
-  }, []);
 
   const handleNextStep = (newData) => {
     setData((prevData) => ({ ...prevData, ...newData }));
-    setCurrentStep((prevStep) => {
-      const newStep = prevStep + 1;
-      localStorage.setItem('currentStep', newStep); // Save new step to localStorage
-      return newStep;
-    });
+    setCurrentStep((prevStep) => prevStep + 1);
   };
 
   const steps = [

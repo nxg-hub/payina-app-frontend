@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Router } from 'react-router-dom';
 import PersonalPage from './pages/Personal';
 import BusinessPage from './pages/Business';
 import Signup from './pages/Signup';
@@ -18,13 +18,15 @@ import Card from './pages/card/Card';
 import Ren from './pages/ren/Ren';
 import Thanks from './pages/thanks/Thanks';
 import Data from './pages/data/Data';
-import Plans from './pages/plans/Plans';
+// import Plans from './pages/plans/Plans';
 import Planb from './pages/planb/Planb';
-import Renew from './pages/renew/Renew';
+// import Renew from './pages/renew/Renew';
 import Betone from './pages/betone/Betone';
 import Bettwo from './pages/bettwo/Bettwo';
 import Bethree from './pages/bethree/Bethree';
 import Befour from './pages/befour/Befour';
+import { FormProvider } from './context/formContext';
+import ErrorBoundary from './utilities/ErrorBoundaryComponent';
 
 function App() {
   const location = useLocation();
@@ -44,48 +46,56 @@ function App() {
 
   return (
     <UserContext.Provider value={{ data, setData }}>
-      <Routes>
-        <Route
-          path="/signup"
-          element={<Signup data={data} currentStep={currentStep} handleNextStep={handleNextStep} />}
-        />
+      <FormProvider>
+        <ErrorBoundary>
+          <Routes>
+            <Route
+              path="/signup"
+              element={
+                <Signup data={data} currentStep={currentStep} handleNextStep={handleNextStep} />
+              }
+            />
 
-        {/* Dynamic route for incomplete signup step */}
-        <Route path="/signup" element={<Signup data={data} handleNextStep={handleNextStep} />} />
-        <Route path="/paybills" element={<Paybills />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/account/dashboard" element={<Dashboard />} />
-        <Route path="/account/invoice" element={<Invoice />} />
-        <Route path="invoice/createinvoice" element={<Createinvoice />} />
-        <Route path="/account/payroll" element={<Payroll />} />
-        <Route path="/account/transaction" element={<Transaction />} />
-        <Route path="/account/inventory" element={<Inventory />} />
-        <Route path="/account/settings" element={<Settings />} />
-        <Route path="/airtime" element={<Airtime />} />
-        <Route path="/card" element={<Card />} />
-        <Route path="/ren" element={<Ren />} />
-        <Route path="/thanks" element={<Thanks />} />
-        <Route path="/data" element={<Data />} />
-        <Route path="/plans" element={<Plans />} />
-        <Route path="/planb" element={<Planb />} />
-        <Route path="/renew" element={<Renew />} />
-        <Route path="/betone" element={<Betone />} />
-        <Route path="/bettwo" element={<Bettwo />} />
-        <Route path="/bethree" element={<Bethree />} />
-        <Route path="/befour" element={<Befour />} />
-        <Route
-          path={currentRoute}
-          element={
-            currentRoute === '/' ? (
-              <PersonalPage />
-            ) : currentRoute === '/business' ? (
-              <BusinessPage />
-            ) : (
-              ''
-            )
-          }
-        />
-      </Routes>
+            <Route
+              path="/signup"
+              element={<Signup data={data} handleNextStep={handleNextStep} />}
+            />
+            <Route path="/paybills" element={<Paybills />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/account/dashboard" element={<Dashboard />} />
+            <Route path="/account/invoice" element={<Invoice />} />
+            <Route path="invoice/createinvoice" element={<Createinvoice />} />
+            <Route path="/account/payroll" element={<Payroll />} />
+            <Route path="/account/transaction" element={<Transaction />} />
+            <Route path="/account/inventory" element={<Inventory />} />
+            <Route path="/account/settings" element={<Settings />} />
+            <Route path="/airtime" element={<Airtime />} />
+            <Route path="/card" element={<Card />} />
+            <Route path="/ren" element={<Ren />} />
+            <Route path="/thanks" element={<Thanks />} />
+            <Route path="/data" element={<Data />} />
+            {/*<Route path="/plans" element={<Plans />} />*/}
+            <Route path="/planb" element={<Planb />} />
+            {/*<Route path="/renew" element={<Renew />} />*/}
+            <Route path="/betone" element={<Betone />} />
+            <Route path="/bettwo" element={<Bettwo />} />
+            <Route path="/bethree" element={<Bethree />} />
+            <Route path="/befour" element={<Befour />} />
+            <Route
+              path={currentRoute}
+              element={
+                currentRoute === '/' ? (
+                  <PersonalPage />
+                ) : currentRoute === '/business' ? (
+                  <BusinessPage />
+                ) : (
+                  ''
+                )
+              }
+            />
+          </Routes>
+        </ErrorBoundary>
+      </FormProvider>
     </UserContext.Provider>
   );
 }

@@ -84,7 +84,7 @@ const Navbar = () => {
                     children="Paybills"
                   />
                 </Link>
-                <LuMoveRight />
+                {/*<LuMoveRight />*/}
               </div>
             </li>
           </ul>
