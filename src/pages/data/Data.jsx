@@ -270,12 +270,6 @@
 // // export default DataPurchaseForm;
 //
 
-
-
-
-
-
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/navbar/navbar';
@@ -297,16 +291,18 @@ export const DataPurchaseForm = () => {
     formValues.selectedNetwork
   );
 
-  useEffect(() => {
-  }, [localEmail, selectedPlan]);
+  useEffect(() => {}, [localEmail, selectedPlan]);
 
-  const handleUserVerified = useCallback((registered, email) => {
-    setIsRegistered(registered);
-    if (registered) {
-      navigate(formValues.userType === 'PERSONAL' ? '/PERSONAL_LOGIN' : '/CORPORATE_LOGIN');
-    }
-    updateFormValues({ email });
-  }, [formValues.userType, navigate, updateFormValues]);
+  const handleUserVerified = useCallback(
+    (registered, email) => {
+      setIsRegistered(registered);
+      if (registered) {
+        navigate(formValues.userType === 'PERSONAL' ? '/login' : '/login');
+      }
+      updateFormValues({ email });
+    },
+    [formValues.userType, navigate, updateFormValues]
+  );
 
   const handleEmailChange = useCallback((e) => {
     const email = e.target.value;
@@ -330,20 +326,25 @@ export const DataPurchaseForm = () => {
 
     const stateToPass = {
       formValues: { ...formValues, email: localEmail },
-      selectedPlan: selectedPlan ? {
-        planName: selectedPlan.name,
-        planPrice: selectedPlan.amount,
-        planData: selectedPlan.slug
-      } : null
+      selectedPlan: selectedPlan
+        ? {
+            planName: selectedPlan.name,
+            planPrice: selectedPlan.amount,
+            planData: selectedPlan.slug
+          }
+        : null
     };
 
     navigate('/planb', { state: stateToPass });
   };
 
-  const handlePlanSelection = useCallback((plan) => {
-    setSelectedPlan(plan);
-    updateFormValues({ amount: plan.amount });
-  }, [setSelectedPlan, updateFormValues]);
+  const handlePlanSelection = useCallback(
+    (plan) => {
+      setSelectedPlan(plan);
+      updateFormValues({ amount: plan.amount });
+    },
+    [setSelectedPlan, updateFormValues]
+  );
 
   return (
     <section>
@@ -396,4 +397,3 @@ export const DataPurchaseForm = () => {
 };
 
 export default DataPurchaseForm;
-

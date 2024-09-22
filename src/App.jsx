@@ -27,6 +27,7 @@ import Bethree from './pages/bethree/Bethree';
 import Befour from './pages/befour/Befour';
 import { FormProvider } from './context/formContext';
 import ErrorBoundary from './utilities/ErrorBoundaryComponent';
+import ReviewOrder from './pages/airtime/ReviewOrder';
 
 function App() {
   const location = useLocation();
@@ -81,6 +82,7 @@ function App() {
             <Route path="/bettwo" element={<Bettwo />} />
             <Route path="/bethree" element={<Bethree />} />
             <Route path="/befour" element={<Befour />} />
+            <Route path="/review-airtime-order" element={<ReviewOrder />} />
             <Route
               path={currentRoute}
               element={
