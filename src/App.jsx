@@ -23,7 +23,7 @@ import Planb from './pages/planb/Planb';
 // import Renew from './pages/renew/Renew';
 import Betone from './pages/betone/Betone';
 import Bettwo from './pages/bettwo/Bettwo';
-import Bethree from './pages/bethree/Bethree';
+// import Bethree from './pages/bethree/Bethree';
 import Befour from './pages/befour/Befour';
 import { FormProvider } from './context/formContext';
 import ErrorBoundary from './utilities/ErrorBoundaryComponent';
@@ -80,7 +80,7 @@ function App() {
             {/*<Route path="/renew" element={<Renew />} />*/}
             <Route path="/betone" element={<Betone />} />
             <Route path="/bettwo" element={<Bettwo />} />
-            <Route path="/bethree" element={<Bethree />} />
+            {/*<Route path="/bethree" element={<Bethree />} />*/}
             <Route path="/befour" element={<Befour />} />
             <Route path="/review-airtime-order" element={<ReviewOrder />} />
             <Route

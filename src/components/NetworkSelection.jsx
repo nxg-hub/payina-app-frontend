@@ -5,7 +5,7 @@ export const NetworkSelection = ({ selectedNetwork, onNetworkChange }) => {
   const { networks, isLoading, error } = useNetworkSelection();
 
   if (isLoading) return <p>Loading networks...</p>;
-  if (error) return <p className="text-red-500">{error}</p>; // Styled error message
+  if (error) return <p className="text-red-500">{error}</p>;
 
   return (
     <div>
