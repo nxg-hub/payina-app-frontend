@@ -6,8 +6,8 @@ const AccountCard = () => {
   });
   const [copyMsg, setCopyMsg] = useState('');
   const [showCopy, setShowCopy] = useState(false);
-  const [loading, setLoading] = useState(true); // Loading state to handle API calls
-  const [error, setError] = useState(''); // Error state to handle any issues
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(''); 
 
   const handleCopyClick = async () => {
     try {
@@ -25,7 +25,7 @@ const AccountCard = () => {
 
   useEffect(() => {
     const fetchAccountDetails = async () => {
-      const token = localStorage.getItem('authToken'); // Get token from localStorage
+      const token = localStorage.getItem('authToken');
 
       if (!token) {
         console.error('No auth token found');
@@ -36,7 +36,7 @@ const AccountCard = () => {
         const response = await fetch(import.meta.env.VITE_ACCOUNT_DETAILS_ENDPOINT, {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`, // Use the token in the Authorization header
+            'Authorization': `Bearer ${token}`, 
             'Content-Type': 'application/json',
           },
         });
@@ -63,7 +63,7 @@ const AccountCard = () => {
     fetchAccountDetails();
   }, []);
   
-  if (loading) return <p>Loading...</p>; // Show loading message while fetching data
+ if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
   
 

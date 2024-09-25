@@ -15,7 +15,7 @@ const TransactionHistory = () => {
   };
   useEffect(() => {
     const fetchTransactions = async () => {
-      const token = getAuthToken(); // Retrieve token from helper
+      const token = getAuthToken(); 
 
       if (!token) {
         return setState({
@@ -33,17 +33,17 @@ const TransactionHistory = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            walletId: '',  // Replace with actual data source
-            startDate: '2024-09-12T06:18:59.470Z', // Replace with actual data source
-            endDate: '2024-09-12T06:18:59.470Z',     // Replace with actual data source
-            type: '',           // Replace with actual data source
+            walletId: '', 
+            startDate: '2024-09-12T06:18:59.470Z',
+            endDate: '2024-09-12T06:18:59.470Z', 
+            type: '',     
           }),
         });
 
         const result = await response.json();
 
         if (response.ok) {
-          // Adjust based on actual structure
+          
           setState({ transactions: result.transactions || [], loading: false, error: null });
         } else {
           throw new Error(result.message || 'Failed to fetch transaction history');
@@ -56,7 +56,7 @@ const TransactionHistory = () => {
     fetchTransactions();
   }, []);
 
-  const { transactions, loading, error } = state; // Destructure state
+  const { transactions, loading, error } = state;
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
