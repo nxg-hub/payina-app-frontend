@@ -14,7 +14,7 @@ export const StepThree = ({ next, data }) => {
       setCanResendCode(true);
     }, 30000); // 30 seconds
 
-    return () => clearTimeout(timer); 
+    return () => clearTimeout(timer);
   }, []);
 
   const handleSubmit = async (values) => {
@@ -29,9 +29,7 @@ export const StepThree = ({ next, data }) => {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem('currentStep', 3); 
-
-        next(values); 
+        next(values);
       } else {
         setOtpError(data.message || 'Invalid OTP');
       }
@@ -55,7 +53,7 @@ export const StepThree = ({ next, data }) => {
       setIsAlertVisible(false);
     }, 3000);
 
-    return () => clearTimeout(timer); 
+    return () => clearTimeout(timer);
   };
 
   const otpInput = `
@@ -68,7 +66,7 @@ export const StepThree = ({ next, data }) => {
     input[type=number] {
       -moz-appearance: textfield;
     }`;
-  
+
   let phoneNumber =
     data.phone?.slice(0, 4) +
     '-' +
@@ -106,11 +104,10 @@ export const StepThree = ({ next, data }) => {
       </div>
       <div className="bg-primary flex flex-col justify-center items-start py-4 xl:py-8 px-4 xl:px-20">
         <div className="text-lightBlue text-start font-bold xl:text-[32px] w-full xl:w-[450px] leading-9 text-xl">
-          A verification code has been sent to your email address
+          Kindly Confirm Your Phone Number
         </div>
         <span className="font-light mt-5 leading-5 text-sm xl:text-base">
-          Kindly confirm your Phone Number
-          We can resend a verification code to your phone number
+          We’ll send a verification code to your phone number
         </span>
         <Formik
           initialValues={{ phone: phoneNumber, otp: '' }}
@@ -132,7 +129,9 @@ export const StepThree = ({ next, data }) => {
                   className="text-sm font-bold mt-10 !py-[1px] !px-[9px] !border-none !rounded-[10px] !bg-[#E80516]"
                 />
               ) : (
-                <span className="text-sm text-gray-500 mt-10">You can resend the code in 30 seconds.</span>
+                <span className="text-sm text-gray-500 mt-10">
+                  You can resend the code in 30 seconds.
+                </span>
               )}
               <span className="text-sm text-[#33b444] mt-4">{isAlertVisible && codeAlert}</span>
               <div className="flex flex-col items-center justify-center">
@@ -174,10 +173,10 @@ export const StepThree = ({ next, data }) => {
                 Enter Code
               </span>
               <CustomButton
-                 padding="15px"
-                 type="submit"
-                 children="Next"
-                 className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[87%] w-[90%] mx-auto my-10 !mb-12 xl:my-12 xl:mb-20"
+                padding="15px"
+                type="submit"
+                children="Next"
+                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[87%] w-[90%] mx-auto my-10 !mb-12 xl:my-12 xl:mb-20"
               />
             </Form>
           )}

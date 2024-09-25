@@ -67,7 +67,7 @@ export const MobileSidebar = () => {
             <TbSettings size={22} />
             <span className="hover:text-lightBlue ease transition-colors">Account Settings</span>
           </Link>
-      
+
           <Link
             to="/"
             className={`flex items-center space-x-6 ${
@@ -76,22 +76,22 @@ export const MobileSidebar = () => {
             <VscSignOut size={22} />
             <span className="hover:text-lightBlue ease transition-colors">Sign Out</span>
           </Link>
-          <div className='flex space-x-10 justify-center mt-20'>
-          <Link href={'/'} className="items-center">
-            <div className="hover:scale-95">
-              <img src={images.Headphone} alt="customer_care" />
-            </div>
-          </Link>
-          <Link to={'/'}>
-          <div className="hover:scale-95">
-            <img src={images.Bell} alt="customer_care" />
-          </div>
-        </Link>
-        <Link to={'/'}>
-          <div className="hover:scale-95">
-            <img src={images.Settings} alt="customer_care" />
-          </div>
-        </Link>
+          <div className="flex space-x-10 justify-center mt-20">
+            <Link href={'/'} className="items-center">
+              <div className="hover:scale-95">
+                <img src={images.Headphone} alt="customer_care" />
+              </div>
+            </Link>
+            <Link to={'/'}>
+              <div className="hover:scale-95">
+                <img src={images.Bell} alt="customer_care" />
+              </div>
+            </Link>
+            <Link to={'/'}>
+              <div className="hover:scale-95">
+                <img src={images.Settings} alt="customer_care" />
+              </div>
+            </Link>
           </div>
         </div>
       </div>

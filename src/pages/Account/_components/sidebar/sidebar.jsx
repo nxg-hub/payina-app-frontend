@@ -1,8 +1,8 @@
 import { AiOutlineAppstore } from 'react-icons/ai';
-import { TbChecklist, TbUserDollar, TbSettings } from "react-icons/tb";
-import { LuFileClock } from "react-icons/lu";
-import { RiFileSettingsLine } from "react-icons/ri"
-import { VscSignOut } from "react-icons/vsc";
+import { TbChecklist, TbUserDollar, TbSettings } from 'react-icons/tb';
+import { LuFileClock } from 'react-icons/lu';
+import { RiFileSettingsLine } from 'react-icons/ri';
+import { VscSignOut } from 'react-icons/vsc';
 import { Link, useLocation } from 'react-router-dom';
 import images from '../../../../constants/images';
 
@@ -23,15 +23,15 @@ export const Sidebar = () => {
               currentRoute === '/account/dashboard' ? '!ml-3 font-bold text-lightBlue' : ''
             }`}>
             <AiOutlineAppstore size={22} />
-            <span className='hover:text-lightBlue ease transition-colors'>Dashboard</span>
+            <span className="hover:text-lightBlue ease transition-colors">Dashboard</span>
           </Link>
-            <Link
+          <Link
             to="/account/invoice"
             className={`flex items-center space-x-6 ${
               currentRoute === '/account/invoice' ? '!ml-3 font-bold text-lightBlue' : ''
             }`}>
             <TbChecklist size={22} />
-            <span className='hover:text-lightBlue ease transition-colors'>Invoice</span>
+            <span className="hover:text-lightBlue ease transition-colors">Invoice</span>
           </Link>
           <Link
             to="/account/payroll"
@@ -39,7 +39,7 @@ export const Sidebar = () => {
               currentRoute === '/account/payroll' ? '!ml-3 font-bold text-lightBlue' : ''
             }`}>
             <TbUserDollar size={22} />
-            <span className='hover:text-lightBlue ease transition-colors'>Payroll</span>
+            <span className="hover:text-lightBlue ease transition-colors">Payroll</span>
           </Link>
           <Link
             to="/account/transaction"
@@ -47,7 +47,7 @@ export const Sidebar = () => {
               currentRoute === '/account/transaction' ? '!ml-3 font-bold text-lightBlue' : ''
             }`}>
             <LuFileClock size={22} />
-            <span className='hover:text-lightBlue ease transition-colors'>Transaction History</span>
+            <span className="hover:text-lightBlue ease transition-colors">Transaction History</span>
           </Link>
           <Link
             to="/account/inventory"
@@ -55,7 +55,9 @@ export const Sidebar = () => {
               currentRoute === '/account/inventory' ? '!ml-3 font-bold text-lightBlue' : ''
             }`}>
             <RiFileSettingsLine size={22} />
-            <span className='hover:text-lightBlue ease transition-colors text-nowrap'>Inventory Management</span>
+            <span className="hover:text-lightBlue ease transition-colors text-nowrap">
+              Inventory Management
+            </span>
           </Link>
           <Link
             to="/account/settings"
@@ -63,7 +65,7 @@ export const Sidebar = () => {
               currentRoute === '/account/settings' ? '!ml-3 font-bold text-lightBlue' : ''
             }`}>
             <TbSettings size={22} />
-            <span className='hover:text-lightBlue ease transition-colors'>Account Settings</span>
+            <span className="hover:text-lightBlue ease transition-colors">Account Settings</span>
           </Link>
           <Link
             to="/"
@@ -71,7 +73,7 @@ export const Sidebar = () => {
               currentRoute === '/' ? '!ml-3 font-bold text-lightBlue' : ''
             }`}>
             <VscSignOut size={22} />
-            <span className='hover:text-lightBlue ease transition-colors'>Sign Out</span>
+            <span className="hover:text-lightBlue ease transition-colors">Sign Out</span>
           </Link>
         </div>
       </div>

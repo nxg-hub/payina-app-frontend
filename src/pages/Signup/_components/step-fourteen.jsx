@@ -1,14 +1,14 @@
-import React from "react";
-import { Form, Formik, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
-import CustomButton from "../../../components/button/button";
+import React from 'react';
+import { Form, Formik, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import CustomButton from '../../../components/button/button';
 
 // Validation schema using Yup
 const StepFourteenValidationSchema = Yup.object().shape({
   numberOfSignatories: Yup.number()
-    .required("Number of signatories is required")
-    .min(1, "Number of signatories must be at least 1")
-    .integer("Number of signatories must be an integer"),
+    .required('Number of signatories is required')
+    .min(1, 'Number of signatories must be at least 1')
+    .integer('Number of signatories must be an integer')
 });
 
 export const StepFourteen = ({ next }) => {
@@ -18,9 +18,7 @@ export const StepFourteen = ({ next }) => {
 
   // Generate options for the number of signatories
   const generateSignatoriesOptions = () => {
-    const options = [
-      { label: 'Select number of signatories', value: '', disabled: true }, 
-    ];
+    const options = [{ label: 'Select number of signatories', value: '', disabled: true }];
 
     for (let i = 1; i <= 10; i++) {
       options.push({ label: `${i}`, value: i });
@@ -34,11 +32,10 @@ export const StepFourteen = ({ next }) => {
       <div className="p-2 xl:p-10 bg-primary !mt-24 xl:mt-0 mx-auto ">
         <Formik
           initialValues={{
-            numberOfSignatories: '', 
+            numberOfSignatories: ''
           }}
           validationSchema={StepFourteenValidationSchema}
-          onSubmit={(values) => handleSubmit(values)}
-        >
+          onSubmit={(values) => handleSubmit(values)}>
           {() => (
             <Form className="">
               <div className="my-4">
@@ -53,14 +50,9 @@ export const StepFourteen = ({ next }) => {
                   id="numberOfSignatories"
                   name="numberOfSignatories"
                   placeholder="Select Numbers of Signatories"
-                  className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-primary rounded-[5px] py-2 px-[10px] bg-[#00678F]"
-                >
+                  className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-primary rounded-[5px] py-2 px-[10px] bg-[#00678F]">
                   {generateSignatoriesOptions().map((option) => (
-                    <option
-                      key={option.value}
-                      value={option.value}
-                      disabled={option.disabled}
-                    >
+                    <option key={option.value} value={option.value} disabled={option.disabled}>
                       {option.label}
                     </option>
                   ))}

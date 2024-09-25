@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import images from '../../../../constants/images';
 
@@ -23,9 +24,12 @@ const FifthSection = () => {
         </div>
 
         <div className="absolute md:top-[95%] top-[127%] md:left-[49%] left-[35%] px-6 md:space-y-4 w-[70%] md:w-[40%] z-50 text-right">
-          <div className="font-bold md:text-2xl xl:text-4xl text-[0.7rem]">Manage Account Signatories</div>
+          <div className="font-bold md:text-2xl xl:text-4xl text-[0.7rem]">
+            Manage Account Signatories
+          </div>
           <div className="font-medium text-[.65rem] xl:text-base">
-            Easily setup multiple signatories to your companies coporate account. Fostering faster access to funds for business activites.
+            Easily setup multiple signatories to your companies coporate account. Fostering faster
+            access to funds for business activites.
           </div>
         </div>
         <img

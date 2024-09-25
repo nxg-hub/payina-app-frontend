@@ -11,18 +11,18 @@ export const StepTen = ({ next }) => {
 
   const handleSubmit = async (business_details) => {
     setLoading(true);
-     const businessData = {
+    const businessData = {
       businessName: business_details.businessName,
       businessAddress: business_details.businessAddress,
       businessCategory: business_details.businessCategory,
       businessType: business_details.businessType,
-      businessRegNumber: business_is_registered === 'yes' ? business_details.businessRegNumber : null,
-      tin_No: business_is_registered === 'yes' ? business_details.tin_No : null,
+      businessRegNumber:
+        business_is_registered === 'yes' ? business_details.businessRegNumber : null,
+      tin_No: business_is_registered === 'yes' ? business_details.tin_No : null
     };
     try {
       // console.log('Submitting business data:', businessData);
 
-     
       next(businessData, 13); // Passes the data and directs to step 13
     } catch (error) {
       console.error('Error submitting business data:', error);
@@ -33,8 +33,8 @@ export const StepTen = ({ next }) => {
   };
   const handleSecondCheck = (value) => {
     setBusinessAddress(value);
-    if (business_and_home=== 'yes') {
-      next( HomeAddress , 11);
+    if (business_and_home === 'yes') {
+      next(HomeAddress, 11);
     }
   };
 
@@ -206,18 +206,22 @@ export const StepTen = ({ next }) => {
                     />
                   </div>
                   <div className="my-2">
-              <label htmlFor="other" className="text-secondary block mb-2 w-full text-sm">
-                Other
-              </label>
-              <Field
-                type="text"
-                id="other"
-                name="other"
-                placeholder="Enter Your Business category"
-                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
-              />
-              <ErrorMessage name="email" component="div" className="text-[#db3a3a] mt-2 text-sm" />
-            </div>
+                    <label htmlFor="other" className="text-secondary block mb-2 w-full text-sm">
+                      Other
+                    </label>
+                    <Field
+                      type="text"
+                      id="other"
+                      name="other"
+                      placeholder="Enter Your Business category"
+                      className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+                    />
+                    <ErrorMessage
+                      name="email"
+                      component="div"
+                      className="text-[#db3a3a] mt-2 text-sm"
+                    />
+                  </div>
                   <div className="w-full flex flex-col space-y-2 ">
                     <label
                       htmlFor="businessType"
@@ -305,49 +309,49 @@ export const StepTen = ({ next }) => {
                         />
                       </div>
                     </div>
-                    </div>
-                 
-                {business_is_registered === 'yes' && (
-                  <>
-                    <div className="w-full flex flex-col space-y-2 ">
-                      <label
-                        htmlFor="businessRegNumber"
-                        className="text-xs md:text-sm font-normal text-[#1A1D1F] opacity-75">
-                        Business Registration Number
-                      </label>
-                      <Field
-                        name="businessRegNumber"
-                        type="text"
-                        placeholder="Enter Business Registration Number"
-                        className="w-full h-10 md:h-[3.4rem] border border-[#9ca3af] outline-none font-light text-[13px] md:text-base text-gray rounded-[5px] py-2 px-[10px]"
-                      />
-                      <ErrorMessage
-                        name="businessRegNumber"
-                        component="span"
-                        className="text-[#db3a3a] text-xs md:text-sm"
-                      />
-                    </div>
-                    <div className="w-full flex flex-col space-y-2 ">
-                      <label
-                        htmlFor="tin_No"
-                        className="text-xs md:text-sm font-normal text-[#1A1D1F] opacity-75">
-                        Tax Identification Number
-                      </label>
-                      <Field
-                        name="tin_No"
-                        type="text"
-                        placeholder="Enter Tax Identification Number"
-                        className="w-full h-10 md:h-[3.4rem] border border-[#9ca3af] outline-none font-light text-[13px] md:text-base text-gray rounded-[5px] py-2 px-[10px]"
-                      />
-                      <ErrorMessage
-                        name="tin_No"
-                        component="span"
-                        className="text-[#db3a3a] text-xs md:text-sm"
-                      />
-                    </div>
-                  </>
-                )}
-          
+                  </div>
+
+                  {business_is_registered === 'yes' && (
+                    <>
+                      <div className="w-full flex flex-col space-y-2 ">
+                        <label
+                          htmlFor="businessRegNumber"
+                          className="text-xs md:text-sm font-normal text-[#1A1D1F] opacity-75">
+                          Business Registration Number
+                        </label>
+                        <Field
+                          name="businessRegNumber"
+                          type="text"
+                          placeholder="Enter Business Registration Number"
+                          className="w-full h-10 md:h-[3.4rem] border border-[#9ca3af] outline-none font-light text-[13px] md:text-base text-gray rounded-[5px] py-2 px-[10px]"
+                        />
+                        <ErrorMessage
+                          name="businessRegNumber"
+                          component="span"
+                          className="text-[#db3a3a] text-xs md:text-sm"
+                        />
+                      </div>
+                      <div className="w-full flex flex-col space-y-2 ">
+                        <label
+                          htmlFor="tin_No"
+                          className="text-xs md:text-sm font-normal text-[#1A1D1F] opacity-75">
+                          Tax Identification Number
+                        </label>
+                        <Field
+                          name="tin_No"
+                          type="text"
+                          placeholder="Enter Tax Identification Number"
+                          className="w-full h-10 md:h-[3.4rem] border border-[#9ca3af] outline-none font-light text-[13px] md:text-base text-gray rounded-[5px] py-2 px-[10px]"
+                        />
+                        <ErrorMessage
+                          name="tin_No"
+                          component="span"
+                          className="text-[#db3a3a] text-xs md:text-sm"
+                        />
+                      </div>
+                    </>
+                  )}
+
                   <div className="flex flex-col space-y-6 mx-auto items-center justify-center">
                     <div className="pb-2 flex  items-center justify-center flex-col">
                       <label className="text-center text-xs md:text-sm font-normal text-[#1A1D1F] opacity-75">
@@ -398,7 +402,7 @@ export const StepTen = ({ next }) => {
                   children={loading ? 'loading...' : 'Next'}
                   className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 mx-auto md:mx-0 w-full md:w-[85%] xl:w-full !mt-0 xl:mb-0"
                   disabled={loading}
-                 />
+                />
               </div>
             </Form>
           )}
@@ -406,5 +410,5 @@ export const StepTen = ({ next }) => {
       </div>
       <style>{selectArrow}</style>
     </>
-);
+  );
 };

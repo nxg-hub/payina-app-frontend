@@ -6,28 +6,25 @@ import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
 import { HomeAddressSchema } from '../schemas/schema';
 
-export const StepEight = ({ next, }) => {
+export const StepEight = ({ next }) => {
   const [countries, setCountries] = useState([]);
   const [currentState, setCurrentState] = useState('');
   const [localGovernment, setLocalGovernment] = useState([]);
 
   const handleSubmit = (address_details) => {
     const HomeAddress = {
-      houseNumber: address_details.houseNumber , 
+      houseNumber: address_details.houseNumber,
       street: address_details.street,
-      state: address_details.state, 
+      state: address_details.state,
       lga: address_details.lga
     };
 
-     try {
-    next(HomeAddress, 11);
-    localStorage.setItem('currentStep', 8);
-
-  }
-  catch (error) {
-    console.error('Error submitting add. data:', error);
-  }
-};
+    try {
+      next(HomeAddress, 11);
+    } catch (error) {
+      console.error('Error submitting add. data:', error);
+    }
+  };
 
   useEffect(() => {
     const currentLga = state_local
@@ -97,14 +94,14 @@ export const StepEight = ({ next, }) => {
       </div>
       <div className="bg-primary !mt-24 xl:mt-0 flex flex-col justify-center items-start mx-auto">
         <Formik
-          initialValues={{ houseNumber: '', street: '',state: '', lga: ''  }}
+          initialValues={{ houseNumber: '', street: '', state: '', lga: '' }}
           validationSchema={HomeAddressSchema}
           onSubmit={(address_details) => handleSubmit(address_details)}>
           {(formik) => (
             <Form className="w-full space-y-2">
               <div className="xl:py-16 p-4 pt-[2.2rem] xl:p-10 xl:pl-[5rem] xl:pr-40 xl:w-auto w-full m-auto xl:space-y-4 space-y-4 pb-2 xl:pb-6">
                 <div className="text-lightBlue text-start font-bold xl:text-[32px] text-xl">
-                Kindly Enter Your Address
+                  Kindly Enter Your Address
                 </div>
                 <div className="xl:w-[120%] flex flex-col space-y-2 ">
                   <label htmlFor="houseNumber" className="text-sm font-normal text-lightBlue">
@@ -120,7 +117,7 @@ export const StepEight = ({ next, }) => {
                 </div>
                 <div className="xl:w-[120%] flex flex-col space-y-2 ">
                   <label htmlFor="street" className="text-sm font-normal text-lightBlue">
-                    Street 
+                    Street
                   </label>
                   <Field
                     name="street"
@@ -138,20 +135,18 @@ export const StepEight = ({ next, }) => {
                     as="select"
                     name="country"
                     className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-[10px] bg-secondary">
-                    <option
-                      value=""
-                      disabled>
+                    <option value="" disabled>
                       Select Country
                     </option>
-                    {Array.isArray(countries) && countries.map(({ value, key }) => (
-
-                      <option
-                        key={key}
-                        value={value}
-                        className="!bg-secondary text-primary font-medium">
-                        {value}
-                      </option>
-                    ))}
+                    {Array.isArray(countries) &&
+                      countries.map(({ value, key }) => (
+                        <option
+                          key={key}
+                          value={value}
+                          className="!bg-secondary text-primary font-medium">
+                          {value}
+                        </option>
+                      ))}
                   </Field>
                   <ErrorMessage name="country" component="span" className="text-[#db3a3a]" />
                 </div>
@@ -164,23 +159,22 @@ export const StepEight = ({ next, }) => {
                     name="state"
                     onChange={(e) => {
                       setCurrentState(e.target.value);
-                      formik.setFieldValue("state", e.target.value);
+                      formik.setFieldValue('state', e.target.value);
                     }}
                     value={formik.values.state}
                     className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-[10px] bg-secondary">
-                    <option
-                      value=""
-                      disabled>
+                    <option value="" disabled>
                       Select State
                     </option>
-                    {countries.length !== 0 && state_local.map(({ state }) => (
-                      <option
-                        key={state}
-                        value={state}
-                        className="!bg-secondary text-primary font-medium">
-                        {state}
-                      </option>
-                    ))}
+                    {countries.length !== 0 &&
+                      state_local.map(({ state }) => (
+                        <option
+                          key={state}
+                          value={state}
+                          className="!bg-secondary text-primary font-medium">
+                          {state}
+                        </option>
+                      ))}
                   </Field>
                 </div>
                 <div className="xl:w-[120%] flex flex-col space-y-2 ">
@@ -191,13 +185,14 @@ export const StepEight = ({ next, }) => {
                     as="select"
                     name="lga"
                     className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-[10px] bg-secondary">
-                    <option
-                      value=""
-                      disabled>
+                    <option value="" disabled>
                       Select Local Government
                     </option>
                     {localGovernment?.map((lga, i) => (
-                      <option key={i} value={lga} className="!bg-secondary text-primary font-medium">
+                      <option
+                        key={i}
+                        value={lga}
+                        className="!bg-secondary text-primary font-medium">
                         {lga}
                       </option>
                     ))}

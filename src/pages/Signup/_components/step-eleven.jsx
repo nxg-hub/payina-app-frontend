@@ -5,7 +5,7 @@ import { BusinessAddressSchema } from '../schemas/schema';
 import { state_local } from '../../../services/state-local';
 import { useEffect, useState } from 'react';
 
-export const StepEleven = ({ next, HomeAddress, }) => {
+export const StepEleven = ({ next, HomeAddress }) => {
   const [businessState, setBusinessState] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -17,29 +17,28 @@ export const StepEleven = ({ next, HomeAddress, }) => {
       businessHouseNumber: business_address.businessHouseNumber,
       businessStreetName: business_address.businessStreetName,
       businessState: business_address.businessState,
-      businessLGA: business_address.businessLGA,
+      businessLGA: business_address.businessLGA
     };
     try {
-          // console.log('Submitting business add.:', BusinessAddress);
+      // console.log('Submitting business add.:', BusinessAddress);
 
-    next(BusinessAddress , 13);
-    
-  } catch (error) {
-    console.error('Error submitting business data:', error);
-  }
-};
+      next(BusinessAddress, 13);
+    } catch (error) {
+      console.error('Error submitting business data:', error);
+    }
+  };
 
-useEffect(() => {
-  if (HomeAddress && HomeAddress.state) {
-    setBusinessState(HomeAddress.state);
-  }
+  useEffect(() => {
+    if (HomeAddress && HomeAddress.state) {
+      setBusinessState(HomeAddress.state);
+    }
 
-  const currentLga = state_local
-    .filter((lga) => lga.state === businessState)
-    .map((lga) => lga.lgas);
+    const currentLga = state_local
+      .filter((lga) => lga.state === businessState)
+      .map((lga) => lga.lgas);
 
-  setLocalGovernment(currentLga[0]);
-}, [businessState, HomeAddress]);
+    setLocalGovernment(currentLga[0]);
+  }, [businessState, HomeAddress]);
 
   const selectArrow = `
       select{
@@ -93,22 +92,24 @@ useEffect(() => {
       </div>
       <div className="bg-primary !mt-24 xl:mt-0 flex flex-col justify-center items-start mx-auto">
         <Formik
-              initialValues={{
-               businessHouseNumber:  '',
-               businessStreetName: '',
-               businessState: '',
-               businessLGA:  '',
-             }}   
-       validationSchema={BusinessAddressSchema}
-      onSubmit={handleSubmit}>
-        {({ values, handleChange }) => (
+          initialValues={{
+            businessHouseNumber: '',
+            businessStreetName: '',
+            businessState: '',
+            businessLGA: ''
+          }}
+          validationSchema={BusinessAddressSchema}
+          onSubmit={handleSubmit}>
+          {({ values, handleChange }) => (
             <Form className="w-full space-y-4">
               <div className="xl:py-16 p-4 pt-[2.2rem] xl:p-10 xl:px-[3rem] xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
                 <div className="text-lightBlue text-start font-bold xl:text-[32px] text-xl">
                   Kindly Enter Your Business Address
                 </div>
                 <div className="xl:w-full flex flex-col space-y-2 ">
-                  <label htmlFor="businessHouseNumber" className="text-sm font-normal text-lightBlue">
+                  <label
+                    htmlFor="businessHouseNumber"
+                    className="text-sm font-normal text-lightBlue">
                     Business Address Number
                   </label>
                   <Field
@@ -149,60 +150,45 @@ useEffect(() => {
                   <Field
                     as="select"
                     name="businessState"
-                  id="businessState"
-                  onChange={(e) => {
-                    handleChange(e);
-                    setBusinessState(e.target.value);
-                  }}
+                    id="businessState"
+                    onChange={(e) => {
+                      handleChange(e);
+                      setBusinessState(e.target.value);
+                    }}
                     className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-[10px] bg-secondary">
-                    <option
-                    value=""
-                    disabled
-                  >
-                    Select State
-                  </option>
-                  {state_local.map(({ state }) => (
-                    <option
-                      key={state}
-                      value={state}
-                      className="!bg-secondary text-primary font-medium">
-                      {state}
+                    <option value="" disabled>
+                      Select State
                     </option>
-                  ))}
-                </Field>
-                <ErrorMessage
-                  name="businessState"
-                  component="span"
-                  className="text-[#db3a3a]"
-                />
-              </div>
-              <div className="xl:w-full flex flex-col space-y-2 ">
-                <label htmlFor="businessLGA" className="text-sm font-normal text-lightBlue">
-                  Local Government
-                </label>
-                <Field
-                  as="select"
-                  name="businessLGA"
-                  className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-[10px] bg-secondary"
-                >
-                  <option
-                    value=""
-                    disabled
-                  >
-                    Select Local Government
-                  </option>
-                  {localGovernment?.map((lga, i) => (
-                    <option value={lga} key={i}>
-                      {lga}
+                    {state_local.map(({ state }) => (
+                      <option
+                        key={state}
+                        value={state}
+                        className="!bg-secondary text-primary font-medium">
+                        {state}
+                      </option>
+                    ))}
+                  </Field>
+                  <ErrorMessage name="businessState" component="span" className="text-[#db3a3a]" />
+                </div>
+                <div className="xl:w-full flex flex-col space-y-2 ">
+                  <label htmlFor="businessLGA" className="text-sm font-normal text-lightBlue">
+                    Local Government
+                  </label>
+                  <Field
+                    as="select"
+                    name="businessLGA"
+                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-[10px] bg-secondary">
+                    <option value="" disabled>
+                      Select Local Government
                     </option>
-                  ))}
-                </Field>
-                <ErrorMessage
-                  name="businessLGA"
-                  component="span"
-                  className="text-[#db3a3a]"
-                />
-              </div>
+                    {localGovernment?.map((lga, i) => (
+                      <option value={lga} key={i}>
+                        {lga}
+                      </option>
+                    ))}
+                  </Field>
+                  <ErrorMessage name="businessLGA" component="span" className="text-[#db3a3a]" />
+                </div>
               </div>
               <CustomButton
                 padding="15px"

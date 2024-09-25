@@ -8,7 +8,6 @@ import ActionButtons from './_components/action-buttons';
 import { Link, useLocation } from 'react-router-dom';
 import CustomButton from '../../components/button/button';
 
-
 const Navbar = () => {
   const [toggleMenu, setToggleMenu] = useState();
   const location = useLocation();
@@ -45,11 +44,7 @@ const Navbar = () => {
       </div>
 
       <div className="xl:hidden block cursor-pointer">
-        <GiHamburgerMenu
-          color='#fff'
-          fontSize={27}
-          onClick={() => setToggleMenu(true)}
-        />
+        <GiHamburgerMenu color="#fff" fontSize={27} onClick={() => setToggleMenu(true)} />
       </div>
       {toggleMenu && (
         <div className="fixed top-0 left-0 w-full h-screen bg-[#000] transition-all duration-150 flex flex-col z-10 justify-center items-center animate-slideBottom">
@@ -82,12 +77,12 @@ const Navbar = () => {
                 <Link to="#" className="hover:text-lightBlue font-semibold">
                   Features
                 </Link> */}
-                 <div className="flex space-x-10 absolute bottom-0 my-8">
-                <Link to="/paybills" >
+              <div className="flex space-x-10 absolute bottom-0 my-8">
+                <Link to="/paybills">
                   <Button
-                  className="hover:bg-lightBlue hover:scale-95 font-extrabold duration-300 center"
-                  children="Paybills"
-                />
+                    className="hover:bg-lightBlue hover:scale-95 font-extrabold duration-300 center"
+                    children="Paybills"
+                  />
                 </Link>
                 <LuMoveRight />
               </div>

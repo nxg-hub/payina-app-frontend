@@ -5,11 +5,11 @@ import { images } from '../../../constants';
 
 export const StepSeventeen = ({ data }) => {
   const [business_name, setBusinessName] = useState('');
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-   const handleClick = () => { 
-    navigate('/account/dashboard')
-   }
+  const handleClick = () => {
+    navigate('/account/dashboard');
+  };
   useEffect(() => {
     setBusinessName(data?.business_details?.business_name);
   }, [data]);

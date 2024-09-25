@@ -6,12 +6,12 @@ import { EmployeeSchema } from '../../schemas/schemas';
 
 const EmployeeDetails = ({ handleEmployeeForm, addEmployeeForm }) => {
   const [save, setSave] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSave = () => {
     setSave(true);
     // navigate('/account/dashboard')
-    navigate(0)
+    navigate(0);
   };
   const handleSubmit = (employee_values) => {
     handleEmployeeForm(employee_values);
@@ -64,10 +64,10 @@ const EmployeeDetails = ({ handleEmployeeForm, addEmployeeForm }) => {
                     required
                   />
                   <ErrorMessage
-                      name="employee_name"
-                      component="span"
-                      className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
-                    />
+                    name="employee_name"
+                    component="span"
+                    className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
+                  />
                 </div>
                 <div className="flex flex-col  w-full py-4 space-y-4">
                   <div className="flex items-center">
@@ -88,10 +88,10 @@ const EmployeeDetails = ({ handleEmployeeForm, addEmployeeForm }) => {
                     required
                   />
                   <ErrorMessage
-                      name="employee_role"
-                      component="span"
-                      className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
-                    />
+                    name="employee_role"
+                    component="span"
+                    className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
+                  />
                 </div>
 
                 <div className="flex flex-col w-full py-4 space-y-4">

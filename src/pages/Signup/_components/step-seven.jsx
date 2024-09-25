@@ -10,11 +10,11 @@ export const StepSeven = ({ next, text }) => {
   return (
     <>
       <div className="p-2 xl:p-10  bg-primary text-center w-full ">
-        <div className=''>
-        <p className='text-[32px] font-bold text-secondary pr-0 xl:px-20'>Congratulation! </p> 
-        <p className='pt-[20px]'>Your Identity Has been Verified!</p>
+        <div className="">
+          <p className="text-[32px] font-bold text-secondary pr-0 xl:px-20">Congratulation! </p>
+          <p className="pt-[20px]">Your Identity Has been Verified!</p>
         </div>
-    
+
         <Formik initialValues={{}} onSubmit={(values) => handleSubmit(values)}>
           {() => (
             <Form className="">
