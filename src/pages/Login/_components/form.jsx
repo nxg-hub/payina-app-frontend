@@ -5,6 +5,7 @@ import { LoginSchema } from '../schemas/schema';
 import { images } from '../../../constants';
 import { useState } from 'react';
 import { useAuth } from '../../../useAuth';
+ main
 
 const parseXML = (xml) => {
   const parser = new DOMParser();
@@ -17,10 +18,13 @@ const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   // const navigate = useNavigate();
+ main
   const auth = useAuth(); // Use the useAuth hook
+  const { setData } = useContext(UserContext); // Use context to get setData function
 
   const handleSubmit = async (values) => {
     setIsLoading(true);
+    setErrorMessage('');
     localStorage.setItem('userEmail', values.email);
 
     const requestData = {
@@ -42,10 +46,12 @@ const LoginForm = () => {
         const token = result?.data;
 
         if (token) {
-          localStorage.setItem('authToken', token);
+          localStorage.setItem('authToken', token); // Save token in localStorage
+          setData({ ...result }); // Store all relevant user data and token in context
           console.log('Log in successful:', token);
 
           await auth.checkUserRegistrationLevel(); // Trigger the redirection after login
+ main
         } else {
           setErrorMessage('Login failed: Invalid token structure');
         }
@@ -60,6 +66,7 @@ const LoginForm = () => {
       setIsLoading(false);
     }
   };
+
 
   return (
     <div className="md:w-[40%] mx-10 md:mx-auto md:py-10">
