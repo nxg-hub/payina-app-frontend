@@ -2,17 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const InputStyle = ({
-                      label,
-                      type,
-                      name,
-                      value,
-                      defaultValue,
-                      onChange,
-                      placeholder,
-                      error,
-                      onBlur,
-                      readOnly
-                    }) => (
+  label,
+  type,
+  name,
+  value,
+  defaultValue,
+  onChange,
+  placeholder,
+  error,
+  onBlur,
+  readOnly
+}) => (
   <div className="flex flex-col w-[64%] mb-4">
     {label && <label className="py-2">{label}</label>}
     <input
