@@ -25,15 +25,29 @@ export const apiService = {
     const response = await axios.post(`${BASE_URL}/bill/initialize`, {
       planId,
       email,
-      amount,
+      amount
     });
     return response.data;
   },
 
-  vendValue: async (paymentReference) => {
-    const response = await axios.post(`${BASE_URL}/vas/vend-value-non-payina-customer/${paymentReference}`);
+  vendValue: async (reference, payload) => {
+    const response = await axios.post(
+      `${BASE_URL}/vas/vend-value-non-payina-customer/${reference}`,
+      payload
+    );
     return response.data;
   },
+  // vendValue: async (reference, payload) => {
+  //   try {
+  //     const response = await axios.post(
+  //       `${BASE_URL}/vas/vend-value-non-payina-customer/${reference}`,
+  //       payload
+  //     );
+  //     return response.data;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // },
 
   fetchServices: async (serviceType) => {
     try {
@@ -95,7 +109,7 @@ export const apiService = {
       console.error('Error fetching biller details:', error);
       throw error;
     }
-  },
+  }
 };
 
 export default apiService;

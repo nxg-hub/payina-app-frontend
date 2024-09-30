@@ -149,8 +149,7 @@
 //
 // export default Airtime;
 
-
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/navbar/navbar';
 import Footer from '../../components/footer/footer';
@@ -158,6 +157,7 @@ import EmailVerification from '../../components/EmailVerification';
 import { useForm } from '../../context/formContext';
 import { useDataPlans } from '../../hooks/useDataPlans';
 import NetworkSelection from '../../components/NetworkSelection';
+import DataPlansSelection from '../../components/DataPlansSelection';
 
 const Airtime = () => {
   const { formValues, updateFormValues } = useForm();
@@ -166,14 +166,25 @@ const Airtime = () => {
   const [errors, setErrors] = useState({});
   const [localEmail, setLocalEmail] = useState('');
   const [amount, setAmount] = useState('');
-  const { selectedPlan, setSelectedPlan } = useDataPlans(formValues.selectedNetwork);
+  const { plans, selectedPlan, setSelectedPlan, isLoading, error } = useDataPlans(
+    formValues.selectedNetwork
+  );
 
-  const handleUserVerified = useCallback((registered, email) => {
-    setIsRegistered(registered);
-    if (registered) {
-      navigate(formValues.userType === 'PERSONAL' ? '/login' : '/login');
+  useEffect(() => {
+    if (selectedPlan) {
+      updateFormValues({ selectedNetworkSlug: selectedPlan.slug });
     }
-  }, [navigate, formValues.userType]);
+  }, [selectedPlan, updateFormValues]);
+
+  const handleUserVerified = useCallback(
+    (registered, email) => {
+      setIsRegistered(registered);
+      if (registered) {
+        navigate(formValues.userType === 'PERSONAL' ? '/login' : '/login');
+      }
+    },
+    [navigate, formValues.userType]
+  );
 
   const handleEmailChange = useCallback((e) => {
     const email = e.target.value;
@@ -188,6 +199,7 @@ const Airtime = () => {
     if (!formValues.phoneNumber) newErrors.phoneNumber = 'Phone number is required';
     if (!formValues.selectedNetwork) newErrors.selectedNetwork = 'Network selection is required';
     if (!amount) newErrors.amount = 'Amount is required';
+    if (!selectedPlan) newErrors.selectedPlan = 'Please select a data plan';
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -205,9 +217,10 @@ const Airtime = () => {
     const stateToPass = {
       formValues: updatedFormValues,
       selectedPlan: {
-        planName: 'Airtime',
-        planPrice: amount,
-        planData: `${formValues.selectedNetwork} Airtime`
+        planName: selectedPlan.name,
+        planPrice: selectedPlan.amount || amount,
+        planData: `${formValues.selectedNetwork} - ${selectedPlan.name}`,
+        planSlug: selectedPlan.slug
       }
     };
 
@@ -228,7 +241,7 @@ const Airtime = () => {
             <span className="text-yellow"> Register</span> or{' '}
             <span className="text-yellow">Login</span>
           </button>
-          <div className="flex flex-col w-[64%]">
+          <div className="flex flex-col">
             <label className="py-4">Email</label>
             <EmailVerification
               onUserVerified={handleUserVerified}
@@ -246,6 +259,12 @@ const Airtime = () => {
                 selectedNetwork={formValues.selectedNetwork}
                 onNetworkChange={(network) => updateFormValues({ selectedNetwork: network })}
                 error={errors.selectedNetwork}
+              />
+              <DataPlansSelection
+                plans={plans}
+                selectedPlan={selectedPlan}
+                onPlanChange={setSelectedPlan}
+                error={errors.selectedPlan}
               />
               <div className="flex flex-col w-[64%]">
                 <label className="py-4">Phone</label>
@@ -273,8 +292,7 @@ const Airtime = () => {
           )}
           <button
             type="submit"
-            className="text-primary mb-10 text-left px-16 py-4 border-none rounded-[5px] bg-lightBlue cursor-pointer hover:bg-neutral transition-all duration-200"
-          >
+            className="text-primary mb-10 text-left px-16 py-4 border-none rounded-[5px] bg-lightBlue cursor-pointer hover:bg-neutral transition-all duration-200">
             Proceed
           </button>
         </form>

@@ -13,7 +13,7 @@ const InputStyle = ({
                       onBlur,
                       readOnly
                     }) => (
-  <div className="flex flex-col w-full mb-4">
+  <div className="flex flex-col w-[64%] mb-4">
     {label && <label className="py-2">{label}</label>}
     <input
       type={type}
