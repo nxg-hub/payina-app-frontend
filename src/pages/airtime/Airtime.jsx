@@ -149,7 +149,6 @@
 //
 // export default Airtime;
 
-
 import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/navbar/navbar';
@@ -168,12 +167,15 @@ const Airtime = () => {
   const [amount, setAmount] = useState('');
   const { selectedPlan, setSelectedPlan } = useDataPlans(formValues.selectedNetwork);
 
-  const handleUserVerified = useCallback((registered, email) => {
-    setIsRegistered(registered);
-    if (registered) {
-      navigate(formValues.userType === 'PERSONAL' ? '/login' : '/login');
-    }
-  }, [navigate, formValues.userType]);
+  const handleUserVerified = useCallback(
+    (registered, email) => {
+      setIsRegistered(registered);
+      if (registered) {
+        navigate(formValues.userType === 'PERSONAL' ? '/login' : '/login');
+      }
+    },
+    [navigate, formValues.userType]
+  );
 
   const handleEmailChange = useCallback((e) => {
     const email = e.target.value;
@@ -273,8 +275,7 @@ const Airtime = () => {
           )}
           <button
             type="submit"
-            className="text-primary mb-10 text-left px-16 py-4 border-none rounded-[5px] bg-lightBlue cursor-pointer hover:bg-neutral transition-all duration-200"
-          >
+            className="text-primary mb-10 text-left px-16 py-4 border-none rounded-[5px] bg-lightBlue cursor-pointer hover:bg-neutral transition-all duration-200">
             Proceed
           </button>
         </form>

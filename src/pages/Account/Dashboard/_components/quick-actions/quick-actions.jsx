@@ -13,7 +13,9 @@ const QuickAction = () => {
             <div className="bg-primary rounded-full">
               <img src={images.SendMoney} className="md:w-[49px] w-[39px] p-2  bg-center" alt="" />
             </div>
-            <Link className="hover:text-lightBlue transition-colors text-center opacity-75 text-sm md:text-base">
+            <Link
+              to="/sendmoney"
+              className="hover:text-lightBlue transition-colors text-center opacity-75 text-sm md:text-base">
               Send Money
             </Link>
           </div>
@@ -23,7 +25,9 @@ const QuickAction = () => {
             <div className="bg-primary rounded-full">
               <img src={images.AddMoney} className="md:w-[49px] w-[39px] p-2  bg-center" alt="" />
             </div>
-            <Link className="hover:text-lightBlue transition-colors text-center opacity-75 text-sm md:text-base">
+            <Link
+              to="/addmoney"
+              className="hover:text-lightBlue transition-colors text-center opacity-75 text-sm md:text-base">
               Add Money
             </Link>
           </div>
@@ -33,7 +37,9 @@ const QuickAction = () => {
             <div className="bg-primary rounded-full">
               <img src={images.Invoice} className="md:w-[49px] w-[39px] p-2  bg-center" alt="" />
             </div>
-            <Link className="hover:text-lightBlue transition-colors text-center opacity-75 text-sm md:text-base">
+            <Link
+              to="/account/invoice"
+              className="hover:text-lightBlue transition-colors text-center opacity-75 text-sm md:text-base">
               Create New Invoice
             </Link>
           </div>
@@ -43,7 +49,9 @@ const QuickAction = () => {
             <div className="bg-primary rounded-full">
               <img src={images.Bills} className="md:w-[49px] w-[39px] p-2  bg-center" alt="" />
             </div>
-            <Link className="hover:text-lightBlue transition-colors text-center opacity-75 text-sm md:text-base">
+            <Link
+              to=""
+              className="hover:text-lightBlue transition-colors text-center opacity-75 text-sm md:text-base">
               Pay Bills
             </Link>
           </div>

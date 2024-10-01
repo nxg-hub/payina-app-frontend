@@ -1,7 +1,8 @@
+// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import propTypes from 'prop-types';
 
-const Cards = ({ src, alt, icon, title }) => {
+const Cards = ({ icon, title }) => {
   return (
     <div className=" container">
       <div
