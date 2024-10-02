@@ -20,6 +20,12 @@ const Airtime = () => {
   );
 
   useEffect(() => {
+    if (plans.length > 0 && !selectedPlan) {
+      setSelectedPlan(plans[0]);
+    }
+  }, [plans, selectedPlan, setSelectedPlan]);
+
+  useEffect(() => {
     if (selectedPlan) {
       updateFormValues({ selectedNetworkSlug: selectedPlan.slug });
     }
@@ -65,12 +71,12 @@ const Airtime = () => {
 
     const stateToPass = {
       formValues: updatedFormValues,
-      selectedPlan: {
+      selectedPlan: selectedPlan ? {
         planName: selectedPlan.name,
         planPrice: selectedPlan.amount || amount,
         planData: `${formValues.selectedNetwork} - ${selectedPlan.name}`,
         planSlug: selectedPlan.slug
-      }
+      } : null
     };
 
     navigate('/planb', { state: stateToPass });

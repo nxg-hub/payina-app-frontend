@@ -1,5 +1,12 @@
 import axios from 'axios';
-import { BASE_URL, BASE_URL2 } from '../utilities/Env';
+import {
+  BASE_URL,
+  BASE_URL2, VITE_FETCH_BILLER_GROUPS,
+  VITE_FETCH_DATA_PLANS,
+  VITE_FETCH_SERVICES,
+  VITE_INITIALIZE_PAYMENT,
+  VITE_VEND_VALUE
+} from '../env';
 
 export const apiService = {
   checkEmailRegistration: async (email) => {
@@ -17,12 +24,12 @@ export const apiService = {
 
   fetchDataPlans: async (networkSlug) => {
     const formattedUrl = networkSlug.replace(' ', '_');
-    const response = await axios.get(`${BASE_URL}/vas/package-enquiry-slug/${formattedUrl}`);
+    const response = await axios.get(`${VITE_FETCH_DATA_PLANS}/${formattedUrl}`);
     return response.data.responseData;
   },
 
   initializePayment: async (planId, email, amount) => {
-    const response = await axios.post(`${BASE_URL}/bill/initialize`, {
+    const response = await axios.post(`${VITE_INITIALIZE_PAYMENT}`, {
       planId,
       email,
       amount
@@ -32,7 +39,7 @@ export const apiService = {
 
   vendValue: async (reference, payload) => {
     const response = await axios.post(
-      `${BASE_URL}/vas/vend-value-non-payina-customer/${reference}`,
+      `${VITE_VEND_VALUE}/${reference}`,
       payload
     );
     return response.data;
@@ -51,7 +58,7 @@ export const apiService = {
 
   fetchServices: async (serviceType) => {
     try {
-      const response = await axios.get(`${BASE_URL}/vas/biller-groups`);
+      const response = await axios.get(`${VITE_FETCH_SERVICES}`);
       return response.data.responseData;
     } catch (error) {
       console.error(`Error fetching ${serviceType} services:`, error);
@@ -61,9 +68,7 @@ export const apiService = {
 
   fetchBettingServices: async () => {
     try {
-      const response = await fetch(`${BASE_URL}/vas/biller-groups`);
-      // Adjust the URL as needed https://payina-wallet-service-api.onrender.com/api/v1/vas/biller-groups
-      // const response = await fetch(`${BASE_URL}/vas/biller-enquiry-slug/BETTING_AND_LOTTERY`); // Adjust the URL as needed
+      const response = await fetch(`${VITE_FETCH_BILLER_GROUPS}`);
       if (!response.ok) {
         throw new Error('Failed to fetch betting services');
       }
@@ -101,15 +106,104 @@ export const apiService = {
   //   }
   // },
 
-  fetchBillerDetails: async (billerGroupId) => {
-    try {
-      const response = await axios.get(`${BASE_URL}/vas/biller-enquiry-id/${billerGroupId}`);
-      return response.data.data;
-    } catch (error) {
-      console.error('Error fetching biller details:', error);
-      throw error;
-    }
-  }
+//   fetchBillerDetails: async (billerGroupId) => {
+//     try {
+//       const response = await axios.get(`${VITE_FETCH_BILLER_DETAILS}/${billerGroupId}`);
+//       return response.data.data;
+//     } catch (error) {
+//       console.error('Error fetching biller details:', error);
+//       throw error;
+//     }
+//   }
 };
 
 export default apiService;
+
+
+// import axios from 'axios';
+// import {
+//   VITE_FETCH_BILLER_GROUPS,
+//   VITE_FETCH_BILLER_DETAILS,
+//   VITE_FETCH_SERVICES,
+//   VITE_VEND_VALUE,
+//   VITE_CHECK_EMAIL_REGISTRATION,
+//   VITE_FETCH_NETWORKS,
+//   VITE_FETCH_DATA_PLANS,
+//   VITE_INITIALIZE_PAYMENT
+// } from '../utilities/Env';
+//
+// export const apiService = {
+//   checkEmailRegistration: async (email) => {
+//     const encodedEmail = encodeURIComponent(email);
+//     const response = await axios.get(`${VITE_CHECK_EMAIL_REGISTRATION}?email=${encodedEmail}`);
+//     return response.data;
+//   },
+//
+//   fetchNetworks: async () => {
+//     const response = await axios.get(`${VITE_FETCH_NETWORKS}`);
+//     return response.data.responseData;
+//   },
+//
+//   fetchDataPlans: async (networkSlug) => {
+//     const formattedUrl = networkSlug.replace(' ', '_');
+//     const response = await axios.get(`${VITE_FETCH_DATA_PLANS}/${formattedUrl}`);
+//     return response.data.responseData;
+//   },
+//
+//   initializePayment: async (planId, email, amount) => {
+//     const response = await axios.post(`${VITE_INITIALIZE_PAYMENT},`, {
+//       planId,
+//       email,
+//       amount
+//     });
+//     return response.data;
+//   },
+//
+//   vendValue: async (reference, payload) => {
+//     const response = await axios.post(`${VITE_VEND_VALUE}/${reference}`, payload);
+//     return response.data;
+//   },
+//
+//   fetchServices: async (serviceType) => {
+//     try {
+//       const response = await axios.get(`${VITE_FETCH_SERVICES}`);
+//       return response.data.responseData;
+//     } catch (error) {
+//       console.error(`Error fetching ${serviceType} services:`, error);
+//       throw error;
+//     }
+//   },
+//
+//   fetchBettingServices: async () => {
+//     try {
+//       const response = await fetch(`${VITE_FETCH_BILLER_GROUPS}`);
+//       if (!response.ok) {
+//         throw new Error('Failed to fetch betting services');
+//       }
+//       const data = await response.json();
+//
+//       // Check if data.responseData exists and is an array
+//       if (!data || !Array.isArray(data.responseData)) {
+//         throw new Error('Invalid response format: responseData not found or not an array');
+//       }
+//
+//       return data.responseData;
+//     } catch (error) {
+//       console.error('Error fetching betting services:', error);
+//       throw error;
+//     }
+//   },
+//
+//   fetchBillerDetails: async (billerGroupId) => {
+//     try {
+//       const response = await axios.get(`${VITE_FETCH_BILLER_DETAILS}/${billerGroupId}`);
+//       return response.data.data;
+//     } catch (error) {
+//       console.error('Error fetching biller details:', error);
+//       throw error;
+//     }
+//   }
+// };
+//
+// export default apiService;
+//
