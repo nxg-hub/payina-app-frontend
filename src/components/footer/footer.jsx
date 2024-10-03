@@ -66,18 +66,18 @@ const Footer = () => {
               className="p-2 rounded-full">
               <img src={images.Facebook} alt="" />
             </Link>
-            <Link className="p-2 rounded-full">
-              <img src={images.Instagram} alt="" />
-            </Link>
+            {/*<Link className="p-2 rounded-full">*/}
+            {/*  <img src={images.Instagram} alt="" />*/}
+            {/*</Link>*/}
             <Link
               to="https://www.linkedin.com/showcase/payina-payment-solutions"
               target="_blank"
               className="p-2 rounded-full">
               <img src={images.LinkedIn} alt="" />
             </Link>
-            <Link className="p-2 rounded-full">
-              <img src={images.Twitter} alt="" />
-            </Link>
+            {/*<Link className="p-2 rounded-full">*/}
+            {/*  <img src={images.Twitter} alt="" />*/}
+            {/*</Link>*/}
           </div>
         </div>
       </section>
