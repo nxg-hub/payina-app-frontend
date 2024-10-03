@@ -14,7 +14,7 @@ const Footer = () => {
             <Link to="/contact-us">Contact Us</Link>
             <hr className="text-yellow w-[10%] py-2  xl:w-[20%]" />
             <Link to="/support">Support</Link>
-            <hr className="text-yellow w-[10%] py-2  xl:w-[20%]" />
+            {/*<hr className="text-yellow w-[10%] py-2  xl:w-[20%]" />*/}
             {/*<Link to="/team">Team</Link>*/}
             <hr className="text-yellow w-[10%] py-2 xl:w-[20%]" />
             <Link to="/terms-of-service">Terms of Service</Link>
@@ -24,12 +24,12 @@ const Footer = () => {
         <div className="flex-col space-y-6 flex text-[#3d2e7c]">
           <div className="pt-0 text-yellow text-[20px]">Account Types</div>
           <div className="space-y-4 text-[16px] text-primary font-semibold">
-            <Link to="/personal">Personal Account</Link>
+            <Link to="/">Personal Account</Link>
             {/*<hr className="text-yellow w-[10%] py-2 xl:w-[20%]" />*/}
             {/*<Link>Petty Business</Link>*/}
             {/*<hr className="text-yellow w-[10%] py-2 xl:w-[20%]" />*/}
             {/*<Link>Superstore</Link>*/}
-            {/*<hr className="text-yellow w-[10%] py-2 xl:w-[20%]" />*/}
+            <hr className="text-yellow w-[10%] py-2 xl:w-[20%]" />
             <Link to="/business">Coporate</Link>
           </div>
         </div>

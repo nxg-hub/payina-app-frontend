@@ -31,6 +31,7 @@ import ReviewOrder from './pages/airtime/ReviewOrder';
 import AboutUs from './pages/aboutus/AboutUs';
 import ContactUs from './pages/contactus/contactUs';
 import Support from './pages/support/support';
+import TermsOfService from './pages/terms/TermsOfService';
 
 function App() {
   const location = useLocation();
@@ -77,6 +78,7 @@ function App() {
             <Route path="/card" element={<Card />} />
             <Route path="/ren" element={<Ren />} />
             <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/support" element={<Support />} />
             <Route path="/thanks" element={<Thanks />} />

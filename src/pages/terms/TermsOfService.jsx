@@ -1,9 +1,13 @@
 // TermsOfService.js
+// eslint-disable-next-line no-unused-vars
 import React from 'react';
+import Navbar from '../../components/navbar/navbar';
+import Footer from '../../components/footer/footer';
 
 const TermsOfService = () => {
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-5 bg-white">
+      <Navbar />
       <h1 className="text-3xl font-bold text-center text-primary mb-4">Terms of Service</h1>
       <p className="text-lg text-gray-700 mb-4">
         Welcome to Payina! By using our services, you agree to the following terms and conditions.
@@ -12,10 +16,10 @@ const TermsOfService = () => {
 
       <h2 className="text-2xl font-semibold">1. Acceptance of Terms</h2>
       <p className="text-lg text-gray-700 mb-4">
-        By accessing our website and using our services, you accept and agree to be bound by these
-        Terms of Service and our Privacy Policy. If you are using the services on behalf of a
-        business or entity, you represent that you have the authority to bind that entity to these
-        terms.
+        By accessing our website or downloading Payina Mobile App and using our services, you accept
+        and agree to be bound by these Terms of Service and our Privacy Policy. If you are using the
+        services on behalf of a business or entity, you represent that you have the authority to
+        bind that entity to these terms.
       </p>
 
       <h2 className="text-2xl font-semibold">2. User Responsibilities</h2>
@@ -58,17 +62,20 @@ const TermsOfService = () => {
 
       <h2 className="text-2xl font-semibold">7. Governing Law</h2>
       <p className="text-lg text-gray-700 mb-4">
-        These Terms shall be governed by and construed in accordance with the laws of [Your
-        Country]. Any disputes arising out of or related to these Terms or your use of the services
-        shall be subject to the exclusive jurisdiction of the courts located in [Your Jurisdiction].
+        These Terms shall be governed by and construed in accordance with the laws of Nigeria. Any
+        disputes arising out of or related to these Terms or your use of the services shall be
+        subject to the exclusive jurisdiction of the courts located in Nigeria.
       </p>
 
       <h2 className="text-2xl font-semibold">8. Contact Us</h2>
       <p className="text-lg text-gray-700 mb-4">
         If you have any questions about these Terms of Service, please contact us at:
         <br />
-        <strong>Email:</strong> support@payina.com
+        <strong>Email:</strong> support@payina.com.ng
       </p>
+      <br />
+      <br />
+      <Footer />
     </div>
   );
 };

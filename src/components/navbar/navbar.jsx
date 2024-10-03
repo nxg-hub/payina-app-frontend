@@ -6,7 +6,6 @@ import Button from '../../components/button/button';
 import Logo from './_components/logo';
 import ActionButtons from './_components/action-buttons';
 import { Link, useLocation } from 'react-router-dom';
-import CustomButton from '../../components/button/button';
 
 const Navbar = () => {
   const [toggleMenu, setToggleMenu] = useState();
