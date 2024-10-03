@@ -24,13 +24,13 @@ const Footer = () => {
         <div className="flex-col space-y-6 flex text-[#3d2e7c]">
           <div className="pt-0 text-yellow text-[20px]">Account Types</div>
           <div className="space-y-4 text-[16px] text-primary font-semibold">
-            <Link>Personal Account</Link>
-            <hr className="text-yellow w-[10%] py-2 xl:w-[20%]" />
-            <Link>Petty Business</Link>
-            <hr className="text-yellow w-[10%] py-2 xl:w-[20%]" />
-            <Link>Superstore</Link>
-            <hr className="text-yellow w-[10%] py-2 xl:w-[20%]" />
-            <Link>Coporate</Link>
+            <Link to="/personal">Personal Account</Link>
+            {/*<hr className="text-yellow w-[10%] py-2 xl:w-[20%]" />*/}
+            {/*<Link>Petty Business</Link>*/}
+            {/*<hr className="text-yellow w-[10%] py-2 xl:w-[20%]" />*/}
+            {/*<Link>Superstore</Link>*/}
+            {/*<hr className="text-yellow w-[10%] py-2 xl:w-[20%]" />*/}
+            <Link to="/business">Coporate</Link>
           </div>
         </div>
 
@@ -60,14 +60,20 @@ const Footer = () => {
         <div className="p-10 space-y-10 md:space-y-0 md:text-center md:flex flex-col justify-between md:px-80 md:space-x-20">
           <div className="text-center text-yellow font-extrabold mb-4">Follow Us</div>
           <div className="!ml-0 flex items-center justify-center space-x-6">
-            <Link className="p-2 rounded-full">
+            <Link
+              to="https://www.facebook.com/payinapaymentsolutions"
+              target="_blank"
+              className="p-2 rounded-full">
               <img src={images.Facebook} alt="" />
             </Link>
             <Link className="p-2 rounded-full">
               <img src={images.Instagram} alt="" />
             </Link>
-            <Link className="p-2 rounded-full">
-              <img src={images.Tiktok} alt="" />
+            <Link
+              to="https://www.linkedin.com/showcase/payina-payment-solutions"
+              target="_blank"
+              className="p-2 rounded-full">
+              <img src={images.LinkedIn} alt="" />
             </Link>
             <Link className="p-2 rounded-full">
               <img src={images.Twitter} alt="" />
