@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import successIcon from '../assets/images/tansIcon.png';
 import errorIcon from '../assets/images/redrectangle.png';
 
-const TransactionModal = ({ isOpen, onClose, status, title, message, reference, onRegister }) => {
+const TransactionModal = ({ isOpen, onClose, status, title, message, details, reference, onRegister }) => {
   if (!isOpen) return null;
 
   const isSuccess = status === 'success';
@@ -20,6 +20,7 @@ const TransactionModal = ({ isOpen, onClose, status, title, message, reference, 
           {title || (isSuccess ? 'Transaction Successful' : 'Transaction Failed')}
         </h2>
         <p className="mb-2 text-black">{message}</p>
+        {details && <p className="mb-2 text-sm text-gray-600">{details}</p>}
         {reference && (
           <p className="mb-4 text-sm text-black">Reference: {reference}</p>
         )}
@@ -32,8 +33,9 @@ const TransactionModal = ({ isOpen, onClose, status, title, message, reference, 
           </button>
         )}
         <button
-          className={`${isSuccess ? 'bg-blue-500 hover:bg-blue-600' : 'bg-red-500 hover:bg-red-600'} text-black px-4 py-2 rounded`}
-          onClick={onClose}>
+          className={`${isSuccess ? 'bg-blue-500 hover:bg-blue-600' : 'bg-red-500 hover:bg-red-600'} text-white px-4 py-2 rounded`}
+          onClick={onClose}
+        >
           Close
         </button>
         {isSuccess && (
@@ -55,6 +57,7 @@ TransactionModal.propTypes = {
   status: PropTypes.oneOf(['success', 'error']).isRequired,
   title: PropTypes.string,
   message: PropTypes.string.isRequired,
+  details: PropTypes.string,
   reference: PropTypes.string,
   onRegister: PropTypes.func,
 };

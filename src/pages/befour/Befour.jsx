@@ -32,50 +32,67 @@ const Befour = () => {
     setModalState((prevState) => ({ ...prevState, isOpen: false }));
   };
 
-  const handleError = useCallback((err, reference) => {
-    let errorMessage = err.response?.data?.message || err.message || 'An unknown error occurred';
-    if (errorMessage === 'Transaction was not successful, vending cannot be completed.') {
-      errorMessage += ' Please try again or contact support.';
+  const isBettingOrLottery = useCallback((selectedBiller) => {
+    return selectedBiller?.slug === 'BETTING_AND_LOTTERY';
+  }, []);
+
+  const handleError = (err, reference) => {
+    let errorMessage = 'An unknown error occurred';
+    let errorDetails = '';
+
+    if (err.response) {
+      const { data, status } = err.response;
+      if (typeof data === 'string') {
+        try {
+          const parsedData = JSON.parse(data);
+          errorMessage = parsedData.message.message || errorMessage;
+          errorDetails = `Error Code: ${parsedData.responseCode || status}`;
+        } catch (e) {
+          errorMessage = data;
+          errorDetails = `Status Code: ${status}`;
+        }
+      } else if (typeof data === 'object') {
+        errorMessage = data.message.message || errorMessage;
+        errorDetails = `Error Code: ${data.responseCode || status}`;
+      }
+    } else if (err.message) {
+      errorMessage = err.message;
     }
+
     setModalState({
       isOpen: true,
       status: 'error',
       title: 'Transaction Failed',
       message: errorMessage,
+      details: errorDetails,
       reference
     });
-  }, []);
+  };
 
   const verifyTransaction = useCallback(
     async (reference) => {
+      if (!formData) return false;
+
       try {
-        const {
-          selectedBiller,
-          amount,
-          customerReference,
-          email,
-          phoneNumber,
-          customerDetails,
-          verificationResult
-        } = formData;
+        const { selectedBiller, selectedPlan, amount, customerReference, email, phoneNumber, customerDetails } = formData;
+
         if (!selectedBiller || !selectedBiller.slug) {
           throw new Error('Selected biller or biller slug is missing');
         }
 
-        if (!customerDetails || !verificationResult || verificationResult.status !== 'success') {
-          throw new Error('Customer verification is required before proceeding');
-        }
+        const isBettingLottery = isBettingOrLottery(selectedBiller);
+        const packageSlug = selectedPlan.slug || 'UNKNOWN_SLUG';
 
         const payload = {
           paymentReference: reference,
           customerId: customerReference,
-          packageSlug: `${selectedBiller.slug}_PREPAID`,
+          packageSlug: packageSlug,
           channel: 'WEB',
           amount: Math.round(amount * 1),
           customerName: customerDetails?.customerName || 'Non-Payina-User',
           phoneNumber: phoneNumber,
           email: email,
-          customerEnquiryResult: customerDetails
+          customerEnquiryResult: isBettingLottery ? null : customerDetails
         };
 
         const vendValueResponse = await apiService.vendValue(reference, payload);
@@ -97,48 +114,59 @@ const Befour = () => {
         return false;
       }
     },
-    [formData, handleError]
+    [formData, isBettingOrLottery]
   );
 
-  const pollTransactionStatus = useCallback(
-    async (reference) => {
-      const maxAttempts = 2;
-      const pollInterval = 1000;
-
-      for (let attempts = 0; attempts < maxAttempts; attempts++) {
-        try {
-          setStatusMessage('Verifying payment...');
-          const success = await verifyTransaction(reference);
-          if (success) return;
-        } catch (err) {
-          if (attempts === maxAttempts - 1) {
-            handleError(err, reference);
-            return;
-          }
-        }
-
-        await new Promise((resolve) => setTimeout(resolve, pollInterval));
-      }
-
-      handleError(new Error('Payment verification timed out.'), reference);
-    },
-    [verifyTransaction, handleError]
-  );
+  // const pollTransactionStatus = useCallback(
+  //   async (reference) => {
+  //     const maxAttempts = 1;
+  //     const pollInterval = 1000;
+  //
+  //     for (let attempts = 0; attempts < maxAttempts; attempts++) {
+  //       try {
+  //         setStatusMessage('Verifying payment...');
+  //         const success = await verifyTransaction(reference);
+  //         if (success) return;
+  //       } catch (err) {
+  //         if (attempts === maxAttempts - 1) {
+  //           handleError(err, reference);
+  //           return;
+  //         }
+  //       }
+  //       await new Promise((resolve) => setTimeout(resolve, pollInterval));
+  //     }
+  //     handleError(new Error('Payment verification timed out.'), reference);
+  //   },
+  //   [verifyTransaction]
+  // );
 
   const handleProceed = async () => {
-    if (
-      !formData.customerDetails ||
-      !formData.verificationResult ||
-      formData.verificationResult.status !== 'success'
-    ) {
+    if (!formData || !formData.selectedBiller) {
       setModalState({
         isOpen: true,
         status: 'error',
         title: 'Error',
-        message:
-          'Customer verification is required before proceeding. Please go back and verify the customer details.'
+        message: 'No valid biller selected. Please go back and select a biller.'
       });
       return;
+    }
+
+    const isBettingLottery = isBettingOrLottery(formData.selectedBiller);
+
+    if (!isBettingLottery) {
+      if (
+        !formData.customerDetails ||
+        !formData.verificationResult ||
+        formData.verificationResult.status !== 'success'
+      ) {
+        setModalState({
+          isOpen: true,
+          status: 'error',
+          title: 'Error',
+          message: 'Customer verification is required before proceeding. Please go back and verify the customer details.'
+        });
+        return;
+      }
     }
 
     setIsSubmitting(true);
@@ -147,7 +175,7 @@ const Befour = () => {
     try {
       const { selectedBiller, amount, email } = formData;
 
-      if (!selectedBiller || !selectedBiller.id || !amount) {
+      if (!selectedBiller.id || !amount) {
         throw new Error('Selected biller or amount is missing');
       }
 
@@ -199,7 +227,6 @@ const Befour = () => {
   };
 
   const handleRegister = () => {
-    // registration Logic
     closeModal();
   };
 
@@ -220,7 +247,9 @@ const Befour = () => {
       <Navbar />
       <OrderReview
         planName={selectedBiller.name}
-        network="Betting Platform"
+        network={
+          isBettingOrLottery(selectedBiller) ? 'Betting and Lottery' : selectedBiller.category
+        }
         phoneNumber={phoneNumber}
         planPrice={amount}
         email={email}
@@ -250,6 +279,7 @@ const Befour = () => {
         status={modalState.status}
         title={modalState.title}
         message={modalState.message}
+        details={modalState.details}
         reference={modalState.reference}
         onRegister={handleRegister}
       />

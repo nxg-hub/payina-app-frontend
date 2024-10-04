@@ -6,6 +6,8 @@ import EmailVerification from '../../components/EmailVerification';
 import { useForm } from '../../context/formContext';
 import { apiService } from '../../services/apiService';
 
+const ALLOWED_SERVICES = ['ELECTRIC_DISCO', 'PAY_TV', 'BETTING_AND_LOTTERY'];
+
 const Betone = () => {
   const { formValues, updateFormValues } = useForm();
   const navigate = useNavigate();
@@ -19,12 +21,54 @@ const Betone = () => {
   useEffect(() => {
     const fetchBettingServices = async () => {
       setIsLoading(true);
+      setError(null);
       try {
-        const services = await apiService.fetchBettingServices();
-        setBettingServices(services);
+        const response = await apiService.fetchBettingServices();
+
+        // Log the entire response for debugging
+        console.log('API Response:', response);
+
+        // Check if response exists
+        if (!response) {
+          throw new Error('No response received from API');
+        }
+
+        // Handle different response formats
+        let serviceData;
+        if (Array.isArray(response)) {
+          serviceData = response;
+        } else if (typeof response === 'object') {
+          if (Array.isArray(response.responseData)) {
+            serviceData = response.responseData;
+          } else if (response.data && Array.isArray(response.data)) {
+            serviceData = response.data;
+          } else if (response.responseData && Array.isArray(response.responseData.services)) {
+            serviceData = response.responseData.services;
+          } else {
+            console.error('Unexpected response structure:', response);
+            throw new Error('Unexpected API response structure');
+          }
+        } else {
+          throw new Error('Invalid API response format');
+        }
+
+        // Filter services
+        const filteredServices = serviceData.filter(service =>
+          service && service.slug && ALLOWED_SERVICES.includes(service.slug)
+        );
+
+        console.log('Filtered services:', filteredServices);
+
+        setBettingServices(filteredServices);
+
+        if (filteredServices.length === 0) {
+          setError('No matching services found');
+        }
       } catch (err) {
-        setError(err.message);
-        console.error('Error fetching betting services:', err);
+        const errorMessage = err.message || 'Error fetching services';
+        setError(errorMessage);
+        console.error('Error details:', err);
+        setBettingServices([]);
       } finally {
         setIsLoading(false);
       }
@@ -54,7 +98,7 @@ const Betone = () => {
     if (!localEmail) newErrors.email = 'Email is required';
     if (!formValues.phoneNumber) newErrors.phoneNumber = 'Phone number is required';
     if (!formValues.selectedBettingService)
-      newErrors.selectedBettingService = 'Betting service selection is required';
+      newErrors.selectedBettingService = 'Service selection is required';
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -64,8 +108,13 @@ const Betone = () => {
     const selectedService = bettingServices.find(
       (service) => service.slug === formValues.selectedBettingService
     );
+
     const stateToPass = {
-      formValues: { ...formValues, email: localEmail },
+      formValues: {
+        ...formValues,
+        email: localEmail,
+        isBetting: selectedService?.slug === 'BETTING_AND_LOTTERY'
+      },
       selectedBettingService: formValues.selectedBettingService,
       slug: selectedService ? selectedService.slug : ''
     };
@@ -79,7 +128,7 @@ const Betone = () => {
       <div className="container">
         <div className="w-[80%] h-1 border-none mr-auto ml-auto mt-[-2px] mb-40 bg-yellow"></div>
         <p className="mt-[-120px] pb-8 text-6xl text-center font-extrabold text-lightBlue">
-          Place Bets & get Cashback
+          Select a Service
         </p>
         <form onSubmit={handleSubmit} className="text-white">
           <button className="text-primary text-left p-10 border-none rounded-[5px] w-[64%] bg-neutral px-4 py-2">
@@ -100,28 +149,26 @@ const Betone = () => {
             <>
               <div className="flex flex-col w-[64%]">
                 <label htmlFor="betting-service-select" className="py-4">
-                  Choose Betting Service
+                  Choose Service
                 </label>
                 <select
                   id="betting-service-select"
-                  value={formValues.selectedBettingService}
+                  value={formValues.selectedBettingService || ''}
                   onChange={(e) => updateFormValues({ selectedBettingService: e.target.value })}
-                  className="border-2 text-xs rounded-[5px] px-5 py-2 border-primary bg-black text-slate-600 w-full">
-                  <option value="">Select Betting Service</option>
-                  {bettingServices.length > 0 ? (
-                    bettingServices.map((service) => (
-                      <option key={service.id} value={service.slug}>
-                        {service.name}
-                      </option>
-                    ))
-                  ) : (
-                    <option value="" disabled>
-                      {isLoading ? 'Loading betting services...' : 'No betting services available'}
+                  className="border-2 text-xs rounded-[5px] px-5 py-2 border-primary bg-black text-slate-600 w-full"
+                >
+                  <option value="">Select Service</option>
+                  {bettingServices.map((service) => (
+                    <option key={service.id} value={service.slug}>
+                      {service.name}
                     </option>
-                  )}
+                  ))}
                 </select>
                 {errors.selectedBettingService && (
                   <p className="text-red-500 mt-1">{errors.selectedBettingService}</p>
+                )}
+                {error && (
+                  <p className="text-red-500 mt-1">{error}</p>
                 )}
               </div>
               <div className="flex flex-col w-[64%]">
@@ -130,7 +177,7 @@ const Betone = () => {
                   type="number"
                   placeholder="Enter Phone number"
                   className="border-2 text-xs rounded-[5px] px-5 py-2 border-primary bg-black text-slate-600"
-                  value={formValues.phoneNumber}
+                  value={formValues.phoneNumber || ''}
                   onChange={(e) => updateFormValues({ phoneNumber: e.target.value })}
                 />
                 {errors.phoneNumber && <p className="text-red-500 mt-1">{errors.phoneNumber}</p>}
@@ -139,12 +186,14 @@ const Betone = () => {
           )}
           <button
             type="submit"
-            className="text-primary mb-10 mt-10 text-left px-16 py-4 border-none rounded-[5px] bg-lightBlue cursor-pointer hover:bg-neutral transition-all duration-200">
-            Proceed to Bettwo
+            className="text-primary mb-10 mt-10 text-left px-16 py-4 border-none rounded-[5px] bg-lightBlue cursor-pointer hover:bg-neutral transition-all duration-200"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Loading...' : 'Proceed to Next Step'}
           </button>
         </form>
-        <Footer />
       </div>
+      <Footer />
     </section>
   );
 };

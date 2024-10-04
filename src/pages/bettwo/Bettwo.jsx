@@ -4,6 +4,7 @@ import axios from 'axios';
 import Navbar from '../../components/navbar/navbar';
 import Footer from '../../components/footer/footer';
 import { bet1, bet2, bet3, bet4, bet5, bet6 } from '../../constants/images';
+import apiService from '../../services/apiService';
 
 const Bettwo = () => {
   const location = useLocation();
@@ -18,6 +19,8 @@ const Bettwo = () => {
   const [error, setError] = useState(null);
   const [verificationResult, setVerificationResult] = useState(null);
   const [customerDetails, setCustomerDetails] = useState(null);
+  const [plans, setPlans] = useState([]);
+  const [selectedPlan, setSelectedPlan] = useState(null);
 
   const billerImages = {
     BET9JA: bet3,
@@ -25,19 +28,46 @@ const Bettwo = () => {
     '1XBET': bet5,
     NAIRABET: bet4,
     '22BET': bet1,
-    BETKING: bet2,
+    BETKING: bet2
   };
 
   const fetchBillerOptions = useCallback(async (billerGroupSlug) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`https://payina-wallet-service-api.onrender.com/api/v1/vas/biller-enquiry-slug/${billerGroupSlug}`);
+      const response = await axios.get(
+        `https://payina-wallet-service-api.onrender.com/api/v1/vas/biller-enquiry-slug/${billerGroupSlug}`
+      );
       const services = response.data.responseData;
       setBillerOptions(services);
     } catch (error) {
       console.error('Error fetching biller options:', error);
       setError('Failed to fetch biller options. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const fetchPlans = useCallback(async (billerSlug) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await apiService.fetchBillerPlans()
+      const planData = response.data.responseData;
+      console.log('Raw API response:', response.data);
+      console.log('Fetched plans:', planData);
+
+      if (Array.isArray(planData)) {
+        setPlans(planData);
+      } else {
+        console.error('Unexpected plan data format:', planData);
+        setPlans([]);
+        setError('Received unexpected plan data format from the server.');
+      }
+    } catch (error) {
+      console.error('Error fetching plans:', error);
+      setError('Failed to fetch plans. Please try again.');
+      setPlans([]);
     } finally {
       setIsLoading(false);
     }
@@ -49,17 +79,28 @@ const Bettwo = () => {
     }
   }, [selectedBettingService, fetchBillerOptions]);
 
+  useEffect(() => {
+    if (selectedBiller) {
+      fetchPlans(selectedBiller.slug);
+    } else {
+      setPlans([]);
+    }
+  }, [selectedBiller, fetchPlans]);
+
   const verifyUser = useCallback(async (customerId, productName, billerSlug) => {
     setIsLoading(true);
     setError(null);
     setVerificationResult(null);
     setCustomerDetails(null);
     try {
-      const response = await axios.post('https://payina-wallet-service-api.onrender.com/api/v1/vas/customer-enquiry', {
-        customerId,
-        productName: `${productName}_PREPAID`,
-        billerSlug
-      });
+      const response = await axios.post(
+        'https://payina-wallet-service-api.onrender.com/api/v1/vas/customer-enquiry',
+        {
+          customerId,
+          productName: `${productName}_PREPAID`,
+          billerSlug
+        }
+      );
 
       if (response.data.error) {
         setError(response.data.message || 'An error occurred during verification.');
@@ -81,7 +122,7 @@ const Bettwo = () => {
       setError('Failed to verify user. Please check your customer reference.');
       setVerificationResult({
         status: 'failed',
-        narration: 'An error occurred while validating the customer\'s identity.'
+        narration: "An error occurred while validating the customer's identity."
       });
     } finally {
       setIsLoading(false);
@@ -90,11 +131,30 @@ const Bettwo = () => {
 
   const handleBillerChange = (e) => {
     const selectedBillerSlug = e.target.value;
-    const selectedBillerObj = billerOptions.find(biller => biller.slug === selectedBillerSlug);
+    const selectedBillerObj = billerOptions.find((biller) => biller.slug === selectedBillerSlug);
     setSelectedBiller(selectedBillerObj || null);
     setVerificationResult(null);
     setCustomerDetails(null);
     setError(null);
+    setSelectedPlan(null);
+    setAmount('');
+  };
+
+  const handlePlanChange = (e) => {
+    const selectedPlanId = e.target.value;
+    console.log('Selected plan ID:', selectedPlanId);
+    console.log('Available plans:', plans);
+    const selectedPlanObj = plans.find((plan) => plan.id.toString() === selectedPlanId);
+    console.log('Selected plan object:', selectedPlanObj);
+
+    if (selectedPlanObj) {
+      setSelectedPlan(selectedPlanObj);
+      setAmount(selectedPlanObj.amount.toString());
+    } else {
+      setSelectedPlan(null);
+      setAmount('');
+      console.error('Selected plan not found in available plans');
+    }
   };
 
   const handleCustomerReferenceChange = (e) => {
@@ -105,11 +165,13 @@ const Bettwo = () => {
   };
 
   const handleImageClick = (billerSlug) => {
-    const selectedBillerObj = billerOptions.find(biller => biller.slug === billerSlug);
+    const selectedBillerObj = billerOptions.find((biller) => biller.slug === billerSlug);
     setSelectedBiller(selectedBillerObj || null);
     setVerificationResult(null);
     setCustomerDetails(null);
     setError(null);
+    setSelectedPlan(null);
+    setAmount('');
   };
 
   const handleProceed = () => {
@@ -125,7 +187,8 @@ const Bettwo = () => {
         email,
         phoneNumber,
         customerDetails,
-        verificationResult
+        verificationResult,
+        selectedPlan
       }
     });
   };
@@ -134,8 +197,7 @@ const Bettwo = () => {
     <div
       key={billerSlug}
       className={`flex-col cursor-pointer ${selectedBiller?.slug === billerSlug ? 'border-2 border-yellow p-2 rounded' : ''}`}
-      onClick={() => handleImageClick(billerSlug)}
-    >
+      onClick={() => handleImageClick(billerSlug)}>
       <img height={58} width={58} src={billerImages[billerSlug]} alt={name} />
       <p>{name}</p>
     </div>
@@ -156,7 +218,6 @@ const Bettwo = () => {
         </button>
         <p className="text-primary mb-3 mt-2">Popular Platforms</p>
 
-        {/* Images Grid */}
         <div className="mb-10 text-lightBlue">
           <div className="flex gap-36">
             {renderBillerImage('BET9JA', 'Bet 9ja')}
@@ -170,10 +231,9 @@ const Bettwo = () => {
           </div>
         </div>
 
-        {/* Dropdown for Biller Selection */}
         <div className="flex-col">
           <label htmlFor="biller-select" className="block text-primary mb-2">
-            Chosen Betting Platform
+            Chosen Service Platform
           </label>
           <select
             id="biller-select"
@@ -189,18 +249,38 @@ const Bettwo = () => {
           </select>
         </div>
 
-        {/* Amount and Customer Reference Inputs */}
+        {selectedBiller && (
+          <div className="flex-col">
+            <label htmlFor="plan-select" className="block text-primary mb-2">
+              Select Plan
+            </label>
+            <select
+              id="plan-select"
+              value={selectedPlan?.id || ''}
+              onChange={handlePlanChange}
+              className="border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-black text-slate-600 w-[64%] mb-3">
+              <option value="">Select a plan</option>
+              {plans.map((plan) => (
+                <option key={plan.id} value={plan.id}>
+                  {plan.name} - ₦{plan.amount}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
         <div className="flex-col">
           <label htmlFor="amount" className="block text-primary mb-2">
             Amount
           </label>
           <input
             id="amount"
-            type="number"
+            type="text"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             className="border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-black text-slate-600 w-[64%] mb-3"
             placeholder="Enter amount"
+            readOnly={selectedPlan !== null}
           />
         </div>
 
@@ -232,15 +312,22 @@ const Bettwo = () => {
         </div>
 
         {verificationResult && (
-          <p className={`mt-1 ${verificationResult.status === 'success' ? 'text-green-500' : 'text-red-500'}`}>
+          <p
+            className={`mt-1 ${verificationResult.status === 'success' ? 'text-green-500' : 'text-red-500'}`}>
             {verificationResult.narration}
           </p>
         )}
         {customerDetails && (
           <div className="mt-3 text-primary">
-            <p><strong>Customer Name:</strong> {customerDetails.customerName}</p>
-            <p><strong>Address:</strong> {customerDetails.address}</p>
-            <p><strong>Phone Number:</strong> {customerDetails.phoneNumber}</p>
+            <p>
+              <strong>Customer Name:</strong> {customerDetails.customerName}
+            </p>
+            <p>
+              <strong>Address:</strong> {customerDetails.address}
+            </p>
+            <p>
+              <strong>Phone Number:</strong> {customerDetails.phoneNumber}
+            </p>
           </div>
         )}
 
@@ -250,7 +337,15 @@ const Bettwo = () => {
         <button
           onClick={handleProceed}
           className="text-primary mb-10 mt-5 text-left px-16 py-4 border-none rounded-[5px] bg-lightBlue cursor-pointer hover:bg-neutral transition-all duration-200"
-          disabled={!selectedBiller || !amount || !customerReference || !email || !phoneNumber || isLoading || verificationResult?.status !== 'success'}>
+          disabled={
+            !selectedBiller ||
+            !amount ||
+            !customerReference ||
+            !email ||
+            !phoneNumber ||
+            isLoading ||
+            verificationResult?.status !== 'success'
+          }>
           Proceed to Befour
         </button>
       </div>

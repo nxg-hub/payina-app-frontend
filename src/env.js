@@ -6,5 +6,6 @@ export const VITE_FETCH_DATA_PLANS = "https://payina-wallet-service-api.onrender
 export const VITE_INITIALIZE_PAYMENT = "https://payina-wallet-service-api.onrender.com/api/v1/bill/initialize";
 export const VITE_VEND_VALUE = "https://payina-wallet-service-api.onrender.com/api/v1/vas/vend-value-non-payina-customer";
 export const VITE_FETCH_SERVICES = "https://payina-wallet-service-api.onrender.com/api/v1/vas/biller-groups";
-export const VITE_FETCH_BILLER_DETAILS = "https://payina-wallet-service-api.onrender.com/api/v1/vas/biller-enquiry-id";
+export const VITE_FETCH_BILLER_PLANS = "https://payina-wallet-service-api.onrender.com/api/v1/vas/package-enquiry-slug";
+// export const VITE_FETCH_BILLER_DETAILS = "https://payina-wallet-service-api.onrender.com/api/v1/vas/biller-enquiry-id";
 export const VITE_FETCH_BILLER_GROUPS = "https://payina-wallet-service-api.onrender.com/api/v1/vas/biller-groups";

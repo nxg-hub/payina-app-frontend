@@ -87,30 +87,30 @@ const PlanB = () => {
     [formData, handleError]
   );
 
-  const pollTransactionStatus = useCallback(
-    async (reference) => {
-      const maxAttempts = 2;
-      const pollInterval = 1000;
-
-      for (let attempts = 0; attempts < maxAttempts; attempts++) {
-        try {
-          setStatusMessage('Verifying payment...');
-          const success = await verifyTransaction(reference);
-          if (success) return;
-        } catch (err) {
-          if (attempts === maxAttempts - 1) {
-            handleError(err, reference);
-            return;
-          }
-        }
-
-        await new Promise((resolve) => setTimeout(resolve, pollInterval));
-      }
-
-      handleError(new Error('Payment verification timed out.'), reference);
-    },
-    [verifyTransaction, handleError]
-  );
+  // const pollTransactionStatus = useCallback(
+  //   async (reference) => {
+  //     const maxAttempts = 1;
+  //     const pollInterval = 1000;
+  //
+  //     for (let attempts = 0; attempts < maxAttempts; attempts++) {
+  //       try {
+  //         setStatusMessage('Verifying payment...');
+  //         const success = await verifyTransaction(reference);
+  //         if (success) return;
+  //       } catch (err) {
+  //         if (attempts === maxAttempts - 1) {
+  //           handleError(err, reference);
+  //           return;
+  //         }
+  //       }
+  //
+  //       await new Promise((resolve) => setTimeout(resolve, pollInterval));
+  //     }
+  //
+  //     handleError(new Error('Payment verification timed out.'), reference);
+  //   },
+  //   [verifyTransaction, handleError]
+  // );
 
   const handleProceed = async () => {
     setIsSubmitting(true);
