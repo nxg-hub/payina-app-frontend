@@ -28,7 +28,6 @@ export const EmailVerification = ({ onUserVerified, value, onChange, error }) =>
       />
       <button
         onClick={() => {
-          // console.log('Verifying email:', value);
           checkEmailRegistration();
         }}
         disabled={isEmailChecking}

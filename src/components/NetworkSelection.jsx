@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNetworkSelection } from '../hooks/useNetworkSelection';
 
-// eslint-disable-next-line react/prop-types
 export const NetworkSelection = ({ selectedNetwork, onNetworkChange }) => {
   const { networks, isLoading, error } = useNetworkSelection();
 
@@ -17,7 +16,8 @@ export const NetworkSelection = ({ selectedNetwork, onNetworkChange }) => {
         id="network-select"
         value={selectedNetwork}
         onChange={(e) => onNetworkChange(e.target.value)}
-        className="border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-black text-slate-600 w-full">
+        className="flex flex-col w-[64%] mb-4 border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-black text-slate-600"
+      >
         <option value="">Select Network</option>
         {networks.map((network) => (
           <option key={network} value={network}>
