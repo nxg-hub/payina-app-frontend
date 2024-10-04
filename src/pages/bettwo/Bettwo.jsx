@@ -52,27 +52,32 @@ const Bettwo = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await apiService.fetchBillerPlans()
+      const response = await axios.get(
+        `https://payina-wallet-service-api.onrender.com/api/v1/vas/package-enquiry-slug/${billerSlug}`
+      );
       const planData = response.data.responseData;
       console.log('Raw API response:', response.data);
       console.log('Fetched plans:', planData);
 
-      if (Array.isArray(planData)) {
+      if (Array.isArray(planData) && planData.length > 0) {
         setPlans(planData);
       } else {
-        console.error('Unexpected plan data format:', planData);
+        console.error('No plans found or unexpected plan data format:', planData);
         setPlans([]);
-        setError('Received unexpected plan data format from the server.');
+        setError('No plans available for this biller. You may enter an amount manually.');
       }
     } catch (error) {
       console.error('Error fetching plans:', error);
-      setError('Failed to fetch plans. Please try again.');
+      if (error.response && error.response.status === 412) {
+        setError('No plans available for this biller. You may enter an amount manually.');
+      } else {
+        setError('Failed to fetch plans. Please try again or enter an amount manually.');
+      }
       setPlans([]);
     } finally {
       setIsLoading(false);
     }
   }, []);
-
   useEffect(() => {
     if (selectedBettingService) {
       fetchBillerOptions(selectedBettingService);
@@ -138,6 +143,10 @@ const Bettwo = () => {
     setError(null);
     setSelectedPlan(null);
     setAmount('');
+    setPlans([]);
+    if (selectedBillerObj) {
+      fetchPlans(selectedBillerObj.slug);
+    }
   };
 
   const handlePlanChange = (e) => {
