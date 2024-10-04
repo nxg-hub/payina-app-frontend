@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { VITE_FETCH_NETWORKS } from '../env.js';
 
 export const useNetworkSelection = () => {
   const [networks, setNetworks] = useState([]);
@@ -12,7 +11,7 @@ export const useNetworkSelection = () => {
       setError(null);
 
       try {
-        const response = await fetch(`${VITE_FETCH_NETWORKS}`);
+        const response = await fetch(`${import.meta.env.VITE_FETCH_NETWORKS}`);
 
         if (!response.ok) {
           throw new Error('Network response was not ok');

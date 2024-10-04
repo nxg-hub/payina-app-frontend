@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Routes, Route, useLocation, Router } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import PersonalPage from './pages/Personal';
 import BusinessPage from './pages/Business';
 import Signup from './pages/Signup';

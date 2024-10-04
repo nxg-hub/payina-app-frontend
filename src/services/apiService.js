@@ -1,34 +1,27 @@
 import axios from 'axios';
-import {
-  BASE_URL2, VITE_FETCH_BILLER_DETAILS, VITE_FETCH_BILLER_GROUPS, VITE_FETCH_BILLER_PLANS,
-  VITE_FETCH_DATA_PLANS,
-  VITE_FETCH_SERVICES,
-  VITE_INITIALIZE_PAYMENT,
-  VITE_VEND_VALUE
-} from '../env';
 
 export const apiService = {
   checkEmailRegistration: async (email) => {
     const encodedEmail = encodeURIComponent(email);
     const response = await axios.get(
-      `${BASE_URL2}/bill-customers/check-if-email-exist-in-db?email=${encodedEmail}`
+      `${import.meta.env.BASE_URL2}/bill-customers/check-if-email-exist-in-db?email=${encodedEmail}`
     );
     return response.data;
   },
 
-  fetchNetworks: async () => {
-    const response = await axios.get(`${BASE_URL}/vas/biller-enquiry-slug/AIRTIME_AND_DATA`);
-    return response.data.responseData;
-  },
+  // fetchNetworks: async () => {
+  //   const response = await axios.get(`${BASE_URL}/vas/biller-enquiry-slug/AIRTIME_AND_DATA`);
+  //   return response.data.responseData;
+  // },
 
   fetchDataPlans: async (networkSlug) => {
     const formattedUrl = networkSlug.replace(' ', '_');
-    const response = await axios.get(`${VITE_FETCH_DATA_PLANS}/${formattedUrl}`);
+    const response = await axios.get(`${import.meta.env.VITE_FETCH_DATA_PLANS}/${formattedUrl}`);
     return response.data.responseData;
   },
 
   initializePayment: async (planId, email, amount) => {
-    const response = await axios.post(`${VITE_INITIALIZE_PAYMENT}`, {
+    const response = await axios.post(`${import.meta.env.VITE_INITIALIZE_PAYMENT}`, {
       planId,
       email,
       amount
@@ -37,10 +30,7 @@ export const apiService = {
   },
 
   vendValue: async (reference, payload) => {
-    const response = await axios.post(
-      `${VITE_VEND_VALUE}/${reference}`,
-      payload
-    );
+    const response = await axios.post(`${import.meta.env.VITE_VEND_VALUE}/${reference}`, payload);
     return response.data;
   },
   // vendValue: async (reference, payload) => {
@@ -57,7 +47,7 @@ export const apiService = {
 
   fetchServices: async (serviceType) => {
     try {
-      const response = await axios.get(`${VITE_FETCH_SERVICES}`);
+      const response = await axios.get(`${import.meta.env.VITE_FETCH_SERVICES}`);
       return response.data.responseData;
     } catch (error) {
       console.error(`Error fetching ${serviceType} services:`, error);
@@ -67,7 +57,7 @@ export const apiService = {
 
   fetchBettingServices: async () => {
     try {
-      const response = await fetch(`${VITE_FETCH_BILLER_GROUPS}`);
+      const response = await fetch(`${import.meta.env.VITE_FETCH_BILLER_GROUPS}`);
       if (!response.ok) {
         throw new Error('Failed to fetch betting services');
       }
@@ -107,7 +97,7 @@ export const apiService = {
 
   fetchBillerPlans: async (billerSlug) => {
     try {
-      const response = await axios.get(`${VITE_FETCH_BILLER_PLANS}/${billerSlug}`);
+      const response = await axios.get(`${import.meta.env.VITE_FETCH_BILLER_PLANS}/${billerSlug}`);
       return response.data.data;
     } catch (error) {
       console.error('Error fetching biller details:', error);
@@ -117,4 +107,3 @@ export const apiService = {
 };
 
 export default apiService;
-
