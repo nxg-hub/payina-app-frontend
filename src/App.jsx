@@ -28,6 +28,9 @@ import Befour from './pages/befour/Befour';
 import { FormProvider } from './context/formContext';
 import ErrorBoundary from './utilities/ErrorBoundaryComponent';
 import ReviewOrder from './pages/airtime/ReviewOrder';
+import AboutUs from './pages/aboutus/AboutUs';
+import ContactUs from './pages/contactus/contactUs';
+import Support from './pages/support/support';
 
 function App() {
   const location = useLocation();
@@ -73,6 +76,9 @@ function App() {
             <Route path="/airtime" element={<Airtime />} />
             <Route path="/card" element={<Card />} />
             <Route path="/ren" element={<Ren />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/support" element={<Support />} />
             <Route path="/thanks" element={<Thanks />} />
             <Route path="/data" element={<Data />} />
             {/*<Route path="/plans" element={<Plans />} />*/}

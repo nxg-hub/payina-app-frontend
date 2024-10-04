@@ -11,7 +11,6 @@ import { Link } from 'react-router-dom';
 
 const Paybills = () => {
   return (
-
     <section>
       <Navbar />
       <div className=" w-full h-screen  text-center ">

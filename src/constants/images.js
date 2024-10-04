@@ -10,6 +10,7 @@ import costIcon from '../assets/images/cost-icon.png';
 import lockIcon from '../assets/images/lock-icon.png';
 import phoneIcon from '../assets/images/phone-icon.png';
 import Facebook from '../assets/images/facebook.svg';
+import LinkedIn from '../assets/images/linkedin.svg';
 import Twitter from '../assets/images/twitter.svg';
 import Instagram from '../assets/images/instagram.svg';
 import Tiktok from '../assets/images/tiktok.svg';
@@ -83,6 +84,7 @@ export default {
   lockIcon,
   phoneIcon,
   Facebook,
+  LinkedIn,
   Instagram,
   Tiktok,
   Twitter,

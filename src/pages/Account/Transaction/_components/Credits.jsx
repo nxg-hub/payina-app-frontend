@@ -43,7 +43,7 @@ const Credits = () => {
                   {' '}
                   <img src={Box} alt="" className="h-[70%] md:h-full w-[70%]  md:w-full " />
                 </div>
-                <p className=" text-[7.5px] md:text-base">Micosoft Inc</p>
+                <p className=" text-[7.5px] md:text-base">Microsoft Inc</p>
               </div>
             </div>
             <span className="font-medium  text-[7px] md:text-base border border-[#0C4E06] text-[#0C4E06] py-1 md:py-2 px-[5.5px] md:px-6">

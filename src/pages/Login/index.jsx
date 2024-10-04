@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import Logo from './_components/ui/logo';
 import LoginForm from './_components/form';
