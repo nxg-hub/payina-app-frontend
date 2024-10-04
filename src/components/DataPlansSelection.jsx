@@ -1,7 +1,5 @@
-// eslint-disable-next-line no-unused-vars
 import React from 'react';
 
-// eslint-disable-next-line react/prop-types
 const DataPlansSelection = ({ plans, selectedPlan, onPlanChange, error }) => {
   return (
     <div className="flex flex-col gap-4">
@@ -12,17 +10,14 @@ const DataPlansSelection = ({ plans, selectedPlan, onPlanChange, error }) => {
         id="dataPlans"
         value={selectedPlan ? selectedPlan.slug : ''}
         onChange={(e) => {
-          // eslint-disable-next-line react/prop-types
           const selected = plans.find((plan) => plan.slug === e.target.value);
           onPlanChange(selected);
         }}
-        className="bg-white text-black rounded p-2" // Retained the dropdown styling.
-      >
+        className="bg-white text-black rounded p-2 flex flex-col w-[64%] mb-4">
         <option value="">Select a plan</option>
-        {/* eslint-disable-next-line react/prop-types */}
         {plans.map((plan) => (
           <option key={plan.id} value={plan.slug}>
-            {plan.name}
+            {plan.name} - {plan.amount ? `${plan.amount} NGN` : 'Variable Amount'}
           </option>
         ))}
       </select>

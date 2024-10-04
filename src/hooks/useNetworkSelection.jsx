@@ -1,35 +1,5 @@
-// // src/hooks/useNetworkSelection.jsx
-// import { useState, useEffect } from 'react';
-//
-// export const useNetworkSelection = () => {
-//   const [networks, setNetworks] = useState([]);
-//   const [isLoading, setIsLoading] = useState(true);
-//   const [error, setError] = useState(null);
-//
-//   useEffect(() => {
-//     // Simulate a network request
-//     const fetchNetworks = async () => {
-//       try {
-//         const response = await fetch('/api/networks');
-//         if (!response.ok) {
-//           throw new Error('Network response was not ok');
-//         }
-//         const data = await response.json();
-//         setNetworks(data);
-//       } catch (error) {
-//         setError('Error Fetching Networks');
-//       } finally {
-//         setIsLoading(false);
-//       }
-//     };
-//
-//     fetchNetworks();
-//   }, []);
-//
-//   return { networks, isLoading, error };
-// };
-
 import { useState, useEffect } from 'react';
+import { VITE_FETCH_NETWORKS } from '../env.js';
 
 export const useNetworkSelection = () => {
   const [networks, setNetworks] = useState([]);
@@ -42,9 +12,7 @@ export const useNetworkSelection = () => {
       setError(null);
 
       try {
-        const response = await fetch(
-          'https://payina-wallet-service-api.onrender.com/api/v1/vas/biller-enquiry-slug/AIRTIME_AND_DATA'
-        );
+        const response = await fetch(`${VITE_FETCH_NETWORKS}`);
 
         if (!response.ok) {
           throw new Error('Network response was not ok');
