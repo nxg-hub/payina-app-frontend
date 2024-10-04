@@ -1,6 +1,8 @@
 import axios from 'axios';
 import {
-  BASE_URL2, VITE_FETCH_BILLER_DETAILS, VITE_FETCH_BILLER_GROUPS, VITE_FETCH_BILLER_PLANS,
+  BASE_URL2,
+  VITE_FETCH_BILLER_GROUPS,
+  VITE_FETCH_BILLER_PLANS,
   VITE_FETCH_DATA_PLANS,
   VITE_FETCH_SERVICES,
   VITE_INITIALIZE_PAYMENT,
@@ -37,10 +39,7 @@ export const apiService = {
   },
 
   vendValue: async (reference, payload) => {
-    const response = await axios.post(
-      `${VITE_VEND_VALUE}/${reference}`,
-      payload
-    );
+    const response = await axios.post(`${VITE_VEND_VALUE}/${reference}`, payload);
     return response.data;
   },
   // vendValue: async (reference, payload) => {
@@ -117,4 +116,3 @@ export const apiService = {
 };
 
 export default apiService;
-
