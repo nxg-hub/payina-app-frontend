@@ -76,6 +76,8 @@ export const StepThree = ({ next, data }) => {
     '-' +
     data.phone?.slice(10);
 
+  console.log(phoneNumber);
+
   return (
     <div>
       <div className="hidden md:block fixed md:top-[-14.5rem] md:right-[1rem] xl:top-[-12.5rem] xl:right-[-39.5rem]">
@@ -107,7 +109,7 @@ export const StepThree = ({ next, data }) => {
           Kindly Confirm Your Phone Number
         </div>
         <span className="font-light mt-5 leading-5 text-sm xl:text-base">
-          We’ll send a verification code to your phone number
+          We’ll send a verification code to your phone number and email address
         </span>
         <Formik
           initialValues={{ phone: phoneNumber, otp: '' }}

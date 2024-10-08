@@ -29,19 +29,36 @@ export const StepTwo = ({ next, initialValues }) => {
 
       if (response.ok && response.headers.get('Content-Type')?.includes('application/json')) {
         const data = await response.json();
-        // console.log('Data:', data);
-
         setMessage('Registration successful');
-        next({ ...initialValues, phone });
+        next({ ...initialValues, phone: phone });
       } else {
-        const errorMessage = await response.text();
+        const errorMessage = await response.text(); // Capture the XML error message
         console.error('Error message:', errorMessage);
-        setMessage('Registration failed: ' + (response.statusText || 'Unknown error'));
+        const parsedMessage = parseXML(errorMessage); // Parse the XML error message
+        setMessage(
+          `Registration failed: ${parsedMessage || response.statusText || 'Unknown error'}`
+        );
       }
     } catch (error) {
       setMessage('An error occurred');
       console.error('An error occurred:', error);
     }
+  };
+
+  const parseXML = (xml) => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(xml, 'application/xml');
+
+    const messageElement = doc.querySelector('message');
+    const debugMessageElement = doc.querySelector('debugMessage');
+
+    const message = messageElement ? messageElement.textContent : 'No error message available';
+    const debugMessage = debugMessageElement
+      ? debugMessageElement.textContent
+      : 'No debug message available';
+
+    // Return the debug message if available, otherwise return the message
+    return debugMessage || message;
   };
 
   const phoneRegExp =
