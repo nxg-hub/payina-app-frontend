@@ -6,7 +6,7 @@ import InputStyle from '../../utilities/InputStyle';
 import NetworkSelection from '../../components/NetworkSelection';
 import DataPlansSelection from '../../components/DataPlansSelection';
 import { useForm } from '../../context/formContext';
-import { EmailVerification } from '../../components/EmailVerification';
+import EmailVerification from '../../components/EmailVerification';
 import { useDataPlans } from '../../hooks/useDataPlans';
 
 export const DataPurchaseForm = () => {
