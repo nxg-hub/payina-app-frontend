@@ -3,7 +3,7 @@ import Navbar from '../../components/navbar/navbar';
 import Footer from '../../components/footer/footer';
 import  { Link} from  'react-router-dom';
 
-const Renew = () => {
+const Review = () => {
     return (
         <section>
            <Navbar />
@@ -25,28 +25,28 @@ const Renew = () => {
                         <label className="pt-4">Card Number</label>
                         <input type="text" placeholder="Enter Card Number" 
                         className="border-2 mt-2 mb-2 rounded-[5px] px-2 py-2 text-xs
-                         border-primary bg-black text-slate-600"
+                         border-primary bg-black "
                         />
                      </div>
                      <div className="flex text-primary flex-col w-[64%] ">
                         <label className="pt-4">Name On Card</label>
                         <input type="text" placeholder="Enter Name On Card" 
                         className="border-2 mt-2 mb-3 rounded-[5px] px-2 py-2
-                        text-xs border-primary bg-black text-slate-600"
+                        text-xs border-primary bg-black "
                         />
                      </div>
                      <div className="md:flex flex-1  text-primary gap-6 mt-8  w-[300px]  ">
                         <input type="number" placeholder="MM" 
                         className="border-2 mb-5 md:static text-xs pl-2 px-24 py-2 rounded-[5px]
-                         border-primary bg-black text-slate-600"
+                         border-primary bg-black "
                         />
                         <input type="number" placeholder="YY" 
                         className=" mb-5 md:static text-xs pl-2 py-2 px-24 border-2 rounded-[5px]
-                         border-primary bg-black text-slate-600"
+                         border-primary bg-black"
                         />
                         <input type="number" placeholder="CVV" 
                         className="border-2 text-xs mb-5 md:static rounded-[5px] pl-2 px-24 py-2
-                         border-primary bg-black text-slate-600"
+                         border-primary bg-black "
                         />
                      </div>
                     <Link to="/thanks" >
@@ -64,4 +64,4 @@ const Renew = () => {
     )
 }
 
-export default Renew
+export default Review

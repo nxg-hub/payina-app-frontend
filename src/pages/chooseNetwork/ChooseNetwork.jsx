@@ -6,7 +6,7 @@ import Footer from '../../components/footer/footer';
 
 
 
-const Card = () => {
+const ChooseNetwork = () => {
     return (
       <section className="text-primary w-full h-screen">
        <Navbar className="pt-6" />
@@ -42,7 +42,7 @@ const Card = () => {
                <p className="pt-8 pl-14 text-sm">200</p>
             </div>
             <div>
-               <Link to="/ren" >
+               <Link to="/reviewAirtime" >
                  <button className="text-primary mb-10 text-left px-16 py-4 
                     border-none rounded-[5px] bg-lightBlue cursor-pointer
                      hover:bg-neutral transition-all duration-200 ">
@@ -58,4 +58,4 @@ const Card = () => {
     )
 }
 
-export default Card
+export default ChooseNetwork;

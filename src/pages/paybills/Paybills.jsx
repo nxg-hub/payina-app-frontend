@@ -11,8 +11,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 const Paybills = () => {
   return (
-        
-        <section>
+     <section>
         <Navbar />
         <div className=" w-full h-screen  text-center ">
             <div className="w-[80%] h-1 border-none mr-auto ml-auto 
@@ -53,7 +52,7 @@ const Paybills = () => {
                      height={72}
                     width={72}
                     src={moneyBack}
-                    alt="moneyback"
+                    alt="money back"
                     className="py-5"
                     />
                     <h2 className="pt-2 pl-2">100% Refund if value <br /> 
@@ -89,20 +88,4 @@ const Paybills = () => {
   );
   };
 
-
-
-
-
-
-
-
-
-
-
-
-
-        
-    
-
-
-export default Paybills
+export default Paybills;

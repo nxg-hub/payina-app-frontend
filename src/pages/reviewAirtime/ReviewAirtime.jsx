@@ -5,7 +5,7 @@ import  { Link} from  'react-router-dom';
 
 
 
-const Ren = () => {
+const ReviewAirtime = () => {
     return (
         <section>
             <Navbar />
@@ -64,4 +64,4 @@ const Ren = () => {
     )
 }
 
-export default Ren
+export default ReviewAirtime

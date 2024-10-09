@@ -24,7 +24,7 @@ const Data = () => {
                         <label className="py-4">Email</label>
                         <input type="email" placeholder="Enter Email address" 
                         className="border-2 text-xs rounded-[5px] px-5 py-2
-                         border-primary bg-black text-slate-600"
+                         border-primary bg-black"
                         />
                         </div>
                         <div className="flex flex-col w-[64%] ">
@@ -34,14 +34,14 @@ const Data = () => {
                            pl-[53%] md:pl-[56%] min-w-1 py-3"  />
                         <input type="text" placeholder="Choose Network "
                       className="border-2 text-xs rounded-[5px]  px-5 py-2 border-primary
-                       bg-black text-slate-600 w-full" />
+                       bg-black  w-full" />
                         </div>
                         </div>
                         <div className="flex flex-col w-[64%] ">
                         <label className="py-4">Phone</label>
                         <input type="number" placeholder="Enter Phone number" 
                         className="border-2 text-xs rounded-[5px] px-5 py-2
-                         border-primary bg-black text-slate-600"
+                         border-primary bg-black"
                         />
                         </div>
                         <Link to="/plans">

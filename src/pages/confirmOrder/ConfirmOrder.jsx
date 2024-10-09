@@ -3,7 +3,7 @@ import Navbar from '../../components/navbar/navbar';
 import Footer from '../../components/footer/footer';
 import  { Link} from  'react-router-dom';
 
-const Bethree = () => {
+const ConfirmOrder = () => {
     
     return (
         <section>
@@ -20,14 +20,14 @@ const Bethree = () => {
             <label className="-mb-2">Platform</label>
                  <input type="text" placeholder="Bet 9ja" 
                  className="border-2 mb-5 md:static border-primary text-xs pl-2 px-52 py-2 
-                  mt-2 rounded-[5px]  border-primary bg-black text-slate-600"
+                  mt-2 rounded-[5px]  border-primary bg-black "
                         />
             </div>
             <div className="flex-col text-primary  mt-4 ml-6 w-[300px]  ">
                <label className="">Custom Ref</label>
                  <input type="text" placeholder="Enter Your Customer ID" 
                  className="border-2 mb-5 md:static border-primary text-xs pl-2 px-52 py-2 rounded-[5px]
-                 mt-2  border-primary bg-black text-slate-600"
+                 mt-2  border-primary bg-black"
                         />
             </div>
             </div>
@@ -42,28 +42,28 @@ const Bethree = () => {
                         <label className="pt-4">Card Number</label>
                         <input type="text" placeholder="Enter Card Number" 
                         className="border-2 mt-2 mb-2 border-primary rounded-[5px] px-2 py-2
-                         text-xs border-primary bg-black text-slate-600"
+                         text-xs border-primary bg-black "
                         />
                      </div>
                      <div className="flex text-primary flex-col w-[64%] ">
                         <label className="pt-4">Name On Card</label>
                         <input type="text" placeholder="Enter Name On Card" 
                         className="border-2 mt-2 mb-3 border-slate-300 rounded-[5px] px-2 py-2
-                         text-xs border-primary bg-black text-slate-600"
+                         text-xs border-primary bg-black "
                         />
                      </div>
                      <div className="md:flex flex-1  text-primary gap-6 mt-8  w-[300px]  ">
                         <input type="number" placeholder="MM" 
-                        className="border-2 mb-5 md:static border-primary text-xs pl-2 px-24 py-2 rounded-[5px]  border-primary bg-black text-slate-600"
+                        className="border-2 mb-5 md:static border-primary text-xs pl-2 px-24 py-2 rounded-[5px]  border-primary bg-black "
                         />
                         <input type="number" placeholder="YY" 
-                        className=" border-primary mb-5 md:static text-xs pl-2 py-2 px-24 border-2 rounded-[5px]  border-primary bg-black text-slate-600"
+                        className=" border-primary mb-5 md:static text-xs pl-2 py-2 px-24 border-2 rounded-[5px]  border-primary bg-black "
                         />
                         <input type="number" placeholder="CVV" 
-                        className="border-2 text-xs mb-5 md:static border-slate-300 rounded-[5px] pl-2 px-24 py-2 border-primary bg-black text-slate-600"
+                        className="border-2 text-xs mb-5 md:static border-slate-300 rounded-[5px] pl-2 px-24 py-2 border-primary bg-black "
                         />
                      </div>
-                    <Link to="/befour" >
+                    <Link to="/reviewOrder" >
                     <button className="text-primary mt-7 mb-12 text-left px-16 py-4 
                     border-none rounded-[5px] bg-lightBlue cursor-pointer
                      hover:bg-neutral transition-all duration-200 ">
@@ -77,4 +77,4 @@ const Bethree = () => {
         </section>
     )
 }
-export default Bethree
+export default ConfirmOrder

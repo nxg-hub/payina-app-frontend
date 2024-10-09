@@ -5,7 +5,7 @@ import Footer from '../../components/footer/footer';
 
 
 
-const Befour = () => {
+const ReviewOrder = () => {
     return (
         <section className="text-primary">
         <Navbar className="pt-6" />
@@ -56,4 +56,4 @@ const Befour = () => {
         </section>
     )
 }
-export default Befour
+export default ReviewOrder

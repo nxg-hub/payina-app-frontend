@@ -6,7 +6,7 @@ import { faChevronDown} from "@fortawesome/free-solid-svg-icons";
 import  { Link} from  'react-router-dom';
 import { bet1, bet2, bet3, bet4, bet5, bet6 } from '../../constants/images';
 
-const Bettwo = () => {
+const BillPlatforms = () => {
     return (
         <section>
          <Navbar />
@@ -97,10 +97,10 @@ const Bettwo = () => {
                  
              
                 <FontAwesomeIcon icon={faChevronDown} color="teal" className=" absolute 
-             pl-[16%] md:pl-[51%] min-w-1 items-center mt-1 cursor-pointer"  />
+             pl-[42%] md:pl-[51%] min-w-1 items-center mt-1 cursor-pointer"  />
            </button>
         </div>
-        <Link to="/bethree" >
+        <Link to="/confirmOrder" >
          <button className="text-primary mb-10 mt-5 text-left px-16 py-4 
          border-none rounded-[5px] bg-lightBlue cursor-pointer
          hover:bg-neutral transition-all duration-200 ">
@@ -115,4 +115,4 @@ const Bettwo = () => {
     )
 }
 
-export default Bettwo
+export default BillPlatforms;

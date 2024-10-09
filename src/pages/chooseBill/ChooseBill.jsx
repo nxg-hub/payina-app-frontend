@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown} from "@fortawesome/free-solid-svg-icons";
 import Footer from '../../components/footer/footer';
 import { Link } from 'react-router-dom';
-const Betone = () => {
+const ChooseBill = () => {
     return (
         <section>
          <Navbar />
@@ -44,7 +44,7 @@ const Betone = () => {
                          border-primary bg-black text-slate-600"
                         />
                         </div>
-                        <Link to="/bettwo">
+                        <Link to="/billplatforms">
                          <button className="text-primary mb-10 mt-10 text-left px-16 py-4 
                     border-none rounded-[5px] bg-lightBlue cursor-pointer
                      hover:bg-neutral transition-all duration-200 ">
@@ -61,4 +61,4 @@ const Betone = () => {
         </section>
     )
 }
-export default Betone
+export default ChooseBill ;

@@ -14,18 +14,18 @@ import Settings from './pages/Account/Settings';
 import Createinvoice from './pages/Account/Invoice/_components/Createinvoice';
 import Paybills from './pages/paybills/Paybills';
 import Airtime from './pages/airtime/Airtime';
-import Card from './pages/card/Card';
-import Ren from './pages/ren/Ren';
+import ChooseNetwork from './pages/chooseNetwork/ChooseNetwork';
+import ReviewAirtime from './pages/reviewAirtime/ReviewAirtime';
 import Thanks from './pages/thanks/Thanks';
 import Data from './pages/data/Data';
 import Plans from './pages/plans/Plans';
 import Planb from './pages/planb/Planb';
-import Renew from './pages/renew/Renew';
+import Review from './pages/review/Review';
 import {useAuth} from "./useAuth";
-import Betone from './pages/betone/Betone';
-import Bettwo from './pages/bettwo/Bettwo';
-import Bethree from './pages/bethree/Bethree';
-import Befour from './pages/befour/Befour';
+import ChooseBill from './pages/chooseBill/ChooseBill';
+import BillPlatforms from './pages/billPlatforms/BillPlatforms';
+import ConfirmOrder from './pages/confirmOrder/ConfirmOrder';
+import ReviewOrder from './pages/reviewOrder/ReviewOrder';
 
 
 
@@ -70,17 +70,17 @@ function App() {
         <Route path="/account/inventory" element={<Inventory />} />
         <Route path="/account/settings" element={<Settings />} />
         <Route path="/airtime" element={<Airtime />} />
-        <Route path="/card" element={<Card />} />
-        <Route path="/ren"  element={<Ren />} />
+        <Route path="/chooseNetwork" element={<ChooseNetwork />} />
+        <Route path="/reviewAirtime"  element={<ReviewAirtime />} />
         <Route path="/thanks" element={<Thanks />} />
         <Route path="/data" element={<Data />} />
         <Route path="/plans" element={<Plans />} />
         <Route path="/planb" element={<Planb />} />
-        <Route path="/renew" element={<Renew />} />
-        <Route path="/betone" element={<Betone />} />
-        <Route path="/bettwo" element={<Bettwo />} />
-        <Route path="/bethree" element={<Bethree />} />
-        <Route path="/befour" element={<Befour />} />
+        <Route path="/review" element={<Review />} />
+        <Route path="/chooseBill" element={<ChooseBill/>} />
+        <Route path="/billPlatforms" element={<BillPlatforms />} />
+        <Route path="/confirmOrder" element={<ConfirmOrder />} />
+        <Route path="/reviewOrder" element={<ReviewOrder />} />
         <Route
           path={currentRoute}
           element={

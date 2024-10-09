@@ -41,7 +41,7 @@ const Planb = () => {
                <p className="pt-8 pl-14 text-sm">500</p>
             </div>
             <div>
-               <Link to="/renew" >
+               <Link to="/review" >
                  <button className="text-primary mb-10 text-left px-16 py-4 
                     border-none rounded-[5px] bg-lightBlue cursor-pointer
                      hover:bg-neutral transition-all duration-200 ">
