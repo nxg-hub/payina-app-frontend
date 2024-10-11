@@ -15,15 +15,20 @@ const Airtime = () => {
   const [errors, setErrors] = useState({});
   const [localEmail, setLocalEmail] = useState('');
   const [amount, setAmount] = useState('');
+
+  // Fetch plans based on selected network
   const { plans, selectedPlan, setSelectedPlan, isLoading, error } = useDataPlans(
     formValues.selectedNetwork
   );
 
+  // Filter to get only the first relevant plan
+  const filteredPlans = plans.length > 0 ? [plans[0]] : [];
+
   useEffect(() => {
-    if (plans.length > 0 && !selectedPlan) {
-      setSelectedPlan(plans[0]);
+    if (filteredPlans.length > 0 && !selectedPlan) {
+      setSelectedPlan(filteredPlans[0]); // Set the first plan as the selected plan
     }
-  }, [plans, selectedPlan, setSelectedPlan]);
+  }, [filteredPlans, selectedPlan, setSelectedPlan]);
 
   useEffect(() => {
     if (selectedPlan) {
@@ -41,6 +46,19 @@ const Airtime = () => {
     [navigate, formValues.userType]
   );
 
+  const handleAmountChange = (e) => {
+    const enteredAmount = e.target.value;
+    setAmount(enteredAmount);
+
+    const newErrors = { ...errors };
+    if (Number(enteredAmount) < 70) {
+      newErrors.amount = 'Amount must be 70 Naira or above';
+    } else {
+      delete newErrors.amount;
+    }
+    setErrors(newErrors);
+  };
+
   const handleEmailChange = useCallback((e) => {
     const email = e.target.value;
     setLocalEmail(email);
@@ -54,6 +72,7 @@ const Airtime = () => {
     if (!formValues.phoneNumber) newErrors.phoneNumber = 'Phone number is required';
     if (!formValues.selectedNetwork) newErrors.selectedNetwork = 'Network selection is required';
     if (!amount) newErrors.amount = 'Amount is required';
+    if (amount && Number(amount) < 70) newErrors.amount = 'Amount must be 70 Naira or above';
     if (!selectedPlan) newErrors.selectedPlan = 'Please select a data plan';
 
     if (Object.keys(newErrors).length > 0) {
@@ -71,12 +90,14 @@ const Airtime = () => {
 
     const stateToPass = {
       formValues: updatedFormValues,
-      selectedPlan: selectedPlan ? {
-        planName: selectedPlan.name,
-        planPrice: selectedPlan.amount || amount,
-        planData: `${formValues.selectedNetwork} - ${selectedPlan.name}`,
-        planSlug: selectedPlan.slug
-      } : null
+      selectedPlan: selectedPlan
+        ? {
+          planName: selectedPlan.name,
+          planPrice: selectedPlan.amount || amount,
+          planData: `${formValues.selectedNetwork} - ${selectedPlan.name}`,
+          planSlug: selectedPlan.slug
+        }
+        : null
     };
 
     navigate('/planb', { state: stateToPass });
@@ -116,7 +137,7 @@ const Airtime = () => {
                 error={errors.selectedNetwork}
               />
               <DataPlansSelection
-                plans={plans}
+                plans={filteredPlans} // Pass the filtered plans with only the first item
                 selectedPlan={selectedPlan}
                 onPlanChange={setSelectedPlan}
                 error={errors.selectedPlan}
@@ -139,7 +160,7 @@ const Airtime = () => {
                   placeholder="Enter amount"
                   className="border-2 mb-8 rounded-[5px] px-5 py-2 border-primary bg-black text-slate-600"
                   value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
+                  onChange={handleAmountChange}
                 />
                 {errors.amount && <p className="text-red-500">{errors.amount}</p>}
               </div>

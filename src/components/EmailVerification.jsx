@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { apiService } from '../services/apiService';
+import InputStyle from '../utilities/InputStyle';
 
 const EmailVerification = ({
                              onUserVerified,
@@ -52,7 +53,7 @@ const EmailVerification = ({
 
   return (
     <div>
-      <input
+      <InputStyle
         type={type}
         value={value}
         onChange={handleChange}
