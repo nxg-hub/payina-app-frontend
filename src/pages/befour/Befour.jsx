@@ -38,33 +38,48 @@ const Befour = () => {
 
   const handleError = (err, reference) => {
     let errorMessage = 'An unknown error occurred';
-    let errorDetails = '';
 
     if (err.response) {
-      const { data, status } = err.response;
+      const { data } = err.response;
+
       if (typeof data === 'string') {
-        try {
-          const parsedData = JSON.parse(data);
-          errorMessage = parsedData.message.message || errorMessage;
-          errorDetails = `Error Code: ${parsedData.responseCode || status}`;
-        } catch (e) {
-          errorMessage = data;
-          errorDetails = `Status Code: ${status}`;
+        const nestedJsonMatch = data.match(/"(\{.*\})"/);
+
+        if (nestedJsonMatch && nestedJsonMatch[1]) {
+          try {
+            const nestedData = JSON.parse(nestedJsonMatch[1]);
+
+            if (
+              nestedData.message &&
+              nestedData.message.includes('Wallet balance too low to debit')
+            ) {
+              const balanceMessage = nestedData.message.match(
+                /Wallet balance too low to debit\. Balance: \d+(\.\d{1,2})?/
+              );
+              errorMessage = balanceMessage ? balanceMessage[0] : 'Wallet balance too low to debit';
+            } else {
+              errorMessage = nestedData.message;
+            }
+          } catch (parseError) {
+            errorMessage = 'Error parsing nested JSON in response';
+          }
+        } else {
+          errorMessage = 'Invalid response format';
         }
-      } else if (typeof data === 'object') {
-        errorMessage = data.message.message || errorMessage;
-        errorDetails = `Error Code: ${data.responseCode || status}`;
+      } else {
+        errorMessage = 'Unexpected data format';
       }
     } else if (err.message) {
       errorMessage = err.message;
     }
+
+    console.log('Parsed Error Message:', errorMessage);
 
     setModalState({
       isOpen: true,
       status: 'error',
       title: 'Transaction Failed',
       message: errorMessage,
-      details: errorDetails,
       reference
     });
   };
@@ -74,7 +89,15 @@ const Befour = () => {
       if (!formData) return false;
 
       try {
-        const { selectedBiller, selectedPlan, amount, customerReference, email, phoneNumber, customerDetails } = formData;
+        const {
+          selectedBiller,
+          selectedPlan,
+          amount,
+          customerReference,
+          email,
+          phoneNumber,
+          customerDetails
+        } = formData;
 
         if (!selectedBiller || !selectedBiller.slug) {
           throw new Error('Selected biller or biller slug is missing');
@@ -88,7 +111,7 @@ const Befour = () => {
           customerId: customerReference,
           packageSlug: packageSlug,
           channel: 'WEB',
-          amount: Math.round(amount * 1),
+          amount: Math.round(amount + 100),
           customerName: customerDetails?.customerName || 'Non-Payina-User',
           phoneNumber: phoneNumber,
           email: email,
@@ -163,7 +186,8 @@ const Befour = () => {
           isOpen: true,
           status: 'error',
           title: 'Error',
-          message: 'Customer verification is required before proceeding. Please go back and verify the customer details.'
+          message:
+            'Customer verification is required before proceeding. Please go back and verify the customer details.'
         });
         return;
       }
@@ -179,7 +203,9 @@ const Befour = () => {
         throw new Error('Selected biller or amount is missing');
       }
 
-      const amountInKobo = Math.round(amount * 100);
+      const amountWithCharges = Math.round(Number(amount) + 100);
+
+      const amountInKobo = Math.round(amountWithCharges * 100);
 
       const initializePaymentResponse = await apiService.initializePayment(
         selectedBiller.id,
@@ -247,11 +273,11 @@ const Befour = () => {
       <Navbar />
       <OrderReview
         planName={selectedBiller.name}
-        network={
-          isBettingOrLottery(selectedBiller) ? 'Betting and Lottery' : selectedBiller.category
-        }
+        // network={
+        //   isBettingOrLottery(selectedBiller) ? 'Betting and Lottery' : selectedBiller.category
+        // }
         phoneNumber={phoneNumber}
-        planPrice={amount}
+        planPrice={Number(amount) + 100}
         email={email}
         customerReference={customerReference}
       />

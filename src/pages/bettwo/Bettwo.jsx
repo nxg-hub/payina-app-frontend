@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import Navbar from '../../components/navbar/navbar';
 import Footer from '../../components/footer/footer';
 import { bet1, bet2, bet3, bet4, bet5, bet6 } from '../../constants/images';
@@ -31,15 +30,32 @@ const Bettwo = () => {
     BETKING: bet2
   };
 
+  const renderBillerImage = (billerSlug, name) => (
+    <div
+      key={billerSlug}
+      className={`flex-col cursor-pointer ${selectedBiller?.slug === billerSlug ? 'border-2 border-yellow p-2 rounded' : ''}`}
+      onClick={() => handleImageClick(billerSlug)}>
+      <img height={58} width={58} src={billerImages[billerSlug]} alt={name} />
+      <p>{name}</p>
+    </div>
+  );
+
+  const handleImageClick = (billerSlug) => {
+    const selectedBillerObj = billerOptions.find((biller) => biller.slug === billerSlug);
+    setSelectedBiller(selectedBillerObj || null);
+    setVerificationResult(null);
+    setCustomerDetails(null);
+    setError(null);
+    setSelectedPlan(null);
+    setAmount('');
+  };
+
   const fetchBillerOptions = useCallback(async (billerGroupSlug) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await axios.get(
-        `https://payina-wallet-service-api.onrender.com/api/v1/vas/biller-enquiry-slug/${billerGroupSlug}`
-      );
-      const services = response.data.responseData;
-      setBillerOptions(services);
+      const response = await apiService.fetchBillerBySlug(billerGroupSlug);
+      setBillerOptions(response);
     } catch (error) {
       console.error('Error fetching biller options:', error);
       setError('Failed to fetch biller options. Please try again.');
@@ -52,26 +68,66 @@ const Bettwo = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await apiService.fetchBillerPlans()
-      const planData = response.data.responseData;
-      console.log('Raw API response:', response.data);
-      console.log('Fetched plans:', planData);
-
-      if (Array.isArray(planData)) {
+      const planData = await apiService.fetchBillerPlans(billerSlug);
+      if (Array.isArray(planData) && planData.length > 0) {
         setPlans(planData);
       } else {
-        console.error('Unexpected plan data format:', planData);
         setPlans([]);
-        setError('Received unexpected plan data format from the server.');
+        setError('No plans available for this biller. You may enter an amount manually.');
       }
     } catch (error) {
       console.error('Error fetching plans:', error);
-      setError('Failed to fetch plans. Please try again.');
       setPlans([]);
+      setError('Failed to fetch plans. Please try again or enter an amount manually.');
     } finally {
       setIsLoading(false);
     }
   }, []);
+
+  const verifyUser = useCallback(
+    async (customerId) => {
+      if (!selectedBiller) return;
+
+      setIsLoading(true);
+      setError(null);
+      setVerificationResult(null);
+      setCustomerDetails(null);
+
+      try {
+        const response = await apiService.verifyCustomer({
+          customerId,
+          productName: `${selectedBiller.name}_PREPAID`,
+          billerSlug: selectedBiller.slug
+        });
+
+        if (response.error) {
+          setError(response.message || 'An error occurred during verification.');
+          setVerificationResult({
+            status: 'failed',
+            narration: response.responseData?.narration || 'Verification failed.'
+          });
+        } else {
+          setVerificationResult({
+            status: 'success',
+            narration: response.message || 'Verification successful.'
+          });
+          if (response.responseData?.customer) {
+            setCustomerDetails(response.responseData.customer);
+          }
+        }
+      } catch (error) {
+        console.error('Error verifying user:', error);
+        setError('Failed to verify user. Please check your customer reference.');
+        setVerificationResult({
+          status: 'failed',
+          narration: "An error occurred while validating the customer's identity."
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [selectedBiller]
+  );
 
   useEffect(() => {
     if (selectedBettingService) {
@@ -87,48 +143,6 @@ const Bettwo = () => {
     }
   }, [selectedBiller, fetchPlans]);
 
-  const verifyUser = useCallback(async (customerId, productName, billerSlug) => {
-    setIsLoading(true);
-    setError(null);
-    setVerificationResult(null);
-    setCustomerDetails(null);
-    try {
-      const response = await axios.post(
-        'https://payina-wallet-service-api.onrender.com/api/v1/vas/customer-enquiry',
-        {
-          customerId,
-          productName: `${productName}_PREPAID`,
-          billerSlug
-        }
-      );
-
-      if (response.data.error) {
-        setError(response.data.message || 'An error occurred during verification.');
-        setVerificationResult({
-          status: 'failed',
-          narration: response.data.responseData?.narration || 'Verification failed.'
-        });
-      } else {
-        setVerificationResult({
-          status: 'success',
-          narration: response.data.message || 'Verification successful.'
-        });
-        if (response.data.responseData?.customer) {
-          setCustomerDetails(response.data.responseData.customer);
-        }
-      }
-    } catch (error) {
-      console.error('Error verifying user:', error);
-      setError('Failed to verify user. Please check your customer reference.');
-      setVerificationResult({
-        status: 'failed',
-        narration: "An error occurred while validating the customer's identity."
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
   const handleBillerChange = (e) => {
     const selectedBillerSlug = e.target.value;
     const selectedBillerObj = billerOptions.find((biller) => biller.slug === selectedBillerSlug);
@@ -142,10 +156,7 @@ const Bettwo = () => {
 
   const handlePlanChange = (e) => {
     const selectedPlanId = e.target.value;
-    console.log('Selected plan ID:', selectedPlanId);
-    console.log('Available plans:', plans);
     const selectedPlanObj = plans.find((plan) => plan.id.toString() === selectedPlanId);
-    console.log('Selected plan object:', selectedPlanObj);
 
     if (selectedPlanObj) {
       setSelectedPlan(selectedPlanObj);
@@ -153,25 +164,15 @@ const Bettwo = () => {
     } else {
       setSelectedPlan(null);
       setAmount('');
-      console.error('Selected plan not found in available plans');
     }
   };
 
   const handleCustomerReferenceChange = (e) => {
-    setCustomerReference(e.target.value);
-    if (selectedBiller) {
-      verifyUser(e.target.value, selectedBiller.name, selectedBiller.slug);
+    const newReference = e.target.value;
+    setCustomerReference(newReference);
+    if (newReference && selectedBiller) {
+      verifyUser(newReference);
     }
-  };
-
-  const handleImageClick = (billerSlug) => {
-    const selectedBillerObj = billerOptions.find((biller) => biller.slug === billerSlug);
-    setSelectedBiller(selectedBillerObj || null);
-    setVerificationResult(null);
-    setCustomerDetails(null);
-    setError(null);
-    setSelectedPlan(null);
-    setAmount('');
   };
 
   const handleProceed = () => {
@@ -192,16 +193,6 @@ const Bettwo = () => {
       }
     });
   };
-
-  const renderBillerImage = (billerSlug, name) => (
-    <div
-      key={billerSlug}
-      className={`flex-col cursor-pointer ${selectedBiller?.slug === billerSlug ? 'border-2 border-yellow p-2 rounded' : ''}`}
-      onClick={() => handleImageClick(billerSlug)}>
-      <img height={58} width={58} src={billerImages[billerSlug]} alt={name} />
-      <p>{name}</p>
-    </div>
-  );
 
   return (
     <section>
@@ -280,7 +271,7 @@ const Bettwo = () => {
             onChange={(e) => setAmount(e.target.value)}
             className="border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-black text-slate-600 w-[64%] mb-3"
             placeholder="Enter amount"
-            readOnly={selectedPlan !== null}
+            // readOnly={selectedPlan !== null}
           />
         </div>
 

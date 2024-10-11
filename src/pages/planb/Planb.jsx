@@ -19,7 +19,7 @@ const PlanB = () => {
     status: 'success',
     title: '',
     message: '',
-    reference: '',
+    reference: ''
   });
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const PlanB = () => {
       status: 'error',
       title: 'Transaction Failed',
       message: errorMessage,
-      reference,
+      reference
     });
   }, []);
 
@@ -62,18 +62,19 @@ const PlanB = () => {
           amount: Math.round(selectedPlan.planPrice * 1),
           customerName: 'Non-Payina-User',
           phoneNumber: formValues.phoneNumber,
-          email: formValues.email,
+          email: formValues.email
         };
 
         const vendValueResponse = await apiService.vendValue(reference, payload);
 
-        if (vendValueResponse.status === "success") {
+        if (vendValueResponse.status === 'success') {
           setModalState({
             isOpen: true,
             status: 'success',
             title: 'Transaction Successful',
-            message: vendValueResponse.responseData.customerMessage || vendValueResponse.message,
-            reference: vendValueResponse.responseData.paymentReference,
+            message: 'Successfully processed the vend request',
+            // message: vendValueResponse.responseData.customerMessage || vendValueResponse.message,
+            reference: vendValueResponse.responseData.paymentReference
           });
           return true;
         } else {
@@ -165,7 +166,7 @@ const PlanB = () => {
         isOpen: true,
         status: 'error',
         title: 'Error',
-        message: 'No payment reference available. Please try initiating the payment again.',
+        message: 'No payment reference available. Please try initiating the payment again.'
       });
     }
   };
