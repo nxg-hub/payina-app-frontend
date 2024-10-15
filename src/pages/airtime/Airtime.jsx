@@ -16,12 +16,10 @@ const Airtime = () => {
   const [localEmail, setLocalEmail] = useState('');
   const [amount, setAmount] = useState('');
 
-  // Fetch plans based on selected network
   const { plans, selectedPlan, setSelectedPlan, isLoading, error } = useDataPlans(
     formValues.selectedNetwork
   );
 
-  // Filter to get only the first relevant plan
   const filteredPlans = plans.length > 0 ? [plans[0]] : [];
 
   useEffect(() => {
@@ -92,11 +90,11 @@ const Airtime = () => {
       formValues: updatedFormValues,
       selectedPlan: selectedPlan
         ? {
-          planName: selectedPlan.name,
-          planPrice: selectedPlan.amount || amount,
-          planData: `${formValues.selectedNetwork} - ${selectedPlan.name}`,
-          planSlug: selectedPlan.slug
-        }
+            planName: selectedPlan.name,
+            planPrice: selectedPlan.amount || amount,
+            planData: `${formValues.selectedNetwork} - ${selectedPlan.name}`,
+            planSlug: selectedPlan.slug
+          }
         : null
     };
 

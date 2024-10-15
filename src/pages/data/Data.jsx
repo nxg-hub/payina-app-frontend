@@ -78,6 +78,7 @@ export const DataPurchaseForm = () => {
     [setSelectedPlan, updateFormValues]
   );
 
+
   return (
     <section>
       <Navbar />
@@ -87,13 +88,12 @@ export const DataPurchaseForm = () => {
         <p className="mt-[-120px] pb-8 text-6xl text-center font-extrabold text-lightBlue">
           Buy Data & get Cashback
         </p>
-        {/*<form onSubmit={handleSubmit}>*/}
 
         <div className="container mx-auto p-4">
           <form onSubmit={handleSubmit} className="text-white">
             <button className="text-primary text-left p-10 border-none rounded-[5px] w-[64%] bg-neutral px-4 py-2">
               Want to enjoy discounts?
-              <span className="text-yellow"> Register</span> or{' '}
+              <span className="text-yellow">Register</span> or{' '}
               <span className="text-yellow">Login</span>
             </button>
             <div className="flex flex-col">
@@ -129,7 +129,6 @@ export const DataPurchaseForm = () => {
                     error={errors.selectedPlan}
                     plans={plans}
                   />
-
                 )}
               </>
             )}

@@ -1,14 +1,22 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../../components/navbar/navbar';
-import Footer from '../../components/footer/footer';
-import EmailVerification from '../../components/EmailVerification';
-import { useForm } from '../../context/formContext';
-import apiService from '../../services/apiService';
+import Navbar from '../../../components/navbar/navbar';
+import Footer from '../../../components/footer/footer';
+import { useForm } from '../../../context/formContext';
+import apiService from '../../../services/apiService';
 
-const ALLOWED_SERVICES = ['ELECTRIC_DISCO', 'PAY_TV', 'BETTING_AND_LOTTERY'];
+const ALLOWED_SERVICES = [
+  'ELECTRIC_DISCO',
+  'PAY_TV',
+  'BETTING_AND_LOTTERY',
+  'TRANSPORT_AND_TOLL_PAYMENT',
+  'COLLECTIONS',
+  'GOVERNMENT_COLLECTIONS',
+  'INTERNATIONAL_AIRTIME',
+  'EDUCATION'
+];
 
-const Betone = () => {
+const Billers = () => {
   const { formValues, updateFormValues } = useForm();
   const navigate = useNavigate();
   const [isRegistered, setIsRegistered] = useState(null);
@@ -52,10 +60,11 @@ const Betone = () => {
           throw new Error('Invalid API response format');
         }
 
-        // Filter services
-        const filteredServices = serviceData.filter(service =>
-          service && service.slug && ALLOWED_SERVICES.includes(service.slug)
+        const filteredServices = serviceData.filter(
+          (service) => service && service.slug && ALLOWED_SERVICES.includes(service.slug)
         );
+        // Filter services
+        // const filteredServices = serviceData.filter((service) => service && service.slug);
 
         console.log('Filtered services:', filteredServices);
 
@@ -127,68 +136,45 @@ const Betone = () => {
       <Navbar />
       <div className="container">
         <div className="w-[80%] h-1 border-none mr-auto ml-auto mt-[-2px] mb-40 bg-yellow"></div>
-        <p className="mt-[-120px] pb-8 text-6xl text-center font-extrabold text-lightBlue">
-          Select a Service
-        </p>
         <form onSubmit={handleSubmit} className="text-white">
-          <button className="text-primary text-left p-10 border-none rounded-[5px] w-[64%] bg-neutral px-4 py-2">
-            Want to enjoy discounts?
-            <span className="text-yellow"> Register</span> or{' '}
-            <span className="text-yellow">Login</span>{' '}
-          </button>
-          <div className="flex flex-col">
-            <label className="py-4">Email</label>
-            <EmailVerification
-              onUserVerified={handleUserVerified}
-              value={localEmail}
-              onChange={handleEmailChange}
-              error={errors.email}
-            />
+          <div className="flex flex-col w-[64%]">
+            <label htmlFor="betting-service-select" className="py-4">
+              Choose Service
+            </label>
+            <select
+              id="betting-service-select"
+              value={formValues.selectedBettingService || ''}
+              onChange={(e) => updateFormValues({ selectedBettingService: e.target.value })}
+              className="border-2 text-xs rounded-[5px] px-5 py-2 border-primary bg-black text-slate-600 w-full">
+              <option value="">Select Service</option>
+              {bettingServices.map((service) => (
+                <option key={service.id} value={service.slug}>
+                  {service.name}
+                </option>
+              ))}
+            </select>
+            {errors.selectedBettingService && (
+              <p className="text-red-500 mt-1">{errors.selectedBettingService}</p>
+            )}
+            {error && <p className="text-red-500 mt-1">{error}</p>}
           </div>
-          {isRegistered === false && (
-            <>
-              <div className="flex flex-col w-[64%]">
-                <label htmlFor="betting-service-select" className="py-4">
-                  Choose Service
-                </label>
-                <select
-                  id="betting-service-select"
-                  value={formValues.selectedBettingService || ''}
-                  onChange={(e) => updateFormValues({ selectedBettingService: e.target.value })}
-                  className="border-2 text-xs rounded-[5px] px-5 py-2 border-primary bg-black text-slate-600 w-full"
-                >
-                  <option value="">Select Service</option>
-                  {bettingServices.map((service) => (
-                    <option key={service.id} value={service.slug}>
-                      {service.name}
-                    </option>
-                  ))}
-                </select>
-                {errors.selectedBettingService && (
-                  <p className="text-red-500 mt-1">{errors.selectedBettingService}</p>
-                )}
-                {error && (
-                  <p className="text-red-500 mt-1">{error}</p>
-                )}
-              </div>
-              <div className="flex flex-col w-[64%]">
-                <label className="py-4">Phone</label>
-                <input
-                  type="number"
-                  placeholder="Enter Phone number"
-                  className="border-2 text-xs rounded-[5px] px-5 py-2 border-primary bg-black text-slate-600"
-                  value={formValues.phoneNumber || ''}
-                  onChange={(e) => updateFormValues({ phoneNumber: e.target.value })}
-                />
-                {errors.phoneNumber && <p className="text-red-500 mt-1">{errors.phoneNumber}</p>}
-              </div>
-            </>
-          )}
+          <div className="flex flex-col w-[64%]">
+            <label className="py-4">Phone</label>
+            <input
+              type="number"
+              placeholder="Enter Phone number"
+              className="border-2 text-xs rounded-[5px] px-5 py-2 border-primary bg-black text-slate-600"
+              value={formValues.phoneNumber || ''}
+              onChange={(e) => updateFormValues({ phoneNumber: e.target.value })}
+            />
+            {errors.phoneNumber && <p className="text-red-500 mt-1">{errors.phoneNumber}</p>}
+          </div>
+          {/*</>*/}
+          {/*)}*/}
           <button
             type="submit"
             className="text-primary mb-10 mt-10 text-left px-16 py-4 border-none rounded-[5px] bg-lightBlue cursor-pointer hover:bg-neutral transition-all duration-200"
-            disabled={isLoading}
-          >
+            disabled={isLoading}>
             {isLoading ? 'Loading...' : 'Proceed to Next Step'}
           </button>
         </form>
@@ -198,4 +184,4 @@ const Betone = () => {
   );
 };
 
-export default Betone;
+export default Billers;

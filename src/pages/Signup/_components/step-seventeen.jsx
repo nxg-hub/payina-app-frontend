@@ -1,18 +1,86 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
+import useLocalStorage from '../../../hooks/useLocalStorage';
 
 export const StepSeventeen = ({ data }) => {
-  const [business_name, setBusinessName] = useState('');
+  const [userData, setUserData] = useState(null);
+  const [walletData, setWalletData] = useState(null);
+  const [newAuthToken] = useLocalStorage('authtoken', '');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const dataFetched = useRef(false);
+
+  useEffect(() => {
+    // Only fetch if we haven't already and have an auth token
+    if (!dataFetched.current && newAuthToken) {
+      const fetchUserAndWalletData = async () => {
+        try {
+          console.log('Starting data fetch...');
+
+          const [userResponse, walletResponse] = await Promise.all([
+            fetch(import.meta.env.VITE_GET_USER, {
+              method: 'GET',
+              headers: {
+                accept: '*/*',
+                apiKey: import.meta.env.VITE_API_KEY,
+                Authorization: `Bearer ${newAuthToken}`,
+                'Content-Type': 'application/json'
+              }
+            }),
+            fetch(import.meta.env.VITE_GET_WALLET_ENDPOINT, {
+              headers: {
+                Authorization: `Bearer ${newAuthToken}`,
+                'Content-Type': 'application/json'
+              }
+            })
+          ]);
+
+          if (!userResponse.ok || !walletResponse.ok) {
+            throw new Error('One or more API calls failed');
+          }
+
+          const [userDataResponse, walletDataResponse] = await Promise.all([
+            userResponse.json(),
+            walletResponse.json()
+          ]);
+
+          setUserData(userDataResponse);
+          setWalletData(walletDataResponse.data);
+
+          console.log('Data fetch completed successfully'); // Debug log
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          setError(error.message);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      dataFetched.current = true; // Mark as fetched before starting
+      fetchUserAndWalletData();
+    }
+
+    // Cleanup function
+    return () => {
+      dataFetched.current = false; // Reset if component unmounts
+    };
+  }, [newAuthToken]); // Only depend on authToken
 
   const handleClick = () => {
     navigate('/account/dashboard');
   };
-  useEffect(() => {
-    setBusinessName(data?.business_details?.business_name);
-  }, [data]);
+
+  if (isLoading) {
+    return <div className="text-center py-8">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center py-8 text-red-600">Error: {error}</div>;
+  }
+
   return (
     <>
       <div className="hidden xl:block fixed top-[-1rem] right-[-32rem]">
@@ -53,7 +121,7 @@ export const StepSeventeen = ({ data }) => {
           </span>
         </div>
         <div className="mt-12 xl:mt-8">
-          <div className=" flex flex-col w-3/4 px-11 md:px-0 text-center mx-auto space-y-12">
+          <div className="flex flex-col w-3/4 px-11 md:px-0 text-center mx-auto space-y-12">
             <div className="w-full relative">
               <img
                 src={images.Rectangle}
@@ -72,7 +140,9 @@ export const StepSeventeen = ({ data }) => {
               />
               <div className="w-full text-primary absolute top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%] flex flex-col md:space-y-4">
                 <span className="md:text-2xl text-xs font-medium">Payina Account Number</span>
-                <span className="md:text-3xl text-sm font-bold">3434556676</span>
+                <span className="md:text-3xl text-sm font-bold">
+                  {walletData?.payStackVirtualAccountNumber || 'N/A'}
+                </span>
               </div>
             </div>
             <div className="w-full relative">
@@ -93,7 +163,9 @@ export const StepSeventeen = ({ data }) => {
               />
               <div className="w-full text-primary absolute top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%] flex flex-col md:space-y-4">
                 <span className="md:text-2xl text-xs font-medium">Business Owner Name</span>
-                <span className="md:text-3xl text-sm font-bold">Jacob Yakub</span>
+                <span className="md:text-3xl text-sm font-bold">
+                  {userData ? `${userData.firstName} ${userData.lastName}` : 'N/A'}
+                </span>
               </div>
             </div>
             <div className="w-full relative">
@@ -114,7 +186,9 @@ export const StepSeventeen = ({ data }) => {
               />
               <div className="w-full text-primary absolute top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%] flex flex-col md:space-y-4">
                 <span className="md:text-2xl text-xs font-medium">Business Name</span>
-                <span className="md:text-3xl text-sm font-bold capitalize">{business_name} </span>
+                <span className="md:text-3xl text-sm font-bold capitalize">
+                  {walletData?.name || data?.business_details?.business_name || 'N/A'}
+                </span>
               </div>
             </div>
           </div>
@@ -123,10 +197,12 @@ export const StepSeventeen = ({ data }) => {
             padding="15px"
             type="submit"
             children="Proceed to Dashboard"
-            className="hover:cursor-pointer flex justify-center items-center !text-[#002A4D] xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 md:w-[334px] xl:w-[434px] w-[90%] mx-auto my-6 xl:mt-6 "
+            className="hover:cursor-pointer flex justify-center items-center !text-[#002A4D] xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 md:w-[334px] xl:w-[434px] w-[90%] mx-auto my-6 xl:mt-6"
           />
         </div>
       </div>
     </>
   );
 };
+
+export default StepSeventeen;

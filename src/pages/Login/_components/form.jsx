@@ -4,6 +4,7 @@ import { LoginSchema } from '../schemas/schema';
 import { images } from '../../../constants';
 import { useState } from 'react';
 import { useAuth } from '../../../useAuth';
+import useLocalStorage from '../../../hooks/useLocalStorage';
 
 const parseXML = (xml) => {
   const parser = new DOMParser();
@@ -11,11 +12,13 @@ const parseXML = (xml) => {
   const message = doc.querySelector('message');
   return message ? message.textContent : 'An unknown error occurred';
 };
-
+const decodeJWT = (token) => JSON.parse(atob(token.split('.')[1]));
 const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const auth = useAuth(); // Use the useAuth hook
+  const [authToken, setAuthToken] = useLocalStorage('authtoken', '');
+  const [userDetails, setuserDetails] = useLocalStorage('userDetails', '');
 
   const handleSubmit = async (values) => {
     setIsLoading(true);
@@ -39,9 +42,15 @@ const LoginForm = () => {
         const result = await response.json();
         const token = result?.data;
 
+
         if (token) {
-          localStorage.setItem('authToken', token);
+          setAuthToken(token);
+          const decodedString = decodeJWT(token);
+          setuserDetails(decodedString);
+          console.log(userDetails, authToken);
+          // localStorage.setItem('authToken', token);
           console.log('Log in successful:', token);
+          // console.log(decodeJWT(token));
 
           await auth.checkUserRegistrationLevel(); // Trigger the redirection after login
         } else {
