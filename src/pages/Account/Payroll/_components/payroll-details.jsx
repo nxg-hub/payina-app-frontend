@@ -4,13 +4,13 @@ import { RiDeleteBinLine } from 'react-icons/ri';
 import { PayrollSchema } from '../../schemas/schemas';
 import { useState } from 'react';
 
-const PayrollDetails = ({onSubmit}) => {
+const PayrollDetails = ({ onSubmit }) => {
   const [jobRoleTitle, setJobRoleTitle] = useState(['']);
   const [allowanceFields, setAllowanceFields] = useState([
     {
       allowancePackageName: '',
-      allowancePay: ''
-    }
+      allowancePay: '',
+    },
   ]);
 
   const addAllowanceField = () => {
@@ -18,8 +18,8 @@ const PayrollDetails = ({onSubmit}) => {
       ...allowanceFields,
       {
         allowancePackageName: '',
-        allowancePay: ''
-      }
+        allowancePay: '',
+      },
     ]);
   };
   const removeAllowanceFields = (index) => {
@@ -49,25 +49,25 @@ const PayrollDetails = ({onSubmit}) => {
     const updatedRoles = [...jobRoleTitle];
     updatedRoles[index] = value;
     setJobRoleTitle(updatedRoles);
-  }; 
-  
+  };
+
   return (
     <div className="flex flex-col justify-center items-start w-auto xl:ml-80 xl:pt-28 md:pt-10 mx-auto h-full">
       <span className="text-xl md:text-3xl font-bold px-6 py-2 md:py-0">Payroll</span>
       <div className="w-full px-6 py-4 ">
         <div className="px-6 py-4 shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px] ">
           <span className="text-base md:text-xl font-medium">Payroll Details</span>
-            <Formik
+          <Formik
             initialValues={{
               jobRoleTitle: jobRoleTitle,
               basicSalary: '',
-              allowances: allowanceFields
+              allowances: allowanceFields,
             }}
             validationSchema={PayrollSchema}
             onSubmit={(values, actions) => {
-            console.log("Form Submitted:", values);  // Debugging output
-            onSubmit(values);
-            actions.setSubmitting(true);
+              console.log('Form Submitted:', values); // Debugging output
+              onSubmit(values);
+              actions.setSubmitting(true);
             }}>
             {(formik) => (
               <Form>
@@ -81,7 +81,7 @@ const PayrollDetails = ({onSubmit}) => {
                     </label>
                     <hr className="border-none bg-lightBlue h-[1px] w-[39%] xl:mr-0 md:mr-14 mr-12 ml-8 " />
                   </div>
-                   {jobRoleTitle.map((role, index) => (
+                  {jobRoleTitle.map((role, index) => (
                     <div className="flex items-center" key={index}>
                       <Field
                         name={`jobRoleTitle.${index}`}
@@ -189,7 +189,8 @@ const PayrollDetails = ({onSubmit}) => {
                 <div className="flex center py-40 gap-4 w-full">
                   <button
                     type="submit"
-                    className="flex gap-2 center rounded-[5px] text-xs md:text-base py-2 border border-lightBlue text-lightBlue w-[300px]"onClick={addJobRoleTitle}>
+                    className="flex gap-2 center rounded-[5px] text-xs md:text-base py-2 border border-lightBlue text-lightBlue w-[300px]"
+                    onClick={addJobRoleTitle}>
                     <LuPlus size={20} color="#006181" />
                     Add role
                   </button>
