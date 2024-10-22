@@ -10,27 +10,20 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { RiDeleteBinLine } from 'react-icons/ri';
 
-const EmployeeDetails = ({ handleEmployeeSubmit }) => {
-  const [save, setSave] = useState(false);
-  const navigate = useNavigate();
+const EmployeeDetails = ({onSubmit}) => {
   const [startDate, setStartDate] = useState(null);
   const [openDatePicker, setOpenDatePicker] = useState(false);
-  const [isAutomaticPayment, setIsAutomaticPayment] = useState(false);
+  // const [isAutomaticPayment, setIsAutomaticPayment] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [frequency, setFrequency] = useState('');
+  const [paymentFrequency, setPaymentFrequency] = useState('');
   const [employeeName, setEmployeeName] = useState(['']);
-  const [formData, setFormData] = useState({}); // use appropriate state structure  
 
-  const handleSubmit = (values) => {  
-    handleEmployeeSubmit(formData); // Call the parent handler with form data  
-  };  
+  //   const handleAutomaticPaymentToggle = () => {
+  //   setIsAutomaticPayment((prev) => !prev);
+  // };
 
-    const handleAutomaticPaymentToggle = () => {
-    setIsAutomaticPayment((prev) => !prev);
-  };
-
-   const handleFrequencySelect = (value) => {
-    setFrequency(value);
+   const handlePaymentFrequencySelect = (value) => {
+    setPaymentFrequency(value);
     setDropdownOpen(false); // Close dropdown after selection
   };
 
@@ -39,7 +32,7 @@ const EmployeeDetails = ({ handleEmployeeSubmit }) => {
   };
 
  const addEmployeeName = () => {
-    setEmployeeName([...employeeName, '']); // Add an empty string for new job role
+    setEmployeeName([...employeeName, '']);
   };
 
   const removeEmployeeName = (index) => {
@@ -48,30 +41,46 @@ const EmployeeDetails = ({ handleEmployeeSubmit }) => {
     setEmployeeName(updatedName);
   };
 
-  const handleEmployeeNameChange = (index, value) => {
-    const updatedName = [...employeeName];
-    updatedName[index] = value;
-    setEmployeeName(updatedName);
-  };
+const handleEmployeeNameChange = (index, value, setFieldValue) => {
+  const updatedName = [...employeeName];
+  updatedName[index] = value;
+  setEmployeeName(updatedName);
+  setFieldValue(`employeeName[${index}]`, value);  // Update Formik's state
+};
+
+  // const handleEmployeeNameChange = (index, value) => {
+  //   const updatedName = [...employeeName];
+  //   updatedName[index] = value;
+  //   setEmployeeName(updatedName);
+  // };
 
   return (
-    <div className="flex flex-col justify-center items-start w-auto xl:ml-80 xl:pt-28 md:pt-10 mx-auto h-full">
+    <div className="flex flex-col justify-center items-start w-auto xl:ml-80 xl:pt-28 md:pt-10">
       <span className="text-xl md:text-3xl font-bold px-6 py-2 md:py-0">Payroll</span>
       <div className="w-full px-6 py-4 ">
         <div className="px-6 py-4 shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px] ">
           <span className="text-base md:text-xl font-medium">Payroll Details</span>
           <Formik
-            initialValues={{ employee_name: [''], employee_role: '', bank_name: '', account_no: '',
-            employement_date: '', frequency_of_payment: '' }}
+            initialValues={{ 
+              employeeName: [''], 
+              employeeRole: '', 
+              bankName: '', 
+              accountNumber: '',
+              employementDate: '', 
+              paymentFrequency: '' }}
             validationSchema={EmployeeSchema}
-            onSubmit={handleSubmit}>
+            onSubmit={(values, actions) => {
+            console.log("Form Submitted:", values);  // Debugging output
+            onSubmit(values);
+            actions.setSubmitting(false);
+            }}>
             {({ setFieldValue }) => (
               <Form>
                 <div className="flex flex-col  w-full py-4 space-y-4">
                   <div className="flex items-center">
                     <hr className="border-none bg-lightBlue ml-[3.2rem] h-[1px] w-[40%] mr-8 " />
                     <label
-                      htmlFor="job_role"
+                      htmlFor="employeeName"
                       className="text-lightBlue text-center font-bold text-sm md:text-[18px] text-nowrap">
                       Employee Name
                     </label>
@@ -80,12 +89,12 @@ const EmployeeDetails = ({ handleEmployeeSubmit }) => {
                   {employeeName.map((name, index) => (
                     <div className="flex items-center" key={index}>
                       <Field
-                        name={`employee_name_${index}`}
+                        name={`employeeName[${index}]`}
                         type="text"
                         placeholder="Enter Employee's name"
                         className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                         value={name}
-                        onChange={(e) => handleEmployeeNameChange(index, e.target.value)}
+                        onChange={(e) => handleEmployeeNameChange(index, e.target.value, setFieldValue)}
                       />
                       {employeeName.length > 1 && (
                         <RiDeleteBinLine
@@ -102,7 +111,7 @@ const EmployeeDetails = ({ handleEmployeeSubmit }) => {
                   <div className="flex items-center">
                     <hr className="border-none bg-lightBlue ml-[3.2rem] h-[1px] w-[40%] mr-8 " />
                     <label
-                      htmlFor="employee_role"
+                      htmlFor="employeeRole"
                       className="text-lightBlue text-center font-bold text-sm md:text-[18px] text-nowrap">
                       Employee Role
                     </label>
@@ -110,13 +119,13 @@ const EmployeeDetails = ({ handleEmployeeSubmit }) => {
                   </div>
 
                   <Field
-                    name="employee_role"
+                    name="employeeRole"
                     type="text"
                     placeholder="Enter Employee's role"
                     className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                   />
                   <ErrorMessage
-                    name="employee_role"
+                    name="employeeRole"
                     component="span"
                     className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                   />
@@ -125,14 +134,14 @@ const EmployeeDetails = ({ handleEmployeeSubmit }) => {
                   <div className="flex items-center">
                     <hr className="border-none bg-lightBlue ml-[3.2rem] h-[1px] w-[40%] mr-8 " />
                     <label
-                      htmlFor="employement_details"
+                      htmlFor="employementDetails"
                       className="text-lightBlue text-center font-bold text-sm md:text-[18px] text-nowrap">
                       Employement Details
                     </label>
                     <hr className="border-none bg-lightBlue h-[1px] w-[39%] xl:mr-0 md:mr-14 mr-12 ml-8 " />
                   </div>
                     <Field
-                    name="employement_date"
+                    name="employementDate"
                     type="text"
                     placeholder="Employement Date"
                     className="w-[100%] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
@@ -141,7 +150,7 @@ const EmployeeDetails = ({ handleEmployeeSubmit }) => {
                     readOnly
                   />
                   <ErrorMessage
-                    name="employement_date"
+                    name="employementDate"
                     component="span"
                     className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                   />
@@ -153,7 +162,7 @@ const EmployeeDetails = ({ handleEmployeeSubmit }) => {
                          selected={startDate}
                          onChange={(date) => {
                          setStartDate(date);
-                         setFieldValue('employement_date', date ? date.toLocaleDateString() : '');
+                         setFieldValue('employementDate', date ? date.toLocaleDateString() : '');
                          setOpenDatePicker(false);
                         }}
                      className="absolute z-10 bg-white border border-gray-300 rounded-md shadow-md"
@@ -174,49 +183,49 @@ const EmployeeDetails = ({ handleEmployeeSubmit }) => {
                       </span>
                       <hr className="border-none bg-lightBlue h-[1px] w-[40%] xl:mr-0 md:mr-14 me-12 ml-8 " />
                     </div>
-                    <label htmlFor="bank_name" className="font-normal text-xs md:text-sm">
+                    <label htmlFor="bankName" className="font-normal text-xs md:text-sm">
                       Name of Bank
                     </label>
                     <Field
-                      name="bank_name"
+                      name="bankName"
                       type="text"
                       placeholder="Enter Name of Bank"
                       className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                     />
                     <ErrorMessage
-                      name="bank_name"
+                      name="bankName"
                       component="span"
                       className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                     />
                   </div>
                   <div>
-                    <label htmlFor="account_no" className="font-normal text-xs md:text-sm">
+                    <label htmlFor="accountNumber" className="font-normal text-xs md:text-sm">
                       Account Number
                     </label>
                     <Field
-                      name="account_no"
+                      name="accountNumber"
                       type="number"
                       placeholder="Enter Account Number"
                       className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                     />
                     <ErrorMessage
-                      name="account_no"
+                      name="accountNumber"
                       component="span"
                       className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                     />
                   </div>
                   <div>
-                    <label htmlFor="frequency_of_payment" className="font-normal text-xs md:text-sm">
+                    <label htmlFor="paymentFrequency" className="font-normal text-xs md:text-sm">
                       Frequency of Payment
                     </label>
                     <Field
-                      name="frequency_of_payment"
+                      name="paymentFrequency"
                       type="text"
-                      placeholder="frequency_of_payment"
+                      placeholder="Frequency of Payment"
                       className="w-full relative border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                     />
                     <ErrorMessage
-                      name="frequency_of_payment"
+                      name="paymentFrequency"
                       component="span"
                       className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                     />
@@ -230,8 +239,8 @@ const EmployeeDetails = ({ handleEmployeeSubmit }) => {
                             key={option}
                             className="p-2 hover:bg-gray-100 cursor-pointer"
                             onClick={() => { 
-                            handleFrequencySelect(option);
-                            setFieldValue('frequency_of_payment', option);
+                            handlePaymentFrequencySelect(option);
+                            setFieldValue('paymentFrequency', option);
                           }}
                           >
                             {option}
@@ -260,7 +269,6 @@ const EmployeeDetails = ({ handleEmployeeSubmit }) => {
                   </button>
                   <button
                     type="submit"
-                    onClick={handleSubmit}
                     className="rounded-[5px] text-xs md:text-base  py-2 border border-lightBlue bg-lightBlue w-[300px] text-primary">
                     Save
                   </button>

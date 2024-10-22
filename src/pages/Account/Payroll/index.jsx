@@ -1,26 +1,26 @@
 import React, { useState } from 'react';  
 import { Navbar, Sidebar } from '../_components';  
 import SetupPayroll from './_components/setup-payroll';  
-import PayrollSelect from './_components/PayrollSelect';  
+import PayrollSubmit from './_components/payrollSubmit';  
 import PayrollView from './_components/PayrollView'; 
 
 const Payroll = () => {  
-  const [showPayrollSelect, setShowPayrollSelect] = useState(false);  
+  const [showPayrollSubmit, setShowPayrollSubmit] = useState(false);  
   const [showPayrollView, setShowPayrollView] = useState(false); // New state for PayrollView  
 
   const handleSetupPayrollClick = () => {  
-    setShowPayrollSelect(true);  
+    setShowPayrollSubmit(true);  
     setShowPayrollView(false); // Reset view to not show PayrollView  
   };  
 
   const handleViewPayrollClick = () => {  
     setShowPayrollView(true); // Set the state to show PayrollView  
-    setShowPayrollSelect(false); // Reset view to not show PayrollSelect  
+    setShowPayrollSubmit(false); // Reset view to not show PayrollSelect  
   };  
 
     const handleBackClick = () => {
     setShowPayrollView(false);
-    setShowPayrollSelect(false);
+    setShowPayrollSubmit(false);
   };
 
   return (  
@@ -29,8 +29,8 @@ const Payroll = () => {
       <Sidebar />
       {showPayrollView ? (  // Check for PayrollView first  
         <PayrollView onBackClick={handleBackClick} />  
-      ) : showPayrollSelect ? (  
-        <PayrollSelect onBackClick={handleBackClick} />   
+      ) : showPayrollSubmit ? (  
+        <PayrollSubmit />   
       ) : (  
         <SetupPayroll   
           onSetupClick={handleSetupPayrollClick}   

@@ -50,7 +50,7 @@ const QuickAction = () => {
               <img src={images.Bills} className="md:w-[49px] w-[39px] p-2  bg-center" alt="" />
             </div>
             <Link
-              to=""
+              to="/paybills"
               className="hover:text-lightBlue transition-colors text-center opacity-75 text-sm md:text-base">
               Pay Bills
             </Link>

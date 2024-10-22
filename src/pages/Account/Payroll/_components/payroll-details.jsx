@@ -1,18 +1,15 @@
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import { LuPlus } from 'react-icons/lu';
-// import { FaArrowLeft } from "react-icons/fa";
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { PayrollSchema } from '../../schemas/schemas';
 import { useState } from 'react';
 
-const PayrollDetails = ({ handlePayrollSubmit }) => {
-  // const [save, setSave] = useState(false);
-  const [formData, setFormData] = useState({}); // use appropriate state structure 
-  const [jobRoles, setJobRoles] = useState(['']);
+const PayrollDetails = ({onSubmit}) => {
+  const [jobRoleTitle, setJobRoleTitle] = useState(['']);
   const [allowanceFields, setAllowanceFields] = useState([
     {
-      allowance_package: '',
-      allowance_pay: ''
+      allowancePackageName: '',
+      allowancePay: ''
     }
   ]);
 
@@ -20,8 +17,8 @@ const PayrollDetails = ({ handlePayrollSubmit }) => {
     setAllowanceFields([
       ...allowanceFields,
       {
-        allowance_package: '',
-        allowance_pay: ''
+        allowancePackageName: '',
+        allowancePay: ''
       }
     ]);
   };
@@ -38,25 +35,22 @@ const PayrollDetails = ({ handlePayrollSubmit }) => {
     setAllowanceFields(list);
   };
 
-  const addJobRole = () => {
-    setJobRoles([...jobRoles, '']); // Add an empty string for new job role
+  const addJobRoleTitle = () => {
+    setJobRoleTitle([...jobRoleTitle, '']); // Add an empty string for new job role
   };
 
-  const removeJobRole = (index) => {
-    const updatedRoles = [...jobRoles];
+  const removeJobRoleTitle = (index) => {
+    const updatedRoles = [...jobRoleTitle];
     updatedRoles.splice(index, 1);
-    setJobRoles(updatedRoles);
+    setJobRoleTitle(updatedRoles);
   };
 
-  const handleJobRoleChange = (index, value) => {
-    const updatedRoles = [...jobRoles];
+  const handleJobRoleTitleChange = (index, value) => {
+    const updatedRoles = [...jobRoleTitle];
     updatedRoles[index] = value;
-    setJobRoles(updatedRoles);
+    setJobRoleTitle(updatedRoles);
   }; 
-
-  const handleSubmit = () => {  
-    handlePayrollSubmit(formData); // Call the parent handler with form data  
-  };  
+  
   return (
     <div className="flex flex-col justify-center items-start w-auto xl:ml-80 xl:pt-28 md:pt-10 mx-auto h-full">
       <span className="text-xl md:text-3xl font-bold px-6 py-2 md:py-0">Payroll</span>
@@ -65,40 +59,45 @@ const PayrollDetails = ({ handlePayrollSubmit }) => {
           <span className="text-base md:text-xl font-medium">Payroll Details</span>
             <Formik
             initialValues={{
-              basic_salary: '',
-              job_roles: jobRoles,
+              jobRoleTitle: jobRoleTitle,
+              basicSalary: '',
               allowances: allowanceFields
             }}
-            validationSchema={PayrollSchema}>
+            validationSchema={PayrollSchema}
+            onSubmit={(values, actions) => {
+            console.log("Form Submitted:", values);  // Debugging output
+            onSubmit(values);
+            actions.setSubmitting(true);
+            }}>
             {(formik) => (
               <Form>
                 <div className="flex flex-col  w-full py-4 space-y-4">
                   <div className="flex items-center">
                     <hr className="border-none bg-lightBlue ml-[3.2rem] h-[1px] w-[40%] mr-8 " />
                     <label
-                      htmlFor="job_role"
+                      htmlFor="jobRoleTitle"
                       className="text-lightBlue text-center font-bold text-sm md:text-[18px] text-nowrap">
                       Job Role/Title
                     </label>
                     <hr className="border-none bg-lightBlue h-[1px] w-[39%] xl:mr-0 md:mr-14 mr-12 ml-8 " />
                   </div>
-                   {jobRoles.map((role, index) => (
+                   {jobRoleTitle.map((role, index) => (
                     <div className="flex items-center" key={index}>
                       <Field
-                        name={`job_role_${index}`}
+                        name={`jobRoleTitle.${index}`}
                         type="text"
                         placeholder="Enter Job Title"
                         className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                         value={role}
-                        onChange={(e) => handleJobRoleChange(index, e.target.value)}
+                        onChange={(e) => handleJobRoleTitleChange(index, e.target.value)}
                         required
                       />
-                      {jobRoles.length > 1 && (
+                      {jobRoleTitle.length > 1 && (
                         <RiDeleteBinLine
                           color="red"
                           size={20}
                           className="ml-2 hover:cursor-pointer"
-                          onClick={() => removeJobRole(index)}
+                          onClick={() => removeJobRoleTitle(index)}
                         />
                       )}
                     </div>
@@ -108,20 +107,20 @@ const PayrollDetails = ({ handlePayrollSubmit }) => {
                   <div className="flex items-center">
                     <hr className="border-none bg-lightBlue ml-[3.2rem] h-[1px] w-[40%] mr-8 " />
                     <label
-                      htmlFor="base_salary"
+                      htmlFor="basicSalary"
                       className="text-lightBlue text-center font-bold text-sm md:text-[18px] text-nowrap">
                       Base Salary
                     </label>
                     <hr className="border-none bg-lightBlue h-[1px] w-[40%] xl:mr-0 md:mr-14 me-12 ml-8 " />
                   </div>
                   <Field
-                    name="base_salary"
+                    name="basicSalary"
                     type="number"
                     placeholder="Enter Base Salary"
                     className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                   />
                   <ErrorMessage
-                    name="base_salary"
+                    name="basicSalary"
                     component="span"
                     className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                   />
@@ -130,7 +129,7 @@ const PayrollDetails = ({ handlePayrollSubmit }) => {
                   <div className="flex items-center">
                     <hr className="border-none   bg-lightBlue ml-[3.2rem] h-[1px] w-[40%] mr-8 " />
                     <label
-                      htmlFor="allowance_package"
+                      htmlFor="allowanceFields"
                       className="text-lightBlue text-center font-bold text-sm md:text-[18px] text-nowrap">
                       Allowances
                     </label>
@@ -139,14 +138,14 @@ const PayrollDetails = ({ handlePayrollSubmit }) => {
                   <div className="flex w-full center gap-2">
                     <div className="flex flex-col w-full">
                       {allowanceFields.map((allowance, i) => {
-                        const { allowance_package, allowance_pay } = allowance;
+                        const { allowancePackageName, allowancePay } = allowance;
                         return (
                           <div className="flex gap-2 py-1" key={i}>
                             <div className="flex flex-col w-full">
                               <input
-                                name="allowance_package"
+                                name="allowancePackageName"
                                 type="text"
-                                value={allowance_package}
+                                value={allowancePackageName}
                                 onChange={(evnt) => handleAllowanceChange(i, evnt)}
                                 placeholder="Enter name of allowance package"
                                 className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
@@ -155,9 +154,9 @@ const PayrollDetails = ({ handlePayrollSubmit }) => {
                             </div>
                             <div className="flex flex-col w-full">
                               <input
-                                name="allowance_pay"
+                                name="allowancePay"
                                 type="number"
-                                value={allowance_pay}
+                                value={allowancePay}
                                 onChange={(evnt) => handleAllowanceChange(i, evnt)}
                                 placeholder="Allowance pay"
                                 className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
@@ -172,7 +171,7 @@ const PayrollDetails = ({ handlePayrollSubmit }) => {
                           color="red"
                           size={20}
                           className="text-center w-full mx-auto hover:cursor-pointer hover:scale-90 !mt-2 "
-                          onClick={removeAllowanceFields}
+                          onClick={() => removeAllowanceFields(i)}
                         />
                       ) : (
                         ''
@@ -190,13 +189,12 @@ const PayrollDetails = ({ handlePayrollSubmit }) => {
                 <div className="flex center py-40 gap-4 w-full">
                   <button
                     type="submit"
-                    className="flex gap-2 center rounded-[5px] text-xs md:text-base py-2 border border-lightBlue text-lightBlue w-[300px]"onClick={addJobRole}>
+                    className="flex gap-2 center rounded-[5px] text-xs md:text-base py-2 border border-lightBlue text-lightBlue w-[300px]"onClick={addJobRoleTitle}>
                     <LuPlus size={20} color="#006181" />
                     Add role
                   </button>
                   <button
                     type="submit"
-                    onClick={handleSubmit}
                     className="rounded-[5px] text-xs md:text-base  py-2 border border-lightBlue bg-lightBlue w-[300px] text-primary">
                     Save
                   </button>
@@ -206,10 +204,6 @@ const PayrollDetails = ({ handlePayrollSubmit }) => {
           </Formik>
         </div>
       </div>
-   {/* <div className="flex flex-row gap-2 text-xl items-left justify-center mt-[10rem] cursor-pointer">
-        <FaArrowLeft className="text-lightBlue" />
-        <span className="text-lightBlue text-xl">Back</span>
-      </div>*/}
     </div>
   );
 };
