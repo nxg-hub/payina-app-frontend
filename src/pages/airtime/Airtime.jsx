@@ -19,7 +19,6 @@ const Airtime = () => {
   const { plans, selectedPlan, setSelectedPlan, isLoading, error } = useDataPlans(
     formValues.selectedNetwork
   );
-
   const filteredPlans = plans.length > 0 ? [plans[0]] : [];
 
   useEffect(() => {

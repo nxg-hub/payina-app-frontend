@@ -69,7 +69,6 @@ export const DataPurchaseForm = () => {
 
     navigate('/planb', { state: stateToPass });
   };
-
   const handlePlanSelection = useCallback(
     (plan) => {
       setSelectedPlan(plan);

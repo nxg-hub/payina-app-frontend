@@ -29,7 +29,6 @@ const PlanB = () => {
       setFormData(location.state);
     }
   }, [location.state]);
-
   useEffect(() => {
     const script = document.createElement('script');
     script.src = import.meta.env.VITE_SCRIPT;
