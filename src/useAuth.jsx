@@ -46,7 +46,7 @@ export function useAuth() {
   };
 
   useEffect(() => {
-    checkUserRegistrationLevel();
+    // checkUserRegistrationLevel();
   }, []);
 
   return { checkUserRegistrationLevel };
