@@ -13,6 +13,7 @@ import Inventory from './pages/Account/Inventory';
 import Settings from './pages/Account/Settings';
 import Createinvoice from './pages/Account/Invoice/_components/Createinvoice';
 import Paybills from './pages/paybills/Paybills';
+import SendMoney from './pages/SendMoney/index';
 import Airtime from './pages/airtime/Airtime';
 import Card from './pages/card/Card';
 import Ren from './pages/ren/Ren';
@@ -66,6 +67,7 @@ function App() {
               element={<Signup data={data} handleNextStep={handleNextStep} />}
             />
             <Route path="/paybills" element={<Paybills />} />
+            <Route path="/sendMoney" element={<SendMoney />} />
             <Route path="/login" element={<Login />} />
             <Route path="/account/dashboard" element={<Dashboard />} />
             <Route path="/account/invoice" element={<Invoice />} />

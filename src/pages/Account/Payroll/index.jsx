@@ -1,57 +1,42 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Navbar, Sidebar } from '../_components';
 import SetupPayroll from './_components/setup-payroll';
-import PayrollDetails from './_components/payroll-details';
-import EmployeeDetails from './_components/employee-details';
+import PayrollSubmit from './_components/payrollSubmit';
+import PayrollView from './_components/PayrollView';
 
 const Payroll = () => {
-  const [data, setData] = useState([]);
-  const [roleData, setRoleData] = useState([]);
-  const [employeeData, setEmployeeData] = useState([]);
-  // console.log(data);
+  const [showPayrollSubmit, setShowPayrollSubmit] = useState(false);
+  const [showPayrollView, setShowPayrollView] = useState(false); // New state for PayrollView
 
-  useEffect(() => {
-    setData((prev) => ({ ...prev, roleData, employeeData }));
-  }, [roleData, employeeData]);
-
-  const handleRoleForm = (newData) => {
-    roleData.push(newData);
-  };
-  const handleEmployeeForm = (newData) => {
-    employeeData.push(newData);
+  const handleSetupPayrollClick = () => {
+    setShowPayrollSubmit(true);
+    setShowPayrollView(false); // Reset view to not show PayrollView
   };
 
-  const [addRole, setAddRole] = useState([
-    <PayrollDetails
-      handleRoleForm={handleRoleForm}
-      addRole={addRoleForm}
-      addEmployeeForm={addEmployeeForm}
-    />
-  ]);
-  const [addEmployee, setAddEmployee] = useState([
-    <EmployeeDetails handleEmployeeForm={handleEmployeeForm} addEmployeeForm={addEmployeeForm} />
-  ]);
-  const [components, setComponents] = useState([<SetupPayroll addRole={addRoleForm} />]);
+  const handleViewPayrollClick = () => {
+    setShowPayrollView(true); // Set the state to show PayrollView
+    setShowPayrollSubmit(false); // Reset view to not show PayrollSelect
+  };
 
-  function addRoleForm() {
-    if (addRole.length > 0) {
-      setComponents([addRole[0]]);
-    }
-  }
-  function addEmployeeForm(values) {
-    if (addEmployee.length > 0) {
-      setComponents([addEmployee[0]]);
-    }
-    setData((prev) => ({ ...prev, ...values }));
-  }
+  const handleBackClick = () => {
+    setShowPayrollView(false);
+    setShowPayrollSubmit(false);
+  };
 
   return (
-    <div className="bg-primary">
+    <div className="flex flex-col h-screen">
       <Navbar />
       <Sidebar />
-      {components.map((component, i) => (
-        <React.Fragment key={i}>{component}</React.Fragment>
-      ))}
+      {showPayrollView ? ( // Check for PayrollView first
+        <PayrollView onBackClick={handleBackClick} />
+      ) : showPayrollSubmit ? (
+        <PayrollSubmit />
+      ) : (
+        <SetupPayroll
+          onSetupClick={handleSetupPayrollClick}
+          onViewClick={handleViewPayrollClick} // Pass the view click handler
+        />
+      )}
     </div>
   );
 };
