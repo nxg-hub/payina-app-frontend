@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, Wifi, Zap, Sliders } from 'lucide-react';
+// import { Phone, Wifi, Zap, Sliders } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const BillOption = ({ icon, label, onClick }) => (
