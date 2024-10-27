@@ -17,7 +17,7 @@ import {
   StepThirteen,
   StepThree,
   StepTwelve,
-  StepTwo
+  StepTwo,
 } from './_components';
 
 export default function SignUpForm() {
@@ -39,7 +39,7 @@ export default function SignUpForm() {
     tin_No: '',
     businessRegNumber: '',
     businessCategory: '',
-    businessType: ''
+    businessType: '',
   });
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -66,7 +66,7 @@ export default function SignUpForm() {
     <StepFifteen next={handleNextStep} email={data.email} />,
     <StepSixteen next={handleNextStep} email={data.email} />,
     <StepSeven next={handleNextStep} text="You Have Successfully Set Your Pin" />,
-    <StepSeventeen next={handleNextStep} data={data} />
+    <StepSeventeen next={handleNextStep} data={data} />,
   ];
 
   return (

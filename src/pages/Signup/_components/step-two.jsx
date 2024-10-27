@@ -16,15 +16,15 @@ export const StepTwo = ({ next, initialValues }) => {
         password: initialValues.password,
         confirmPassword: initialValues.confirmPassword,
         userType: 'corporate',
-        email: initialValues.email
+        email: initialValues.email,
       };
 
       const response = await fetch(import.meta.env.VITE_REGISTER_USER_ENDPOINT, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
 
       if (response.ok && response.headers.get('Content-Type')?.includes('application/json')) {
@@ -125,7 +125,7 @@ export const StepTwo = ({ next, initialValues }) => {
               style={{
                 ReactInternationalPhoneHeight: '500px',
                 '--react-international-phone-flag-width': '54px',
-                '--react-international-phone-border-radius': '5px'
+                '--react-international-phone-border-radius': '5px',
               }}
               buttonClassName="!p-2"
               countrySelectorStyleProps="p-2"

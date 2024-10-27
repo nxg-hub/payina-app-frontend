@@ -7,24 +7,24 @@ export const PayrollData = [
     employmentDetails: [
       {
         employmentDate: '12th May, 2000',
-        employmentId: '086b4r'
-      }
+        employmentId: '086b4r',
+      },
     ],
     basicSalary: '$30000',
     allowances: [
       {
         allowancePackageName: 'Transport',
-        allowancePay: '$50'
-      }
+        allowancePay: '$50',
+      },
     ],
     accountDetails: [
       {
         nameOfBank: 'Oceanic Bank',
         accountNumber: '0998357234',
         PaymentFrequency: 'True',
-        automaticPayment: 'True'
-      }
-    ]
+        automaticPayment: 'True',
+      },
+    ],
   },
   {
     id: 1,
@@ -34,24 +34,24 @@ export const PayrollData = [
     employmentDetails: [
       {
         employmentDate: '12th May, 2000',
-        employmentId: '086b4r'
-      }
+        employmentId: '086b4r',
+      },
     ],
     basicSalary: '$30000',
     allowances: [
       {
         allowancePackageName: 'Transport',
-        allowancePay: '$50'
-      }
+        allowancePay: '$50',
+      },
     ],
     accountDetails: [
       {
         nameOfBank: 'Oceanic Bank',
         accountNumber: '0998357234',
         PaymentFrequency: 'True',
-        automaticPayment: 'True'
-      }
-    ]
+        automaticPayment: 'True',
+      },
+    ],
   },
   {
     id: 2,
@@ -61,24 +61,24 @@ export const PayrollData = [
     employmentDetails: [
       {
         employmentDate: '12th May, 2000',
-        employmentId: '086b4r'
-      }
+        employmentId: '086b4r',
+      },
     ],
     basicSalary: '$30000',
     allowances: [
       {
         allowancePackageName: 'Transport',
-        allowancePay: '$50'
-      }
+        allowancePay: '$50',
+      },
     ],
     accountDetails: [
       {
         nameOfBank: 'Oceanic Bank',
         accountNumber: '0998357234',
         PaymentFrequency: 'True',
-        automaticPayment: 'True'
-      }
-    ]
+        automaticPayment: 'True',
+      },
+    ],
   },
   {
     id: 3,
@@ -88,24 +88,24 @@ export const PayrollData = [
     employmentDetails: [
       {
         employmentDate: '12th May, 2000',
-        employmentId: '086b4r'
-      }
+        employmentId: '086b4r',
+      },
     ],
     basicSalary: '$30000',
     allowances: [
       {
         allowancePackageName: 'Transport',
-        allowancePay: '$50'
-      }
+        allowancePay: '$50',
+      },
     ],
     accountDetails: [
       {
         nameOfBank: 'Oceanic Bank',
         accountNumber: '0998357234',
         PaymentFrequency: 'True',
-        automaticPayment: 'True'
-      }
-    ]
+        automaticPayment: 'True',
+      },
+    ],
   },
   {
     id: 4,
@@ -115,24 +115,24 @@ export const PayrollData = [
     employmentDetails: [
       {
         employmentDate: '12th May, 2000',
-        employmentId: '086b4r'
-      }
+        employmentId: '086b4r',
+      },
     ],
     basicSalary: '$30000',
     allowances: [
       {
         allowancePackageName: 'Transport',
-        allowancePay: '$50'
-      }
+        allowancePay: '$50',
+      },
     ],
     accountDetails: [
       {
         nameOfBank: 'Oceanic Bank',
         accountNumber: '0998357234',
         PaymentFrequency: 'True',
-        automaticPayment: 'True'
-      }
-    ]
+        automaticPayment: 'True',
+      },
+    ],
   },
   {
     id: 5,
@@ -142,24 +142,24 @@ export const PayrollData = [
     employmentDetails: [
       {
         employmentDate: '12th May, 2000',
-        employmentId: '086b4r'
-      }
+        employmentId: '086b4r',
+      },
     ],
     basicSalary: '$30000',
     allowances: [
       {
         allowancePackageName: 'Transport',
-        allowancePay: '$50'
-      }
+        allowancePay: '$50',
+      },
     ],
     accountDetails: [
       {
         nameOfBank: 'Oceanic Bank',
         accountNumber: '0998357234',
         PaymentFrequency: 'True',
-        automaticPayment: 'True'
-      }
-    ]
+        automaticPayment: 'True',
+      },
+    ],
   },
   {
     id: 6,
@@ -169,23 +169,23 @@ export const PayrollData = [
     employmentDetails: [
       {
         employmentDate: '12th May, 2000',
-        employmentId: '086b4r'
-      }
+        employmentId: '086b4r',
+      },
     ],
     basicSalary: '$30000',
     allowances: [
       {
         allowancePackageName: 'Transport',
-        allowancePay: '$50'
-      }
+        allowancePay: '$50',
+      },
     ],
     accountDetails: [
       {
         nameOfBank: 'Oceanic Bank',
         accountNumber: '0998357234',
         PaymentFrequency: 'True',
-        automaticPayment: 'True'
-      }
-    ]
-  }
+        automaticPayment: 'True',
+      },
+    ],
+  },
 ];

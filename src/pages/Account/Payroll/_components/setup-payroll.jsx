@@ -11,7 +11,12 @@ const SetupPayroll = ({ onSetupClick, onViewClick }) => {
         <button className="border-2 border-[#044B84] rounded-[4px] py-2 px-3" onClick={onViewClick}>
           <span className="text-lightBlue font-bold text-xl">View Payroll</span>
         </button>
-        <h3 className="text-black font-bold text-md">No Payroll yet? <span className="text-lightBlue cursor-pointer" onClick={onSetupClick}>Set up Payroll</span></h3>
+        <h3 className="text-black font-bold text-md">
+          No Payroll yet?{' '}
+          <span className="text-lightBlue cursor-pointer" onClick={onSetupClick}>
+            Set up Payroll
+          </span>
+        </h3>
       </div>
     </div>
   );
