@@ -19,12 +19,9 @@ import Card from './pages/card/Card';
 import Ren from './pages/ren/Ren';
 import Thanks from './pages/thanks/Thanks';
 import Data from './pages/data/Data';
-// import Plans from './pages/plans/Plans';
 import Planb from './pages/planb/Planb';
-// import Renew from './pages/renew/Renew';
 import Betone from './pages/betone/Betone';
 import Bettwo from './pages/bettwo/Bettwo';
-// import Bethree from './pages/bethree/Bethree';
 import Befour from './pages/befour/Befour';
 import { FormProvider } from './context/formContext';
 import ErrorBoundary from './utilities/ErrorBoundaryComponent';
@@ -33,6 +30,15 @@ import AboutUs from './pages/aboutus/AboutUs';
 import ContactUs from './pages/contactus/contactUs';
 import Support from './pages/support/support';
 import TermsOfService from './pages/terms/TermsOfService';
+import UsersPaybill from './pages/Account/users-paybill';
+import BillPayment from './pages/Account/users-paybill';
+import UserAirtime from './pages/Account/UserPages/airtime';
+import UserData from './pages/Account/UserPages/data';
+import FundWallet from './pages/airtime/FundWallet';
+import Billers from './pages/Account/UserPages/billers';
+import Electricity from './pages/Account/UserPages/electricity';
+import { StepSeventeen } from './pages/Signup/_components';
+// import PaymentPage from './pages/Account/UserPages/fund_wallet';
 
 function App() {
   const location = useLocation();
@@ -67,16 +73,25 @@ function App() {
               element={<Signup data={data} handleNextStep={handleNextStep} />}
             />
             <Route path="/paybills" element={<Paybills />} />
+              Payina-in-app-transaction-one
+            {/*<Route path="/account/fund_wallet" element={<PaymentPage />} />*/}
             <Route path="/sendMoney" element={<SendMoney />} />
             <Route path="/login" element={<Login />} />
             <Route path="/account/dashboard" element={<Dashboard />} />
             <Route path="/account/invoice" element={<Invoice />} />
+            <Route path="/account/step" element={<StepSeventeen />} />
             <Route path="invoice/createinvoice" element={<Createinvoice />} />
             <Route path="/account/payroll" element={<Payroll />} />
             <Route path="/account/transaction" element={<Transaction />} />
             <Route path="/account/inventory" element={<Inventory />} />
             <Route path="/account/settings" element={<Settings />} />
             <Route path="/airtime" element={<Airtime />} />
+            <Route path="/account/airtime" element={<UserAirtime />} />
+            <Route path="/account/bills" element={<Billers />} />
+            <Route path="/account/fund-wallet" element={<FundWallet />} />
+            <Route path="/account/data" element={<UserData />} />
+            <Route path="/account/billers" element={<BillPayment />} />
+            <Route path="/account/electricity" element={<Electricity />} />
             <Route path="/card" element={<Card />} />
             <Route path="/ren" element={<Ren />} />
             <Route path="/about-us" element={<AboutUs />} />
@@ -85,12 +100,10 @@ function App() {
             <Route path="/support" element={<Support />} />
             <Route path="/thanks" element={<Thanks />} />
             <Route path="/data" element={<Data />} />
-            {/*<Route path="/plans" element={<Plans />} />*/}
             <Route path="/planb" element={<Planb />} />
-            {/*<Route path="/renew" element={<Renew />} />*/}
             <Route path="/betone" element={<Betone />} />
             <Route path="/bettwo" element={<Bettwo />} />
-            {/*<Route path="/bethree" element={<Bethree />} />*/}
+            <Route path="/bills-payment" element={<UsersPaybill />} />
             <Route path="/befour" element={<Befour />} />
             <Route path="/review-airtime-order" element={<ReviewOrder />} />
             <Route

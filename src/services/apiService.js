@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const apiService = {
+const apiService = {
   checkEmailRegistration: async (email) => {
     try {
       if (!email) {
@@ -16,12 +16,79 @@ export const apiService = {
     }
   },
 
-  fetchNetworks: async () => {
+  authUserEmail: async () => {
     try {
-      const response = await axios.get(import.meta.env.VITE_FETCH_NETWORKS);
-      return response.data.responseData;
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+      const response = await axios.get(import.meta.env.VITE_GET_USER, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      if (!response.data || !response.data.email) {
+        throw new Error('User email not found in the response');
+      }
+      return response.data.email;
     } catch (error) {
-      console.error('Error fetching networks:', error);
+      console.error('Error authenticating user email:', error);
+      if (error.response && error.response.status === 401) {
+        throw new Error('Authentication failed. Please log in again.');
+      }
+      throw error;
+    }
+  },
+
+  fundWallet: async (email, amount) => {
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+      const paystackPublicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
+
+      // const userData = await apiService.getUserData();
+
+      const response = await axios.post(
+        import.meta.env.VITE_FUND_WALLET_API,
+        {
+          email,
+          amount,
+          channels: ["card"],
+          walletId: userData.walletId
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            apiKey: paystackPublicKey
+          }
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error funding wallet:', error);
+      throw error;
+    }
+  },
+
+  getUserData: async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+      const response = await axios.get(import.meta.env.VITE_GET_USER, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching user data:', error);
       throw error;
     }
   },
@@ -114,7 +181,26 @@ export const apiService = {
       console.error('Error verifying customer:', error);
       throw error;
     }
-  }
+  },
+
+  getWalletBalance: async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+      const response = await axios.get(import.meta.env.VITE_GET_WALLET_ENDPOINT, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      return response.data.balance.amount;
+    } catch (error) {
+      console.error('Error fetching wallet balance:', error);
+      throw error;
+    }
+  },
 };
 
 export default apiService;
