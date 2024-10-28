@@ -26,29 +26,28 @@ const LoginForm = () => {
 
     const requestData = {
       email: values.email,
-      password: values.password
+      password: values.password,
     };
 
     try {
       const response = await fetch(import.meta.env.VITE_LOGIN_USER_ENDPOINT, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(requestData)
+        body: JSON.stringify(requestData),
       });
 
       if (response.ok) {
         const result = await response.json();
         const token = result?.data;
 
-
         if (token) {
           setAuthToken(token);
           const decodedString = decodeJWT(token);
           setuserDetails(decodedString);
           console.log(userDetails, authToken);
-          // localStorage.setItem('authToken', token);
+          localStorage.setItem('authToken', token);
           console.log('Log in successful:', token);
           // console.log(decodeJWT(token));
 
