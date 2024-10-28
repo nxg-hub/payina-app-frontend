@@ -12,7 +12,6 @@ const Payroll = () => {
     setShowPayrollView(false);
   };
 
-  /* handle view payroll click */
   const handleViewPayrollClick = () => {
     setShowPayrollView(true);
     setShowPayrollSubmit(false);
