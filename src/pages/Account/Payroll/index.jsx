@@ -6,16 +6,15 @@ import PayrollView from './_components/PayrollView';
 
 const Payroll = () => {
   const [showPayrollSubmit, setShowPayrollSubmit] = useState(false);
-  const [showPayrollView, setShowPayrollView] = useState(false); // New state for PayrollView
-
+  const [showPayrollView, setShowPayrollView] = useState(false); 
   const handleSetupPayrollClick = () => {
     setShowPayrollSubmit(true);
-    setShowPayrollView(false); // Reset view to not show PayrollView
+    setShowPayrollView(false); 
   };
 
   const handleViewPayrollClick = () => {
-    setShowPayrollView(true); // Set the state to show PayrollView
-    setShowPayrollSubmit(false); // Reset view to not show PayrollSelect
+    setShowPayrollView(true); 
+    setShowPayrollSubmit(false); 
   };
 
   const handleBackClick = () => {
@@ -23,19 +22,20 @@ const Payroll = () => {
     setShowPayrollSubmit(false);
   };
 
+  const handleSuccess = () => {
+    setShowPayrollSubmit(false);
+  };
+
   return (
     <div className="flex flex-col h-screen">
       <Navbar />
       <Sidebar />
-      {showPayrollView ? ( // Check for PayrollView first
+      {showPayrollView ? (
         <PayrollView onBackClick={handleBackClick} />
       ) : showPayrollSubmit ? (
-        <PayrollSubmit />
+        <PayrollSubmit onSuccess={handleSuccess} />
       ) : (
-        <SetupPayroll
-          onSetupClick={handleSetupPayrollClick}
-          onViewClick={handleViewPayrollClick} // Pass the view click handler
-        />
+        <SetupPayroll onSetupClick={handleSetupPayrollClick} onViewClick={handleViewPayrollClick} />
       )}
     </div>
   );

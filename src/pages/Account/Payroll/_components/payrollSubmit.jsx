@@ -1,200 +1,146 @@
-// import React, { useState } from 'react';
-// import axios from 'axios';
-// import PayrollDetails from './payroll-Details';
-// import EmployeeDetails from './employee-Details';
-
-// const PayrollSubmit = () => {
-//   const [showPayrollDetails, setShowPayrollDetails] = useState(false);
-//   const [employeeData, setEmployeeData] = useState(null);
-//   const [employeeId, setEmployeeId] = useState(null);  // Store employeeId
-
-//  // Fetch employeeId from the dedicated API
-//   const fetchEmployeeId = async () => {
-//     try {
-//       const response = await axios.get(import.meta.env.VITE_FETCH_EMPLOYEE_ID_ENDPOINT);
-      
-//       // Log the full response for debugging
-//       console.log('Full response:', response);
-
-//       // Assuming employeeId should be in response.data
-//       const fetchedEmployeeId = response.data.employementDetails.employeeId;
-      
-//       // Log employeeId to ensure it's not undefined
-//       console.log('Fetched employeeId:', fetchedEmployeeId);
-      
-//       if (!fetchedEmployeeId) {
-//         throw new Error('employeeId is undefined or missing in the API response');
-//       }
-//       setEmployeeId(fetchedEmployeeId);
-//       return fetchedEmployeeId;
-//     } catch (error) {
-//       console.error('Error fetching employeeId:', error);
-//       throw error;
-//     }
-//   };
-
-//   // Handle form submission for employee details
-//   const handleEmployeeSubmit = async (values) => {
-//     try {
-//       // Fetch employeeId first
-//       const fetchedEmployeeId = await fetchEmployeeId();
-
-//       // Append employeeId to the employee details before submission
-//       const employeeDataWithId = {
-//         employeeId: fetchedEmployeeId,
-//         ...values,
-//       };
-
-//       // Send employee details to its endpoint
-//       const response = await axios.post(import.meta.env.VITE_UPLOAD_EMPLOYEES_FORM_ENDPOINT, employeeDataWithId); // Replace with actual API endpoint
-//       console.log('Employee details submitted:', response.data);
-
-//       // Store employeeData for later use in payroll form submission
-//       setEmployeeData(employeeDataWithId);
-
-//       // Show payroll details form
-//       setShowPayrollDetails(true);
-//     } catch (error) {
-//       console.error('Error submitting employee details:', error);
-//     }
-//   };
-
-//   // Handle form submission for payroll details
-//   const handlePayrollSubmit = async (payrollValues) => {
-//     try {
-//       if (!employeeId) {
-//         throw new Error('Employee ID is missing.');
-//       }
-
-//       // Combine employeeData and payrollData
-//       const combinedData = {
-//         employeeId,  // Use the previously fetched employeeId
-//         ...employeeData,
-//         ...payrollValues,
-//       };
-
-//       // Send the combined data to the payroll endpoint
-//       const response = await axios.post(import.meta.env.VITE_UPLOAD_PAYROLL_FORM_ENDPOINT, combinedData); // Replace with actual API endpoint
-//       console.log('Both employee and payroll details submitted:', response.data);
-//     } catch (error) {
-//       console.error('Error submitting payroll details:', error);
-//     }
-//   };
-
-//   return (
-//     <div className="container mx-auto">
-//       {showPayrollDetails ? (
-//         <PayrollDetails onSubmit={handlePayrollSubmit} />
-//       ) : (
-//         <EmployeeDetails onSubmit={handleEmployeeSubmit} />
-//       )}
-//     </div>
-//   );
-// };
-
-// export default PayrollSubmit;
-
-
-import React, { useState } from 'react';
-import axios from 'axios';
-import PayrollDetails from './payroll-Details';
+import React, { useState, useEffect } from 'react';
+import PayrollDetails from './payroll-details';
 import EmployeeDetails from './employee-Details';
+import { API_HOST_URL } from '../../../../utils/api/API_HOST';
 
-const PayrollSubmit = () => {
-  const [showPayrollDetails, setShowPayrollDetails] = useState(false);
-  const [employeeData, setEmployeeData] = useState(null);
-  const [employeeId, setEmployeeId] = useState(null);  // Store employeeId
+const PayrollSubmit = ({ onSuccess }) => {
+  const [step, setStep] = useState(1);
+  const [employeeId, setEmployeeId] = useState(null);
+  const [employeeDetails, setEmployeeDetails] = useState({});
+  const [payrollDetails, setPayrollDetails] = useState({});
+  const [customerId, setCustomerId] = useState(null);
 
-  // Fetch customerId from the get user endpoint
-  const fetchCustomerId = async () => {
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem('authToken');
+      console.log('token:', token);
+
+      if (!token) {
+        console.error('No auth token found');
+        return;
+      }
+      try {
+        const response = await fetch(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+
+        const result = await response.json();
+        console.log('Fetched user data:', result);
+        setCustomerId(result.customerId);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const handleEmployeeSave = async (data) => {
     try {
-      const response = await axios.get(import.meta.env.VITE_GET_USER_ENDPOINT);  // Replace with actual endpoint
-      const customerId = response.data.customerId;  // Assuming customerId is in response.data
-      console.log('Fetched customerId:', customerId);
       if (!customerId) {
-        throw new Error('customerId is undefined or missing in the API response');
+        console.error('Customer ID is missing');
+        return;
       }
-      return customerId;
-    } catch (error) {
-      console.error('Error fetching customerId:', error);
-      throw error;
-    }
-  };
 
-  // Add employee and fetch employeeId
-  const addEmployeeAndGetEmployeeId = async (customerId) => {
-    try {
-      const addEmployeeResponse = await axios.post(import.meta.env.VITE_ADD_EMPLOYEE_ENDPOINT, { customerId });  // Replace with actual endpoint
-      const employeeId = addEmployeeResponse.data.employeeId;  // Assuming employeeId is returned
-      console.log('Added employee and fetched employeeId:', employeeId);
-      if (!employeeId) {
-        throw new Error('employeeId is undefined or missing in the API response');
+      const response = await fetch(
+        `${API_HOST_URL}/api/corporate-customers/${customerId}/employees/add`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Customer-ID': customerId,
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      alert('employee details sent successfully');
+      console.log('employee details sent successfully');
+      console.log('Response Status:', response.status);
+      const responseBody = await response.text();
+      console.log('Response Body:', responseBody);
+      console.log('Customer ID:', customerId);
+
+      if (!response.ok) {
+        console.error('Failed to save employee details');
+        return;
       }
-      return employeeId;
+
+      if (responseBody) {
+        const result = JSON.parse(responseBody);
+        console.log('Employee ID:', result.id);
+        setEmployeeId(result.id);
+        setStep(2);
+      } else {
+        console.error('Invalid or empty response');
+      }
     } catch (error) {
-      console.error('Error adding employee:', error);
-      throw error;
+      console.error('Error:', error);
     }
   };
 
-  // Handle form submission for employee details
-  const handleEmployeeSubmit = async (values) => {
-    try {
-      // Step 1: Fetch customerId
-      const customerId = await fetchCustomerId();
-
-      // Step 2: Add employee and fetch employeeId
-      const fetchedEmployeeId = await addEmployeeAndGetEmployeeId(customerId);
-
-      // Step 3: Append employeeId to the employee details before submission
-      const employeeDataWithId = {
-        employeeId: fetchedEmployeeId,
-        ...values,
-      };
-
-      // Step 4: Send employee details to its endpoint
-      const response = await axios.post(import.meta.env.VITE_UPLOAD_EMPLOYEES_FORM_ENDPOINT, employeeDataWithId); // Replace with actual API endpoint
-      console.log('Employee details submitted:', response.data);
-
-      // Store employeeData for later use in payroll form submission
-      setEmployeeData(employeeDataWithId);
-      setEmployeeId(fetchedEmployeeId);  // Save employeeId for later
-
-      // Show payroll details form
-      setShowPayrollDetails(true);
-    } catch (error) {
-      console.error('Error submitting employee details:', error);
-    }
-  };
-
-  // Handle form submission for payroll details
-  const handlePayrollSubmit = async (payrollValues) => {
+  const handlePayrollSave = async (data) => {
     try {
       if (!employeeId) {
-        throw new Error('Employee ID is missing.');
+        console.error('Employee ID is missing');
+        return;
       }
 
-      // Combine employeeData and payrollData
-      const combinedData = {
-        employeeId,  // Use the previously fetched employeeId
-        ...employeeData,
-        ...payrollValues,
-      };
+      const response = await fetch(`${API_HOST_URL}/api/employees/payrolls/${employeeId}/add`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...data,
+          employeeId,
+        }),
+      });
 
-      // Send the combined data to the payroll endpoint
-      const response = await axios.post(import.meta.env.VITE_UPLOAD_PAYROLL_FORM_ENDPOINT, combinedData); // Replace with actual API endpoint
-      console.log('Both employee and payroll details submitted:', response.data);
+      if (!response.ok) {
+        console.error('Failed to save payroll details');
+        return;
+      }
+
+      const textResult = await response.text();
+      if (textResult) {
+        const result = JSON.parse(textResult);
+        alert('Payroll details saved successfully');
+        onSuccess();
+        console.log('Payroll details saved successfully');
+      } else {
+        console.error('Empty or invalid JSON response');
+      }
     } catch (error) {
-      console.error('Error submitting payroll details:', error);
+      console.error('Error:', error);
     }
   };
 
   return (
     <div className="container mx-auto">
-      {showPayrollDetails ? (
-        <PayrollDetails onSubmit={handlePayrollSubmit} />
-      ) : (
-        <EmployeeDetails onSubmit={handleEmployeeSubmit} />
+      {step === 1 && (
+        <EmployeeDetails
+          onSave={(data) => {
+            setEmployeeDetails(data);
+            handleEmployeeSave(data);
+          }}
+        />
+      )}
+      {step === 2 && employeeId && (
+        <PayrollDetails
+          employeeId={employeeId}
+          onSave={(data) => {
+            setPayrollDetails(data);
+            handlePayrollSave(data);
+          }}
+        />
       )}
     </div>
   );

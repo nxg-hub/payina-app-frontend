@@ -16,7 +16,7 @@ export const StepEight = ({ next }) => {
       houseNumber: address_details.houseNumber,
       street: address_details.street,
       state: address_details.state,
-      lga: address_details.lga
+      lga: address_details.lga,
     };
 
     try {

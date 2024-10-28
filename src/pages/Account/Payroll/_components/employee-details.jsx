@@ -1,52 +1,50 @@
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import { LuPlus } from 'react-icons/lu';
-// import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { EmployeeSchema } from '../../schemas/schemas';
 import calendar from '../../../../assets/images/calendar.svg';
 import dropdown from '../../../../assets/images/Vector-dropdown.svg';
-// import { FaArrowLeft } from "react-icons/fa";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { RiDeleteBinLine } from 'react-icons/ri';
+// import { RiDeleteBinLine } from 'react-icons/ri';
 
-const EmployeeDetails = ({ onSubmit }) => {
+const EmployeeDetails = ({ onSave }) => {
   const [startDate, setStartDate] = useState(null);
   const [openDatePicker, setOpenDatePicker] = useState(false);
-  // const [isAutomaticPayment, setIsAutomaticPayment] = useState(false);
+  const [automaticPayment, setAutomaticPayment] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [paymentFrequency, setPaymentFrequency] = useState('');
-  const [employeeName, setEmployeeName] = useState(['']);
+  // const [employeeName, setEmployeeName] = useState(['']);
 
-  //   const handleAutomaticPaymentToggle = () => {
-  //   setIsAutomaticPayment((prev) => !prev);
-  // };
+  const handleAutomaticPaymentToggle = () => {
+    setAutomaticPayment((prev) => !prev);
+  };
 
   const handlePaymentFrequencySelect = (value) => {
     setPaymentFrequency(value);
-    setDropdownOpen(false); // Close dropdown after selection
+    setDropdownOpen(false); 
   };
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
   };
 
-  const addEmployeeName = () => {
-    setEmployeeName([...employeeName, '']);
-  };
+  // const addEmployeeName = () => {
+  //   setEmployeeName([...employeeName, '']);
+  // };
 
-  const removeEmployeeName = (index) => {
-    const updatedName = [...employeeName];
-    updatedName.splice(index, 1);
-    setEmployeeName(updatedName);
-  };
+  // const removeEmployeeName = (index) => {
+  //   const updatedName = [...employeeName];
+  //   updatedName.splice(index, 1);
+  //   setEmployeeName(updatedName);
+  // };
 
-  const handleEmployeeNameChange = (index, value, setFieldValue) => {
-    const updatedName = [...employeeName];
-    updatedName[index] = value;
-    setEmployeeName(updatedName);
-    setFieldValue(`employeeName[${index}]`, value); // Update Formik's state
-  };
+  // const handleEmployeeNameChange = (index, value, setFieldValue) => {
+  //   const updatedName = [...employeeName];
+  //   updatedName[index] = value;
+  //   setEmployeeName(updatedName);
+  //   setFieldValue(`employeeName[${index}]`, value); // Update Formik's state
+  // };
 
   // const handleEmployeeNameChange = (index, value) => {
   //   const updatedName = [...employeeName];
@@ -62,17 +60,23 @@ const EmployeeDetails = ({ onSubmit }) => {
           <span className="text-base md:text-xl font-medium">Payroll Details</span>
           <Formik
             initialValues={{
-              employeeName: [''],
+              employeeName: '',
               employeeRole: '',
-              bankName: '',
-              accountNumber: '',
-              employementDate: '',
-              paymentFrequency: '',
+              employmentDetails: {
+                employeeId: '',
+                employmentDate: '',
+              },
+              accountDetails: {
+                nameOfBank: '',
+                accountNumber: '',
+                paymentFrequency: '',
+                automaticPayment: false,
+              },
             }}
             validationSchema={EmployeeSchema}
             onSubmit={(values, actions) => {
-              console.log('Form Submitted:', values); // Debugging output
-              onSubmit(values);
+              console.log('Form Submitted:', values);
+              onSave(values);
               actions.setSubmitting(false);
             }}>
             {({ setFieldValue }) => (
@@ -87,7 +91,18 @@ const EmployeeDetails = ({ onSubmit }) => {
                     </label>
                     <hr className="border-none bg-lightBlue h-[1px] w-[39%] xl:mr-0 md:mr-14 mr-12 ml-8 " />
                   </div>
-                  {employeeName.map((name, index) => (
+                  <Field
+                    name="employeeName"
+                    type="text"
+                    placeholder="Enter Employee's name"
+                    className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                  />
+                  <ErrorMessage
+                    name="employeeName"
+                    component="span"
+                    className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
+                  />
+                  {/* {employeeName.map((name, index) => (
                     <div className="flex items-center" key={index}>
                       <Field
                         name={`employeeName[${index}]`}
@@ -108,7 +123,7 @@ const EmployeeDetails = ({ onSubmit }) => {
                         />
                       )}
                     </div>
-                  ))}
+                  ))} */}
                 </div>
                 <div className="flex flex-col  w-full py-4 space-y-4">
                   <div className="flex items-center">
@@ -133,109 +148,133 @@ const EmployeeDetails = ({ onSubmit }) => {
                     className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                   />
                 </div>
-                <div className="flex flex-col relative w-full py-4 space-y-4">
+                <div className="flex flex-col w-full py-4 space-y-4">
                   <div className="flex items-center">
                     <hr className="border-none bg-lightBlue ml-[3.2rem] h-[1px] w-[40%] mr-8 " />
                     <label
-                      htmlFor="employementDetails"
+                      htmlFor="employmentDetails"
                       className="text-lightBlue text-center font-bold text-sm md:text-[18px] text-nowrap">
                       Employement Details
                     </label>
                     <hr className="border-none bg-lightBlue h-[1px] w-[39%] xl:mr-0 md:mr-14 mr-12 ml-8 " />
                   </div>
-                  <Field
-                    name="employementDate"
-                    type="text"
-                    placeholder="Employement Date"
-                    className="w-[100%] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
-                    value={startDate ? startDate.toLocaleDateString() : ''}
-                    onClick={() => setOpenDatePicker(true)}
-                    readOnly
-                  />
-                  <ErrorMessage
-                    name="employementDate"
-                    component="span"
-                    className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
-                  />
-                  <div
-                    className="absolute right-[2rem] top-10 cursor-pointer"
-                    onClick={() => setStartDate(new Date())}>
-                    <img src={calendar} alt="Calendar Icon" />
+                  <div className="flex flex-row gap-5">
+                    <div className="flex flex-col relative gap-2 w-[100%]">
+                      <Field
+                        name="employmentDetails.employmentDate"
+                        type="text"
+                        placeholder="Employement Date"
+                        className="border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                        value={startDate ? startDate.toISOString().split('T')[0] : ''}
+                        onClick={() => setOpenDatePicker(true)}
+                        readOnly
+                      />
+                      <ErrorMessage
+                        name="employmentDetails.employmentDate"
+                        component="span"
+                        className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
+                      />
+                      <div
+                        className="absolute md:left-[16rem] lg:left-[22rem] top-2 cursor-pointer"
+                        onClick={() => setStartDate(new Date())}>
+                        <img src={calendar} alt="Calendar Icon" />
+                      </div>
+                      {openDatePicker && (
+                        <DatePicker
+                          selected={startDate}
+                          onChange={(date) => {
+                            setStartDate(date);
+                            setFieldValue(
+                              'employmentDetails.employmentDate',
+                              date ? date.toISOString() : ''
+                            );
+                            setOpenDatePicker(false);
+                          }}
+                          className="absolute z-10 bg-white border border-gray-300 rounded-md shadow-md"
+                          placeholderText="Select a date"
+                          // dateFormat="MM/dd/yyyy"
+                          popperPlacement="top"
+                          onClickOutside={() => setOpenDatePicker(false)}
+                        />
+                      )}
+                    </div>
+                    <div className="flex flex-col relative gap-2 w-[100%]">
+                      <Field
+                        name="employmentDetails.employeeId"
+                        type="text"
+                        placeholder="Employee Id"
+                        className="border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                      />
+                      <ErrorMessage
+                        name="employmentDetails.employeeId"
+                        component="span"
+                        className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
+                      />
+                    </div>
                   </div>
-                  {openDatePicker && (
-                    <DatePicker
-                      selected={startDate}
-                      onChange={(date) => {
-                        setStartDate(date);
-                        setFieldValue('employementDate', date ? date.toLocaleDateString() : '');
-                        setOpenDatePicker(false);
-                      }}
-                      className="absolute z-10 bg-white border border-gray-300 rounded-md shadow-md"
-                      placeholderText="Select a date"
-                      dateFormat="MM/dd/yyyy"
-                      popperPlacement="top"
-                      onClickOutside={() => setOpenDatePicker(false)} // close date picker on outside click
-                    />
-                  )}
                 </div>
 
                 <div className="flex flex-col w-full py-4 space-y-4">
-                  <div>
-                    <div className="flex items-center">
-                      <hr className="border-none bg-lightBlue ml-[3.2rem] h-[1px] w-[40%] mr-8 " />
-                      <span className="text-lightBlue text-center font-bold text-sm md:text-[18px] text-nowrap">
-                        Account Details
-                      </span>
-                      <hr className="border-none bg-lightBlue h-[1px] w-[40%] xl:mr-0 md:mr-14 me-12 ml-8 " />
-                    </div>
-                    <label htmlFor="bankName" className="font-normal text-xs md:text-sm">
-                      Name of Bank
-                    </label>
-                    <Field
-                      name="bankName"
-                      type="text"
-                      placeholder="Enter Name of Bank"
-                      className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
-                    />
-                    <ErrorMessage
-                      name="bankName"
-                      component="span"
-                      className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
-                    />
+                  <div className="flex items-center">
+                    <hr className="border-none bg-lightBlue ml-[3.2rem] h-[1px] w-[40%] mr-8 " />
+                    <span className="text-lightBlue text-center font-bold text-sm md:text-[18px] text-nowrap">
+                      Account Details
+                    </span>
+                    <hr className="border-none bg-lightBlue h-[1px] w-[40%] xl:mr-0 md:mr-14 me-12 ml-8 " />
                   </div>
+                  <label
+                    htmlFor="accountDetails.nameOfBank"
+                    className="font-normal text-sm md:text-md">
+                    Name of Bank
+                  </label>
+                  <Field
+                    name="accountDetails.nameOfBank"
+                    type="text"
+                    placeholder="Enter Name of Bank"
+                    className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                  />
+                  <ErrorMessage
+                    name="accountDetails.nameOfBank"
+                    component="span"
+                    className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
+                  />
                   <div>
-                    <label htmlFor="accountNumber" className="font-normal text-xs md:text-sm">
+                    <label
+                      htmlFor="accountDetails.accountNumber"
+                      className="font-normal text-xs md:text-sm">
                       Account Number
                     </label>
                     <Field
-                      name="accountNumber"
+                      name="accountDetails.accountNumber"
                       type="number"
                       placeholder="Enter Account Number"
                       className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                     />
                     <ErrorMessage
-                      name="accountNumber"
+                      name="accountDetails.accountNumber"
                       component="span"
                       className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                     />
                   </div>
-                  <div>
-                    <label htmlFor="paymentFrequency" className="font-normal text-xs md:text-sm">
+                  <div className="relative">
+                    <label
+                      htmlFor="accountDetails.paymentFrequency"
+                      className="font-normal text-xs md:text-sm">
                       Frequency of Payment
                     </label>
                     <Field
-                      name="paymentFrequency"
+                      name="accountDetails.paymentFrequency"
                       type="text"
                       placeholder="Frequency of Payment"
                       className="w-full relative border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                     />
                     <ErrorMessage
-                      name="paymentFrequency"
+                      name="accountDetails.paymentFrequency"
                       component="span"
                       className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                     />
                     <div
-                      className="absolute cursor-pointer right-[4rem] top-[47.5rem]"
+                      className="absolute cursor-pointer right-[0] bottom-[1rem] mr-2"
                       onClick={toggleDropdown}>
                       <img src={dropdown} alt="Dropdown" />
                     </div>
@@ -247,7 +286,7 @@ const EmployeeDetails = ({ onSubmit }) => {
                             className="p-2 hover:bg-gray-100 cursor-pointer"
                             onClick={() => {
                               handlePaymentFrequencySelect(option);
-                              setFieldValue('paymentFrequency', option);
+                              setFieldValue('accountDetails.paymentFrequency', option);
                             }}>
                             {option}
                           </div>
@@ -255,20 +294,24 @@ const EmployeeDetails = ({ onSubmit }) => {
                       </div>
                     )}
                   </div>
-                  {/*  <div className="font-normal text-xs md:text-sm">Automatic Payment
-                 <span 
-                      className={`border border-[#D9D9D9] bg-black rounded-md px-[20px] py-[2px] ml-3 cursor-pointer`} 
-                    >
-                    <span className={`automatic-on border rounded-full px-[5px] py-[2px] cursor-pointer ${isAutomaticPayment ? 'bg-green-500' : 'bg-red-500'}`}
-                    onClick={handleAutomaticPaymentToggle}></span>
+                  <div className="font-normal text-xs md:text-sm">
+                    Automatic Payment
+                    <span
+                      name="accountDetails.automaticPayment"
+                      className={`border border-[#D9D9D9] bg-black rounded-md px-[5px] py-[2px] w-[15px] ml-3 cursor-pointer`}>
+                      <span
+                        className={`automatic-on border rounded-full cursor-pointer px-[5px] py-[2px] ${automaticPayment ? 'bg-green-500' : 'bg-red-500'}`}
+                        onClick={() => {
+                          setAutomaticPayment(!automaticPayment);
+                          setFieldValue('accountDetails.automaticPayment', !automaticPayment);
+                        }}></span>
                     </span>
-                  </div>*/}
+                  </div>
                 </div>
 
                 <div className="flex center py-40 gap-4 w-full">
                   <button
                     type="button"
-                    onClick={addEmployeeName}
                     className="flex gap-2 center rounded-[5px] text-xs md:text-base py-2 border border-lightBlue text-lightBlue w-[300px]">
                     <LuPlus size={20} color="#006181" />
                     Add Employee

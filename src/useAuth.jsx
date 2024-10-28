@@ -8,7 +8,7 @@ const REGISTRATION_LEVELS = {
   BVN_DETAILS_CONFIRMATION_SAVE_USERNAME: 4,
   FACIAL_CAPTURE_AND_UPLOAD: 5,
   CORPORATE_PROFILE_UPDATE_SET_PIN: 7,
-  KYC_COMPLETED: 17
+  KYC_COMPLETED: 17,
 };
 
 export function useAuth() {
@@ -25,8 +25,8 @@ export function useAuth() {
 
       const response = await axios.get(import.meta.env.VITE_REG_LEVEL_ENDPOINT, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       const registrationLevel = response.data;

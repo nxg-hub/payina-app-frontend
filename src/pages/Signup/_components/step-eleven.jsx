@@ -17,7 +17,7 @@ export const StepEleven = ({ next, HomeAddress }) => {
       businessHouseNumber: business_address.businessHouseNumber,
       businessStreetName: business_address.businessStreetName,
       businessState: business_address.businessState,
-      businessLGA: business_address.businessLGA
+      businessLGA: business_address.businessLGA,
     };
     try {
       // console.log('Submitting business add.:', BusinessAddress);
@@ -96,7 +96,7 @@ export const StepEleven = ({ next, HomeAddress }) => {
             businessHouseNumber: '',
             businessStreetName: '',
             businessState: '',
-            businessLGA: ''
+            businessLGA: '',
           }}
           validationSchema={BusinessAddressSchema}
           onSubmit={handleSubmit}>
