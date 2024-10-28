@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PayrollDetails from './payroll-details';
-import EmployeeDetails from './employee-Details';
+import EmployeeDetails from './employee-details';
 import { API_HOST_URL } from '../../../../utils/api/API_HOST';
 
 const PayrollSubmit = ({ onSuccess }) => {
