@@ -47,7 +47,7 @@ const LoginForm = () => {
           const decodedString = decodeJWT(token);
           setuserDetails(decodedString);
           console.log(userDetails, authToken);
-          // localStorage.setItem('authToken', token);
+          localStorage.setItem('authToken', token);
           console.log('Log in successful:', token);
           // console.log(decodeJWT(token));
 
