@@ -6,15 +6,16 @@ import PayrollView from './_components/PayrollView';
 
 const Payroll = () => {
   const [showPayrollSubmit, setShowPayrollSubmit] = useState(false);
-  const [showPayrollView, setShowPayrollView] = useState(false); 
+  const [showPayrollView, setShowPayrollView] = useState(false);
   const handleSetupPayrollClick = () => {
     setShowPayrollSubmit(true);
-    setShowPayrollView(false); 
+    setShowPayrollView(false);
   };
 
+  /* handle view payroll click */
   const handleViewPayrollClick = () => {
-    setShowPayrollView(true); 
-    setShowPayrollSubmit(false); 
+    setShowPayrollView(true);
+    setShowPayrollSubmit(false);
   };
 
   const handleBackClick = () => {
