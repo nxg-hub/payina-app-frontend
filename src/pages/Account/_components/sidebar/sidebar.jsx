@@ -23,16 +23,13 @@ export const Sidebar = () => {
       }
 
       try {
-        const response = await fetch(
-          import.meta.env.VITE_ACCOUNT_DETAILS,
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${newAuthToken}`,
-              'Content-Type': 'application/json'
-            }
-          }
-        );
+        const response = await fetch(import.meta.env.VITE_ACCOUNT_DETAILS, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${newAuthToken}`,
+            'Content-Type': 'application/json',
+          },
+        });
 
         if (response.ok) {
           const data = await response.json();
