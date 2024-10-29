@@ -1,198 +1,200 @@
-// import { LiaGreaterThanSolid } from 'react-icons/lia';
-// import { Link } from 'react-router-dom';
-// import { images } from '../../../../../constants';
-// const TransactionHistory = () => {
-//   return (
-//     <div className="md:px-[.7rem] pb-4 w-auto md:clear-right ml-5 md:ml-2 xl:ml-[19.5rem] mr-5 md:mr-3">
-//       <div className="opacity-70 font-bold text-lightBlue py-2 text-sm md:text-base">
-//         Transaction History
-//       </div>
-//       <div className="flex flex-col border-b border-[#D9D9D9]">
-//         <div className="flex items-center justify-between px-2 md:px-6 py-4 md:py-6 md:gap-0 gap-2">
-//           <img src={images.GreenArrow} className="md:w-[40px] w-[20px]" alt="" />
-//           <span className="font-medium text-xs md:text-base">Salary For August</span>
-//           <span className="text-xs xl:text-base">IITA</span>
-//           <span className="border border-[#24FF00] text-xs md:text-base p-2 md:p-4">
-//             Successful
-//           </span>
-//           <span className="text-xs md:text-base">20,000</span>
-//         </div>
-//       </div>
-//       <div className="flex flex-col border-b border-[#D9D9D9]">
-//         <div className="flex items-center justify-between px-2 md:px-6 py-4 md:py-6 md:gap-0 gap-2">
-//           <img src={images.RedArrow} className="md:w-[40px] w-[20px]" alt="" />
-//           <span className="font-medium text-xs md:text-base">Salary For August</span>
-//           <span className="text-xs xl:text-base">IITA</span>
-//           <span className="border border-[#24FF00] text-xs md:text-base p-2 md:p-4">
-//             Successful
-//           </span>
-//           <span className="text-xs md:text-base">20,000</span>
-//         </div>
-//       </div>
-//       <div className="flex flex-col border-b border-[#D9D9D9]">
-//         <div className="flex items-center justify-between px-2 md:px-6 py-4 md:py-6 md:gap-0 gap-2">
-//           <img src={images.RedArrow} className="md:w-[40px] w-[20px]" alt="" />
-//           <span className="font-medium text-xs md:text-base">Salary For August</span>
-//           <span className="text-xs xl:text-base">IITA</span>
-//           <span className="border border-[#24FF00] text-xs md:text-base p-2 md:p-4">
-//             Successful
-//           </span>
-//           <span className="text-xs md:text-base">20,000</span>
-//         </div>
-//       </div>
-//       <div className="flex flex-col border-b border-[#D9D9D9] ">
-//         <div className="flex items-center justify-between px-2 md:px-6 py-4 md:py-6 md:gap-0 gap-2">
-//           <img src={images.RedArrow} className="md:w-[40px] w-[20px]" alt="" />
-//           <span className="font-medium text-xs md:text-base">Salary For August</span>
-//           <span className="text-xs xl:text-base">IITA</span>
-//           <span className="border border-[#24FF00] p-2 md:p-4 text-xs xl:text-base">
-//             Successful
-//           </span>
-//           <span className="text-xs md:text-base">20,000</span>
-//         </div>
-//       </div>
-//       <Link
-//         to="/account/transaction"
-//         className="float-right pr-0 p-4 text-lightBlue flex items-center gap-2 font-medium text-xs md:text-base">
-//         See All Transactions <LiaGreaterThanSolid color="#006181" />
-//       </Link>
-//     </div>
-//   );
-// };
-//
-// export default TransactionHistory;
-
-import { useEffect, useState } from 'react';
-import { LiaGreaterThanSolid } from 'react-icons/lia';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import useLocalStorage from '../../../../../hooks/useLocalStorage';
 import { images } from '../../../../../constants';
-const getAuthToken = () => localStorage.getItem('authToken');
 
-const TransactionHistory = () => {
-  const [state, setState] = useState({
-    transactions: [],
-    loading: true,
-    error: null
+export default function TransactionTable() {
+  const [authToken] = useLocalStorage('authToken', '');
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [dateRange, setDateRange] = useState({
+    startDate: new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toISOString().split('T')[0],
+    endDate: new Date().toISOString().split('T')[0]
   });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(110);
+  const [pageSize] = useState(100);
+  const [totalPages, setTotalPages] = useState(1);
+  const [showAllFields, setShowAllFields] = useState(false);
 
-  const getArrowImage = (type) => {
-    return type === 'credit' ? images.GreenArrow : images.RedArrow;
+  const fetchTransactions = async (type) => {
+    try {
+      const response = await fetch(
+        `https://payina-be-6f08cdfb4414.herokuapp.com/dashboard/get-transaction-history`,
+        {
+          method: 'POST',
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify({
+            type,
+            startDate: new Date(dateRange.startDate).toISOString(),
+            endDate: new Date(dateRange.endDate).toISOString(),
+            page,
+            pageSize
+          })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch ${type} transactions: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      return data.data.content;
+    } catch (err) {
+      console.error(`Error fetching ${type} transactions:`, err);
+      throw err;
+    }
+  };
+
+  const fetchAllTransactions = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const [creditTransactions, debitTransactions] = await Promise.all([
+        fetchTransactions('CREDIT'),
+        fetchTransactions('DEBIT')
+      ]);
+
+      const allTransactions = [...creditTransactions, ...debitTransactions];
+
+      // Remove duplicates based on transaction ID or reference
+      const uniqueTransactions = Array.from(new Map(allTransactions.map(item => [item.transactionRef, item])).values());
+
+      // Sort by date
+      uniqueTransactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      setTransactions(uniqueTransactions);
+      setTotalPages(Math.ceil(uniqueTransactions.length / pageSize) || 1);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    const fetchTransactions = async () => {
-      const token = getAuthToken();
+    if (authToken) {
+      fetchAllTransactions();
+    } else {
+      setError("Authentication token is missing.");
+    }
+  }, [authToken, dateRange, page]);
 
-      if (!token) {
-        setState({
-          transactions: [],
-          loading: false,
-          error: 'Authorization token not found.'
-        });
-        return;
-      }
+  const handleNextPage = () => {
+    if (page < totalPages - 1) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
 
-      // Get the current date
-      const currentDate = new Date();
+  const handlePreviousPage = () => {
+    if (page > 0) {
+      setPage((prevPage) => prevPage - 1);
+    }
+  };
 
-      // Get the date 10 days ago
-      const tenDaysAgo = new Date();
-      tenDaysAgo.setDate(currentDate.getDate() - 10);
+  const filteredTransactions = transactions.filter(transaction =>
+    Object.values(transaction).some(value =>
+      String(value).toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
 
-      try {
-        console.log('Fetching transactions...');
-        console.log('Start Date:', currentDate.toISOString());
-        console.log('End Date:', tenDaysAgo.toISOString());
+  const toggleFields = () => {
+    setShowAllFields((prevShowAllFields) => !prevShowAllFields);
+  };
 
-        const response = await fetch(import.meta.env.VITE_TRANSACTION_HISTORY_ENDPOINT, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            walletId: '', // Ensure this is set properly if required
-            startDate: currentDate.toISOString(), // Current date as start date
-            endDate: tenDaysAgo.toISOString(), // 10 days before current date as end date
-            type: '' // Ensure this is set properly if required
-          })
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-          // Even if the API call succeeds, check if transactions array is empty
-          setState({ transactions: result.transactions || [], loading: false, error: null });
-        } else {
-          console.error('Error fetching transactions:', result);
-          throw new Error(result.message || 'Failed to fetch transaction history');
-        }
-      } catch (error) {
-        console.error('Fetch error:', error);
-        setState({ transactions: [], loading: false, error: error.message });
-      }
-    };
-
-    fetchTransactions();
-  }, []);
-
-  const { transactions, loading, error } = state;
-
-  // Loading state
-  if (loading) return <div>Loading...</div>;
-
-  // Error state
-  if (error) {
-    console.error('Error in transaction history:', error);
-    return (
-      <div className="md:px-[.7rem] pb-4 w-auto md:clear-right ml-5 md:ml-2 xl:ml-[19.5rem] mr-5 md:mr-3">
-        <div className="opacity-70 font-bold text-white py-2 text-sm md:text-base">
-          Transaction History
-        </div>
-        <div className="text-white">No transactions found</div>
-      </div>
-    );
-  }
-
-  // Transaction history display
   return (
-    <div className="md:px-[.7rem] pb-4 w-auto md:clear-right ml-5 md:ml-2 xl:ml-[19.5rem] mr-5 md:mr-3">
-      <div className="opacity-70 font-bold text-white py-2 text-sm md:text-base">
-        Transaction History
+    <div className="main-container flex w-full max-w-[1100px] flex-col gap-[19px] items-start flex-nowrap relative mx-auto my-0">
+      {/* Controls Section */}
+      <div className='flex w-full gap-4 items-center justify-between mb-4'>
+        <div className='flex gap-4 items-center'>
+          <input
+            type="date"
+            value={dateRange.startDate}
+            onChange={(e) => setDateRange(prev => ({ ...prev, startDate: e.target.value }))}
+            className='border border-[#d9d9d9] p-2 rounded'
+          />
+          <input
+            type="date"
+            value={dateRange.endDate}
+            onChange={(e) => setDateRange(prev => ({ ...prev, endDate: e.target.value }))}
+            className='border border-[#d9d9d9] p-2 rounded'
+          />
+          <input
+            type="text"
+            placeholder="Search transactions..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className='border border-[#d9d9d9] p-2 rounded min-w-[200px]'
+          />
+        </div>
+        <button
+          onClick={toggleFields}
+          className='flex px-4 py-2 gap-[10px] justify-center items-center border-solid border border-[#1a1d1f] rounded'
+        >
+          {showAllFields ? 'Hide Details' : 'Show More Fields'}
+        </button>
       </div>
-      {transactions.length > 0 ? (
-        transactions.map((transaction, index) => (
-          <div key={index} className="flex flex-col border-b border-[#D9D9D9]">
-            <div className="flex items-center justify-between px-2 md:px-6 py-4 md:py-6 gap-2">
-              <img
-                src={getArrowImage(transaction.type)}
-                className="md:w-[40px] w-[20px]"
-                alt={transaction.type === 'credit' ? 'Credit' : 'Debit'}
-              />
-              <span className="font-medium text-xs md:text-base">
-                {transaction.description || 'Transaction Description'}
-              </span>
-              <span className="text-xs xl:text-base">{transaction.merchant || 'Merchant'}</span>
-              <span
-                className={`border ${
-                  transaction.status === 'Successful' ? 'border-[#24FF00]' : 'border-red-500'
-                } text-xs md:text-base p-2 md:p-4`}>
-                {transaction.status || 'Status'}
-              </span>
-              <span className="text-xs md:text-base">{transaction.amount || '0.00'}</span>
-            </div>
-          </div>
-        ))
+
+      {/* Table Section */}
+      {loading ? (
+        <div className='w-full text-center'>Loading...</div>
+      ) : error ? (
+        <div className='w-full text-center text-red-500'>{error}</div>
       ) : (
-        <div className="text-white">No transactions found</div>
+        <div id="transactions-table" className='w-full overflow-x-auto'>
+          <table className="min-w-full table-auto border-collapse">
+            <tbody>
+            {filteredTransactions.length > 0 ? (
+              filteredTransactions.map((transaction, index) => (
+                <tr key={transaction.id || index} className="border-b border-gray-300">
+                  <td className="px-4 py-2 border-b">
+                    {transaction.type.toLowerCase() === 'credit' ? (
+                      <img src={images.GreenArrow} className="md:w-[40px] w-[20px]" alt="Credit" />
+                    ) : (
+                      <img src={images.RedArrow} className="md:w-[40px] w-[20px]" alt="Debit" />
+                    )}
+                  </td>
+                  <td className="px-4 py-2 border-b">{transaction.description}</td>
+                  <td className="px-4 py-2 border-b">{transaction.transactionRef}</td>
+                  <td className="px-4 py-2 border-b">{transaction.status}</td>
+                  <td className="px-4 py-2 border-b">{transaction.amount}</td>
+                  <td className="px-4 py-2 border-b">{transaction.createdAt}</td>
+                  {showAllFields && (
+                    <>
+                      <td className="px-4 py-2 border-b">{transaction.id}</td>
+                      <td className="px-4 py-2 border-b">{transaction.previousBalance}</td>
+                      <td className="px-4 py-2 border-b">{transaction.newBalance}</td>
+                    </>
+                  )}
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center text-gray-500 py-4">
+                  No results found.
+                </td>
+              </tr>
+            )}
+            </tbody>
+          </table>
+
+          {/* Pagination Controls */}
+          <div className="flex justify-between mt-4">
+            <button onClick={handlePreviousPage} disabled={page === 0}>
+              Previous
+            </button>
+            <span>Page {page + 1} of {totalPages}</span>
+            <button onClick={handleNextPage} disabled={page === totalPages - 1}>
+              Next
+            </button>
+          </div>
+        </div>
       )}
-      <Link
-        to="/account/transaction"
-        className="float-right pr-0 p-4 text-lightBlue flex items-center gap-2 font-medium text-xs md:text-base">
-        See All Transactions <LiaGreaterThanSolid color="#006181" />
-      </Link>
     </div>
   );
-};
-
-export default TransactionHistory;
+}

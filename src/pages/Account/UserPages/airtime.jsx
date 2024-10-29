@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Navbar, Sidebar } from '../_components';
 import { useForm } from '../../../context/formContext';
@@ -10,7 +10,7 @@ import WalletBalanceChecker from '../../../utilities/WalletBalanceChecker';
 import InputStyle from '../../../utilities/InputStyle';
 import { useAuth } from '../../../context/useAuth';
 import useLocalStorage from '../../../hooks/useLocalStorage';
-import DataPlansSelection from '../../../components/DataPlansSelection';
+import Loader from '../../../assets/LoadingSpinner.jsx';
 
 const UserAirtime = () => {
   const { formValues, updateFormValues } = useForm();
@@ -24,25 +24,42 @@ const UserAirtime = () => {
   const [modalDetails, setModalDetails] = useState('');
   const [isProcessingVend, setIsProcessingVend] = useState(false);
   const auth = useAuth();
-  const { plans, selectedPlan, setSelectedPlan, error: plansError } = useDataPlans(formValues.selectedNetwork);
-  const [userDetails, setuserDetails] = useLocalStorage('userDetails', '');
+  const [userDetails] = useLocalStorage('userDetails', '');
 
-  const filteredPlans = plans.length > 0 ? [plans[0]] : [];
-  // Hardcoded values that were previously fetched
-  const accountNumber = '';
-  const merchantId = '';
+  const {
+    plans,
+    selectedPlan,
+    setSelectedPlan,
+    error: plansError,
+    loading: plansLoading,
+  } = useDataPlans(formValues.selectedNetwork);
+
+  const { currentPlan, packageSlug } = useMemo(() => {
+    if (!Array.isArray(plans) || plans.length === 0) {
+      return { currentPlan: null, packageSlug: '' };
+    }
+
+    const firstPlan = plans[0];
+    return {
+      currentPlan: firstPlan,
+      packageSlug: firstPlan.slug || ''
+    };
+  }, [plans]);
+
+  useEffect(() => {
+    if (packageSlug) {
+      updateFormValues({ packageSlug });
+    }
+  }, []);
 
   const handleAmountChange = (e) => {
     const enteredAmount = e.target.value;
     setAmount(enteredAmount);
 
-    const newErrors = { ...errors };
-    if (Number(enteredAmount) < 0) {
-      newErrors.amount = 'Amount must be 70 Naira or above';
-    } else {
-      delete newErrors.amount;
-    }
-    setErrors(newErrors);
+    setErrors(prev => ({
+      ...prev,
+      amount: Number(enteredAmount) < 70 ? 'Amount must be 70 Naira or above' : undefined
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -52,17 +69,20 @@ const UserAirtime = () => {
     if (!formValues.phoneNumber) newErrors.phoneNumber = 'Phone number is required';
     if (!formValues.selectedNetwork) newErrors.selectedNetwork = 'Network selection is required';
     if (!amount) newErrors.amount = 'Amount is required';
-    if (amount && Number(amount) < 0) newErrors.amount = 'Amount must be 70 Naira or above';
-    if (!selectedPlan) newErrors.selectedPlan = 'Please select a data plan';
+    if (amount && Number(amount) < 70) newErrors.amount = 'Amount must be 70 Naira or above';
+    if (!packageSlug) newErrors.packageSlug = 'Network plan not available';
     if (!userDetails.sub) newErrors.email = 'Email is required';
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
+
+    setIsProcessingVend(true);
   };
 
   const handleVendInitiated = (reference) => {
+    setIsProcessingVend(false);
     setModalStatus('success');
     setModalTitle('Transaction Successful');
     setModalMessage('Successfully processed the vend request');
@@ -71,6 +91,7 @@ const UserAirtime = () => {
   };
 
   const handleError = (err) => {
+    setIsProcessingVend(false);
     setModalStatus('error');
     setModalTitle('Transaction Failed');
     setModalMessage(err.message || 'An unknown error occurred');
@@ -82,12 +103,20 @@ const UserAirtime = () => {
     navigate('/account/fund-wallet');
   };
 
+  if (plansLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Loader />
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen bg-gray-100">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Navbar />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-black">
           <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 lg:ml-96 mt-16 sm:mt-28">
             <h3 className="text-white text-2xl sm:text-3xl font-medium">Buy Airtime</h3>
 
@@ -97,18 +126,11 @@ const UserAirtime = () => {
                 onNetworkChange={(network) => updateFormValues({ selectedNetwork: network })}
                 error={errors.selectedNetwork}
               />
-              <DataPlansSelection
-                plans={filteredPlans} // Pass the filtered plans with only the first item
-                selectedPlan={selectedPlan}
-                onPlanChange={setSelectedPlan}
-                error={errors.selectedPlan}
-              />
 
               <div className="mt-4">
                 <label className="block text-sm font-medium text-white">Phone</label>
                 <InputStyle
                   type="tel"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   value={formValues.phoneNumber}
                   onChange={(e) => updateFormValues({ phoneNumber: e.target.value })}
                 />
@@ -121,16 +143,18 @@ const UserAirtime = () => {
                 <label className="block text-sm font-medium text-white">Amount</label>
                 <InputStyle
                   type="number"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   value={amount}
                   onChange={handleAmountChange}
+                  min="70"
                 />
-                {errors.amount && (
-                  <p className="mt-2 text-sm text-red-600">{errors.amount}</p>
-                )}
+                {errors.amount && <p className="mt-2 text-sm text-red-600">{errors.amount}</p>}
               </div>
 
-              {isProcessingVend && <div>Processing...</div>}
+              {packageSlug && (
+                <div className="mt-2 text-sm text-gray-400">
+                  Selected Plan ID: {packageSlug}
+                </div>
+              )}
 
               <div className="mt-4">
                 <WalletBalanceChecker
@@ -139,26 +163,31 @@ const UserAirtime = () => {
                     setModalStatus('error');
                     setModalTitle('Insufficient Funds');
                     setModalMessage('Wallet balance too low. Fund your wallet to proceed.');
-                    setModalDetails(`Wallet Balance: ₦${balance.toFixed(2)}, Required Amount: ₦${requiredAmount}`);
+                    setModalDetails(
+                      `Wallet Balance: ₦${balance.toFixed(2)}, Required Amount: ₦${requiredAmount}`
+                    );
                     setShowModal(true);
                   }}
-                  onSufficientFunds={() => {
-                    // When funds are sufficient
-                  }}
+                  onSufficientFunds={() => {}}
                 />
               </div>
 
-              <div className="mt-4">
-                <VendInitiator
-                  selectedPlan={selectedPlan}
-                  formValues={{ ...formValues, email: userDetails.sub }}
-                  amount={amount}
-                  onVendInitiated={handleVendInitiated}
-                  onError={handleError}
-                  accountNumber={accountNumber}
-                  merchantId={merchantId}
-                />
-              </div>
+              <VendInitiator
+                selectedPlan={currentPlan}
+                formValues={{
+                  ...formValues,
+                  email: userDetails.sub,
+                  packageSlug,
+                  phoneNumber: formValues.phoneNumber,
+                  selectedNetwork: formValues.selectedNetwork
+                }}
+                amount={amount}
+                packageSlug={packageSlug}
+                onVendInitiated={handleVendInitiated}
+                onError={handleError}
+                isProcessing={isProcessingVend}
+                setIsProcessing={setIsProcessingVend}
+              />
             </form>
           </div>
         </main>
@@ -179,8 +208,3 @@ const UserAirtime = () => {
 };
 
 export default UserAirtime;
-
-
-
-
-
