@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PayrollDetails from './payroll-details';
 import EmployeeDetails from './employee-details';
-import { API_HOST_URL } from '../../../../utils/api/API_HOST';
 
 const PayrollSubmit = ({ onSuccess }) => {
   const [step, setStep] = useState(1);
@@ -50,17 +49,16 @@ const PayrollSubmit = ({ onSuccess }) => {
         return;
       }
 
-      const response = await fetch(
-        `${API_HOST_URL}/api/corporate-customers/${customerId}/employees/add`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Customer-ID': customerId,
-          },
-          body: JSON.stringify(data, employeeId),
-        }
-      );
+      const endpoint = `${import.meta.env.VITE_ADD_EMPLOYEE_ENDPOINT}${customerId}/add`;
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Customer-ID': customerId,
+        },
+        body: JSON.stringify(data, employeeId),
+      });
       console.log('Payroll save for Employee ID:', employeeId),
         alert('employee details sent successfully');
       console.log('employee details sent successfully');
@@ -94,7 +92,9 @@ const PayrollSubmit = ({ onSuccess }) => {
         return;
       }
 
-      const response = await fetch(`${API_HOST_URL}/api/employees/payrolls/${employeeId}/add`, {
+      const endpoint = `${import.meta.env.VITE_ADD_PAYROLL_ENDPOINT}${employeeId}/add`;
+
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

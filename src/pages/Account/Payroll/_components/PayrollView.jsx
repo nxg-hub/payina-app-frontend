@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { API_HOST_URL } from '../../../../utils/api/API_HOST';
 import { FaArrowLeft, FaSearch } from 'react-icons/fa';
 
 const PayrollView = ({ onBackClick }) => {
@@ -17,7 +16,7 @@ const PayrollView = ({ onBackClick }) => {
         return;
       }
       try {
-        const userResponse = await fetch(`${API_HOST_URL}/api/v1/auth/get-user`, {
+        const userResponse = await fetch(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -39,14 +38,12 @@ const PayrollView = ({ onBackClick }) => {
 
     const fetchPayrollData = async () => {
       try {
-        const employeeResponse = await fetch(
-          `${API_HOST_URL}/api/corporate-customers/${customerId}/employees/all`
-        );
+        const employeesEndpoint = `${import.meta.env.VITE_GET_ALL_EMPLOYEE_ENDPOINT}${customerId}/employees/all`;
+        const employeeResponse = await fetch(employeesEndpoint);
         const employeeData = await employeeResponse.json();
 
-        const payrollResponse = await fetch(
-          `${API_HOST_URL}/api/employees/payrolls/corporate/${customerId}/payrolls`
-        );
+        const payrollEndpoint = `${import.meta.env.VITE_GET_ALL_PAYROLL_ENDPOINT}${customerId}/payrolls`;
+        const payrollResponse = await fetch(payrollEndpoint);
         const payrollData = await payrollResponse.json();
         const combinedData = employeeData.map((employee) => {
           const payrollDetails = payrollData.find((payroll) => payroll === employee.id);
