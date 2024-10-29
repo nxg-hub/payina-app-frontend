@@ -49,9 +49,7 @@ const PayrollView = ({ onBackClick }) => {
         );
         const payrollData = await payrollResponse.json();
         const combinedData = employeeData.map((employee) => {
-          const payrollDetails = payrollData.find(
-            (payroll) => payroll.employeeId === employee.employeeId
-          );
+          const payrollDetails = payrollData.find((payroll) => payroll.id === employee.id);
           return {
             ...employee,
             jobRoleTitle: payrollDetails ? payrollDetails.jobRoleTitle : '',

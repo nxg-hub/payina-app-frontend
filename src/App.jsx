@@ -67,13 +67,12 @@ function App() {
                 <Signup data={data} currentStep={currentStep} handleNextStep={handleNextStep} />
               }
             />
-
             <Route
               path="/signup"
               element={<Signup data={data} handleNextStep={handleNextStep} />}
             />
             <Route path="/paybills" element={<Paybills />} />
-              Payina-in-app-transaction-one
+            Payina-in-app-transaction-one
             {/*<Route path="/account/fund_wallet" element={<PaymentPage />} />*/}
             <Route path="/sendMoney" element={<SendMoney />} />
             <Route path="/login" element={<Login />} />
