@@ -58,10 +58,11 @@ const PayrollSubmit = ({ onSuccess }) => {
             'Content-Type': 'application/json',
             'Customer-ID': customerId,
           },
-          body: JSON.stringify(data),
+          body: JSON.stringify(data, employeeId),
         }
       );
-      alert('employee details sent successfully');
+      console.log('Payroll save for Employee ID:', employeeId),
+        alert('employee details sent successfully');
       console.log('employee details sent successfully');
       console.log('Response Status:', response.status);
       const responseBody = await response.text();
