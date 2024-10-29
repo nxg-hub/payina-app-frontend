@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useLocalStorage from '../hooks/useLocalStorage';
+import TransactionModal from '../utilities/TransactionModal';
 
 const WalletBalanceChecker = ({ amount, onInsufficientFunds, onSufficientFunds }) => {
+  const navigate = useNavigate();
   const [balance, setBalance] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [newAuthToken] = useLocalStorage('authtoken', '');
+  const [showTransferModal, setShowTransferModal] = useState(false);
+  const [showInsufficientModal, setShowInsufficientModal] = useState(false);
+
+  const accountNumber = '1234567890';
+  const bankName = 'Test Bank';
 
   const fetchWalletBalance = async () => {
     try {
@@ -36,24 +44,18 @@ const WalletBalanceChecker = ({ amount, onInsufficientFunds, onSufficientFunds }
       let data;
       try {
         data = JSON.parse(text);
-        // Log the entire response data for debugging
         console.log('Wallet API Response:', data);
-
-        // Log specific balance values
-        console.log('Ledger Balance:', data.data.ledgerBalance.amount);
-        console.log('Main Balance:', data.data.balance.amount);
       } catch (e) {
         console.error('JSON Parse Error:', e);
         console.error('Raw Response:', text);
         throw new Error('Invalid JSON response from server');
       }
 
-      // Use ledgerBalance instead of balance
-      const ledgerBalance = data.data.ledgerBalance.amount;
+      const ledgerBalance = data.data.balance.amount;
       setBalance(ledgerBalance);
 
-      // Check if amount exceeds balance
       if (amount && Number(amount) > ledgerBalance) {
+        setShowInsufficientModal(true);
         onInsufficientFunds(ledgerBalance, Number(amount));
       } else if (amount) {
         onSufficientFunds();
@@ -76,7 +78,17 @@ const WalletBalanceChecker = ({ amount, onInsufficientFunds, onSufficientFunds }
 
     const intervalId = setInterval(fetchWalletBalance, 12000);
     return () => clearInterval(intervalId);
-  }, [amount, newAuthToken]);
+  }, []);
+
+  const handleFundWithCard = () => {
+    navigate('/account/fund-wallet');
+    setShowInsufficientModal(false);
+  };
+
+  const handleTransfer = () => {
+    setShowInsufficientModal(false);
+    setShowTransferModal(true);
+  };
 
   if (loading) {
     return <div className="text-white">Checking wallet balance...</div>;
@@ -90,6 +102,68 @@ const WalletBalanceChecker = ({ amount, onInsufficientFunds, onSufficientFunds }
     <div className="text-white">
       <h2 className="text-lg font-semibold mb-2">Wallet Balance</h2>
       <p>{balance !== null ? `₦${Number(balance).toLocaleString()}` : 'Unable to fetch balance'}</p>
+
+      {/*/!* Insufficient Funds Modal *!/*/}
+      {/*<TransactionModal*/}
+      {/*  isOpen={showInsufficientModal}*/}
+      {/*  onClose={() => setShowInsufficientModal(false)}*/}
+      {/*  status="error"*/}
+      {/*  title="Insufficient Funds"*/}
+      {/*  message={`Your wallet balance (₦${Number(balance).toLocaleString()}) is insufficient for this transaction (₦${Number(amount).toLocaleString()})`}*/}
+      {/*  customButtons={*/}
+      {/*    <div className="flex flex-col space-y-2 w-full mt-4">*/}
+      {/*      <button*/}
+      {/*        onClick={() => setShowInsufficientModal(false)}*/}
+      {/*        className="w-full px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"*/}
+      {/*      >*/}
+      {/*        Back*/}
+      {/*      </button>*/}
+      {/*      <button*/}
+      {/*        onClick={handleFundWithCard}*/}
+      {/*        className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"*/}
+      {/*      >*/}
+      {/*        Fund with Card*/}
+      {/*      </button>*/}
+      {/*      <button*/}
+      {/*        onClick={handleTransfer}*/}
+      {/*        className="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"*/}
+      {/*      >*/}
+      {/*        Transfer*/}
+      {/*      </button>*/}
+      {/*    </div>*/}
+      {/*  }*/}
+      {/*/>*/}
+
+      {/* Transfer Details Modal */}
+      <TransactionModal
+        isOpen={showTransferModal}
+        onClose={() => setShowTransferModal(false)}
+        status="info"
+        title="Bank Transfer Details"
+        message={
+          <div className="space-y-4">
+            <div>
+              <p className="font-semibold">Account Number:</p>
+              <p className="text-lg">{accountNumber}</p>
+            </div>
+            <div>
+              <p className="font-semibold">Bank Name:</p>
+              <p className="text-lg">{bankName}</p>
+            </div>
+            <p className="text-sm text-gray-400 mt-4">
+              Please note that it may take a few minutes for your transfer to reflect in your wallet balance.
+            </p>
+          </div>
+        }
+        customButtons={
+          <button
+            onClick={() => setShowTransferModal(false)}
+            className="w-full px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 mt-4"
+          >
+            Close
+          </button>
+        }
+      />
     </div>
   );
 };

@@ -38,6 +38,7 @@ import FundWallet from './pages/airtime/FundWallet';
 import Billers from './pages/Account/UserPages/billers';
 import Electricity from './pages/Account/UserPages/electricity';
 import { StepSeventeen } from './pages/Signup/_components';
+import TransactionHistory from './pages/Account/Dashboard/_components/transaction-history/transaction-history.jsx';
 // import PaymentPage from './pages/Account/UserPages/fund_wallet';
 
 function App() {
@@ -89,6 +90,7 @@ function App() {
             <Route path="/account/airtime" element={<UserAirtime />} />
             <Route path="/account/bills" element={<Billers />} />
             <Route path="/account/fund-wallet" element={<FundWallet />} />
+            <Route path="/account/transaction-history" element={<TransactionHistory />} />
             <Route path="/account/data" element={<UserData />} />
             <Route path="/account/billers" element={<BillPayment />} />
             <Route path="/account/electricity" element={<Electricity />} />

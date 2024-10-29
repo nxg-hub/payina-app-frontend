@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../../components/navbar/navbar';
+import { Navbar } from '../Account/_components/index.js';
 import Footer from '../../components/footer/footer';
 import TransactionModal from '../../utilities/TransactionModal';
 import useLocalStorage from '../../hooks/useLocalStorage';
@@ -59,7 +59,7 @@ const FundWallet = () => {
         </div>
         <div className="flex-1 flex flex-col">
           <Navbar />
-          <div className="container mx-auto px-4 md:px-8 flex-grow">
+          <div className="container mx-auto px-4 md:px-8 flex-grow bg-black">
             <div className="md:ml-80 w-full max-w-2xl mx-auto py-8">
               <div className="flex flex-col space-y-6">
                 <div className="flex flex-col w-full">
@@ -103,15 +103,15 @@ const FundWallet = () => {
         </div>
       </div>
       <Footer />
-      <TransactionModal
-        isOpen={modalState.isOpen}
-        onClose={closeModal}
-        status={modalState.status}
-        title={modalState.title}
-        message={modalState.message}
-        reference={modalState.reference}
-        onRegister={closeModal}
-      />
+      {/*<TransactionModal*/}
+      {/*  isOpen={modalState.isOpen}*/}
+      {/*  onClose={closeModal}*/}
+      {/*  status={modalState.status}*/}
+      {/*  title={modalState.title}*/}
+      {/*  message={modalState.message}*/}
+      {/*  reference={modalState.reference}*/}
+      {/*  onRegister={closeModal}*/}
+      {/*/>*/}
     </section>
   );
 };

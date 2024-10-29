@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import useLocalStorage from '../hooks/useLocalStorage';
 
 const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues = {} }) => {
+  const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [newAuthToken] = useLocalStorage('authtoken', '');
@@ -65,60 +67,23 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
     };
 
     fetchInitialData();
-  }, [newAuthToken]);
-
-  const handleFundingProcess = async (paystackResponse, initializeData) => {
-    try {
-      setStatusMessage('Processing funding request...');
-
-      const fundingData = {
-        customerId: userData?.customerId || '',
-        packageSlug: 'wallet_funding',
-        channel: 'card',
-        amount: amount,
-        customerName: userData ? `${userData.firstName} ${userData.lastName}` : '',
-        phoneNumber: formValues.phoneNumber || userData?.phoneNumber,
-        accountNumber: userData?.accountNumber,
-        email: userData?.email || formValues.email,
-        merchantId: initializeData?.merchantId || paystackResponse?.merchantId,
-        paymentReference: paystackResponse.reference
-      };
-
-      const fundingResponse = await axios.post(
-        import.meta.env.VITE_VEND_VALUE_PAYINA,
-        fundingData,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: '*/*',
-            Authorization: `Bearer ${newAuthToken}`,
-            apiKey: API_KEY
-          }
-        }
-      );
-
-      if (fundingResponse.data.status === 'success') {
-        onFundingInitiated(paystackResponse.reference, fundingResponse.data);
-        setStatusMessage('Funding completed successfully');
-        setPaymentCompleted(true);
-      } else {
-        throw new Error(fundingResponse.data.message || 'Funding failed');
-      }
-    } catch (err) {
-      console.error('Error in funding process:', err);
-      setStatusMessage('Funding process failed');
-      onError(err);
-    } finally {
-      setIsProcessing(false);
-    }
-  };
+  }, []);
 
   const handlePaymentCompletion = async (reference, initializeData) => {
     if (!paymentCompleted) {
-      await handleFundingProcess({
-        reference: reference,
-        status: 'success'
-      }, initializeData);
+      setStatusMessage('Payment completed successfully');
+      setPaymentCompleted(true);
+      onFundingInitiated(reference, { status: 'success' });
+      setIsProcessing(false);
+
+      // Option 1: Direct navigation
+      navigate(-1); // Goes back to previous page
+
+      // Option 2: Through callback (uncomment if using this approach)
+      // onFundingInitiated(reference, {
+      //   status: 'success',
+      //   shouldNavigate: true // Parent component can handle navigation
+      // });
     }
   };
 
