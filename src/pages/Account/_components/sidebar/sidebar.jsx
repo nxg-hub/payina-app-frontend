@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { AiOutlineAppstore } from 'react-icons/ai';
 import { TbChecklist, TbUserDollar, TbSettings } from 'react-icons/tb';
 import { LuFileClock } from 'react-icons/lu';
@@ -5,16 +6,59 @@ import { RiFileSettingsLine } from 'react-icons/ri';
 import { VscSignOut } from 'react-icons/vsc';
 import { Link, useLocation } from 'react-router-dom';
 import images from '../../../../constants/images';
+import useLocalStorage from '../../../../hooks/useLocalStorage.js';
 
 export const Sidebar = () => {
   const location = useLocation();
   const currentRoute = location.pathname;
+  const [userName, setUserName] = useState('');
+  const [error, setError] = useState('');
+  const [newAuthToken] = useLocalStorage('authtoken', '');
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      if (!newAuthToken) {
+        setError('No auth token found');
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          import.meta.env.VITE_ACCOUNT_DETAILS,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${newAuthToken}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Fetched User Name:', data.customerUserName);
+          setUserName(data.customerUserName || 'User');
+          setError('');
+        } else {
+          setError('Failed to fetch user details');
+        }
+      } catch (err) {
+        setError('Error fetching user details');
+        console.error(err);
+      }
+    };
+
+    fetchUserName();
+  }, [newAuthToken]);
+
   return (
     <div className="bg-[#CCDFE6] float-left rounded-[10px] px-10 py-4 mt-[5.5rem] fixed w-[312px] h-[100vh] xl:block hidden">
       <div className="flex flex-col justify-center items-center">
         <div className="mb-20">
           <img src={images.Profile} alt="profile image" />
-          <div className="font-semibold text-xl mt-2">Hi, Jakyyy</div>
+          <div className="font-semibold text-xl mt-2">
+            {error ? `Error: ${error}` : `Hi, ${userName}`}
+          </div>
         </div>
         <div className="space-y-[52px] flex flex-col w-full">
           <Link
@@ -80,3 +124,5 @@ export const Sidebar = () => {
     </div>
   );
 };
+
+export default Sidebar;
