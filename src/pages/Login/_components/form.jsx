@@ -17,7 +17,7 @@ const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const auth = useAuth(); // Use the useAuth hook
-  const [authToken, setAuthToken] = useLocalStorage('authtoken', '');
+  const [authToken, setAuthToken] = useLocalStorage('authToken', '');
   const [userDetails, setuserDetails] = useLocalStorage('userDetails', '');
 
   const handleSubmit = async (values) => {
