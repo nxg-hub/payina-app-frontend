@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PayrollDetails from './payroll-details';
 import EmployeeDetails from './employee-details';
-import { API_HOST_URL } from '../../../../utils/api/API_HOST';
+import useLocalStorage from '../../../../hooks/useLocalStorage.js';
 
 const PayrollSubmit = ({ onSuccess }) => {
   const [step, setStep] = useState(1);
@@ -9,21 +9,15 @@ const PayrollSubmit = ({ onSuccess }) => {
   const [employeeDetails, setEmployeeDetails] = useState({});
   const [payrollDetails, setPayrollDetails] = useState({});
   const [customerId, setCustomerId] = useState(null);
+  const [newAuthToken] = useLocalStorage('authtoken', '');
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const token = localStorage.getItem('authToken');
-      console.log('token:', token);
-
-      if (!token) {
-        console.error('No auth token found');
-        return;
-      }
       try {
         const response = await fetch(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
           method: 'GET',
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${newAuthToken}`,
             'Content-Type': 'application/json',
           },
         });
@@ -50,33 +44,32 @@ const PayrollSubmit = ({ onSuccess }) => {
         return;
       }
 
-      const response = await fetch(
-        `${API_HOST_URL}/api/corporate-customers/${customerId}/employees/add`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Customer-ID': customerId,
-          },
-          body: JSON.stringify(data),
-        }
+      const endpoint = import.meta.env.VITE_ADD_EMPLOYEE_ENDPOINT.replace(
+        '{customerId}',
+        customerId
       );
-      alert('employee details sent successfully');
-      console.log('employee details sent successfully');
-      console.log('Response Status:', response.status);
-      const responseBody = await response.text();
-      console.log('Response Body:', responseBody);
-      console.log('Customer ID:', customerId);
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Customer-ID': customerId,
+        },
+        body: JSON.stringify(data),
+      });
 
       if (!response.ok) {
         console.error('Failed to save employee details');
         return;
       }
 
+      const responseBody = await response.json();
+      console.log('Response Status:', response.status);
+      console.log('Response Body:', responseBody);
+      console.log('Customer ID:', customerId);
+
       if (responseBody) {
-        const result = JSON.parse(responseBody);
-        console.log('Employee ID:', result.id);
-        setEmployeeId(result.id);
+        console.log('Employee ID:', responseBody.id);
+        setEmployeeId(responseBody.id);
         setStep(2);
       } else {
         console.error('Invalid or empty response');
@@ -93,7 +86,11 @@ const PayrollSubmit = ({ onSuccess }) => {
         return;
       }
 
-      const response = await fetch(`${API_HOST_URL}/api/employees/payrolls/${employeeId}/add`, {
+      const endpoint = import.meta.env.VITE_ADD_PAYROLL_ENDPOINT.replace(
+        '{employeeId}',
+        employeeId
+      );
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -109,15 +106,10 @@ const PayrollSubmit = ({ onSuccess }) => {
         return;
       }
 
-      const textResult = await response.text();
-      if (textResult) {
-        const result = JSON.parse(textResult);
-        alert('Payroll details saved successfully');
-        onSuccess();
-        console.log('Payroll details saved successfully');
-      } else {
-        console.error('Empty or invalid JSON response');
-      }
+      const result = await response.json();
+      alert('Payroll details saved successfully');
+      onSuccess();
+      console.log('Payroll details saved successfully');
     } catch (error) {
       console.error('Error:', error);
     }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { API_HOST_URL } from '../../../../utils/api/API_HOST';
 import { FaArrowLeft, FaSearch } from 'react-icons/fa';
+import useLocalStorage from '../../../../hooks/useLocalStorage.js';
 
 const PayrollView = ({ onBackClick }) => {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
@@ -8,24 +8,27 @@ const PayrollView = ({ onBackClick }) => {
   const [payrollData, setPayrollData] = useState([]);
   const [customerId, setCustomerId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [newAuthToken] = useLocalStorage('authtoken', '');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const token = localStorage.getItem('authToken');
-      if (!token) {
-        console.error('No auth token found');
-        return;
-      }
       try {
-        const userResponse = await fetch(`${API_HOST_URL}/api/v1/auth/get-user`, {
+        const response = await fetch(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
           method: 'GET',
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${newAuthToken}`,
             'Content-Type': 'application/json',
           },
         });
-        const userData = await userResponse.json();
-        setCustomerId(userData.customerId);
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+
+        const result = await response.json();
+        console.log('Fetched user data:', result);
+        setCustomerId(result.customerId);
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -38,18 +41,23 @@ const PayrollView = ({ onBackClick }) => {
     if (!customerId) return;
 
     const fetchPayrollData = async () => {
+      setLoading(true);
       try {
-        const employeeResponse = await fetch(
-          `${API_HOST_URL}/api/corporate-customers/${customerId}/employees/all`
+        const employeesEndpoint = import.meta.env.VITE_GET_ALL_EMPLOYEE_ENDPOINT.replace(
+          '{customerId}',
+          customerId
         );
+        const employeeResponse = await fetch(employeesEndpoint);
         const employeeData = await employeeResponse.json();
 
-        const payrollResponse = await fetch(
-          `${API_HOST_URL}/api/employees/payrolls/corporate/${customerId}/payrolls`
+        const payrollEndpoint = import.meta.env.VITE_GET_ALL_EMPLOYEE_ENDPOINT.replace(
+          '{customerId}',
+          customerId
         );
+        const payrollResponse = await fetch(payrollEndpoint);
         const payrollData = await payrollResponse.json();
         const combinedData = employeeData.map((employee) => {
-          const payrollDetails = payrollData.find((payroll) => payroll.id === employee.id);
+          const payrollDetails = payrollData.find((payroll) => payroll === employee.id);
           return {
             ...employee,
             jobRoleTitle: payrollDetails ? payrollDetails.jobRoleTitle : '',
@@ -61,6 +69,8 @@ const PayrollView = ({ onBackClick }) => {
         setPayrollData(combinedData);
       } catch (error) {
         console.error('Error fetching payroll data:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -99,36 +109,44 @@ const PayrollView = ({ onBackClick }) => {
             <FaSearch className="absolute right-0 mr-4 mt-3 text-lightBlue font-bold" />
           </div>
         </div>
-        <div className="grid grid-cols-3 justify-center items-center gap-4 mt-[4rem] px-[5rem] py-2">
-          {filteredPayrollData.map((employee) => (
-            <div
-              key={employee.id}
-              className="flex flex-col justify-center items-center gap-4 bg-white p-6 rounded shadow-lg">
-              <div className="flex flex-col items-start gap-2">
-                <h1 className="text-xl font-bold text-lightBlue mb-3">Employee Details</h1>
-                <div className="text-sm font-bold">
-                  Employee Name: <span className="font-medium">{employee.employeeName}</span>
+
+        {loading ? (
+          <div className="text-center text-lg">Loading payroll data...</div>
+        ) : (
+          <div className="grid grid-cols-3 justify-center items-center gap-4 mt-[4rem] px-[5rem] py-2">
+            {filteredPayrollData.map((employee) => (
+              <div
+                key={employee.id}
+                className="flex flex-col justify-center items-center gap-4 bg-white p-6 rounded shadow-lg">
+                <div className="flex flex-col items-start gap-2">
+                  <h1 className="text-xl font-bold text-lightBlue mb-3">Employee Details</h1>
+                  <div className="text-sm font-bold">
+                    Employee Name: <span className="font-medium">{employee.employeeName}</span>
+                  </div>
+                  <div className="text-sm font-bold">
+                    Employee Role: <span className="font-medium">{employee.employeeRole}</span>
+                  </div>
+                  <div className="text-sm font-bold">
+                    Employment Date:{' '}
+                    <span className="font-medium">
+                      {employee.employmentDetails?.employmentDate}
+                    </span>
+                  </div>
+                  <div className="text-sm font-bold">
+                    Employee Id:{' '}
+                    <span className="font-medium">{employee.employmentDetails?.employeeId}</span>
+                  </div>
                 </div>
-                <div className="text-sm font-bold">
-                  Employee Role: <span className="font-medium">{employee.employeeRole}</span>
-                </div>
-                <div className="text-sm font-bold">
-                  Employment Date:{' '}
-                  <span className="font-medium">{employee.employmentDetails?.employmentDate}</span>
-                </div>
-                <div className="text-sm font-bold">
-                  Employee Id:{' '}
-                  <span className="font-medium">{employee.employmentDetails?.employeeId}</span>
-                </div>
+                <button
+                  className="mt-2 text-lightBlue hover:underline"
+                  onClick={() => handleSeeMoreClick(employee)}>
+                  See More
+                </button>
               </div>
-              <button
-                className="mt-2 text-lightBlue hover:underline"
-                onClick={() => handleSeeMoreClick(employee)}>
-                See More
-              </button>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
+
         {isModalOpen && selectedEmployee && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white p-6 rounded shadow-lg">
