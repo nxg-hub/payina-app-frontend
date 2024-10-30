@@ -8,7 +8,7 @@ const PayrollView = ({ onBackClick }) => {
   const [payrollData, setPayrollData] = useState([]);
   const [customerId, setCustomerId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [newAuthToken] = useLocalStorage('authtoken', '');
+  const [newAuthToken] = useLocalStorage('authToken', '');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

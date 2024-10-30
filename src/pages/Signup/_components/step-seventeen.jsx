@@ -7,7 +7,7 @@ import useLocalStorage from '../../../hooks/useLocalStorage';
 export const StepSeventeen = ({ data }) => {
   const [userData, setUserData] = useState(null);
   const [walletData, setWalletData] = useState(null);
-  const [newAuthToken] = useLocalStorage('authtoken', '');
+  const [newAuthToken] = useLocalStorage('authToken', '');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();

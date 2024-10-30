@@ -8,7 +8,7 @@ const AccountCard = () => {
   const [showCopy, setShowCopy] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [newAuthToken] = useLocalStorage('authtoken', '');
+  const [newAuthToken] = useLocalStorage('authToken', '');
 
   const handleCopyClick = async () => {
     try {
@@ -26,8 +26,8 @@ const AccountCard = () => {
 
   useEffect(() => {
     const fetchAccountDetails = async () => {
-      console.log("Fetching account details...");
-      const token = newAuthToken;  // Use token from useLocalStorage
+      console.log('Fetching account details...');
+      const token = newAuthToken; // Use token from useLocalStorage
 
       if (!token) {
         setError('No auth token found');
@@ -36,45 +36,40 @@ const AccountCard = () => {
       }
 
       try {
-        const response = await fetch(
-          'https://payina-be-6f08cdfb4414.herokuapp.com/dashboard/get-account-details',
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            }
-          }
-        );
+        const response = await fetch(import.meta.env.VITE_ACCOUNT_DETAILS, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
 
-        console.log("API call response status:", response.status);
+        console.log('API call response status:', response.status);
 
         if (response.ok) {
           const result = await response.json();
-          console.log('API Response:', result);  // Log the response data here
+          console.log('API Response:', result); // Log the response data here
 
           setAccountDetails({
             accountNumber: result.accountNumber || '',
             accountName: result.accountName || '',
             ownerName: result.customerUserName || '',
-            accountStatus: result.accountStatus === 'true' ? 'active' : 'inactive'
+            accountStatus: result.accountStatus === 'true' ? 'active' : 'inactive',
           });
           setError('');
         } else {
           setError('Failed to fetch account details');
         }
       } catch (error) {
-        console.error("Error in fetch:", error);
+        console.error('Error in fetch:', error);
         setError('Error fetching account details');
       } finally {
         setLoading(false);
       }
     };
 
-
     fetchAccountDetails();
   }, []);
-
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
@@ -136,4 +131,3 @@ const AccountCard = () => {
 };
 
 export default AccountCard;
-

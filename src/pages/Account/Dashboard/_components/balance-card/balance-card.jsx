@@ -6,7 +6,7 @@ import useLocalStorage from '../../../../../hooks/useLocalStorage.js';
 const BalanceCard = () => {
   const [balance, setBalance] = useState(0);
   const [hideIcon, setHideIcon] = useState(false);
-  const [newAuthToken] = useLocalStorage('authtoken', '');
+  const [newAuthToken] = useLocalStorage('authToken', '');
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -21,8 +21,8 @@ const BalanceCard = () => {
             accept: '*/*',
             apiKey: import.meta.env.VITE_API_KEY,
             Authorization: `Bearer ${newAuthToken}`,
-            'Content-Type': 'application/json'
-          }
+            'Content-Type': 'application/json',
+          },
         });
 
         if (!response.ok) {
@@ -75,7 +75,8 @@ const BalanceCard = () => {
             </div>
             {hideIcon && (
               <div className="md:text-[32px] text-2xl font-bold">
-                <span className="uppercase text-sm md:text-[23.282px] ">NGN</span> {balance.toFixed(2)}
+                <span className="uppercase text-sm md:text-[23.282px] ">NGN</span>{' '}
+                {balance.toFixed(2)}
               </div>
             )}
           </div>

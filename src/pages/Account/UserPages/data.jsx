@@ -173,7 +173,6 @@
 //
 // export default UserData;
 
-
 //
 // import React, { useState, useCallback, useMemo, useEffect } from 'react';
 // import { useNavigate } from 'react-router-dom';
@@ -376,8 +375,6 @@
 //
 // export default UserData;
 
-
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Navbar, Sidebar } from '../_components';
@@ -421,7 +418,7 @@ const UserData = () => {
 
     return {
       currentPlan: selectedPlan,
-      packageSlug: selectedPlan.slug || ''
+      packageSlug: selectedPlan.slug || '',
     };
   }, [selectedPlan]);
 
@@ -516,9 +513,7 @@ const UserData = () => {
               </div>
 
               {packageSlug && (
-                <div className="mt-2 text-sm text-gray-400">
-                  Selected Plan ID: {packageSlug}
-                </div>
+                <div className="mt-2 text-sm text-gray-400">Selected Plan ID: {packageSlug}</div>
               )}
 
               <div className="mt-4">
@@ -544,7 +539,7 @@ const UserData = () => {
                   email: userDetails.sub,
                   packageSlug,
                   phoneNumber: formValues.phoneNumber,
-                  selectedNetwork: formValues.selectedNetwork
+                  selectedNetwork: formValues.selectedNetwork,
                 }}
                 amount={selectedPlan?.amount}
                 packageSlug={packageSlug}

@@ -32,9 +32,8 @@ const Electricity = () => {
         if (Array.isArray(response)) {
           serviceData = response;
         } else if (typeof response === 'object') {
-          serviceData = response.responseData?.services ||
-            response.responseData ||
-            response.data || [];
+          serviceData =
+            response.responseData?.services || response.responseData || response.data || [];
         } else {
           throw new Error('Invalid API response format');
         }
@@ -77,15 +76,15 @@ const Electricity = () => {
     const stateToPass = {
       formValues: {
         ...formValues,
-        isBetting: selectedService?.slug === 'BETTING_AND_LOTTERY'
+        isBetting: selectedService?.slug === 'BETTING_AND_LOTTERY',
       },
       selectedBettingService: formValues.selectedBettingService,
-      slug: selectedService?.slug || ''
+      slug: selectedService?.slug || '',
     };
 
     navigate('/bettwo', {
       state: stateToPass,
-      replace: true // Use replace to prevent going back to this page
+      replace: true, // Use replace to prevent going back to this page
     });
   }, [navigate, formValues, bettingServices]);
 

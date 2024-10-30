@@ -42,7 +42,7 @@ const UserAirtime = () => {
     const firstPlan = plans[0];
     return {
       currentPlan: firstPlan,
-      packageSlug: firstPlan.slug || ''
+      packageSlug: firstPlan.slug || '',
     };
   }, [plans]);
 
@@ -56,9 +56,9 @@ const UserAirtime = () => {
     const enteredAmount = e.target.value;
     setAmount(enteredAmount);
 
-    setErrors(prev => ({
+    setErrors((prev) => ({
       ...prev,
-      amount: Number(enteredAmount) < 70 ? 'Amount must be 70 Naira or above' : undefined
+      amount: Number(enteredAmount) < 70 ? 'Amount must be 70 Naira or above' : undefined,
     }));
   };
 
@@ -141,19 +141,12 @@ const UserAirtime = () => {
 
               <div className="mt-4">
                 <label className="block text-sm font-medium text-white">Amount</label>
-                <InputStyle
-                  type="number"
-                  value={amount}
-                  onChange={handleAmountChange}
-                  min="70"
-                />
+                <InputStyle type="number" value={amount} onChange={handleAmountChange} min="70" />
                 {errors.amount && <p className="mt-2 text-sm text-red-600">{errors.amount}</p>}
               </div>
 
               {packageSlug && (
-                <div className="mt-2 text-sm text-gray-400">
-                  Selected Plan ID: {packageSlug}
-                </div>
+                <div className="mt-2 text-sm text-gray-400">Selected Plan ID: {packageSlug}</div>
               )}
 
               <div className="mt-4">
@@ -179,7 +172,7 @@ const UserAirtime = () => {
                   email: userDetails.sub,
                   packageSlug,
                   phoneNumber: formValues.phoneNumber,
-                  selectedNetwork: formValues.selectedNetwork
+                  selectedNetwork: formValues.selectedNetwork,
                 }}
                 amount={amount}
                 packageSlug={packageSlug}
