@@ -20,11 +20,11 @@ const FundWallet = () => {
     status: 'success',
     title: '',
     message: '',
-    reference: ''
+    reference: '',
   });
 
   const closeModal = () => {
-    setModalState(prev => ({ ...prev, isOpen: false }));
+    setModalState((prev) => ({ ...prev, isOpen: false }));
     navigate('/account/airtime');
   };
 
@@ -35,19 +35,20 @@ const FundWallet = () => {
       status: 'success',
       title: 'Transaction Successful',
       message: 'Your wallet has been funded successfully',
-      reference
+      reference,
     });
   };
 
   const handleFundingError = (error) => {
     setIsProcessingVend(false);
-    const errorMessage = error.response?.data?.message || error.message || 'An unknown error occurred';
+    const errorMessage =
+      error.response?.data?.message || error.message || 'An unknown error occurred';
     setModalState({
       isOpen: true,
       status: 'error',
       title: 'Transaction Failed',
       message: errorMessage,
-      reference: ''
+      reference: '',
     });
   };
 
@@ -83,14 +84,12 @@ const FundWallet = () => {
                     onError={handleFundingError}
                     formValues={{
                       email: userDetails.sub,
-                      phoneNumber: userDetails.phone
+                      phoneNumber: userDetails.phone,
                     }}
                   />
                 )}
 
-                {statusMessage && (
-                  <p className="text-blue-500 text-center">{statusMessage}</p>
-                )}
+                {statusMessage && <p className="text-blue-500 text-center">{statusMessage}</p>}
 
                 {isProcessingVend && (
                   <div className="flex justify-center">

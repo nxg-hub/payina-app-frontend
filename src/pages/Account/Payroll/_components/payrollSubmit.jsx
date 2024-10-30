@@ -9,7 +9,7 @@ const PayrollSubmit = ({ onSuccess }) => {
   const [employeeDetails, setEmployeeDetails] = useState({});
   const [payrollDetails, setPayrollDetails] = useState({});
   const [customerId, setCustomerId] = useState(null);
-  const [newAuthToken] = useLocalStorage('authtoken', '');
+  const [newAuthToken] = useLocalStorage('authToken', '');
 
   useEffect(() => {
     const fetchUserData = async () => {

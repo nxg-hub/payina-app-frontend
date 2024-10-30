@@ -12,7 +12,7 @@ export const MobileSidebar = () => {
   const location = useLocation();
   const currentRoute = location.pathname;
   const [customerUserName, setCustomerUserName] = useState('User'); // Default display name
-  const [newAuthToken] = useLocalStorage('authtoken', '');
+  const [newAuthToken] = useLocalStorage('authToken', '');
   useEffect(() => {
     const fetchAccountDetails = async () => {
       try {

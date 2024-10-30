@@ -13,7 +13,7 @@ const ALLOWED_SERVICES = [
   'COLLECTIONS',
   'GOVERNMENT_COLLECTIONS',
   'INTERNATIONAL_AIRTIME',
-  'EDUCATION'
+  'EDUCATION',
 ];
 
 const Billers = () => {
@@ -122,10 +122,10 @@ const Billers = () => {
       formValues: {
         ...formValues,
         email: localEmail,
-        isBetting: selectedService?.slug === 'BETTING_AND_LOTTERY'
+        isBetting: selectedService?.slug === 'BETTING_AND_LOTTERY',
       },
       selectedBettingService: formValues.selectedBettingService,
-      slug: selectedService ? selectedService.slug : ''
+      slug: selectedService ? selectedService.slug : '',
     };
 
     navigate('/bettwo', { state: stateToPass });

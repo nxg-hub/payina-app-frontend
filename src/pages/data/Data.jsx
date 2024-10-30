@@ -57,14 +57,14 @@ export const DataPurchaseForm = () => {
         ...formValues,
         email: localEmail,
         phoneNumber: formValues.phoneNumber,
-        selectedNetwork: formValues.selectedNetwork
+        selectedNetwork: formValues.selectedNetwork,
       },
       selectedPlan: {
         id: selectedPlan.id,
         planName: selectedPlan.name,
         planPrice: selectedPlan.amount,
-        planSlug: selectedPlan.slug
-      }
+        planSlug: selectedPlan.slug,
+      },
     };
 
     navigate('/planb', { state: stateToPass });
@@ -76,7 +76,6 @@ export const DataPurchaseForm = () => {
     },
     [setSelectedPlan, updateFormValues]
   );
-
 
   return (
     <section>

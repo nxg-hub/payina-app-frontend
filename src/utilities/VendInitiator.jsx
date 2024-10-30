@@ -15,7 +15,7 @@ const VendInitiator = ({
   setIsProcessing,
 }) => {
   const [statusMessage, setStatusMessage] = useState('');
-  const [newAuthToken] = useLocalStorage('authtoken', '');
+  const [newAuthToken] = useLocalStorage('authToken', '');
   const [userData, setUserData] = useState(null);
   const [walletData, setWalletData] = useState(null);
   const walletDetailsRef = useRef(null);

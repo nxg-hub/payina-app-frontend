@@ -21,7 +21,7 @@ const AirtimeReview = () => {
     status: 'success',
     title: '',
     message: '',
-    reference: ''
+    reference: '',
   });
 
   useEffect(() => {
@@ -55,7 +55,7 @@ const AirtimeReview = () => {
       status: 'error',
       title: 'Transaction Failed',
       message: errorMessage,
-      reference
+      reference,
     });
   }, []);
 
@@ -74,7 +74,7 @@ const AirtimeReview = () => {
               status: 'success',
               title: 'Transaction Successful',
               message: 'Successfully processed the vend request',
-              reference: response.paymentReference
+              reference: response.paymentReference,
             });
             setIsProcessingVend(false);
             return;
@@ -113,7 +113,7 @@ const AirtimeReview = () => {
           amount: Math.round(selectedPlan.planPrice * 1),
           customerName: 'Non-Payina-User',
           phoneNumber: formValues.phoneNumber,
-          email: formValues.email
+          email: formValues.email,
         };
 
         const vendValueResponse = await apiService.vendValue(reference, payload);
@@ -127,7 +127,7 @@ const AirtimeReview = () => {
             status: 'success',
             title: 'Transaction Successful',
             message: 'Successfully processed the vend request',
-            reference: vendValueResponse.responseData.paymentReference
+            reference: vendValueResponse.responseData.paymentReference,
           });
           setIsProcessingVend(false);
         } else {
@@ -173,7 +173,10 @@ const AirtimeReview = () => {
         // Add any other required parameters
       });
 
-      if (fundWalletResponse.status === true && fundWalletResponse.message === 'Authorization URL created') {
+      if (
+        fundWalletResponse.status === true &&
+        fundWalletResponse.message === 'Authorization URL created'
+      ) {
         const { authorization_url, reference } = fundWalletResponse.data;
         setPaymentReference(reference);
 

@@ -21,24 +21,21 @@ export default function TransactionTable() {
 
   const fetchTransactions = async (type) => {
     try {
-      const response = await fetch(
-        `https://payina-be-6f08cdfb4414.herokuapp.com/dashboard/get-transaction-history`,
-        {
-          method: 'POST',
-          headers: {
-            accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify({
-            type,
-            startDate: new Date(dateRange.startDate).toISOString(),
-            endDate: new Date(dateRange.endDate).toISOString(),
-            page,
-            pageSize,
-          }),
-        }
-      );
+      const response = await fetch(import.meta.env.VITE_TRANSACTION_HISTORY, {
+        method: 'POST',
+        headers: {
+          accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          type,
+          startDate: new Date(dateRange.startDate).toISOString(),
+          endDate: new Date(dateRange.endDate).toISOString(),
+          page,
+          pageSize,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error(`Failed to fetch ${type} transactions: ${response.statusText}`);

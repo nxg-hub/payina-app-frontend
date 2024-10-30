@@ -7,7 +7,7 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
-  const [newAuthToken] = useLocalStorage('authtoken', '');
+  const [newAuthToken] = useLocalStorage('authToken', '');
   const [userData, setUserData] = useState(null);
   const [walletData, setWalletData] = useState(null);
   const [paymentReference, setPaymentReference] = useState(null);
@@ -35,8 +35,8 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
             accept: '*/*',
             apiKey: API_KEY,
             Authorization: `Bearer ${newAuthToken}`,
-            'Content-Type': 'application/json'
-          }
+            'Content-Type': 'application/json',
+          },
         });
 
         if (!userResponse.ok) {
@@ -50,8 +50,8 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
           headers: {
             Authorization: `Bearer ${newAuthToken}`,
             'Content-Type': 'application/json',
-            apiKey: API_KEY
-          }
+            apiKey: API_KEY,
+          },
         });
 
         if (!walletResponse.ok) {
@@ -76,14 +76,7 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
       onFundingInitiated(reference, { status: 'success' });
       setIsProcessing(false);
 
-      // Option 1: Direct navigation
-      navigate(-1); // Goes back to previous page
-
-      // Option 2: Through callback (uncomment if using this approach)
-      // onFundingInitiated(reference, {
-      //   status: 'success',
-      //   shouldNavigate: true // Parent component can handle navigation
-      // });
+      navigate(-1);
     }
   };
 
@@ -107,16 +100,13 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
       onClose: () => {
         if (!paymentCompleted) {
           axios
-            .get(
-              `https://payina-wallet-service-api.onrender.com/api/v1/bill/verify/${initializeData.reference}`,
-              {
-                headers: {
-                  Authorization: `Bearer ${newAuthToken}`,
-                  'Content-Type': 'application/json',
-                  apiKey: API_KEY
-                }
-              }
-            )
+            .get(import.meta.env.VITE_VERIFY_PAYMENT, {
+              headers: {
+                Authorization: `Bearer ${newAuthToken}`,
+                'Content-Type': 'application/json',
+                apiKey: API_KEY,
+              },
+            })
             .then((response) => {
               if (response.data.status === 'success' && response.data.data.status === 'success') {
                 handlePaymentCompletion(initializeData.reference, initializeData);
@@ -136,7 +126,7 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
         if (response.status === 'success') {
           handlePaymentCompletion(response.reference, initializeData);
         }
-      }
+      },
     };
 
     const handler = window.PaystackPop.setup(config);
@@ -154,14 +144,14 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
           email: userData?.email || formValues.email,
           amount: Number(amount) * 100,
           channels: ['card'],
-          walletId: walletData?.walletId || userData?.walletId
+          walletId: walletData?.walletId || userData?.walletId,
         },
         {
           headers: {
             'Content-Type': 'application/json',
             Accept: '*/*',
-            apiKey: API_KEY
-          }
+            apiKey: API_KEY,
+          },
         }
       );
 

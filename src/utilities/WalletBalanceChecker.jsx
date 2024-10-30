@@ -8,7 +8,7 @@ const WalletBalanceChecker = ({ amount, onInsufficientFunds, onSufficientFunds }
   const [balance, setBalance] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [newAuthToken] = useLocalStorage('authtoken', '');
+  const [newAuthToken] = useLocalStorage('authToken', '');
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [showInsufficientModal, setShowInsufficientModal] = useState(false);
 
