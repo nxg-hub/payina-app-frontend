@@ -13,7 +13,7 @@ export const Sidebar = () => {
   const currentRoute = location.pathname;
   const [userName, setUserName] = useState('');
   const [error, setError] = useState('');
-  const [newAuthToken] = useLocalStorage('authtoken', '');
+  const [newAuthToken] = useLocalStorage('authToken', '');
 
   useEffect(() => {
     const fetchUserName = async () => {
