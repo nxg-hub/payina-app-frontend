@@ -37,7 +37,6 @@ import UserData from './pages/Account/UserPages/data';
 import FundWallet from './pages/airtime/FundWallet';
 import Billers from './pages/Account/UserPages/billers';
 import Electricity from './pages/Account/UserPages/electricity';
-import { StepSeventeen } from './pages/Signup/_components';
 import TransactionHistory from './pages/Account/Dashboard/_components/transaction-history/transaction-history.jsx';
 // import PaymentPage from './pages/Account/UserPages/fund_wallet';
 
@@ -79,7 +78,6 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/account/dashboard" element={<Dashboard />} />
             <Route path="/account/invoice" element={<Invoice />} />
-            <Route path="/account/step" element={<StepSeventeen />} />
             <Route path="invoice/createinvoice" element={<Createinvoice />} />
             <Route path="/account/payroll" element={<Payroll />} />
             <Route path="/account/transaction" element={<Transaction />} />

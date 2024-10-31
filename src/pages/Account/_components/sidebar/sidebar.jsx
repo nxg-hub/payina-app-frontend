@@ -12,18 +12,19 @@ export const Sidebar = () => {
   const location = useLocation();
   const currentRoute = location.pathname;
   const [userName, setUserName] = useState('');
+  const [userImage, setUserImage] = useState('');
   const [error, setError] = useState('');
   const [newAuthToken] = useLocalStorage('authToken', '');
 
   useEffect(() => {
-    const fetchUserName = async () => {
+    const fetchUserDetails = async () => {
       if (!newAuthToken) {
         setError('No auth token found');
         return;
       }
 
       try {
-        const response = await fetch(import.meta.env.VITE_ACCOUNT_DETAILS, {
+        const response = await fetch(import.meta.env.VITE_GET_USER, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${newAuthToken}`,
@@ -33,8 +34,9 @@ export const Sidebar = () => {
 
         if (response.ok) {
           const data = await response.json();
-          console.log('Fetched User Name:', data.customerUserName);
-          setUserName(data.customerUserName || 'User');
+          console.log('Fetched User Details:', data);
+          setUserName(data.payinaUserName || 'User');
+          setUserImage(data.passportUrl || '');
           setError('');
         } else {
           setError('Failed to fetch user details');
@@ -45,14 +47,30 @@ export const Sidebar = () => {
       }
     };
 
-    fetchUserName();
+    fetchUserDetails();
   }, [newAuthToken]);
 
   return (
     <div className="bg-[#CCDFE6] float-left rounded-[10px] px-10 py-4 mt-[5.5rem] fixed w-[312px] h-[100vh] xl:block hidden">
       <div className="flex flex-col justify-center items-center">
         <div className="mb-20">
-          <img src={images.Profile} alt="profile image" />
+          {userImage ? (
+            <img
+              src={userImage}
+              alt="profile image"
+              className="w-24 h-24 rounded-full object-cover"
+              onError={(e) => {
+                e.target.src = images.Profile;
+                console.log('Error loading passport image, using fallback');
+              }}
+            />
+          ) : (
+            <img
+              src={images.Profile}
+              alt="profile image"
+              className="w-24 h-24"
+            />
+          )}
           <div className="font-semibold text-xl mt-2">
             {error ? `Error: ${error}` : `Hi, ${userName}`}
           </div>

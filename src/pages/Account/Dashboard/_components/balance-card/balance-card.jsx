@@ -46,7 +46,7 @@ const BalanceCard = () => {
   };
 
   return (
-    <div className="px-4 mx-auto w-auto ml-0 xl:ml-[19rem] clear-none xl:clear-right mt-20">
+    <div className="px-4 mx-auto w-auto ml-0 xl:ml-[19rem] clear-none xl:clear-right mt-4">
       <div className="w-auto p-4 py-6 h-fit xl:h-[134x] md:h-fit mx-auto text-start bg-lightBlue shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px] text-primary rounded-[10px]">
         <div className="flex gap-4 md:gap-0 md:pt-0 justify-between md:text-sm xl:text-base">
           <div className="px-4 py-4 md:py-8 space-y-2">
@@ -76,7 +76,7 @@ const BalanceCard = () => {
             {hideIcon && (
               <div className="md:text-[32px] text-2xl font-bold">
                 <span className="uppercase text-sm md:text-[23.282px] ">NGN</span>{' '}
-                {balance.toFixed(2)}
+                {balance.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
               </div>
             )}
           </div>
