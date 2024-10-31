@@ -3,8 +3,34 @@ import backArrow from '../../../../assets/images/Group-backArrow.png';
 import progressLine from '../../../../assets/images/Union.png';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import { RecieverSchema } from './schemas/schemas.js';
+import axios from 'axios';
 
 const RecipientDetails = ({ nextStep }) => {
+  const verifyPayinaTag = async (payinaTag) => {
+    try {
+      const endpoint = import.meta.env.VITE_GET_PAYINA_TAG_ENDPOINT.replace(
+        '{username}',
+        payinaTag
+      );
+
+      const response = await axios.get(endpoint);
+      return response.data.isValid;
+    } catch (error) {
+      console.error('Error verifying payina tag:', error);
+      return false;
+    }
+  };
+
+  const handleSubmit = async (values, { setFieldError }) => {
+    const isValid = await verifyPayinaTag(values.confirmPayinaTag);
+
+    if (isValid) {
+      nextStep();
+    } else {
+      setFieldError('confirmPayinaTag', 'Incorrect payinaTag. Please re-enter the correct one.');
+    }
+  };
+
   return (
     <div className="flex flex-col justify-center items-start xl:ml-80 xl:pt-28 md:pt-10 mx-auto">
       <div className="flex flex-row justify-between items-left gap-[45rem]">
@@ -22,12 +48,10 @@ const RecipientDetails = ({ nextStep }) => {
         <Formik
           initialValues={{
             payinaTag: '',
-            recieverName: '',
+            confirmPayinaTag: '',
           }}
           validationSchema={RecieverSchema}
-          onSubmit={() => {
-            nextStep();
-          }}>
+          onSubmit={handleSubmit}>
           {() => (
             <Form>
               <div className="flex flex-col items-left gap-2">
@@ -47,17 +71,17 @@ const RecipientDetails = ({ nextStep }) => {
                 />
               </div>
               <div className="flex flex-col  w-full py-4 space-y-4">
-                <label htmlFor="recieverName" className="text-left font-md text-md">
+                <label htmlFor="confirmPayinaTag" className="text-left font-md text-md">
                   Confirm Reciever Name
                 </label>
                 <Field
-                  name="recieverName"
+                  name="confirmPayinaTag"
                   type="text"
                   placeholder=""
                   className="w-[700px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                 />
                 <ErrorMessage
-                  name="recieverName"
+                  name="confirmPayinaTag"
                   component="span"
                   className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                 />
