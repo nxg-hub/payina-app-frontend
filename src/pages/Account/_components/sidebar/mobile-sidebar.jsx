@@ -32,7 +32,7 @@ export const MobileSidebar = () => {
 
         const data = await response.json();
         setCustomerUserName(data.payinaUserName || '');
-        setUserImage(data.passportUrl || ''); // Set the passport URL from the response
+        setUserImage(data.passportUrl || '');
       } catch (error) {
         console.error('Error fetching account details:', error);
       }
@@ -42,7 +42,11 @@ export const MobileSidebar = () => {
   }, []);
 
   return (
-    <div className="bg-[#CCDFE6] rounded-[10px] px-10 py-10 mt-4 w-[312px] h-[999px] overflow-y-scroll">
+    <div style={{
+      overflowY: 'auto',
+      scrollbarWidth: 'none',
+      msOverflowStyle: 'none'
+    }} className="bg-[#CCDFE6] fixed left-0 top-[5.5rem] w-[312px] h-[calc(100vh-5.5rem)] overflow-y-auto rounded-[10px] px-4 py-4 xl:block">
       <div className="flex flex-col justify-center items-center">
         <div className="mb-20">
           {userImage ? (
