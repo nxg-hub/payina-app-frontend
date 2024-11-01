@@ -51,7 +51,12 @@ export const Sidebar = () => {
   }, [newAuthToken]);
 
   return (
-    <div className="bg-[#CCDFE6] float-left rounded-[10px] px-10 py-4 mt-[5.5rem] fixed w-[312px] h-[100vh] xl:block hidden">
+    <div style={{
+      overflowY: 'auto',
+      scrollbarWidth: 'none',
+      msOverflowStyle: 'none'
+    }} className="bg-[#CCDFE6] fixed left-0 top-[5.5rem] w-[312px] h-[calc(100vh-5.5rem)] overflow-y-auto rounded-[10px] px-4 py-4 xl:block hidden scrollbar">
+     <div className="space-y-[52px] flex flex-col w-full pb-20">
       <div className="flex flex-col justify-center items-center">
         <div className="mb-20">
           {userImage ? (
@@ -136,6 +141,7 @@ export const Sidebar = () => {
           </Link>
         </div>
       </div>
+    </div>
     </div>
   );
 };

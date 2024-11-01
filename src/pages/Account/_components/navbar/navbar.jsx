@@ -7,15 +7,39 @@ import { UserContext } from '../../../../context/context';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { LuX } from 'react-icons/lu';
 import { MobileSidebar } from '../sidebar/mobile-sidebar';
+import useLocalStorage from '../../../../hooks/useLocalStorage.js';
 
 export const Navbar = () => {
-  const [userDetails, setUserDetails] = useState();
+  // const [userDetails, setUserDetails] = useState();
   const [toggleMenu, setToggleMenu] = useState(false);
-  const { data } = useContext(UserContext);
-  // console.log(userDetails);
+  // const { data } = useContext(UserContext);
+  const [customerUserName, setCustomerUserName] = useState('User');
+  const [userImage, setUserImage] = useState('');
+  const [newAuthToken] = useLocalStorage('authToken', '');
+
 
   useEffect(() => {
-    setUserDetails(data);
+    const fetchAccountDetails = async () => {
+      try {
+        const response = await fetch(import.meta.env.VITE_GET_USER, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${newAuthToken}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+
+        const data = await response.json();
+        setCustomerUserName(data.payinaUserName || 'User');
+        setUserImage(data.passportUrl || '');
+      } catch (error){
+        console.error('Error fetching account details:', error)
+      }
+    };
+    fetchAccountDetails();
   }, []);
 
   const selectArrow = `
@@ -43,7 +67,7 @@ export const Navbar = () => {
           <div className="text-nowrap font-medium text-base">Business Account</div>
           <select className="pl-4 pr-8 outline-none border border-lightBlue">
             <option className="capitalize p-2 text-base font-semibold">
-              {userDetails?.business_details?.business_name}
+              {customerUserName}
             </option>
           </select>
         </div>
