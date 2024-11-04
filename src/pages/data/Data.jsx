@@ -8,6 +8,7 @@ import DataPlansSelection from '../../components/DataPlansSelection';
 import { useForm } from '../../context/formContext';
 import EmailVerification from '../../components/EmailVerification';
 import { useDataPlans } from '../../hooks/useDataPlans';
+import NetworkSelectionNonPayinaUsers from '../../components/NetworkSelectionNonPayinaUsers.jsx';
 
 export const DataPurchaseForm = () => {
   const { formValues, updateFormValues } = useForm();
@@ -57,14 +58,14 @@ export const DataPurchaseForm = () => {
         ...formValues,
         email: localEmail,
         phoneNumber: formValues.phoneNumber,
-        selectedNetwork: formValues.selectedNetwork,
+        selectedNetwork: formValues.selectedNetwork
       },
       selectedPlan: {
         id: selectedPlan.id,
         planName: selectedPlan.name,
         planPrice: selectedPlan.amount,
-        planSlug: selectedPlan.slug,
-      },
+        planSlug: selectedPlan.slug
+      }
     };
 
     navigate('/planb', { state: stateToPass });
@@ -77,11 +78,12 @@ export const DataPurchaseForm = () => {
     [setSelectedPlan, updateFormValues]
   );
 
+
   return (
     <section>
       <Navbar />
 
-      <div className="container">
+      <div className="container bg-black">
         <div className="w-[80%] h-1 border-none mr-auto ml-auto mt-[-2px] mb-40 bg-yellow"></div>
         <p className="mt-[-120px] pb-8 text-6xl text-center font-extrabold text-lightBlue">
           Buy Data & get Cashback
@@ -114,7 +116,7 @@ export const DataPurchaseForm = () => {
                   value={formValues.phoneNumber}
                   onChange={(e) => updateFormValues({ phoneNumber: e.target.value })}
                 />
-                <NetworkSelection
+                <NetworkSelectionNonPayinaUsers
                   selectedNetwork={formValues.selectedNetwork}
                   onNetworkChange={(network) => updateFormValues({ selectedNetwork: network })}
                   error={errors.selectedNetwork}

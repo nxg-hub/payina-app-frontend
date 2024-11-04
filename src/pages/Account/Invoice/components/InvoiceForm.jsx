@@ -128,7 +128,6 @@ export const InvoiceForm = ({ next }) => {
       alert('An error occurred. Please try again.');
     }
   };
-  // Function to handle getting existing clients
   const handleGetClients = async (values) => {
     setIsLoadingClients(true);
     try {
