@@ -15,7 +15,8 @@ module.exports = {
         secondary: '#00678F',
         yellow: '#FFCB05',
         lightBlue: '#006181',
-        neutral: '#004359'
+        neutral: '#004359',
+        customGray: '#D9D9D9'
       },
       keyframes: {
         slideBottom: {
