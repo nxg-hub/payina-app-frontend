@@ -5,7 +5,7 @@ import Footer from '../../components/footer/footer';
 import EmailVerification from '../../components/EmailVerification';
 import { useForm } from '../../context/formContext';
 import { useDataPlans } from '../../hooks/useDataPlans';
-import NetworkSelection from '../../components/NetworkSelection';
+import NetworkSelection from '../../components/NetworkSelectionNonPayinaUsers';
 import DataPlansSelection from '../../components/DataPlansSelection';
 
 const Airtime = () => {
@@ -101,9 +101,9 @@ const Airtime = () => {
   };
 
   return (
-    <section className="text-primary w-full h-screen">
+    <section className="text-primary w-full h-screen ">
       <Navbar className="pt-6" />
-      <div className="container">
+      <div className="container bg-black">
         <div className="w-[80%] h-1 border-none mr-auto ml-auto mt-[-2px] mb-40 bg-yellow"></div>
         <p className="mt-[-120px] pb-8 text-6xl text-center font-extrabold text-lightBlue">
           Buy Airtime & get Cashback
