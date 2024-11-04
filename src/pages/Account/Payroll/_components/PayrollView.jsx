@@ -57,7 +57,7 @@ const PayrollView = ({ onBackClick }) => {
         const payrollResponse = await fetch(payrollEndpoint);
         const payrollData = await payrollResponse.json();
         const combinedData = employeeData.map((employee) => {
-          const payrollDetails = payrollData.find((payroll) => payroll === employee.id);
+          const payrollDetails = payrollData.find((payroll) => employee.id === payroll.employeeId);
           return {
             ...employee,
             jobRoleTitle: payrollDetails ? payrollDetails.jobRoleTitle : '',
@@ -212,17 +212,19 @@ const PayrollView = ({ onBackClick }) => {
                 </div>
                 <div className="flex flex-col gap-2 mt-4">
                   <h1 className="text-md font-bold text-lightBlue">Allowances</h1>
-                  {selectedEmployee.allowances.map((allowance, index) => (
-                    <div key={index}>
-                      <div className="text-sm font-bold">
-                        Allowance Package Name:{' '}
-                        <span className="font-medium">{allowance.allowancePackageName}</span>
+                  {selectedEmployee.allowances &&
+                    selectedEmployee.allowances.map((allowance, index) => (
+                      <div key={index}>
+                        <div className="text-sm font-bold">
+                          Allowance Package Name:{' '}
+                          <span className="font-medium">{allowance.allowancePackageName}</span>
+                        </div>
+                        <div className="text-sm font-bold">
+                          Allowance Pay:{' '}
+                          <span className="font-medium">{allowance.allowancePay}</span>
+                        </div>
                       </div>
-                      <div className="text-sm font-bold">
-                        Allowance Pay: <span className="font-medium">{allowance.allowancePay}</span>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </div>
 
