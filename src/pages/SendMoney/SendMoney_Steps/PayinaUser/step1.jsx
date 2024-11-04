@@ -12,30 +12,45 @@ const RecipientDetails = ({ nextStep }) => {
         '{username}',
         payinaTag
       );
+      console.log(`Requesting endpoint: ${endpoint}`);
 
       const response = await axios.get(endpoint);
-      return response.data.isValid;
+      console.log('API response data:', response.data);
+      if (response.data && response.data.payinaUserName) {
+        return response.data.payinaUserName;
+      } else {
+        return null;
+      }
     } catch (error) {
-      console.error('Error verifying payina tag:', error);
-      return false;
+      if (error.response && error.response.status === 404) {
+        console.error(`Payina tag "${payinaTag}" not found.`);
+      } else {
+        console.error('Error verifying payina tag:', error);
+      }
+      return null;
     }
   };
 
   const handleSubmit = async (values, { setFieldError }) => {
-    const isValid = await verifyPayinaTag(values.confirmPayinaTag);
+    if (values.payinaTag !== values.confirmPayinaTag) {
+      setFieldError('confirmPayinaTag', 'Payina Tag and Confirm Payina Tag must match.');
+      return;
+    }
 
-    if (isValid) {
-      nextStep();
+    const payinaUsername = await verifyPayinaTag(values.confirmPayinaTag);
+    console.log('Submitting form with values:', values);
+
+    if (payinaUsername) {
+      nextStep({ payinaTag: values.payinaTag });
     } else {
       setFieldError('confirmPayinaTag', 'Incorrect payinaTag. Please re-enter the correct one.');
     }
   };
-
   return (
     <div className="flex flex-col justify-center items-start xl:ml-80 xl:pt-28 md:pt-10 mx-auto">
       <div className="flex flex-row justify-between items-left gap-[45rem]">
         <div className="text-xl md:text-3xl font-medium">Send Money</div>
-        <div className="flex flex-row gap-2 cancelAction-img">
+        <div className="flex flex-row gap-2 cancelAction-img cursor-pointer">
           <img src={backArrow} alt="cancelAction"></img>
           <div className="text-md text-center mt-2">Back</div>
         </div>

@@ -1,8 +1,9 @@
 import React from 'react';
 import backArrow from '../../../../assets/images/Group-backArrow.png';
 import progressLine from '../../../../assets/images/Union.png';
+import PropTypes from 'prop-types';
 
-const ReviewTransaction = ({ nextStep, prevStep }) => {
+const ReviewTransaction = ({ data, nextStep, prevStep }) => {
   return (
     <div className="flex flex-col justify-center items-start xl:ml-80 xl:pt-28 md:pt-10 mx-auto">
       <div className="flex flex-row justify-between items-left gap-[45rem]">
@@ -19,17 +20,17 @@ const ReviewTransaction = ({ nextStep, prevStep }) => {
       <div className="flex flex-col items-left justify-between gap-4 bg-[#EBEBEB] rounded-md py-10 px-14 mt-5">
         <div className="flex flex-row justify-between gap-[20rem]">
           <div className="text-md font-medium">Receiver Name</div>
-          <div className="text-md font-medium">Jacob Yakub</div>
+          <div className="text-md font-medium">{data.payinaTag}</div>
         </div>
 
         <div className="flex flex-row justify-between gap-[20rem]">
           <div className="text-md font-medium">Trannsaction Amount</div>
-          <div className="text-md font-medium">100 000</div>
+          <div className="text-md font-medium">{data.amount}</div>
         </div>
 
         <div className="flex flex-row justify-between gap-[20rem]">
-          <div className="text-md font-medium">Transaction ID</div>
-          <div className="text-md font-medium">567289735637</div>
+          <div className="text-md font-medium">Transaction Purpose</div>
+          <div className="text-md font-medium">{data.purpose}</div>
         </div>
       </div>
       <div className="flex justify-end mt-5 ml-[22rem]">
@@ -42,6 +43,16 @@ const ReviewTransaction = ({ nextStep, prevStep }) => {
       </div>
     </div>
   );
+};
+
+ReviewTransaction.propTypes = {
+  data: PropTypes.shape({
+    payinaTag: PropTypes.string.isRequired,
+    amount: PropTypes.string.isRequired,
+    purpose: PropTypes.string.isRequired,
+  }).isRequired,
+  nextStep: PropTypes.func.isRequired,
+  prevStep: PropTypes.func.isRequired,
 };
 
 export default ReviewTransaction;

@@ -3,13 +3,20 @@ import RecipientDetails from './step1';
 import AmountDetails from './step2';
 import ReviewTransaction from './step3';
 import EnterPin from './step4';
-import SuccessPage from './step5';
+import SuccessMessage from './step5';
+import DeclineMessage from './step6';
 
 const PayinaUser = () => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [transactionData, setTransactionData] = useState({
+    payinaTag: '',
+    amount: '',
+    purpose: '',
+  });
 
-  const nextStep = () => {
-    setCurrentStep((prevStep) => Math.min(prevStep + 1, 6));
+  const nextStep = (data) => {
+    setTransactionData((prev) => ({ ...prev, ...data }));
+    setCurrentStep((prevStep) => prevStep + 1);
   };
 
   const prevStep = () => {
@@ -23,13 +30,11 @@ const PayinaUser = () => {
       case 2:
         return <AmountDetails nextStep={nextStep} prevStep={prevStep} />;
       case 3:
-        return <ReviewTransaction nextStep={nextStep} prevStep={prevStep} />;
+        return <ReviewTransaction data={transactionData} nextStep={nextStep} prevStep={prevStep} />;
       case 4:
-        return <EnterPin nextStep={nextStep} prevStep={prevStep} />;
-      case 5:
-        return <SuccessPage nextStep={nextStep} prevStep={prevStep} />;
+        return <EnterPin data={transactionData} prevStep={prevStep} />;
       default:
-        return <RecipientDetails nextStep={nextStep} />;
+        return <RecipientDetails nextStep={prevStep} />;
     }
   };
 

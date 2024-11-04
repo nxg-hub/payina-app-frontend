@@ -5,6 +5,9 @@ import { Field, Formik, Form, ErrorMessage } from 'formik';
 import { AmountSchema } from './schemas/schemas.js';
 
 const AmountDetails = ({ nextStep, prevStep }) => {
+  const handleSubmit = (values) => {
+    nextStep({ amount: values.amount, purpose: values.purpose }); // Pass amount and purpose to nextStep
+  };
   return (
     <div className="flex flex-col justify-center items-start xl:ml-80 xl:pt-28 md:pt-10 mx-auto">
       <div className="flex flex-row justify-between items-left gap-[45rem]">
@@ -25,9 +28,7 @@ const AmountDetails = ({ nextStep, prevStep }) => {
             purpose: '',
           }}
           validationSchema={AmountSchema}
-          onSubmit={() => {
-            nextStep();
-          }}>
+          onSubmit={handleSubmit}>
           {() => (
             <Form>
               <div className="flex flex-col items-left gap-2">

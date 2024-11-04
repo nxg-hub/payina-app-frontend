@@ -31,9 +31,15 @@ const SendMoneySteps = () => {
                 </div>
               </Link>
             </div>
-            <div className="item-center mt-5 mx-auto">
+            <div className="">
               <img src={progressLine} alt="progressLine"></img>
             </div>
+            {/* <div className="item-center mt-5 mx-auto relative">
+              <div className="">
+                <img src={progressLine} alt="progressLine"></img>
+              </div>
+              <div className="color-input bg-[#006181] rounded-full px-3 py-3 absolute top-0"></div>
+            </div> */}
             <div className="text-md md:text-xl font-medium mt-5">Send To</div>
             <div
               onClick={() => setSelectedForm('payinaUser')}
@@ -74,3 +80,4 @@ const SendMoneySteps = () => {
 };
 
 export default SendMoneySteps;
+
