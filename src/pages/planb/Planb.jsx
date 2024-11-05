@@ -8,7 +8,7 @@ import OrderReview from '../OrderReview/OrderReview.jsx';
 import TransactionModal from '../../utilities/TransactionModal';
 import Loader from '../../assets/LoadingSpinner';
 
-const PlanB = () => {
+const Planb = () => {
   const location = useLocation();
   const [formData, setFormData] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -214,7 +214,7 @@ const PlanB = () => {
   if (!formData || !formData.selectedPlan) {
     return (
       <section className="text-primary">
-        <Sidebar />
+        {/*<Sidebar />*/}
         <Navbar />
         <NoValidSelection message="No valid plan selected. Please go back and select a plan." />
         <Footer />
@@ -229,7 +229,7 @@ const PlanB = () => {
   const email = formValues?.email || '';
 
   return (
-    <section className="text-primary">
+    <section className="text-primary bg-black">
       <Navbar />
       <OrderReview
         planName={planName}
@@ -239,7 +239,7 @@ const PlanB = () => {
         email={email}
       />
       {statusMessage && <p className="text-blue-500 mt-4">{statusMessage}</p>}
-      {isProcessingVend && <Loader />} {/* Add your loader component here */}
+      {isProcessingVend && <Loader />}
       <button
         className="text-primary mt-[25] text-left px-16 py-4 border-none rounded-[5px] bg-lightBlue cursor-pointer hover:bg-neutral transition-all duration-200"
         onClick={handleProceed}
@@ -260,7 +260,7 @@ const PlanB = () => {
   );
 };
 
-export default PlanB;
+export default Planb;
 
 //
 // import React, { useEffect, useState, useCallback } from 'react';

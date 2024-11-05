@@ -8,7 +8,7 @@ const OrderReview = ({ planName, network, phoneNumber, planPrice, email }) => {
         Review your Order
       </button>
       <ReviewItem label="Product" value={planName || 'N/A'} />
-      <ReviewItem label="Network" value={network} />
+      {/*<ReviewItem label="Network" value={network} />*/}
       <ReviewItem label="Phone number" value={phoneNumber} />
       <ReviewItem label="Amount" value={planPrice || 'N/A'} />
       <ReviewItem label="Email" value={email} />

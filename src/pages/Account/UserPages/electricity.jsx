@@ -1,9 +1,10 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../../../components/navbar/navbar';
-import Footer from '../../../components/footer/footer';
 import { useForm } from '../../../context/formContext';
 import apiService from '../../../services/apiService';
+import Navbar from '../../../components/navbar/navbar';
+import Footer from '../../../components/footer/footer';
+import CustomButton from '../../../components/button/button.jsx';
 
 const ALLOWED_SERVICES = ['ELECTRIC_DISCO'];
 
@@ -82,9 +83,9 @@ const Electricity = () => {
       slug: selectedService?.slug || '',
     };
 
-    navigate('/bettwo', {
+    navigate('/account/bills/details', {
       state: stateToPass,
-      replace: true, // Use replace to prevent going back to this page
+      replace: true,
     });
   }, [navigate, formValues, bettingServices]);
 
@@ -101,51 +102,71 @@ const Electricity = () => {
   };
 
   return (
-    <section>
+    <section className="min-h-screen flex flex-col">
       <Navbar />
-      <div className="container">
-        <div className="w-[80%] h-1 border-none mr-auto ml-auto mt-[-2px] mb-40 bg-yellow"></div>
-        <form onSubmit={handleSubmit} className="text-white">
-          <div className="flex flex-col w-[64%]">
-            <label htmlFor="betting-service-select" className="py-4">
-              Choose Service
-            </label>
-            <select
-              id="betting-service-select"
-              value={formValues.selectedBettingService || ''}
-              onChange={(e) => updateFormValues({ selectedBettingService: e.target.value })}
-              className="border-2 text-xs rounded-[5px] px-5 py-2 border-primary bg-black text-slate-600 w-full">
-              <option value="">Select Service</option>
-              {bettingServices.map((service) => (
-                <option key={service.id} value={service.slug}>
-                  {service.name}
-                </option>
-              ))}
-            </select>
-            {errors.selectedBettingService && (
-              <p className="text-red-500 mt-1">{errors.selectedBettingService}</p>
-            )}
-            {error && <p className="text-red-500 mt-1">{error}</p>}
+      <main className="flex-grow bg-gray-100">
+        <div className="container mx-auto px-4 py-8">
+          <div className="relative mb-8">
+            <div className="w-4/5 h-1 bg-yellow-400 mx-auto -mt-0.5" />
           </div>
-          <div className="flex flex-col w-[64%]">
-            <label className="py-4">Phone</label>
-            <input
-              type="number"
-              placeholder="Enter Phone number"
-              className="border-2 text-xs rounded-[5px] px-5 py-2 border-primary bg-black text-slate-600"
-              value={formValues.phoneNumber || ''}
-              onChange={(e) => updateFormValues({ phoneNumber: e.target.value })}
-            />
-            {errors.phoneNumber && <p className="text-red-500 mt-1">{errors.phoneNumber}</p>}
+
+          <div className="max-w-lg mx-auto bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-6">Electricity Payment</h2>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-4">
+                {/*<div className="space-y-2">*/}
+                {/*  <label htmlFor="betting-service-select"*/}
+                {/*         className="block text-sm font-medium text-gray-700">*/}
+                {/*    Choose Service*/}
+                {/*  </label>*/}
+                {/*  <select*/}
+                {/*    id="betting-service-select"*/}
+                {/*    value={formValues.selectedBettingService || ''}*/}
+                {/*    onChange={(e) => updateFormValues({ selectedBettingService: e.target.value })}*/}
+                {/*    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700"*/}
+                {/*  >*/}
+                {/*    <option value="">Select Service</option>*/}
+                {/*    {bettingServices.map((service) => (*/}
+                {/*      <option key={service.id} value={service.slug}>*/}
+                {/*        {service.name}*/}
+                {/*      </option>*/}
+                {/*    ))}*/}
+                {/*  </select>*/}
+                {/*  {errors.selectedBettingService && (*/}
+                {/*    <p className="mt-2 text-sm text-red-600">{errors.selectedBettingService}</p>*/}
+                {/*  )}*/}
+                {/*  {error && <p className="mt-2 text-sm text-red-600">{error}</p>}*/}
+                {/*</div>*/}
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Phone
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="Enter Phone number"
+                    value={formValues.phoneNumber || ''}
+                    onChange={(e) => updateFormValues({ phoneNumber: e.target.value })}
+                    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  {errors.phoneNumber && (
+                    <p className="mt-2 text-sm text-red-600">{errors.phoneNumber}</p>
+                  )}
+                </div>
+              </div>
+
+              <CustomButton
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
+              >
+                {isLoading ? 'Loading...' : 'Proceed'}
+              </CustomButton>
+            </form>
           </div>
-          <button
-            type="submit"
-            className="text-primary mb-10 mt-10 text-left px-16 py-4 border-none rounded-[5px] bg-lightBlue cursor-pointer hover:bg-neutral transition-all duration-200"
-            disabled={isLoading}>
-            {isLoading ? 'Loading...' : 'Proceed to Next Step'}
-          </button>
-        </form>
-      </div>
+        </div>
+      </main>
       <Footer />
     </section>
   );

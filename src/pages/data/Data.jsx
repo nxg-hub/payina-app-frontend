@@ -68,7 +68,7 @@ export const DataPurchaseForm = () => {
       }
     };
 
-    navigate('/planb', { state: stateToPass });
+    navigate('/plans/review', { state: stateToPass });
   };
   const handlePlanSelection = useCallback(
     (plan) => {

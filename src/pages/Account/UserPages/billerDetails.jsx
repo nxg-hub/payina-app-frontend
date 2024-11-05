@@ -1,11 +1,12 @@
+
 import React, { useEffect, useState, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Navbar from '../../components/navbar/navbar';
-import Footer from '../../components/footer/footer';
-import ServiceImages from '../../assets/serviceImages.jsx';
-import apiService from '../../services/apiService';
+import Navbar from '../../../components/navbar/navbar';
+import Footer from '../../../components/footer/footer';
+import ServiceImages from '../../../assets/serviceImages.jsx';
+import apiService from '../../../services/apiService';
 
-const Bettwo = () => {
+const BillerDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { email, selectedBettingService, phoneNumber } = location.state?.formValues || {};
@@ -20,12 +21,15 @@ const Bettwo = () => {
   const [customerDetails, setCustomerDetails] = useState(null);
   const [plans, setPlans] = useState([]);
   const [selectedPlan, setSelectedPlan] = useState(null);
-  const [selectedPlanSlug, setSelectedPlanSlug] = useState(null);
 
   const handleImageClick = (billerSlug) => {
     const selectedBillerObj = billerOptions.find((biller) => biller.slug === billerSlug);
     setSelectedBiller(selectedBillerObj || null);
-    resetForm();
+    setVerificationResult(null);
+    setCustomerDetails(null);
+    setError(null);
+    setSelectedPlan(null);
+    setAmount('');
   };
 
   const fetchBillerOptions = useCallback(async (billerGroupSlug) => {
@@ -65,8 +69,11 @@ const Bettwo = () => {
   const verifyUser = useCallback(
     async (customerId) => {
       if (!selectedBiller) return;
+
       setIsLoading(true);
-      resetVerification();
+      setError(null);
+      setVerificationResult(null);
+      setCustomerDetails(null);
 
       try {
         const response = await apiService.verifyCustomer({
@@ -76,28 +83,27 @@ const Bettwo = () => {
         });
 
         if (response.error) {
+          setError(response.message || 'An error occurred during verification.');
           setVerificationResult({
             status: 'failed',
-            narration: response.message || 'Verification failed.'
+            narration: response.responseData?.narration || 'Verification failed.'
           });
-          setError(response.message || 'An error occurred during verification.');
-          setCustomerDetails(null);
         } else {
           setVerificationResult({
             status: 'success',
             narration: response.message || 'Verification successful.'
           });
-          setCustomerDetails(response.responseData?.customer || null);
-          setError(null);
+          if (response.responseData?.customer) {
+            setCustomerDetails(response.responseData.customer);
+          }
         }
       } catch (error) {
         console.error('Error verifying user:', error);
+        setError('Failed to verify user. Please check your customer reference.');
         setVerificationResult({
           status: 'failed',
           narration: "An error occurred while validating the customer's identity."
         });
-        setError('Failed to verify user. Please check your customer reference.');
-        setCustomerDetails(null);
       } finally {
         setIsLoading(false);
       }
@@ -123,32 +129,23 @@ const Bettwo = () => {
     const selectedBillerSlug = e.target.value;
     const selectedBillerObj = billerOptions.find((biller) => biller.slug === selectedBillerSlug);
     setSelectedBiller(selectedBillerObj || null);
-    resetForm();
+    setVerificationResult(null);
+    setCustomerDetails(null);
+    setError(null);
+    setSelectedPlan(null);
+    setAmount('');
   };
 
   const handlePlanChange = (e) => {
     const selectedPlanId = e.target.value;
-
-    if (!selectedPlanId) {
-      console.warn("No plan selected");
-      setSelectedPlan(null);
-      setAmount('');
-      setSelectedPlanSlug(null);
-      return;
-    }
-
-    const selectedPlanObj = plans.find((plan) => plan.id && plan.id.toString() === selectedPlanId);
+    const selectedPlanObj = plans.find((plan) => plan.id.toString() === selectedPlanId);
 
     if (selectedPlanObj) {
       setSelectedPlan(selectedPlanObj);
-      setAmount(selectedPlanObj.amount?.toString() || '');
-      setSelectedPlanSlug(selectedPlanObj.slug || '');
-      console.log("Selected Plan Slug:", selectedPlanObj.slug);
+      setAmount(selectedPlanObj.amount.toString());
     } else {
-      console.warn("Selected plan not found in the list");
       setSelectedPlan(null);
       setAmount('');
-      setSelectedPlanSlug(null);
     }
   };
 
@@ -174,8 +171,7 @@ const Bettwo = () => {
         phoneNumber,
         customerDetails,
         verificationResult,
-        selectedPlan,
-        packageSlug: selectedPlanSlug
+        selectedPlan
       }
     });
   };
@@ -187,22 +183,9 @@ const Bettwo = () => {
       ELECTRIC_DISCO: 'Choose Your Electricity Provider',
       AIRTIME_AND_DATA: 'Select Your Network Provider',
       ENTERTAINMENT_AND_LIFESTYLE: 'Choose Your Entertainment Service'
+      // Add more titles as needed
     };
     return titles[selectedBettingService] || 'Select Service Provider';
-  };
-
-  const resetForm = () => {
-    setVerificationResult(null);
-    setCustomerDetails(null);
-    setError(null);
-    setSelectedPlan(null);
-    setAmount('');
-  };
-
-  const resetVerification = () => {
-    setVerificationResult(null);
-    setCustomerDetails(null);
-    setError(null);
   };
 
   return (
@@ -213,6 +196,14 @@ const Bettwo = () => {
         <p className="mt-[-120px] pb-8 text-6xl text-center font-extrabold text-lightBlue">
           {getServiceTitle()}
         </p>
+
+        <button className="text-primary text-left p-10 border-none rounded-[5px] w-[64%] bg-neutral mb-3 px-4 py-2">
+          Want to enjoy discounts?
+          <span className="text-yellow"> Register</span> or{' '}
+          <span className="text-yellow">Login</span>{' '}
+        </button>
+
+        <p className="text-primary mb-3 mt-2">Popular Platforms</p>
 
         <ServiceImages
           selectedService={selectedBettingService}
@@ -259,36 +250,6 @@ const Bettwo = () => {
         )}
 
         <div className="flex-col">
-          <label htmlFor="customer-reference" className="block text-primary mb-2">
-            Customer Reference
-          </label>
-          <input
-            id="customer-reference"
-            type="text"
-            value={customerReference}
-            onChange={handleCustomerReferenceChange}
-            className="border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-black text-slate-600 w-[64%] mb-3"
-            placeholder="Enter customer reference"
-          />
-        </div>
-
-        {customerDetails && (
-          <div className="">
-            {/*<h3 className="text-lightBlue font-semibold mb-2">Customer Details</h3>*/}
-            <p className="text-lightBlue">Name: {customerDetails.customerName}</p>
-            {customerDetails.address && (
-              <p className="text-lightBlue">Address: {customerDetails.address}</p>
-            )}
-          </div>
-        )}
-
-        {error && (
-          <div className="mb-4 p-4 bg-red-900 text-white rounded-md w-[64%]">
-            {error}
-          </div>
-        )}
-
-        <div className="flex-col">
           <label htmlFor="amount" className="block text-primary mb-2">
             Amount
           </label>
@@ -302,11 +263,72 @@ const Bettwo = () => {
           />
         </div>
 
+        <div className="flex-col">
+          <label htmlFor="customer-reference" className="block text-primary mb-2">
+            Customer Reference
+          </label>
+          <input
+            id="customer-reference"
+            type="text"
+            value={customerReference}
+            onChange={handleCustomerReferenceChange}
+            className="border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-black text-slate-600 w-[64%] mb-3"
+            placeholder="Enter customer reference"
+          />
+        </div>
+
+        <div className="flex-col">
+          <label htmlFor="phone-number" className="block text-primary mb-2">
+            Phone Number
+          </label>
+          <input
+            id="phone-number"
+            type="text"
+            value={phoneNumber || ''}
+            readOnly
+            className="border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-black text-slate-600 w-[64%] mb-3"
+          />
+        </div>
+
+        {verificationResult && (
+          <p
+            className={`mt-1 ${
+              verificationResult.status === 'success' ? 'text-green-500' : 'text-red-500'
+            }`}>
+            {verificationResult.narration}
+          </p>
+        )}
+
+        {customerDetails && (
+          <div className="mt-3 text-primary">
+            <p>
+              <strong>Customer Name:</strong> {customerDetails.customerName}
+            </p>
+            <p>
+              <strong>Address:</strong> {customerDetails.address}
+            </p>
+            <p>
+              <strong>Phone Number:</strong> {customerDetails.phoneNumber}
+            </p>
+          </div>
+        )}
+
+        {isLoading && <p className="text-primary">Loading...</p>}
+        {error && <p className="text-red-500">Error: {error}</p>}
+
         <button
           onClick={handleProceed}
-          className="mt-4 px-4 py-2 bg-lightBlue text-white rounded-md hover:bg-blue-600 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed"
-          disabled={isLoading || !customerDetails}>
-          {isLoading ? 'Loading...' : 'Proceed'}
+          className="text-primary mb-10 mt-5 text-left px-16 py-4 border-none rounded-[5px] bg-lightBlue cursor-pointer hover:bg-neutral transition-all duration-200"
+          disabled={
+            !selectedBiller ||
+            !amount ||
+            !customerReference ||
+            !email ||
+            !phoneNumber ||
+            isLoading ||
+            verificationResult?.status !== 'success'
+          }>
+          Proceed
         </button>
       </div>
       <Footer />
@@ -314,4 +336,4 @@ const Bettwo = () => {
   );
 };
 
-export default Bettwo;
+export default BillerDetails;
