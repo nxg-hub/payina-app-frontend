@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Navbar from '../../../components/navbar/navbar';
+import { Navbar, Sidebar } from '../_components';
 import Footer from '../../../components/footer/footer';
 import ServiceImages from '../../../assets/serviceImages.jsx';
 import apiService from '../../../services/apiService';
@@ -191,7 +191,8 @@ const BillerDetails = () => {
   return (
     <section>
       <Navbar />
-      <div className="container bg-black">
+      <Sidebar />
+      <div className="container bg-white">
         <div className="w-[80%] h-1 border-none mr-auto ml-auto mt-[-2px] mb-40 bg-yellow"></div>
         <p className="mt-[-120px] pb-8 text-6xl text-center font-extrabold text-lightBlue">
           {getServiceTitle()}

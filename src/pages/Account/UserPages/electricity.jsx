@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from '../../../context/formContext';
 import apiService from '../../../services/apiService';
-import Navbar from '../../../components/navbar/navbar';
+import { Navbar, Sidebar } from '../_components';
 import Footer from '../../../components/footer/footer';
 import CustomButton from '../../../components/button/button.jsx';
 
@@ -83,7 +83,7 @@ const Electricity = () => {
       slug: selectedService?.slug || '',
     };
 
-    navigate('/account/bills/details', {
+    navigate('/account/bills/plans', {
       state: stateToPass,
       replace: true,
     });
@@ -104,6 +104,7 @@ const Electricity = () => {
   return (
     <section className="min-h-screen flex flex-col">
       <Navbar />
+      <Sidebar />
       <main className="flex-grow bg-gray-100">
         <div className="container mx-auto px-4 py-8">
           <div className="relative mb-8">
@@ -115,29 +116,29 @@ const Electricity = () => {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-4">
-                {/*<div className="space-y-2">*/}
-                {/*  <label htmlFor="betting-service-select"*/}
-                {/*         className="block text-sm font-medium text-gray-700">*/}
-                {/*    Choose Service*/}
-                {/*  </label>*/}
-                {/*  <select*/}
-                {/*    id="betting-service-select"*/}
-                {/*    value={formValues.selectedBettingService || ''}*/}
-                {/*    onChange={(e) => updateFormValues({ selectedBettingService: e.target.value })}*/}
-                {/*    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700"*/}
-                {/*  >*/}
-                {/*    <option value="">Select Service</option>*/}
-                {/*    {bettingServices.map((service) => (*/}
-                {/*      <option key={service.id} value={service.slug}>*/}
-                {/*        {service.name}*/}
-                {/*      </option>*/}
-                {/*    ))}*/}
-                {/*  </select>*/}
-                {/*  {errors.selectedBettingService && (*/}
-                {/*    <p className="mt-2 text-sm text-red-600">{errors.selectedBettingService}</p>*/}
-                {/*  )}*/}
-                {/*  {error && <p className="mt-2 text-sm text-red-600">{error}</p>}*/}
-                {/*</div>*/}
+                <div className="space-y-2">
+                  <label htmlFor="betting-service-select"
+                         className="block text-sm font-medium text-gray-700">
+                    Choose Service
+                  </label>
+                  <select
+                    id="betting-service-select"
+                    value={formValues.selectedBettingService || ''}
+                    onChange={(e) => updateFormValues({ selectedBettingService: e.target.value })}
+                    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700"
+                  >
+                    <option value="">Select Service</option>
+                    {bettingServices.map((service) => (
+                      <option key={service.id} value={service.slug}>
+                        {service.name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.selectedBettingService && (
+                    <p className="mt-2 text-sm text-red-600">{errors.selectedBettingService}</p>
+                  )}
+                  {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+                </div>
 
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700">

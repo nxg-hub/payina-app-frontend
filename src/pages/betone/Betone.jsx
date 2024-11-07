@@ -123,7 +123,7 @@ const Betone = () => {
   };
 
   return (
-    <section>
+    <section className="bg-black">
       <Navbar />
       <div className="container bg-black">
         <div className="w-[80%] h-1 border-none mr-auto ml-auto mt-[-2px] mb-40 bg-yellow"></div>

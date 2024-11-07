@@ -2,9 +2,10 @@ import React from 'react';
 
 const OrderReview = ({ planName, network, phoneNumber, planPrice, email }) => {
   return (
-    <div className="container">
-      <div className="w-[80%] h-1 border-none mr-auto ml-auto mt-[-2px] mb-8 bg-yellow"></div>
-      <button className="text-primary mt-[25] text-left p-10 border-none rounded-[5px] w-[64%] bg-neutral px-4 py-2">
+    <div className="w-4/5 mx-auto mb-10">
+    {/*<div className="w-4/5 mx-auto mb-10">*/}
+      <div className="w-full h-1 bg-yellow mb-32"></div>
+      <button className="ml-[15.5%] text-primary text-center p-4 rounded-md w-[62%] bg-neutral mb-6">
         Review your Order
       </button>
       <ReviewItem label="Product" value={planName || 'N/A'} />
@@ -17,10 +18,10 @@ const OrderReview = ({ planName, network, phoneNumber, planPrice, email }) => {
 };
 
 const ReviewItem = ({ label, value }) => (
-  <div className="flex px-5 gap-4">
-    <p className="pt-8 pr-5 text-sm">{label}</p>
-    <div className="w-[42%] mt-24 h-1 ml-5 border-none bg-yellow"></div>
-    <p className="pt-8 pl-5 text-sm">{value}</p>
+  <div className="flex items-center mb-11">
+    <p className="text-sm w-1/6">{label}</p>
+    <div className="w-3/5 h-1 bg-yellow"></div>
+    <p className="text-sm w-1/6 pl-14">{value}</p>
   </div>
 );
 

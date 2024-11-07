@@ -71,21 +71,22 @@ const Bettwo = () => {
       try {
         const response = await apiService.verifyCustomer({
           customerId,
+          // productName: `${selectedBiller.name}`,
           productName: `${selectedBiller.name}_PREPAID`,
-          billerSlug: selectedBiller.slug
+          billerSlug: selectedBiller.slug,
         });
 
         if (response.error) {
           setVerificationResult({
             status: 'failed',
-            narration: response.message || 'Verification failed.'
+            narration: response.message || 'Verification failed.',
           });
           setError(response.message || 'An error occurred during verification.');
           setCustomerDetails(null);
         } else {
           setVerificationResult({
             status: 'success',
-            narration: response.message || 'Verification successful.'
+            narration: response.message || 'Verification successful.',
           });
           setCustomerDetails(response.responseData?.customer || null);
           setError(null);
@@ -94,7 +95,7 @@ const Bettwo = () => {
         console.error('Error verifying user:', error);
         setVerificationResult({
           status: 'failed',
-          narration: "An error occurred while validating the customer's identity."
+          narration: "An error occurred while validating the customer's identity.",
         });
         setError('Failed to verify user. Please check your customer reference.');
         setCustomerDetails(null);
@@ -130,7 +131,7 @@ const Bettwo = () => {
     const selectedPlanId = e.target.value;
 
     if (!selectedPlanId) {
-      console.warn("No plan selected");
+      console.warn('No plan selected');
       setSelectedPlan(null);
       setAmount('');
       setSelectedPlanSlug(null);
@@ -143,9 +144,9 @@ const Bettwo = () => {
       setSelectedPlan(selectedPlanObj);
       setAmount(selectedPlanObj.amount?.toString() || '');
       setSelectedPlanSlug(selectedPlanObj.slug || '');
-      console.log("Selected Plan Slug:", selectedPlanObj.slug);
+      console.log('Selected Plan Slug:', selectedPlanObj.slug);
     } else {
-      console.warn("Selected plan not found in the list");
+      console.warn('Selected plan not found in the list');
       setSelectedPlan(null);
       setAmount('');
       setSelectedPlanSlug(null);
@@ -175,8 +176,8 @@ const Bettwo = () => {
         customerDetails,
         verificationResult,
         selectedPlan,
-        packageSlug: selectedPlanSlug
-      }
+        packageSlug: selectedPlanSlug,
+      },
     });
   };
 
@@ -186,7 +187,7 @@ const Bettwo = () => {
       PAY_TV: 'Select Your TV Provider',
       ELECTRIC_DISCO: 'Choose Your Electricity Provider',
       AIRTIME_AND_DATA: 'Select Your Network Provider',
-      ENTERTAINMENT_AND_LIFESTYLE: 'Choose Your Entertainment Service'
+      ENTERTAINMENT_AND_LIFESTYLE: 'Choose Your Entertainment Service',
     };
     return titles[selectedBettingService] || 'Select Service Provider';
   };
@@ -206,7 +207,7 @@ const Bettwo = () => {
   };
 
   return (
-    <section>
+    <section className="bg-black">
       <Navbar />
       <div className="container bg-black">
         <div className="w-[80%] h-1 border-none mr-auto ml-auto mt-[-2px] mb-40 bg-yellow"></div>
@@ -282,11 +283,7 @@ const Bettwo = () => {
           </div>
         )}
 
-        {error && (
-          <div className="mb-4 p-4 bg-red-900 text-white rounded-md w-[64%]">
-            {error}
-          </div>
-        )}
+        {error && <div className="mb-4 p-4 bg-red-900 text-white rounded-md w-[64%]">{error}</div>}
 
         <div className="flex-col">
           <label htmlFor="amount" className="block text-primary mb-2">

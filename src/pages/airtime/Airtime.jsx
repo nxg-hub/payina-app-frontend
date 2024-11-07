@@ -101,9 +101,9 @@ const Airtime = () => {
   };
 
   return (
-    <section className="w-full h-screen text-white">
+    <section className="w-full h-screen text-white bg-black">
       <Navbar className="pt-6" />
-      <div className="container bg-black">
+      <div className="container">
         <div className="w-[80%] h-1 border-none mr-auto ml-auto mt-[-2px] mb-40 bg-yellow"></div>
         <p className="mt-[-120px] pb-8 text-6xl text-center font-extrabold text-lightBlue">
           Buy Airtime & get Cashback

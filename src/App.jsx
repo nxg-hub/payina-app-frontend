@@ -40,6 +40,7 @@ import Electricity from './pages/Account/UserPages/electricity';
 import TransactionHistory from './pages/Account/Dashboard/_components/transaction-history/transaction-history.jsx';
 import BillerDetails from './pages/Account/UserPages/billerDetails.jsx';
 import PlansReview from './pages/befour/PlansReview.jsx';
+import BillerPlans from './pages/Account/UserPages/billerPlans.jsx';
 // import PaymentPage from './pages/Account/UserPages/fund_wallet';
 
 function App() {
@@ -89,6 +90,7 @@ function App() {
             <Route path="/account/airtime" element={<UserAirtime />} />
             <Route path="/account/bills" element={<Billers />} />
             <Route path="/account/bills/details" element={<BillerDetails />} />
+            <Route path="/account/bills/plans" element={<BillerPlans />} />
             <Route path="/account/fund-wallet" element={<FundWallet />} />
             <Route path="/account/transaction-history" element={<TransactionHistory />} />
             <Route path="/account/data" element={<UserData />} />

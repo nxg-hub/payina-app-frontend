@@ -5,17 +5,17 @@ import Loader from '../assets/LoadingSpinner.jsx';
 import CustomButton from '../components/button/button.jsx';
 
 const VendInitiator = ({
-  selectedPlan,
-  formValues,
-  packageSlug,
-  amount,
-  onVendInitiated,
-  onError,
-  accountNumber,
-  customerReference,
-  isProcessing,
-  setIsProcessing,
-}) => {
+                         selectedPlan,
+                         formValues,
+                         packageSlug,
+                         amount,
+                         onVendInitiated,
+                         onError,
+                         accountNumber,
+                         customerReference,
+                         isProcessing,
+                         setIsProcessing,
+                       }) => {
   const [statusMessage, setStatusMessage] = useState('');
   const [newAuthToken] = useLocalStorage('authToken', '');
   const [userData, setUserData] = useState(null);
@@ -130,7 +130,7 @@ const VendInitiator = ({
         amount: amount,
         customerName: userData ? `${userData.firstName} ${userData.lastName}` : '',
         phoneNumber: formValues.phoneNumber,
-        accountNumber: userData?.accountNumber || accountNumber ,
+        accountNumber: userData?.customerReference || customerReference,
         email: userData?.email || formValues.email,
         merchantId: walletDetailsRef.current.businessId,
       };

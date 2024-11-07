@@ -44,7 +44,7 @@ const Paybills = () => {
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-center px-20 md:pt-20 pb-10 text-white lg:flex lg:items-center lg:justify-center lg:flex-row lg:gap-6">
+        <div className=" bg-black flex flex-col items-center justify-center px-20 md:pt-20 pb-10 text-white lg:flex lg:items-center lg:justify-center lg:flex-row lg:gap-6">
           <Link to="/airtime" className="pb-7 lg:pb-0 lg:w-1/3">
             <Cards icon={<IoCallOutline size={30} color="white" />} title="Buy Airtime" />
           </Link>

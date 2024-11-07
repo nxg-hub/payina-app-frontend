@@ -21,7 +21,7 @@ const Befour = () => {
     status: 'success',
     title: '',
     message: '',
-    reference: ''
+    reference: '',
   });
 
   useEffect(() => {
@@ -59,7 +59,7 @@ const Befour = () => {
       status: 'error',
       title: 'Transaction Failed',
       message: errorMessage,
-      reference
+      reference,
     });
   }, []);
 
@@ -78,7 +78,7 @@ const Befour = () => {
               status: 'success',
               title: 'Transaction Successful',
               message: 'Successfully processed the vend request',
-              reference: response.paymentReference
+              reference: response.paymentReference,
             });
             setIsProcessingVend(false);
             return;
@@ -110,7 +110,7 @@ const Befour = () => {
           email,
           phoneNumber,
           customerDetails,
-          packageSlug
+          packageSlug,
         } = formData;
         if (!selectedBiller || !selectedBiller.slug) {
           throw new Error('Selected biller or biller slug is missing');
@@ -126,7 +126,7 @@ const Befour = () => {
           amount: Math.round(Number(amount) + 100),
           customerName: customerDetails?.customerName || 'Non-Payina-User',
           phoneNumber: phoneNumber,
-          email: customerDetails?.emailAddress || email
+          email: customerDetails?.emailAddress || email,
         };
 
         const vendValueResponse = await apiService.vendValue(reference, payload);
@@ -140,7 +140,7 @@ const Befour = () => {
             status: 'success',
             title: 'Transaction Successful',
             message: 'Successfully processed the vend request',
-            reference: vendValueResponse.responseData.paymentReference
+            reference: vendValueResponse.responseData.paymentReference,
           });
           setIsProcessingVend(false);
         } else {
@@ -153,7 +153,6 @@ const Befour = () => {
     },
     [formData, isBettingOrLottery, handleError, pollVendStatus]
   );
-
 
   const handlePaystackCallback = useCallback(
     (response) => {
@@ -173,7 +172,7 @@ const Befour = () => {
         isOpen: true,
         status: 'error',
         title: 'Error',
-        message: 'No valid biller selected. Please go back and select a biller.'
+        message: 'No valid biller selected. Please go back and select a biller.',
       });
       return;
     }
@@ -191,7 +190,7 @@ const Befour = () => {
           status: 'error',
           title: 'Error',
           message:
-            'Customer verification is required before proceeding. Please go back and verify the customer details.'
+            'Customer verification is required before proceeding. Please go back and verify the customer details.',
         });
         return;
       }
@@ -235,7 +234,7 @@ const Befour = () => {
             onClose: () => {
               setStatusMessage('Payment cancelled.');
             },
-            callback: handlePaystackCallback
+            callback: handlePaystackCallback,
           });
           handler.openIframe();
         } else {
@@ -243,7 +242,7 @@ const Befour = () => {
             isOpen: true,
             status: 'error',
             title: 'Error',
-            message: 'Payment system is not available at the moment. Please try again later.'
+            message: 'Payment system is not available at the moment. Please try again later.',
           });
           return;
         }
@@ -283,10 +282,10 @@ const Befour = () => {
         email={email}
         customerReference={customerReference}
       />
-      {statusMessage && <p className="text-blue-500 mt-4">{statusMessage}</p>}
+      {/*{statusMessage && <p className="text-blue-500 mt-4 ml-[25%]">{statusMessage}</p>}*/}
       {isProcessingVend && <Loader />}
       <button
-        className="text-primary mt-[25] text-left px-16 py-4 border-none rounded-[5px] bg-lightBlue cursor-pointer hover:bg-neutral transition-all duration-200"
+        className="w-[50%] mb-10 ml-[22%] text-primary mt-[25] text-center px-16 py-4 border-none rounded-[5px] bg-lightBlue cursor-pointer hover:bg-neutral transition-all duration-200"
         onClick={handleProceed}
         disabled={isSubmitting || isProcessingVend}>
         {isSubmitting ? 'Processing...' : 'Proceed to Payment'}

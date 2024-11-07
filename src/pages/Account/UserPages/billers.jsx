@@ -1,12 +1,13 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Navbar, Sidebar } from '../_components';
 import { useForm } from '../../../context/formContext';
 import apiService from '../../../services/apiService';
-import Navbar from '../../../components/navbar/navbar';
 import Footer from '../../../components/footer/footer';
 import CustomButton from '../../../components/button/button.jsx';
 
 const ALLOWED_SERVICES = [
+  'ELECTRIC_DISCO',
   'PAY_TV',
   'BETTING_AND_LOTTERY',
   'TRANSPORT_AND_TOLL_PAYMENT',
@@ -16,7 +17,7 @@ const ALLOWED_SERVICES = [
   'EDUCATION',
   'ENTERTAINMENT_AND_LIFESTYLE',
   'FOOD',
-  'paymentss'
+  'paymentss',
 ];
 
 const Billers = () => {
@@ -28,15 +29,16 @@ const Billers = () => {
   const [bettingServices, setBettingServices] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchBettingServices = async () => {
       setIsLoading(true);
       setError(null);
       try {
+        console.log('Fetching betting services...');
         const response = await apiService.fetchBettingServices();
-
-        console.log('API Response:', response);
+        console.log('API Response for betting services:', response);
 
         if (!response) {
           throw new Error('No response received from API');
@@ -65,7 +67,6 @@ const Billers = () => {
         );
 
         console.log('Filtered services:', filteredServices);
-
         setBettingServices(filteredServices);
 
         if (filteredServices.length === 0) {
@@ -73,8 +74,8 @@ const Billers = () => {
         }
       } catch (err) {
         const errorMessage = err.message || 'Error fetching services';
+        console.error('Error fetching services:', err);
         setError(errorMessage);
-        console.error('Error details:', err);
         setBettingServices([]);
       } finally {
         setIsLoading(false);
@@ -84,135 +85,179 @@ const Billers = () => {
     fetchBettingServices();
   }, []);
 
-  const handleUserVerified = useCallback(
-    (registered, email) => {
-      setIsRegistered(registered);
-      if (registered) {
-        navigate('/login');
-      }
-      updateFormValues({ email });
-    },
-    [navigate, updateFormValues]
-  );
-
-  const handleEmailChange = useCallback((e) => {
-    setLocalEmail(e.target.value);
-  }, []);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const validateForm = () => {
+    console.log('Validating form values:', { formValues, localEmail });
     const newErrors = {};
-    if (!localEmail) newErrors.email = 'Email is required';
-    if (!formValues.phoneNumber) newErrors.phoneNumber = 'Phone number is required';
-    if (!formValues.selectedBettingService)
-      newErrors.selectedBettingService = 'Service selection is required';
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+    if (!formValues.phoneNumber) {
+      newErrors.phoneNumber = 'Phone number is required';
+    } else if (!/^\d{10,11}$/.test(formValues.phoneNumber)) {
+      newErrors.phoneNumber = 'Phone number must be 10-11 digits';
+    }
+
+    if (!formValues.selectedBettingService) {
+      newErrors.selectedBettingService = 'Service selection is required';
+    }
+
+    console.log('Validation errors:', newErrors);
+    return newErrors;
+  };
+
+  const handleNavigation = useCallback((stateToPass) => {
+    console.log('Navigating with state:', stateToPass);
+    try {
+      navigate('/account/bills/plans', {
+        state: stateToPass,
+        replace: true // Prevents going back to form
+      });
+    } catch (err) {
+      console.error('Navigation error:', err);
+      setError('Navigation failed. Please try again.');
+    }
+  }, [navigate]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log('Form submission started');
+
+    if (isSubmitting) {
+      console.log('Submission already in progress');
       return;
     }
 
-    const selectedService = bettingServices.find(
-      (service) => service.slug === formValues.selectedBettingService
-    );
+    setIsSubmitting(true);
+    setError(null);
 
-    const stateToPass = {
-      formValues: {
-        ...formValues,
-        email: localEmail,
-        isBetting: selectedService?.slug === 'BETTING_AND_LOTTERY',
-      },
-      selectedBettingService: formValues.selectedBettingService,
-      slug: selectedService ? selectedService.slug : '',
-    };
+    try {
+      // Validate form
+      const validationErrors = validateForm();
+      if (Object.keys(validationErrors).length > 0) {
+        console.log('Validation failed:', validationErrors);
+        setErrors(validationErrors);
+        return;
+      }
 
-    navigate('/account/bills/details', { state: stateToPass });
+      // Find selected service
+      const selectedService = bettingServices.find(
+        (service) => service.slug === formValues.selectedBettingService
+      );
+      console.log('Selected service:', selectedService);
+
+      if (!selectedService) {
+        throw new Error('Selected service not found');
+      }
+
+      const stateToPass = {
+        formValues: {
+          ...formValues,
+          email: localEmail,
+          isBetting: selectedService.slug === 'BETTING_AND_LOTTERY',
+          timestamp: new Date().toISOString(), // Add timestamp for tracking
+        },
+        selectedBettingService: formValues.selectedBettingService,
+        slug: selectedService.slug,
+        serviceDetails: {
+          name: selectedService.name,
+          id: selectedService.id,
+        },
+      };
+
+      console.log('Proceeding with form submission:', stateToPass);
+
+      // Navigate to plans page
+      handleNavigation(stateToPass);
+
+    } catch (err) {
+      console.error('Form submission error:', err);
+      setError(err.message || 'An error occurred while processing your request');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <section className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-gray-100">
       <Navbar />
-      <main className="flex-grow bg-gray-100">
-        <div className="container mx-auto px-4 py-8">
-          <div className="relative mb-8">
-            <div className="w-4/5 h-1 bg-yellow-400 mx-auto -mt-0.5" />
-          </div>
+      <div className="flex">
+        <Sidebar />
+        <main className="flex-1 min-h-screen">
+          <div className="container mx-auto px-4 sm:px-6 py-8 lg:px-8 mt-16">
+            <div className="max-w-md mx-auto">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-6">Select a Service</h2>
 
-          <div className="max-w-lg mx-auto bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-6">Bills Payment</h2>
+              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+                <CustomButton
+                  type="button"
+                  className="w-full mb-6 text-left bg-blue-50 text-blue-600 p-4 rounded-lg hover:bg-blue-100 transition-colors duration-200"
+                >
+                  Want to enjoy discounts?{' '}
+                  <span className="font-semibold">Register</span> or{' '}
+                  <span className="font-semibold">Login</span>
+                </CustomButton>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <label htmlFor="betting-service-select"
-                         className="block text-sm font-medium text-gray-700">
-                    Choose Service
-                  </label>
-                  <select
-                    id="betting-service-select"
-                    value={formValues.selectedBettingService || ''}
-                    onChange={(e) => updateFormValues({ selectedBettingService: e.target.value })}
-                    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700"
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Choose Service
+                      </label>
+                      <select
+                        id="betting-service-select"
+                        value={formValues.selectedBettingService || ''}
+                        onChange={(e) => {
+                          console.log('Service selected:', e.target.value);
+                          updateFormValues({ selectedBettingService: e.target.value });
+                        }}
+                        className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="">Select Service</option>
+                        {bettingServices.map((service) => (
+                          <option key={service.id} value={service.slug}>
+                            {service.name}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.selectedBettingService && (
+                        <p className="mt-2 text-sm text-red-600">{errors.selectedBettingService}</p>
+                      )}
+                      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Phone Number
+                      </label>
+                      <input
+                        type="number"
+                        placeholder="Enter Phone number"
+                        className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={formValues.phoneNumber || ''}
+                        onChange={(e) => {
+                          console.log('Phone number updated:', e.target.value);
+                          updateFormValues({ phoneNumber: e.target.value });
+                        }}
+                      />
+                      {errors.phoneNumber && (
+                        <p className="mt-2 text-sm text-red-600">{errors.phoneNumber}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <CustomButton
+                    type="submit"
+                    className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isSubmitting || isLoading}
                   >
-                    <option value="">Select Service</option>
-                    {bettingServices.map((service) => (
-                      <option key={service.id} value={service.slug}>
-                        {service.name}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.selectedBettingService && (
-                    <p className="mt-2 text-sm text-red-600">{errors.selectedBettingService}</p>
-                  )}
-                  {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Phone
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="Enter Phone number"
-                    value={formValues.phoneNumber || ''}
-                    onChange={(e) => updateFormValues({ phoneNumber: e.target.value })}
-                    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700"
-                  />
-                  {errors.phoneNumber && (
-                    <p className="mt-2 text-sm text-red-600">{errors.phoneNumber}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    placeholder="Enter Email address"
-                    value={localEmail}
-                    onChange={handleEmailChange}
-                    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700"
-                  />
-                  {errors.email && (
-                    <p className="mt-2 text-sm text-red-600">{errors.email}</p>
-                  )}
-                </div>
+                    {isSubmitting ? 'Processing...' : isLoading ? 'Loading...' : 'Proceed'}
+                  </CustomButton>
+                </form>
               </div>
-
-              <CustomButton
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
-              >
-                {isLoading ? 'Loading...' : 'Proceed'}
-              </CustomButton>
-            </form>
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
       <Footer />
-    </section>
+    </div>
   );
 };
 
