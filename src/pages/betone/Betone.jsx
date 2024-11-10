@@ -119,13 +119,13 @@ const Betone = () => {
       slug: selectedService ? selectedService.slug : ''
     };
 
-    navigate('/bettwo', { state: stateToPass });
+    navigate('/bills/plans', { state: stateToPass });
   };
 
   return (
-    <section>
+    <section className="bg-black">
       <Navbar />
-      <div className="container">
+      <div className="container bg-black">
         <div className="w-[80%] h-1 border-none mr-auto ml-auto mt-[-2px] mb-40 bg-yellow"></div>
         <p className="mt-[-120px] pb-8 text-6xl text-center font-extrabold text-lightBlue">
           Select a Service
@@ -189,7 +189,7 @@ const Betone = () => {
             className="text-primary mb-10 mt-10 text-left px-16 py-4 border-none rounded-[5px] bg-lightBlue cursor-pointer hover:bg-neutral transition-all duration-200"
             disabled={isLoading}
           >
-            {isLoading ? 'Loading...' : 'Proceed to Next Step'}
+            {isLoading ? 'Loading...' : 'Proceed'}
           </button>
         </form>
       </div>

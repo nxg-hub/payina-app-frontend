@@ -63,8 +63,7 @@ const AirtimeReview = () => {
     async (reference) => {
       try {
         const maxAttempts = 10;
-        const pollInterval = 5000; // 5 seconds
-
+        const pollInterval = 5000;
         for (let attempt = 0; attempt < maxAttempts; attempt++) {
           const response = await apiService.checkVendStatus(reference);
 
@@ -194,7 +193,6 @@ const AirtimeReview = () => {
           });
           handler.openIframe();
         } else {
-          // If for some reason the inline payment can't be opened, redirect to the authorization URL
           window.location.href = authorization_url;
         }
       } else {

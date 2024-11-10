@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import Navbar from '../../components/navbar/navbar';
 import Footer from '../../components/footer/footer';
@@ -11,9 +10,9 @@ import { Link } from 'react-router-dom';
 
 const Paybills = () => {
   return (
-    <section>
+    <section className="bg-black">
       <Navbar />
-      <div className=" w-full h-screen  text-center ">
+      <div className=" w-full h-screen  text-center bg-black">
         <div
           className="w-[80%] h-1 border-none mr-auto ml-auto
             mt-[-2px] mb-40 bg-yellow"></div>
@@ -45,7 +44,7 @@ const Paybills = () => {
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-center px-20 md:pt-20 pb-10 text-white lg:flex lg:items-center lg:justify-center lg:flex-row lg:gap-6">
+        <div className=" bg-black flex flex-col items-center justify-center px-20 md:pt-20 pb-10 text-white lg:flex lg:items-center lg:justify-center lg:flex-row lg:gap-6">
           <Link to="/airtime" className="pb-7 lg:pb-0 lg:w-1/3">
             <Cards icon={<IoCallOutline size={30} color="white" />} title="Buy Airtime" />
           </Link>
@@ -54,7 +53,7 @@ const Paybills = () => {
             <Cards icon={<IoWifi size={30} color="white" />} title="Buy Data" />
           </Link>
 
-          <Link to="/betone" className="lg:w-1/3">
+          <Link to="/bills" className="lg:w-1/3">
             <Cards icon={<RiCurrencyFill size={30} color="white" />} title="Pay Bills" />
           </Link>
         </div>

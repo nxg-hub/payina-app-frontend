@@ -6,22 +6,20 @@ import apiService from '../../services/apiService';
 import NoValidSelection from '../../utilities/NoValidSelection';
 import OrderReview from '../OrderReview/OrderReview.jsx';
 import TransactionModal from '../../utilities/TransactionModal';
-import Loader from '../../assets/LoadingSpinner';
 
-const Befour = () => {
+const plansReview = () => {
   const location = useLocation();
   const [formData, setFormData] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isProcessingVend, setIsProcessingVend] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [paymentReference, setPaymentReference] = useState(null);
-
+  const [isPaymentInitiated, setIsPaymentInitiated] = useState(false);
   const [modalState, setModalState] = useState({
     isOpen: false,
     status: 'success',
     title: '',
     message: '',
-    reference: '',
+    reference: ''
   });
 
   useEffect(() => {
@@ -29,17 +27,6 @@ const Befour = () => {
       setFormData(location.state);
     }
   }, [location.state]);
-
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = import.meta.env.VITE_SCRIPT;
-    script.async = true;
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
 
   const closeModal = () => {
     setModalState((prevState) => ({ ...prevState, isOpen: false }));
@@ -49,122 +36,132 @@ const Befour = () => {
     return selectedBiller?.slug === 'BETTING_AND_LOTTERY';
   }, []);
 
-  const handleError = useCallback((err, reference) => {
-    let errorMessage = err.response?.data?.message || err.message || 'An unknown error occurred';
-    if (errorMessage === 'Transaction was not successful, vending cannot be completed.') {
-      errorMessage += ' Please try again or contact support.';
+  const handleError = (err, reference) => {
+    let errorMessage = 'An unknown error occurred';
+
+    if (err.response) {
+      const { data } = err.response;
+
+      if (typeof data === 'string') {
+        const nestedJsonMatch = data.match(/"(\{.*\})"/);
+
+        if (nestedJsonMatch && nestedJsonMatch[1]) {
+          try {
+            const nestedData = JSON.parse(nestedJsonMatch[1]);
+
+            if (
+              nestedData.message &&
+              nestedData.message.includes('Wallet balance too low to debit')
+            ) {
+              const balanceMessage = nestedData.message.match(
+                /Wallet balance too low to debit\. Balance: \d+(\.\d{1,2})?/
+              );
+              errorMessage = balanceMessage ? balanceMessage[0] : 'Wallet balance too low to debit';
+            } else {
+              errorMessage = nestedData.message;
+            }
+          } catch (parseError) {
+            errorMessage = 'Error parsing nested JSON in response';
+          }
+        } else {
+          errorMessage = 'Invalid response format';
+        }
+      } else {
+        errorMessage = 'Unexpected data format';
+      }
+    } else if (err.message) {
+      errorMessage = err.message;
     }
+
+    console.log('Parsed Error Message:', errorMessage);
+
     setModalState({
       isOpen: true,
       status: 'error',
       title: 'Transaction Failed',
       message: errorMessage,
-      reference,
+      reference
     });
-  }, []);
+  };
 
-  const pollVendStatus = useCallback(
+  const verifyTransaction = useCallback(
     async (reference) => {
+      if (!formData) return false;
+
       try {
-        const maxAttempts = 10;
-        const pollInterval = 5000; // 5 seconds
-
-        for (let attempt = 0; attempt < maxAttempts; attempt++) {
-          const response = await apiService.checkVendStatus(reference);
-
-          if (response.status === 'completed') {
-            setModalState({
-              isOpen: true,
-              status: 'success',
-              title: 'Transaction Successful',
-              message: 'Successfully processed the vend request',
-              reference: response.paymentReference,
-            });
-            setIsProcessingVend(false);
-            return;
-          } else if (response.status === 'failed') {
-            throw new Error(response.message || 'Vend process failed');
-          }
-
-          await new Promise((resolve) => setTimeout(resolve, pollInterval));
-        }
-
-        throw new Error('Vend process timed out');
-      } catch (err) {
-        handleError(err, reference);
-      } finally {
-        setIsProcessingVend(false);
-      }
-    },
-    [handleError]
-  );
-
-  const vendValue = useCallback(
-    async (reference) => {
-      try {
-        setIsProcessingVend(true);
         const {
           selectedBiller,
+          selectedPlan,
           amount,
           customerReference,
           email,
           phoneNumber,
-          customerDetails,
-          packageSlug,
+          customerDetails
         } = formData;
+
         if (!selectedBiller || !selectedBiller.slug) {
           throw new Error('Selected biller or biller slug is missing');
         }
 
         const isBettingLottery = isBettingOrLottery(selectedBiller);
+        const packageSlug = selectedPlan.slug || 'UNKNOWN_SLUG';
 
         const payload = {
           paymentReference: reference,
           customerId: customerReference,
-          packageSlug: packageSlug || 'UNKNOWN_SLUG',
+          packageSlug: packageSlug,
           channel: 'WEB',
-          amount: Math.round(Number(amount) + 100),
+          amount: Math.round(amount + 100),
           customerName: customerDetails?.customerName || 'Non-Payina-User',
           phoneNumber: phoneNumber,
-          email: customerDetails?.emailAddress || email,
+          email: email,
+          customerEnquiryResult: isBettingLottery ? null : customerDetails
         };
 
         const vendValueResponse = await apiService.vendValue(reference, payload);
 
-        if (vendValueResponse.status === 202) {
-          setStatusMessage('Vend request accepted. Processing...');
-          pollVendStatus(reference);
-        } else if (vendValueResponse.status === 'success') {
+        if (vendValueResponse.status === 'success') {
           setModalState({
             isOpen: true,
             status: 'success',
             title: 'Transaction Successful',
-            message: 'Successfully processed the vend request',
-            reference: vendValueResponse.responseData.paymentReference,
+            message: vendValueResponse.responseData.customerMessage || vendValueResponse.message,
+            reference: vendValueResponse.responseData.paymentReference
           });
-          setIsProcessingVend(false);
+          return true;
         } else {
-          throw new Error(vendValueResponse.message || 'Vend value failed');
+          throw new Error(vendValueResponse.message || 'Transaction verification failed');
         }
       } catch (err) {
         handleError(err, reference);
-        setIsProcessingVend(false);
+        return false;
       }
     },
-    [formData, isBettingOrLottery, handleError, pollVendStatus]
+    [formData, isBettingOrLottery]
   );
 
-  const handlePaystackCallback = useCallback(
-    (response) => {
-      if (response.status === 'success') {
-        setStatusMessage('Payment successful. Processing vend request...');
-        vendValue(response.reference);
-      } else {
-        setStatusMessage('Payment was not completed.');
-      }
-    },
-    [vendValue]
-  );
+  // const pollTransactionStatus = useCallback(
+  //   async (reference) => {
+  //     const maxAttempts = 1;
+  //     const pollInterval = 1000;
+  //
+  //     for (let attempts = 0; attempts < maxAttempts; attempts++) {
+  //       try {
+  //         setStatusMessage('Verifying payment...');
+  //         const success = await verifyTransaction(reference);
+  //         if (success) return;
+  //       } catch (err) {
+  //         if (attempts === maxAttempts - 1) {
+  //           handleError(err, reference);
+  //           return;
+  //         }
+  //       }
+  //       await new Promise((resolve) => setTimeout(resolve, pollInterval));
+  //     }
+  //     handleError(new Error('Payment verification timed out.'), reference);
+  //   },
+  //   [verifyTransaction]
+  // );
 
   const handleProceed = async () => {
     if (!formData || !formData.selectedBiller) {
@@ -172,7 +169,7 @@ const Befour = () => {
         isOpen: true,
         status: 'error',
         title: 'Error',
-        message: 'No valid biller selected. Please go back and select a biller.',
+        message: 'No valid biller selected. Please go back and select a biller.'
       });
       return;
     }
@@ -190,7 +187,7 @@ const Befour = () => {
           status: 'error',
           title: 'Error',
           message:
-            'Customer verification is required before proceeding. Please go back and verify the customer details.',
+            'Customer verification is required before proceeding. Please go back and verify the customer details.'
         });
         return;
       }
@@ -207,6 +204,7 @@ const Befour = () => {
       }
 
       const amountWithCharges = Math.round(Number(amount) + 100);
+
       const amountInKobo = Math.round(amountWithCharges * 100);
 
       const initializePaymentResponse = await apiService.initializePayment(
@@ -219,33 +217,17 @@ const Befour = () => {
         initializePaymentResponse.status === true &&
         initializePaymentResponse.message === 'Authorization URL created'
       ) {
-        const { authorization_url, access_code, reference } = initializePaymentResponse.data;
+        const { authorization_url, reference } = initializePaymentResponse.data;
         setPaymentReference(reference);
 
-        // Open Paystack inline payment modal
-        if (window.PaystackPop) {
-          const handler = window.PaystackPop.setup({
-            key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
-            email: formData.email,
-            amount: amountInKobo,
-            ref: reference,
-            url: authorization_url,
-            access_code: access_code,
-            onClose: () => {
-              setStatusMessage('Payment cancelled.');
-            },
-            callback: handlePaystackCallback,
-          });
-          handler.openIframe();
-        } else {
-          setModalState({
-            isOpen: true,
-            status: 'error',
-            title: 'Error',
-            message: 'Payment system is not available at the moment. Please try again later.',
-          });
-          return;
-        }
+        setStatusMessage('Payment page opened. Please complete the payment in the new window.');
+        window.open(authorization_url, '_blank');
+
+        setIsPaymentInitiated(true);
+
+        setTimeout(() => {
+          pollTransactionStatus(reference);
+        }, 60000);
       } else {
         throw new Error(initializePaymentResponse.message || 'Payment initialization failed');
       }
@@ -253,6 +235,20 @@ const Befour = () => {
       handleError(err, paymentReference);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleManualVerification = () => {
+    if (paymentReference) {
+      setIsSubmitting(true);
+      verifyTransaction(paymentReference);
+    } else {
+      setModalState({
+        isOpen: true,
+        status: 'error',
+        title: 'Error',
+        message: 'No payment reference available. Please try initiating the payment again.'
+      });
     }
   };
 
@@ -282,26 +278,35 @@ const Befour = () => {
         email={email}
         customerReference={customerReference}
       />
-      {/*{statusMessage && <p className="text-blue-500 mt-4 ml-[25%]">{statusMessage}</p>}*/}
-      {isProcessingVend && <Loader />}
-      <button
-        className="w-[50%] mb-10 ml-[22%] text-primary mt-[25] text-center px-16 py-4 border-none rounded-[5px] bg-lightBlue cursor-pointer hover:bg-neutral transition-all duration-200"
-        onClick={handleProceed}
-        disabled={isSubmitting || isProcessingVend}>
-        {isSubmitting ? 'Processing...' : 'Proceed to Payment'}
-      </button>
+      {statusMessage && <p className="text-blue-500 mt-4">{statusMessage}</p>}
+      {!isPaymentInitiated ? (
+        <button
+          className="text-primary mt-[25] text-left px-16 py-4 border-none rounded-[5px] bg-lightBlue cursor-pointer hover:bg-neutral transition-all duration-200"
+          onClick={handleProceed}
+          disabled={isSubmitting}>
+          {isSubmitting ? 'Processing...' : 'Proceed to Payment'}
+        </button>
+      ) : (
+        <button
+          className="text-primary mt-[25] text-left px-16 py-4 border-none rounded-[5px] bg-green-500 cursor-pointer hover:bg-green-600 transition-all duration-200"
+          onClick={handleManualVerification}
+          disabled={isSubmitting}>
+          Verify Payment Manually
+        </button>
+      )}
       <Footer />
+
       <TransactionModal
         isOpen={modalState.isOpen}
         onClose={closeModal}
         status={modalState.status}
         title={modalState.title}
         message={modalState.message}
+        details={modalState.details}
         reference={modalState.reference}
         onRegister={handleRegister}
       />
     </section>
   );
 };
-
-export default Befour;
+export default plansReview
