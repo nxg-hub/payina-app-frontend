@@ -3,11 +3,10 @@ import RecipientDetails from './step1';
 import AmountDetails from './step2';
 import ReviewTransaction from './step3';
 import EnterPin from './step4';
-import SuccessMessage from './step5';
-import DeclineMessage from './step6';
+import Stepper from '../../stepper';
+import backArrow from '../../../../assets/images/Group-backArrow.png';
 
-const PayinaUser = () => {
-  const [currentStep, setCurrentStep] = useState(1);
+const PayinaUser = ({ currentStep, totalSteps, handleNext, handlePrev }) => {
   const [transactionData, setTransactionData] = useState({
     payinaTag: '',
     amount: '',
@@ -16,11 +15,7 @@ const PayinaUser = () => {
 
   const nextStep = (data) => {
     setTransactionData((prev) => ({ ...prev, ...data }));
-    setCurrentStep((prevStep) => prevStep + 1);
-  };
-
-  const prevStep = () => {
-    setCurrentStep((prevStep) => Math.max(prevStep - 1, 1));
+    handleNext();
   };
 
   const renderStep = () => {
@@ -28,17 +23,34 @@ const PayinaUser = () => {
       case 1:
         return <RecipientDetails nextStep={nextStep} />;
       case 2:
-        return <AmountDetails nextStep={nextStep} prevStep={prevStep} />;
+        return <AmountDetails nextStep={nextStep} prevStep={handlePrev} />;
       case 3:
-        return <ReviewTransaction data={transactionData} nextStep={nextStep} prevStep={prevStep} />;
+        return (
+          <ReviewTransaction data={transactionData} nextStep={nextStep} prevStep={handlePrev} />
+        );
       case 4:
-        return <EnterPin data={transactionData} prevStep={prevStep} />;
+        return <EnterPin data={transactionData} prevStep={handlePrev} />;
       default:
-        return <RecipientDetails nextStep={prevStep} />;
+        return <RecipientDetails nextStep={handlePrev} />;
     }
   };
 
-  return <div className="step-container">{renderStep()}</div>;
+  return (
+    <div className="flex flex-col justify-center items-start xl:ml-80 xl:pt-28 md:pt-10 mx-auto">
+      <div className="flex flex-row justify-between items-left gap-[45rem]">
+        <div className="text-xl md:text-3xl font-medium">Send Money</div>
+        <div className="flex flex-row gap-2 cancelAction-img cursor-pointer" onClick={handlePrev}>
+          <img src={backArrow} alt="cancelAction"></img>
+          <div className="text-md text-center mt-2">Back</div>
+        </div>
+      </div>
+      <div className="item-center mt-5 mx-auto">
+        {currentStep >= 1 && currentStep <= 3 && (
+          <Stepper currentStep={currentStep} numberOfSteps={totalSteps} />
+        )}
+      </div>
+      {renderStep()}
+    </div>
+  );
 };
-
 export default PayinaUser;

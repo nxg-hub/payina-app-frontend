@@ -1,25 +1,50 @@
 import React, { useState } from 'react';
 import cancelImg from '../../../assets/images/CancelSendMoney.png';
 import { Link } from 'react-router-dom';
-import progressLine from '../../../assets/images/Union.png';
 import PayinaUser from './PayinaUser/index';
 import AnotherBank from './AnotherBank/index';
 import Beneficiaries from './BeneficiariesAccount/index';
 import payinaUserImg from '../../../assets/images/Layer_x0020_1.png';
 import anotherBankImg from '../../../assets/images/Group-AnotherBank.png';
 import beneficiaryImg from '../../../assets/images/Group-beneficiaries.png';
+import Stepper from '../stepper';
 
 const SendMoneySteps = () => {
   const [selectedForm, setSelectedForm] = useState(null);
+  const [currentStep, setCurrentStep] = useState(1);
+  const totalSteps = 4;
 
   const renderForm = () => {
+    const handleNext = () => setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+    const handlePrev = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
     switch (selectedForm) {
       case 'payinaUser':
-        return <PayinaUser />;
+        return (
+          <PayinaUser
+            currentStep={currentStep}
+            totalSteps={totalSteps}
+            handleNext={handleNext}
+            handlePrev={handlePrev}
+          />
+        );
       case 'anotherBank':
-        return <AnotherBank />;
+        return (
+          <AnotherBank
+            currentStep={currentStep}
+            totalSteps={totalSteps}
+            handleNext={handleNext}
+            handlePrev={handlePrev}
+          />
+        );
       case 'beneficiaries':
-        return <Beneficiaries />;
+        return (
+          <Beneficiaries
+            currentStep={currentStep}
+            totalSteps={totalSteps}
+            handleNext={handleNext}
+            handlePrev={handlePrev}
+          />
+        );
       default:
         return (
           <div className="flex flex-col justify-center items-start xl:ml-80 xl:pt-28 md:pt-10 mx-auto">
@@ -31,15 +56,9 @@ const SendMoneySteps = () => {
                 </div>
               </Link>
             </div>
-            <div className="">
-              <img src={progressLine} alt="progressLine"></img>
+            <div className="item-center mt-5 mx-auto">
+              <Stepper currentStep={selectedForm ? 1 : 0} numberOfSteps={totalSteps} />
             </div>
-            {/* <div className="item-center mt-5 mx-auto relative">
-              <div className="">
-                <img src={progressLine} alt="progressLine"></img>
-              </div>
-              <div className="color-input bg-[#006181] rounded-full px-3 py-3 absolute top-0"></div>
-            </div> */}
             <div className="text-md md:text-xl font-medium mt-5">Send To</div>
             <div
               onClick={() => setSelectedForm('payinaUser')}
@@ -80,4 +99,3 @@ const SendMoneySteps = () => {
 };
 
 export default SendMoneySteps;
-

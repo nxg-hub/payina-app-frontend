@@ -1,5 +1,5 @@
 import React from 'react';
-import backArrow from '../../../../assets/images/Group-backArrow.png';
+import { Link } from 'react-router-dom';
 import DeclineImg from '../../../../assets/images/Group 10275-decline.png';
 
 const DeclinePage = () => {
@@ -11,11 +11,13 @@ const DeclinePage = () => {
           <img src={DeclineImg} alt="suceessImg"></img>
         </div>
         <div className="text-md md:text-xl font-medium">Transaction Failed</div>
-        <button
-          type="submit"
-          className="rounded-[5px] text-xs md:text-base  py-2 border border-lightBlue bg-lightBlue w-[300px] text-primary">
-          Back to Dashboard
-        </button>
+        <Link to="/account/dashboard">
+          <button
+            type="submit"
+            className="rounded-[5px] text-xs md:text-base  py-2 border border-lightBlue bg-lightBlue w-[300px] text-primary">
+            Back to Dashboard
+          </button>
+        </Link>
       </div>
     </div>
   );

@@ -1,21 +1,9 @@
 import React from 'react';
-import backArrow from '../../../../assets/images/Group-backArrow.png';
-import progressLine from '../../../../assets/images/Union.png';
 import PropTypes from 'prop-types';
 
-const ReviewTransaction = ({ data, nextStep, prevStep }) => {
+const ReviewTransaction = ({ data, nextStep }) => {
   return (
-    <div className="flex flex-col justify-center items-start xl:ml-80 xl:pt-28 md:pt-10 mx-auto">
-      <div className="flex flex-row justify-between items-left gap-[45rem]">
-        <div className="text-xl md:text-3xl font-medium">Send Money</div>
-        <div className="flex flex-row gap-2 cancelAction-img" onClick={prevStep}>
-          <img src={backArrow} alt="cancelAction"></img>
-          <div className="text-md text-center mt-2">Back</div>
-        </div>
-      </div>
-      <div className="item-center mt-5 mx-auto">
-        <img src={progressLine} alt="progressLine"></img>
-      </div>
+    <div className="flex flex-col justify-between items-left">
       <div className="text-md md:text-xl font-medium mt-5">Review Transaction Details</div>
       <div className="flex flex-col items-left justify-between gap-4 bg-[#EBEBEB] rounded-md py-10 px-14 mt-5">
         <div className="flex flex-row justify-between gap-[20rem]">
