@@ -12,7 +12,6 @@ const VendInitiator = ({
   onVendInitiated,
   onError,
   accountNumber,
-  customerReference,
   isProcessing,
   setIsProcessing,
 }) => {
@@ -130,7 +129,7 @@ const VendInitiator = ({
         amount: amount,
         customerName: userData ? `${userData.firstName} ${userData.lastName}` : '',
         phoneNumber: formValues.phoneNumber,
-        accountNumber: userData?.accountNumber || accountNumber ,
+        accountNumber: userData?.accountNumber || accountNumber,
         email: userData?.email || formValues.email,
         merchantId: walletDetailsRef.current.businessId,
       };

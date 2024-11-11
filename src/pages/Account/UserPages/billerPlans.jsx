@@ -33,13 +33,15 @@ const BillerPlans = () => {
   const [modalMessage, setModalMessage] = useState('');
   const [modalDetails, setModalDetails] = useState('');
   const [isProcessingVend, setIsProcessingVend] = useState(false);
+  const [isCustomerVerified, setIsCustomerVerified] = useState(false);
   const [userDetails] = useLocalStorage('userDetails', '');
   const walletCheckerRef = useRef();
+  const verificationTimeoutRef = useRef(null);
 
   const handleImageClick = (billerSlug) => {
     const selectedBillerObj = billerOptions.find((biller) => biller.slug === billerSlug);
     setSelectedBiller(selectedBillerObj || null);
-    resetForm();
+    setIsCustomerVerified(false);
   };
 
   const fetchBillerOptions = useCallback(async (billerGroupSlug) => {
@@ -49,7 +51,6 @@ const BillerPlans = () => {
       const response = await apiService.fetchBillerBySlug(billerGroupSlug);
       setBillerOptions(response);
     } catch (error) {
-      console.error('Error fetching biller options:', error);
       setError('Failed to fetch biller options. Please try again.');
     } finally {
       setIsLoading(false);
@@ -68,7 +69,6 @@ const BillerPlans = () => {
         setError('No plans available for this biller. You may enter an amount manually.');
       }
     } catch (error) {
-      console.error('Error fetching plans:', error);
       setPlans([]);
       setError('Failed to fetch plans. Please try again or enter an amount manually.');
     } finally {
@@ -78,14 +78,17 @@ const BillerPlans = () => {
 
   const verifyUser = useCallback(
     async (customerId) => {
-      if (!selectedBiller) return;
-      setIsLoading(true);
-      resetVerification();
+      if (!selectedBiller || !selectedPlan) {
+        setError('Please select both a biller and a plan before entering customer reference');
+        return false;
+      }
 
+      setIsLoading(true);
+      setError(null);
       try {
         const response = await apiService.verifyCustomer({
           customerId,
-          productName: `${selectedBiller.name}_PREPAID`,
+          productName: selectedPlan.slug,
           billerSlug: selectedBiller.slug,
         });
 
@@ -96,13 +99,17 @@ const BillerPlans = () => {
           });
           setError(response.message || 'An error occurred during verification.');
           setCustomerDetails(null);
+          setIsCustomerVerified(false);
+          return false;
         } else {
           setVerificationResult({
             status: 'success',
             narration: response.message || 'Verification successful.',
           });
           setCustomerDetails(response.responseData?.customer || null);
+          setIsCustomerVerified(true);
           setError(null);
+          return true;
         }
       } catch (error) {
         console.error('Error verifying user:', error);
@@ -112,11 +119,13 @@ const BillerPlans = () => {
         });
         setError('Failed to verify user. Please check your customer reference.');
         setCustomerDetails(null);
+        setIsCustomerVerified(false);
+        return false;
       } finally {
         setIsLoading(false);
       }
     },
-    [selectedBiller]
+    [selectedBiller, selectedPlan]
   );
 
   useEffect(() => {
@@ -133,45 +142,74 @@ const BillerPlans = () => {
     }
   }, [selectedBiller, fetchPlans]);
 
+  // Auto-verification effect
+  useEffect(() => {
+    if (verificationTimeoutRef.current) {
+      clearTimeout(verificationTimeoutRef.current);
+    }
+
+    if (customerReference && customerReference.length >= 3 && selectedBiller && selectedPlan) {
+      verificationTimeoutRef.current = setTimeout(() => {
+        verifyUser(customerReference);
+      }, 1000); // Delay verification by 1 second after user stops typing
+    }
+
+    return () => {
+      if (verificationTimeoutRef.current) {
+        clearTimeout(verificationTimeoutRef.current);
+      }
+    };
+  }, [customerReference, selectedBiller, selectedPlan, verifyUser]);
+
   const handleBillerChange = (e) => {
     const selectedBillerSlug = e.target.value;
     const selectedBillerObj = billerOptions.find((biller) => biller.slug === selectedBillerSlug);
     setSelectedBiller(selectedBillerObj || null);
-    resetForm();
+    setIsCustomerVerified(false);
+    setCustomerDetails(null);
+    setVerificationResult(null);
+    setError(null);
   };
 
   const handlePlanChange = (e) => {
     const selectedPlanId = e.target.value;
-
     if (!selectedPlanId) {
-      console.warn('No plan selected');
       setSelectedPlan(null);
       setAmount('');
       setSelectedPlanSlug(null);
+      setIsCustomerVerified(false);
+      setCustomerDetails(null);
+      setVerificationResult(null);
       return;
     }
 
     const selectedPlanObj = plans.find((plan) => plan.id && plan.id.toString() === selectedPlanId);
-
     if (selectedPlanObj) {
       setSelectedPlan(selectedPlanObj);
       setAmount(selectedPlanObj.amount?.toString() || '');
       setSelectedPlanSlug(selectedPlanObj.slug || '');
-      console.log('Selected Plan Slug:', selectedPlanObj.slug);
+
+      // Trigger verification if customer reference exists
+      if (customerReference && customerReference.length >= 3) {
+        verifyUser(customerReference);
+      }
     } else {
-      console.warn('Selected plan not found in the list');
       setSelectedPlan(null);
       setAmount('');
       setSelectedPlanSlug(null);
+      setIsCustomerVerified(false);
+      setCustomerDetails(null);
+      setVerificationResult(null);
     }
   };
 
   const handleCustomerReferenceChange = (e) => {
     const newReference = e.target.value;
     setCustomerReference(newReference);
-    if (newReference && selectedBiller) {
-      verifyUser(newReference);
-    }
+    setIsCustomerVerified(false);
+    setCustomerDetails(null);
+    setVerificationResult(null);
+    setError(null);
   };
 
   const handleVendInitiated = (reference) => {
@@ -182,7 +220,7 @@ const BillerPlans = () => {
     setShowModal(true);
 
     setTimeout(() => {
-      window.location.reload();
+      setShowModal(false);
     }, 2000);
   };
 
@@ -210,25 +248,16 @@ const BillerPlans = () => {
     return titles[selectedBettingService] || 'Select Service Provider';
   };
 
-  const resetForm = () => {
-    setVerificationResult(null);
-    setCustomerDetails(null);
-    setError(null);
-    setSelectedPlan(null);
-    setAmount('');
-  };
-
-  const resetVerification = () => {
-    setVerificationResult(null);
-    setCustomerDetails(null);
-    setError(null);
-  };
-
   const handleSubmit = async (e) => {
-    console.log('AAAAAAAAAA', customerReference);
     e.preventDefault();
+
     if (!selectedBiller) {
       setError('Please select a service platform');
+      return;
+    }
+
+    if (!selectedPlan) {
+      setError('Please select a plan');
       return;
     }
 
@@ -242,9 +271,11 @@ const BillerPlans = () => {
       return;
     }
 
-    if (!customerDetails) {
-      setError('Please wait for customer verification');
-      return;
+    if (!isCustomerVerified) {
+      const verificationSuccessful = await verifyUser(customerReference);
+      if (!verificationSuccessful) {
+        return;
+      }
     }
 
     await walletCheckerRef.current.checkBalance();
@@ -312,7 +343,7 @@ const BillerPlans = () => {
                       </div>
                     )}
 
-                    {/* Customer Reference */}
+                    {/* Customer Reference Input */}
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-gray-700">
                         Customer Reference
@@ -325,6 +356,9 @@ const BillerPlans = () => {
                         className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Enter customer reference"
                       />
+                      {isLoading && (
+                        <p className="text-sm text-gray-500">Verifying customer reference...</p>
+                      )}
                     </div>
 
                     {/* Amount */}
@@ -337,8 +371,26 @@ const BillerPlans = () => {
                         onChange={(e) => setAmount(e.target.value)}
                         className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Enter amount"
+                        // readOnly={selectedPlan !== null}
                       />
                     </div>
+
+                    {/* Verification Status */}
+                    {verificationResult && (
+                      <div
+                        className={`p-4 rounded-lg ${
+                          verificationResult.status === 'success' ? 'bg-green-50' : 'bg-red-50'
+                        }`}>
+                        <p
+                          className={`text-sm ${
+                            verificationResult.status === 'success'
+                              ? 'text-green-700'
+                              : 'text-red-700'
+                          }`}>
+                          {verificationResult.narration}
+                        </p>
+                      </div>
+                    )}
 
                     {/* Customer Details */}
                     {customerDetails && (
@@ -364,7 +416,7 @@ const BillerPlans = () => {
 
                     <WalletBalanceChecker
                       ref={walletCheckerRef}
-                      amount={selectedPlan?.amount}
+                      amount={amount}
                       onInsufficientFunds={(balance, requiredAmount) => {
                         setModalStatus('error');
                         setModalTitle('Insufficient Funds');
@@ -386,7 +438,7 @@ const BillerPlans = () => {
                       packageSlug: selectedPlanSlug,
                       phoneNumber,
                       selectedBiller,
-                      accountNumber: customerReference // Set accountNumber in formValues to use customerReference
+                      customerId: customerReference, // Set accountNumber in formValues to use customerReference
                     }}
                     amount={amount}
                     packageSlug={selectedPlanSlug}

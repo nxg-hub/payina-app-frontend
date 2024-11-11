@@ -33,10 +33,20 @@ export const DataPurchaseForm = () => {
     [formValues.userType, navigate, updateFormValues]
   );
 
+  const clearError = (field) => {
+    setErrors((prevErrors) => {
+      const newErrors = { ...prevErrors };
+      delete newErrors[field];
+      return newErrors;
+    });
+  };
+
   const handleEmailChange = useCallback((e) => {
     const email = e.target.value;
     setLocalEmail(email);
   }, []);
+
+  const phone = formValues.phoneNumber;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -45,6 +55,8 @@ export const DataPurchaseForm = () => {
     const newErrors = {};
     if (!localEmail) newErrors.email = 'Email is required';
     if (!formValues.phoneNumber) newErrors.phoneNumber = 'Phone number is required';
+    if (phone.length < 11) newErrors.phoneNumber = 'Phone number is incorrect';
+    if (phone.length > 11) newErrors.phoneNumber = 'Phone number is over 11  digits';
     if (!formValues.selectedNetwork) newErrors.selectedNetwork = 'Network selection is required';
     if (!selectedPlan) newErrors.selectedPlan = 'Plan selection is required';
 
@@ -80,7 +92,7 @@ export const DataPurchaseForm = () => {
 
 
   return (
-    <section>
+    <section className="bg-black">
       <Navbar />
 
       <div className="container bg-black">
@@ -125,9 +137,14 @@ export const DataPurchaseForm = () => {
                   <DataPlansSelection
                     networkSlug={formValues.selectedNetwork}
                     selectedPlan={selectedPlan}
-                    onPlanChange={handlePlanSelection}
-                    error={errors.selectedPlan}
+                    // onPlanChange={handlePlanSelection}
+                    // error={errors.selectedPlan}
                     plans={plans}
+                    onPlanChange={(plan) => {
+                      setSelectedPlan(plan);
+                      clearError('selectedPlan');
+                    }}
+                    error={errors.selectedPlan}
                   />
                 )}
               </>

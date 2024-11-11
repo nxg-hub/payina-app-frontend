@@ -4,6 +4,7 @@ import Navbar from '../../components/navbar/navbar';
 import Footer from '../../components/footer/footer';
 import ServiceImages from '../../assets/serviceImages.jsx';
 import apiService from '../../services/apiService';
+import CustomButton from '../../components/button/button.jsx';
 
 const Bettwo = () => {
   const location = useLocation();
@@ -71,9 +72,8 @@ const Bettwo = () => {
       try {
         const response = await apiService.verifyCustomer({
           customerId,
-          // productName: `${selectedBiller.name}`,
-          productName: `${selectedBiller.name}_PREPAID`,
           billerSlug: selectedBiller.slug,
+          productName: selectedPlan.slug,
         });
 
         if (response.error) {
@@ -92,7 +92,7 @@ const Bettwo = () => {
           setError(null);
         }
       } catch (error) {
-        console.error('Error verifying user:', error);
+        // console.error('Error verifying user:', error);
         setVerificationResult({
           status: 'failed',
           narration: "An error occurred while validating the customer's identity.",
@@ -103,7 +103,7 @@ const Bettwo = () => {
         setIsLoading(false);
       }
     },
-    [selectedBiller]
+    [selectedBiller, selectedPlan]
   );
 
   useEffect(() => {
@@ -131,7 +131,7 @@ const Bettwo = () => {
     const selectedPlanId = e.target.value;
 
     if (!selectedPlanId) {
-      console.warn('No plan selected');
+      // console.warn('No plan selected');
       setSelectedPlan(null);
       setAmount('');
       setSelectedPlanSlug(null);
@@ -144,9 +144,9 @@ const Bettwo = () => {
       setSelectedPlan(selectedPlanObj);
       setAmount(selectedPlanObj.amount?.toString() || '');
       setSelectedPlanSlug(selectedPlanObj.slug || '');
-      console.log('Selected Plan Slug:', selectedPlanObj.slug);
+      // console.log('Selected Plan Slug:', selectedPlanObj.slug);
     } else {
-      console.warn('Selected plan not found in the list');
+      // console.warn('Selected plan not found in the list');
       setSelectedPlan(null);
       setAmount('');
       setSelectedPlanSlug(null);
@@ -215,11 +215,13 @@ const Bettwo = () => {
           {getServiceTitle()}
         </p>
 
-        <ServiceImages
-          selectedService={selectedBettingService}
-          selectedBiller={selectedBiller}
-          onBillerSelect={handleImageClick}
-        />
+        <div className="flex justify-start">
+          <ServiceImages
+            selectedService={selectedBettingService}
+            selectedBiller={selectedBiller}
+            onBillerSelect={handleImageClick}
+          />
+        </div>
 
         <div className="flex-col">
           <label htmlFor="biller-select" className="block text-primary mb-2">
@@ -275,7 +277,6 @@ const Bettwo = () => {
 
         {customerDetails && (
           <div className="">
-            {/*<h3 className="text-lightBlue font-semibold mb-2">Customer Details</h3>*/}
             <p className="text-lightBlue">Name: {customerDetails.customerName}</p>
             {customerDetails.address && (
               <p className="text-lightBlue">Address: {customerDetails.address}</p>
@@ -299,12 +300,18 @@ const Bettwo = () => {
           />
         </div>
 
-        <button
+        <CustomButton
           onClick={handleProceed}
-          className="mt-4 px-4 py-2 bg-lightBlue text-white rounded-md hover:bg-blue-600 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed"
+          className="mt-4 mb-10 px-16 py-4 bg-lightBlue text-white rounded-md hover:bg-blue-600 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed"
           disabled={isLoading || !customerDetails}>
           {isLoading ? 'Loading...' : 'Proceed'}
-        </button>
+        </CustomButton>
+        {/*<button*/}
+        {/*  onClick={handleProceed}*/}
+        {/*  className="mt-4 mb-10 px-16 py-4 bg-lightBlue text-white rounded-md hover:bg-blue-600 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed"*/}
+        {/*  disabled={isLoading || !customerDetails}>*/}
+        {/*  {isLoading ? 'Loading...' : 'Proceed'}*/}
+        {/*</button>*/}
       </div>
       <Footer />
     </section>

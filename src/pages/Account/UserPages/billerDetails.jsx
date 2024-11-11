@@ -98,7 +98,7 @@ const BillerDetails = () => {
           }
         }
       } catch (error) {
-        console.error('Error verifying user:', error);
+        // console.error('Error verifying user:', error);
         setError('Failed to verify user. Please check your customer reference.');
         setVerificationResult({
           status: 'failed',
