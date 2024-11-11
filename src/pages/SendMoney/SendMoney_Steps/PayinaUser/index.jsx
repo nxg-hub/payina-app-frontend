@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
 import RecipientDetails from './step1';
 import AmountDetails from './step2';
@@ -6,6 +7,7 @@ import EnterPin from './step4';
 import Stepper from '../../stepper';
 import backArrow from '../../../../assets/images/Group-backArrow.png';
 
+// eslint-disable-next-line react/prop-types
 const PayinaUser = ({ currentStep, totalSteps, handleNext, handlePrev }) => {
   const [transactionData, setTransactionData] = useState({
     payinaTag: '',
