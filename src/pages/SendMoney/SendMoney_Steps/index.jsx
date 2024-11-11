@@ -14,9 +14,21 @@ const SendMoneySteps = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 4;
 
+  const resetFormSelection = () => {
+    setSelectedForm(null);
+    setCurrentStep(1);
+  };
+
+  const handleNext = () => setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+  const handlePrev = () => {
+    if (currentStep === 1) {
+      resetFormSelection();
+    } else {
+      setCurrentStep((prev) => Math.max(prev - 1, 1));
+    }
+  };
+
   const renderForm = () => {
-    const handleNext = () => setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
-    const handlePrev = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
     switch (selectedForm) {
       case 'payinaUser':
         return (
@@ -25,6 +37,7 @@ const SendMoneySteps = () => {
             totalSteps={totalSteps}
             handleNext={handleNext}
             handlePrev={handlePrev}
+            resetFormSelection={resetFormSelection}
           />
         );
       case 'anotherBank':
@@ -34,6 +47,7 @@ const SendMoneySteps = () => {
             totalSteps={totalSteps}
             handleNext={handleNext}
             handlePrev={handlePrev}
+            resetFormSelection={resetFormSelection}
           />
         );
       case 'beneficiaries':
@@ -43,6 +57,7 @@ const SendMoneySteps = () => {
             totalSteps={totalSteps}
             handleNext={handleNext}
             handlePrev={handlePrev}
+            resetFormSelection={resetFormSelection}
           />
         );
       default:
