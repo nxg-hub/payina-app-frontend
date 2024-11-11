@@ -5,17 +5,17 @@ import Loader from '../assets/LoadingSpinner.jsx';
 import CustomButton from '../components/button/button.jsx';
 
 const VendInitiator = ({
-                         selectedPlan,
-                         formValues,
-                         packageSlug,
-                         amount,
-                         onVendInitiated,
-                         onError,
-                         accountNumber,
-                         customerReference,
-                         isProcessing,
-                         setIsProcessing,
-                       }) => {
+  selectedPlan,
+  formValues,
+  packageSlug,
+  amount,
+  onVendInitiated,
+  onError,
+  accountNumber,
+  customerReference,
+  isProcessing,
+  setIsProcessing,
+}) => {
   const [statusMessage, setStatusMessage] = useState('');
   const [newAuthToken] = useLocalStorage('authToken', '');
   const [userData, setUserData] = useState(null);
@@ -25,7 +25,6 @@ const VendInitiator = ({
   const hasLoadedWalletRef = useRef(false);
 
   const fetchWalletDetails = useCallback(async () => {
-    // Prevent duplicate wallet fetches
     if (hasLoadedWalletRef.current) {
       return walletDetailsRef.current;
     }
@@ -101,7 +100,7 @@ const VendInitiator = ({
           await fetchWalletDetails();
         }
       } catch (error) {
-        console.error('Error fetching initial data:', error);
+        // console.error('Error fetching initial data:', error);
         onError(error);
       }
     };
@@ -124,18 +123,18 @@ const VendInitiator = ({
       }
 
       const vendData = {
-        customerId: userData?.customerId || '',
+        customerId: userData?.customerReference || customerReference,
         packageSlug: packageSlug,
         channel: 'web',
         amount: amount,
         customerName: userData ? `${userData.firstName} ${userData.lastName}` : '',
         phoneNumber: formValues.phoneNumber,
-        accountNumber: userData?.customerReference || customerReference,
+        accountNumber: userData?.accountNumber || accountNumber,
         email: userData?.email || formValues.email,
         merchantId: walletDetailsRef.current.businessId,
       };
 
-      console.log('Final Vend Data:', vendData);
+      // console.log('Final Vend Data:', vendData);
 
       const vendValueResponse = await axios.post(import.meta.env.VITE_VEND_VALUE_PAYINA, vendData, {
         headers: {
@@ -156,8 +155,9 @@ const VendInitiator = ({
       }
     } catch (err) {
       console.error('Error in vend process:', err);
-      // Use the debug message from the API response if available
-      const errorMessage = err.response?.data?.debugMessage || err.message || 'Vend process failed';
+      // const errorMessage = err.message || 'Vend process failed';
+      const errorMessage = 'Vend process failed';
+      // const errorMessage = err.response?.data?.debugMessage || err.message || 'Vend process failed';
       setStatusMessage(errorMessage);
       onError(err);
     } finally {

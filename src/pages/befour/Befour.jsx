@@ -7,6 +7,9 @@ import NoValidSelection from '../../utilities/NoValidSelection';
 import OrderReview from '../OrderReview/OrderReview.jsx';
 import TransactionModal from '../../utilities/TransactionModal';
 import Loader from '../../assets/LoadingSpinner';
+import successIcon from '../../assets/images/tansIcon.png';
+import errorIcon from '../../assets/images/redrectangle.png';
+import { useNavigate } from 'react-router-dom';
 
 const Befour = () => {
   const location = useLocation();
@@ -15,6 +18,7 @@ const Befour = () => {
   const [isProcessingVend, setIsProcessingVend] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [paymentReference, setPaymentReference] = useState(null);
+  const navigate = useNavigate()
 
   const [modalState, setModalState] = useState({
     isOpen: false,
@@ -111,6 +115,9 @@ const Befour = () => {
           phoneNumber,
           customerDetails,
           packageSlug,
+          accountNumber,
+          merchantId
+
         } = formData;
         if (!selectedBiller || !selectedBiller.slug) {
           throw new Error('Selected biller or biller slug is missing');
@@ -122,8 +129,10 @@ const Befour = () => {
           paymentReference: reference,
           customerId: customerReference,
           packageSlug: packageSlug || 'UNKNOWN_SLUG',
-          channel: 'WEB',
-          amount: Math.round(Number(amount) + 100),
+          accountNumber: customerReference,
+          channel: 'Web',
+          // amount: Math.round(Number(amount) + 100),
+          amount: Math.round(Number(amount) + 100).toString(),
           customerName: customerDetails?.customerName || 'Non-Payina-User',
           phoneNumber: phoneNumber,
           email: customerDetails?.emailAddress || email,
@@ -257,7 +266,11 @@ const Befour = () => {
   };
 
   const handleRegister = () => {
-    closeModal();
+    navigate('/signup');
+  };
+
+  const handleLogin = () => {
+    navigate('/login');
   };
 
   if (!formData || !formData.selectedBiller) {
@@ -288,7 +301,7 @@ const Befour = () => {
         className="w-[50%] mb-10 ml-[22%] text-primary mt-[25] text-center px-16 py-4 border-none rounded-[5px] bg-lightBlue cursor-pointer hover:bg-neutral transition-all duration-200"
         onClick={handleProceed}
         disabled={isSubmitting || isProcessingVend}>
-        {isSubmitting ? 'Processing...' : 'Proceed to Payment'}
+        {isSubmitting ? 'Processing...' : 'Proceed'}
       </button>
       <Footer />
       <TransactionModal
@@ -298,6 +311,14 @@ const Befour = () => {
         title={modalState.title}
         message={modalState.message}
         reference={modalState.reference}
+        buttons={['login', 'register']}
+        successIcon={successIcon}
+        errorIcon={errorIcon}
+        buttonStyles={{
+          login: 'bg-blue-600 hover:bg-blue-700',
+          register: 'bg-blue-500 hover:bg-blue-600'
+        }}
+        onLogin={handleLogin}
         onRegister={handleRegister}
       />
     </section>

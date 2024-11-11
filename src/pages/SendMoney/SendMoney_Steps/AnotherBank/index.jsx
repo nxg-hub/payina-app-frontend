@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
 import RecipientDetails from './step1';
 import AmountDetails from './step2';

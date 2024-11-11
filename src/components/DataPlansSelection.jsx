@@ -3,9 +3,6 @@ import React from 'react';
 const DataPlansSelection = ({ plans, selectedPlan, onPlanChange, error }) => {
   return (
     <div className="flex flex-col gap-4">
-      {/*<label htmlFor="dataPlans" className="text-sm">*/}
-      {/*  Select Data Plan*/}
-      {/*</label>*/}
       <select
         id="dataPlans"
         value={selectedPlan ? selectedPlan.slug : ''}

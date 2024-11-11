@@ -3,12 +3,12 @@ import { ChevronDown } from 'lucide-react';
 import NetworkLogos from '../utilities/NetworkLogos.jsx';
 
 const NetworkSelection = ({
-                            selectedNetwork,
-                            onNetworkChange,
-                            phoneNumber,
-                            onPhoneChange,
-                            error: propError
-                          }) => {
+  selectedNetwork,
+  onNetworkChange,
+  phoneNumber,
+  onPhoneChange,
+  error: propError,
+}) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [providers, setProviders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -31,26 +31,27 @@ const NetworkSelection = ({
         if (data.responseData && Array.isArray(data.responseData)) {
           // Filter and transform the providers data
           const filteredProviders = data.responseData
-            .filter(provider =>
-              // Filter out duplicates and variations (e.g., MTN_BILL_PAYMENT)
-              !provider.slug.includes('_BILL_PAYMENT') &&
-              !provider.slug.includes('_2') &&
-              !provider.slug.includes('_3')
+            .filter(
+              (provider) =>
+                // Filter out duplicates and variations (e.g., MTN_BILL_PAYMENT)
+                !provider.slug.includes('_BILL_PAYMENT') &&
+                !provider.slug.includes('_2') &&
+                !provider.slug.includes('_3')
             )
-            .map(provider => ({
+            .map((provider) => ({
               id: provider.id,
               name: provider.name,
               slug: provider.slug,
-              hasLogo: ['MTN', 'AIRTEL', 'GLO', '9MOBILE'].some(
-                network => provider.slug.includes(network)
-              )
+              hasLogo: ['MTN', 'AIRTEL', 'GLO', '9MOBILE'].some((network) =>
+                provider.slug.includes(network)
+              ),
             }));
 
           setProviders(filteredProviders);
 
           // Set MTN as default if no network is selected
           if (!selectedNetwork) {
-            const mtnProvider = filteredProviders.find(p => p.slug === 'MTN_NIGERIA');
+            const mtnProvider = filteredProviders.find((p) => p.slug === 'MTN_NIGERIA');
             if (mtnProvider) {
               onNetworkChange(mtnProvider.slug);
             }
@@ -75,7 +76,7 @@ const NetworkSelection = ({
   };
 
   const getCurrentProvider = () => {
-    return providers.find(p => p.slug === selectedNetwork);
+    return providers.find((p) => p.slug === selectedNetwork);
   };
 
   if (isLoading) {
@@ -97,8 +98,7 @@ const NetworkSelection = ({
           <button
             type="button"
             className="w-full h-12 px-2 border border-r-0 rounded-l-lg flex items-center justify-between bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          >
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
             {selectedNetwork ? (
               <div className="flex items-center space-x-2">
                 {getCurrentProvider()?.hasLogo ? (
@@ -122,8 +122,7 @@ const NetworkSelection = ({
                   onClick={() => {
                     onNetworkChange(provider.slug);
                     setIsDropdownOpen(false);
-                  }}
-                >
+                  }}>
                   {provider.hasLogo ? (
                     React.createElement(getProviderLogo(provider.slug))
                   ) : (
@@ -146,9 +145,7 @@ const NetworkSelection = ({
         </div>
       </div>
 
-      {(propError || error) && (
-        <p className="mt-2 text-sm text-red-500">{propError || error}</p>
-      )}
+      {(propError || error) && <p className="mt-2 text-sm text-red-500">{propError || error}</p>}
     </div>
   );
 };

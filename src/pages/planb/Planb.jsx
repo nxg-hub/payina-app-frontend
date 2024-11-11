@@ -7,9 +7,13 @@ import NoValidSelection from '../../utilities/NoValidSelection';
 import OrderReview from '../OrderReview/OrderReview.jsx';
 import TransactionModal from '../../utilities/TransactionModal';
 import Loader from '../../assets/LoadingSpinner';
+import { useNavigate } from 'react-router-dom';
+import successIcon from '../../assets/images/tansIcon.png';
+import errorIcon from '../../assets/images/redrectangle.png';
 
 const Planb = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isProcessingVend, setIsProcessingVend] = useState(false);
@@ -19,8 +23,8 @@ const Planb = () => {
   const [modalState, setModalState] = useState({
     isOpen: false,
     status: 'success',
-    title: '',
-    message: '',
+    title: 'Congrats!',
+    message: 'Your Transaction was Successful',
     reference: '',
   });
 
@@ -40,9 +44,9 @@ const Planb = () => {
     };
   }, []);
 
-  const closeModal = () => {
-    setModalState((prevState) => ({ ...prevState, isOpen: false }));
-  };
+  // const closeModal = () => {
+  //   setModalState((prevState) => ({ ...prevState, isOpen: false }));
+  // };
 
   const handleError = useCallback((err, reference) => {
     let errorMessage = err.response?.data?.message || err.message || 'An unknown error occurred';
@@ -150,6 +154,10 @@ const Planb = () => {
     },
     [vendValue]
   );
+  const closeModal = () => {
+    setModalState((prevState) => ({ ...prevState, isOpen: false }));
+    navigate(-1);
+  };
 
   const handleProceed = async () => {
     setIsSubmitting(true);
@@ -207,14 +215,18 @@ const Planb = () => {
   };
 
   const handleRegister = () => {
-    // registration Logic
-    closeModal();
+    // closeModal();
+    navigate('/signup');
+  };
+
+  const handleLogin = () => {
+    // closeModal();
+    navigate('/login');
   };
 
   if (!formData || !formData.selectedPlan) {
     return (
       <section className="text-primary">
-        {/*<Sidebar />*/}
         <Navbar />
         <NoValidSelection message="No valid plan selected. Please go back and select a plan." />
         <Footer />
@@ -227,6 +239,7 @@ const Planb = () => {
   const network = formValues?.selectedNetwork || 'Unknown Network';
   const phoneNumber = formValues?.phoneNumber || '';
   const email = formValues?.email || '';
+
 
   return (
     <section className="text-primary bg-black">
@@ -244,7 +257,7 @@ const Planb = () => {
         className="w-[50%] mb-10 ml-[22%] text-primary mt-[25] text-center px-16 py-4 border-none rounded-[5px] bg-lightBlue cursor-pointer hover:bg-neutral transition-all duration-200"
         onClick={handleProceed}
         disabled={isSubmitting || isProcessingVend}>
-        {isSubmitting ? 'Processing...' : 'Proceed to Payment'}
+        {isSubmitting ? 'Processing...' : 'Proceed'}
       </button>
       <Footer />
       <TransactionModal
@@ -254,6 +267,14 @@ const Planb = () => {
         title={modalState.title}
         message={modalState.message}
         reference={modalState.reference}
+        buttons={['login', 'register']}
+        successIcon={successIcon}
+        errorIcon={errorIcon}
+        buttonStyles={{
+          login: 'bg-blue-600 hover:bg-blue-700',
+          register: 'bg-blue-500 hover:bg-blue-600'
+        }}
+        onLogin={handleLogin}
         onRegister={handleRegister}
       />
     </section>

@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
 import cancelImg from '../../../assets/images/CancelSendMoney.png';
 import { Link } from 'react-router-dom';
@@ -5,7 +6,7 @@ import PayinaUser from './PayinaUser/index';
 import AnotherBank from './AnotherBank/index';
 import Beneficiaries from './BeneficiariesAccount/index';
 import payinaUserImg from '../../../assets/images/Layer_x0020_1.png';
-import anotherBankImg from '../../../assets/images/Group-AnotherBank.png';
+// import anotherBankImg from '../../../assets/images/Group-AnotherBank.png';
 import beneficiaryImg from '../../../assets/images/Group-beneficiaries.png';
 import Stepper from '../stepper';
 
@@ -85,16 +86,16 @@ const SendMoneySteps = () => {
                 Payina User
               </div>
             </div>
-            <div
-              onClick={() => setSelectedForm('anotherBank')}
-              className="flex flex-row gap-8 justify-center items-start cursor-pointer hover:border-yellow mt-5 px-10 py-2 bg-[#D9D9D9] text-black border border-[#006181] rounded-lg">
-              <div className="border border-yellow rounded-full p-3">
-                <img src={anotherBankImg} alt="payrollSelect" />
-              </div>
-              <div className="text-center font-medium mt-5 ml-2 text-md md:text-xl">
-                Another Bank
-              </div>
-            </div>
+            {/*<div*/}
+            {/*  onClick={() => setSelectedForm('anotherBank')}*/}
+            {/*  className="flex flex-row gap-8 justify-center items-start cursor-pointer hover:border-yellow mt-5 px-10 py-2 bg-[#D9D9D9] text-black border border-[#006181] rounded-lg">*/}
+            {/*  <div className="border border-yellow rounded-full p-3">*/}
+            {/*    <img src={anotherBankImg} alt="payrollSelect" />*/}
+            {/*  </div>*/}
+            {/*  <div className="text-center font-medium mt-5 ml-2 text-md md:text-xl">*/}
+            {/*    Another Bank*/}
+            {/*  </div>*/}
+            {/*</div>*/}
             <div
               onClick={() => setSelectedForm('beneficiaries')}
               className="flex flex-row gap-8 justify-center items-start cursor-pointer hover:border-yellow mt-5 px-10 py-2 bg-[#D9D9D9] text-black border border-[#006181] rounded-lg">
