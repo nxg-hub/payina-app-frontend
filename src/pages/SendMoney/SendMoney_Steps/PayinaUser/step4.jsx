@@ -148,7 +148,7 @@ const EnterPin = ({ data }) => {
   if (showDecline) return <DeclineMessage />;
 
   return (
-    <div className="transaction-pin flex flex-col justify-center items-center bg-[#D2D2D285] rounded-md py-[3rem] px-[5rem] mt-[5rem] gap-8 mx-auto">
+    <div className="transaction-pin flex flex-col justify-center items-center bg-[#D2D2D285] rounded-md md:p-[2rem] sm:p-[2rem] xl:py-[3rem] xl:px-[5rem] mt-[5rem] gap-8 mx-auto">
       <span>Enter Transaction Pin</span>
       {errorMessage && <div className="text-red-500">{errorMessage}</div>}
       <div className="circle flex flex-row justify-center items-center gap-6">

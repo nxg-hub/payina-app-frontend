@@ -83,7 +83,7 @@ const RecipientDetails = ({ nextStep }) => {
   };
 
   return (
-    <div className="flex flex-col items-left justify-left gap-4 form mt-5">
+    <div className="flex flex-col items-left justify-center gap-4 form mt-5">
       <span className="text-md md:text-xl font-medium mt-5">Recipient Details</span>
       <Formik
         initialValues={{
@@ -114,7 +114,7 @@ const RecipientDetails = ({ nextStep }) => {
                 name="accountNumber"
                 type="text"
                 placeholder="Enter Recipient Account Number"
-                className="w-[700px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                className="xl:w-[700px] w-[400px]  border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                 onChange={(e) => {
                   setFieldValue('accountNumber', e.target.value);
                   setReceiverConfirmationMessage('');
@@ -137,7 +137,7 @@ const RecipientDetails = ({ nextStep }) => {
                   setSelectedCountry(e.target.value);
                   setFieldValue('country', e.target.value);
                 }}
-                className="w-[700px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm">
+                className="xl:w-[700px] w-[400px]  border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm">
                 <option value="" label="Select a country" />
                 <option value="NG" label="Nigeria" />
                 <option value="GH" label="Ghana" />
@@ -202,7 +202,7 @@ const RecipientDetails = ({ nextStep }) => {
                 onBlur={() => {
                   confirmReceiverDetails(values, values.accountNumber, values.recieverName);
                 }}
-                className="w-[700px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                className="xl:w-[700px] w-[400px]  border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
               />
               <ErrorMessage
                 name="recieverName"
@@ -211,12 +211,12 @@ const RecipientDetails = ({ nextStep }) => {
               />
               {receiverConfirmationMessage && (
                 <span
-                  className={`text-xs md:text-base ${isReceiverConfirmed ? 'text-green-500' : 'text-red-500'}`}>
+                  className={`text-xs md:text-base ${isReceiverConfirmed ? 'text-lightBlue' : 'text-red-500'}`}>
                   {receiverConfirmationMessage}
                 </span>
               )}
               {isReceiverConfirmed && (
-                <div className="text-xs md:text-base text-green-500">
+                <div className="text-xs md:text-base text-lightBlue">
                   <p>Account Number: {responseDetails.accountNumber}</p>
                   <p>Account Name: {responseDetails.accountName}</p>
                 </div>
@@ -226,7 +226,7 @@ const RecipientDetails = ({ nextStep }) => {
               <button
                 type="submit"
                 disabled={!isReceiverConfirmed}
-                className={`rounded-[5px] text-xs md:text-base py-2 border border-lightBlue bg-lightBlue w-[300px] text-primary ${!isReceiverConfirmed ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                className={`rounded-[5px] text-xs md:text-base py-2 border border-lightBlue bg-lightBlue w-[250px] xl:mr-0 mr-5 xl:w-[300px] text-primary ${!isReceiverConfirmed ? 'opacity-50 cursor-not-allowed' : ''}`}>
                 Next
               </button>
             </div>

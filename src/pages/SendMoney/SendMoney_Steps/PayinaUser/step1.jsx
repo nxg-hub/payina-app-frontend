@@ -64,7 +64,7 @@ const RecipientDetails = ({ nextStep }) => {
                 name="payinaTag"
                 type="text"
                 placeholder="Enter Recipient Payina Tag"
-                className="w-[700px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
               />
               <ErrorMessage
                 name="payinaTag"
@@ -80,7 +80,7 @@ const RecipientDetails = ({ nextStep }) => {
                 name="confirmPayinaTag"
                 type="text"
                 placeholder=""
-                className="w-[700px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
               />
               <ErrorMessage
                 name="confirmPayinaTag"
@@ -91,7 +91,7 @@ const RecipientDetails = ({ nextStep }) => {
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="rounded-[5px] text-xs md:text-base  py-2 border border-lightBlue bg-lightBlue w-[300px] text-primary">
+                className="rounded-[5px] text-xs md:text-base  py-2 border border-lightBlue bg-lightBlue w-[250px] xl:mr-0 mr-5 xl:w-[300px] text-primary">
                 Next
               </button>
             </div>

@@ -10,7 +10,7 @@ const stepper = ({ currentStep, numberOfSteps }) => {
         <React.Fragment key={index}>
           <div className={`w-6 h-6 rounded-full drop-shadow-md ${activeColor(index)}`}></div>
           {isFinalStep(index) ? null : (
-            <div className={`w-[150px] h-1 ${activeColor(index)}`}></div>
+            <div className={`xl:w-[150px] w-[50px] h-1 ${activeColor(index)}`}></div>
           )}
         </React.Fragment>
       ))}
