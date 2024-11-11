@@ -5,24 +5,6 @@ import { RiDeleteBinLine } from 'react-icons/ri';
 import { PayrollSchema } from '../../schemas/schemas';
 
 const PayrollDetails = ({ onSave }) => {
-  // const [jobRoleTitle, setJobRoleTitle] = useState(['']);
-
-  // const addJobRoleTitle = () => {
-  //   setJobRoleTitle([...jobRoleTitle, '']); // Add an empty string for new job role
-  // };
-
-  // const removeJobRoleTitle = (index) => {
-  //   const updatedRoles = [...jobRoleTitle];
-  //   updatedRoles.splice(index, 1);
-  //   setJobRoleTitle(updatedRoles);
-  // };
-
-  // const handleJobRoleTitleChange = (index, value) => {
-  //   const updatedRoles = [...jobRoleTitle];
-  //   updatedRoles[index] = value;
-  //   setJobRoleTitle(updatedRoles);
-  // };
-
   return (
     <div className="flex flex-col justify-center items-start w-auto xl:ml-80 xl:pt-28 md:pt-10 mx-auto h-full">
       <span className="text-xl md:text-3xl font-bold px-6 py-2 md:py-0">Payroll</span>
@@ -46,7 +28,7 @@ const PayrollDetails = ({ onSave }) => {
               onSave(values);
               actions.setSubmitting(false);
             }}>
-            {({ values, setFieldValue }) => (
+            {({ values, setFieldValue, resetForm }) => (
               <Form>
                 <div className="flex flex-col  w-full py-4 space-y-4">
                   <div className="flex items-center">
@@ -69,27 +51,6 @@ const PayrollDetails = ({ onSave }) => {
                     component="span"
                     className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                   />
-                  {/* {jobRoleTitle.map((role, index) => (
-                    <div className="flex items-center" key={index}>
-                      <Field
-                        name={`jobRoleTitle.${index}`}
-                        type="text"
-                        placeholder="Enter Job Title"
-                        className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
-                        value={role}
-                        onChange={(e) => handleJobRoleTitleChange(index, e.target.value)}
-                        required
-                      />
-                      {jobRoleTitle.length > 1 && (
-                        <RiDeleteBinLine
-                          color="red"
-                          size={20}
-                          className="ml-2 hover:cursor-pointer"
-                          onClick={() => removeJobRoleTitle(index)}
-                        />
-                      )}
-                    </div>
-                  ))} */}
                 </div>
                 <div className="flex flex-col w-full py-4 space-y-4">
                   <div className="flex items-center">
@@ -186,7 +147,8 @@ const PayrollDetails = ({ onSave }) => {
                 <div className="flex center py-40 gap-4 w-full">
                   <button
                     type="button"
-                    className="flex gap-2 center rounded-[5px] text-xs md:text-base py-2 border border-lightBlue text-lightBlue w-[300px]">
+                    className="flex gap-2 center rounded-[5px] text-xs md:text-base py-2 border border-lightBlue text-lightBlue w-[300px]"
+                    onClick={() => resetForm()}>
                     <LuPlus size={20} color="#006181" />
                     Add role
                   </button>

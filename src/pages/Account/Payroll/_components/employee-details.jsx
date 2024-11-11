@@ -6,7 +6,6 @@ import calendar from '../../../../assets/images/calendar.svg';
 import dropdown from '../../../../assets/images/Vector-dropdown.svg';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-// import { RiDeleteBinLine } from 'react-icons/ri';
 
 const EmployeeDetails = ({ onSave }) => {
   const [startDate, setStartDate] = useState(null);
@@ -14,43 +13,15 @@ const EmployeeDetails = ({ onSave }) => {
   const [automaticPayment, setAutomaticPayment] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [paymentFrequency, setPaymentFrequency] = useState('');
-  // const [employeeName, setEmployeeName] = useState(['']);
-
-  const handleAutomaticPaymentToggle = () => {
-    setAutomaticPayment((prev) => !prev);
-  };
 
   const handlePaymentFrequencySelect = (value) => {
     setPaymentFrequency(value);
-    setDropdownOpen(false); 
+    setDropdownOpen(false);
   };
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
   };
-
-  // const addEmployeeName = () => {
-  //   setEmployeeName([...employeeName, '']);
-  // };
-
-  // const removeEmployeeName = (index) => {
-  //   const updatedName = [...employeeName];
-  //   updatedName.splice(index, 1);
-  //   setEmployeeName(updatedName);
-  // };
-
-  // const handleEmployeeNameChange = (index, value, setFieldValue) => {
-  //   const updatedName = [...employeeName];
-  //   updatedName[index] = value;
-  //   setEmployeeName(updatedName);
-  //   setFieldValue(`employeeName[${index}]`, value); // Update Formik's state
-  // };
-
-  // const handleEmployeeNameChange = (index, value) => {
-  //   const updatedName = [...employeeName];
-  //   updatedName[index] = value;
-  //   setEmployeeName(updatedName);
-  // };
 
   return (
     <div className="flex flex-col justify-center items-start w-auto xl:ml-80 xl:pt-28 md:pt-10">
@@ -79,7 +50,7 @@ const EmployeeDetails = ({ onSave }) => {
               onSave(values);
               actions.setSubmitting(false);
             }}>
-            {({ setFieldValue }) => (
+            {({ setFieldValue, resetForm }) => (
               <Form>
                 <div className="flex flex-col  w-full py-4 space-y-4">
                   <div className="flex items-center">
@@ -102,28 +73,6 @@ const EmployeeDetails = ({ onSave }) => {
                     component="span"
                     className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                   />
-                  {/* {employeeName.map((name, index) => (
-                    <div className="flex items-center" key={index}>
-                      <Field
-                        name={`employeeName[${index}]`}
-                        type="text"
-                        placeholder="Enter Employee's name"
-                        className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
-                        value={name}
-                        onChange={(e) =>
-                          handleEmployeeNameChange(index, e.target.value, setFieldValue)
-                        }
-                      />
-                      {employeeName.length > 1 && (
-                        <RiDeleteBinLine
-                          color="red"
-                          size={20}
-                          className="ml-2 hover:cursor-pointer"
-                          onClick={() => removeEmployeeName(index)}
-                        />
-                      )}
-                    </div>
-                  ))} */}
                 </div>
                 <div className="flex flex-col  w-full py-4 space-y-4">
                   <div className="flex items-center">
@@ -192,7 +141,6 @@ const EmployeeDetails = ({ onSave }) => {
                           }}
                           className="absolute z-10 bg-white border border-gray-300 rounded-md shadow-md"
                           placeholderText="Select a date"
-                          // dateFormat="MM/dd/yyyy"
                           popperPlacement="top"
                           onClickOutside={() => setOpenDatePicker(false)}
                         />
@@ -246,7 +194,7 @@ const EmployeeDetails = ({ onSave }) => {
                     </label>
                     <Field
                       name="accountDetails.accountNumber"
-                      type="number"
+                      type="text"
                       placeholder="Enter Account Number"
                       className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                     />
@@ -312,7 +260,14 @@ const EmployeeDetails = ({ onSave }) => {
                 <div className="flex center py-40 gap-4 w-full">
                   <button
                     type="button"
-                    className="flex gap-2 center rounded-[5px] text-xs md:text-base py-2 border border-lightBlue text-lightBlue w-[300px]">
+                    className="flex gap-2 center rounded-[5px] text-xs md:text-base py-2 border border-lightBlue text-lightBlue w-[300px]"
+                    onClick={() => {
+                      setStartDate(null);
+                      setAutomaticPayment(false);
+                      setPaymentFrequency('');
+                      setDropdownOpen(false);
+                      resetForm();
+                    }}>
                     <LuPlus size={20} color="#006181" />
                     Add Employee
                   </button>

@@ -10,25 +10,12 @@ export const PayrollSchema = Yup.object().shape({
     })
   ),
 });
-// export const PayrollSchema = Yup.object().shape({
-//   jobRoleTitle: Yup.string().required('Job role is required'),
-//   basicSalary: Yup.string().required('Basic salary is required'),
-//   allowances: Yup.object().shape({
-//     allowancePackageName: Yup.string().required('Allowance package is required'),
-//     allowancePay: Yup.string().required('Allowance pay is required'),
-//   }),
-// });
 
 export const EmployeeSchema = Yup.object().shape({
   employeeName: Yup.string().required('Name is required'),
   employeeRole: Yup.string().required("Employee's role is required"),
   employmentDetails: Yup.object().shape({
     employeeId: Yup.string().required("Employee's ID is required"),
-    // employmentDate: Yup.date()
-    //   .transform((value, originalValue) => {
-    //     return originalValue ? new Date(originalValue).toISOString() : originalValue;
-    //   })
-    //   .required('Employment Date is required'),
     employmentDate: Yup.date().required('Employement Date is required'),
   }),
   accountDetails: Yup.object().shape({
