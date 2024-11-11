@@ -3,34 +3,40 @@ import apiService from '../services/apiService';
 import InputStyle from '../utilities/InputStyle';
 
 const EmailVerification = ({
-  onUserVerified,
-  value,
-  onChange,
-  type = 'email',
-  placeholder = 'Enter Email address',
-  className = 'border-2 rounded-[5px] px-5 py-2 border-primary bg-black text-slate-600'
-}) => {
+                             onUserVerified,
+                             value,
+                             onChange,
+                             type = 'email',
+                             placeholder = 'Enter Email address',
+                             className = 'border-2 rounded-[5px] px-5 py-2 border-primary bg-black text-slate-600'
+                           }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Regular expression to validate email format
+  const validateEmailFormat = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const verifyEmail = useCallback(
     async (email) => {
-      if (!email) return;
+      if (!email || !validateEmailFormat(email)) {
+        setError('Please enter a valid email address');
+        return;
+      }
 
       setLoading(true);
       setError('');
 
       try {
         const response = await apiService.checkEmailRegistration(email);
-
-        // Assuming the API returns { exists: boolean, message: string, userType: string | null }
         const isRegistered = response.exists;
 
         // Call the callback with the verification result and email
         onUserVerified(isRegistered, email, response.userType);
 
         if (!isRegistered) {
-          // If user doesn't exist, we don't show an error, as this is expected behavior
           setError('');
         }
       } catch (err) {
@@ -45,9 +51,8 @@ const EmailVerification = ({
   const handleChange = useCallback(
     (e) => {
       const newEmail = e.target.value;
-      onChange(e); // Call the parent's onChange handler
+      onChange(e);
 
-      // Clear any existing error when the user types
       if (error) setError('');
     },
     [onChange, error]

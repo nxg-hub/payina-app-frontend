@@ -38,8 +38,8 @@ const UserAirtime = () => {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${authToken}`,
-            'apiKey': import.meta.env.VITE_API_KEY
-          }
+            'apiKey': import.meta.env.VITE_API_KEY,
+          },
         });
 
         if (!response.ok) {
@@ -47,9 +47,11 @@ const UserAirtime = () => {
         }
 
         const data = await response.json();
+        console.log("Fetched user data:", data);
         if (data.phoneNumber) {
           const formattedPhone = data.phoneNumber.replace('+234', '0');
           setUserPhone(formattedPhone);
+          updateFormValues({ phoneNumber: formattedPhone });
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -121,10 +123,13 @@ const UserAirtime = () => {
     setModalTitle('Transaction Successful');
     setModalMessage('Successfully processed the vend request');
     setShowModal(true);
-
-    setTimeout(() => {
-      window.location.reload();
-    }, 2000);
+    // Reset form values after successful transaction
+    setAmount('');
+    updateFormValues({
+      phoneNumber: '',
+      selectedNetwork: '',
+      packageSlug: ''
+    });
   };
 
   const handleError = (err) => {
@@ -258,4 +263,3 @@ const UserAirtime = () => {
 };
 
 export default UserAirtime;
-

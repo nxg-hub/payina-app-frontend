@@ -92,11 +92,15 @@ const Betone = () => {
     setLocalEmail(e.target.value);
   }, []);
 
+  const phone = formValues.phoneNumber;
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const newErrors = {};
     if (!localEmail) newErrors.email = 'Email is required';
     if (!formValues.phoneNumber) newErrors.phoneNumber = 'Phone number is required';
+    if (phone.length < 11) newErrors.phoneNumber = 'Phone number is incorrect';
+    if (phone.length > 11) newErrors.phoneNumber = 'Phone number is over 11  digits';
     if (!formValues.selectedBettingService)
       newErrors.selectedBettingService = 'Service selection is required';
 
