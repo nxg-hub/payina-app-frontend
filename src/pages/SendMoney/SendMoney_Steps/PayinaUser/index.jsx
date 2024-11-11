@@ -7,8 +7,7 @@ import EnterPin from './step4';
 import Stepper from '../../stepper';
 import backArrow from '../../../../assets/images/Group-backArrow.png';
 
-// eslint-disable-next-line react/prop-types
-const PayinaUser = ({ currentStep, totalSteps, handleNext, handlePrev }) => {
+const PayinaUser = ({ currentStep, totalSteps, handleNext, handlePrev, resetFormSelection }) => {
   const [transactionData, setTransactionData] = useState({
     payinaTag: '',
     amount: '',
@@ -18,6 +17,14 @@ const PayinaUser = ({ currentStep, totalSteps, handleNext, handlePrev }) => {
   const nextStep = (data) => {
     setTransactionData((prev) => ({ ...prev, ...data }));
     handleNext();
+  };
+
+  const backButtonClick = () => {
+    if (currentStep === 1) {
+      resetFormSelection();
+    } else {
+      handlePrev();
+    }
   };
 
   const renderStep = () => {
@@ -41,7 +48,9 @@ const PayinaUser = ({ currentStep, totalSteps, handleNext, handlePrev }) => {
     <div className="flex flex-col justify-center items-start xl:ml-80 xl:pt-28 md:pt-10 sm:ml-[30px] md:ml-[25px] mx-auto">
       <div className="flex flex-row xl:justify-between items-left xl:gap-[45rem] md:gap-[25rem] sm:gap-[15rem]">
         <div className="text-xl md:text-3xl font-medium">Send Money</div>
-        <div className="flex flex-row gap-2 cancelAction-img cursor-pointer" onClick={handlePrev}>
+        <div
+          className="flex flex-row gap-2 cancelAction-img cursor-pointer"
+          onClick={backButtonClick}>
           <img src={backArrow} alt="cancelAction"></img>
           <div className="text-md text-center mt-2">Back</div>
         </div>
