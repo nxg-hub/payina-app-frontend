@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { FaArrowLeft, FaSearch } from 'react-icons/fa';
 import useLocalStorage from '../../../../hooks/useLocalStorage.js';
+import { images } from '../../../../constants';
 
-const PayrollView = ({ onBackClick }) => {
+const PayrollView = ({ onBackClick, onSetupClick }) => {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [payrollData, setPayrollData] = useState([]);
@@ -50,14 +51,14 @@ const PayrollView = ({ onBackClick }) => {
         const employeeResponse = await fetch(employeesEndpoint);
         const employeeData = await employeeResponse.json();
 
-        const payrollEndpoint = import.meta.env.VITE_GET_ALL_EMPLOYEE_ENDPOINT.replace(
+        const payrollEndpoint = import.meta.env.VITE_GET_ALL_PAYROLL_ENDPOINT.replace(
           '{customerId}',
           customerId
         );
         const payrollResponse = await fetch(payrollEndpoint);
         const payrollData = await payrollResponse.json();
         const combinedData = employeeData.map((employee) => {
-          const payrollDetails = payrollData.find((payroll) => employee.id === payroll.employeeId);
+          const payrollDetails = payrollData.find((payroll) => employee.id === payroll.id);
           return {
             ...employee,
             jobRoleTitle: payrollDetails ? payrollDetails.jobRoleTitle : '',
@@ -112,6 +113,16 @@ const PayrollView = ({ onBackClick }) => {
 
         {loading ? (
           <div className="text-center text-lg">Loading payroll data...</div>
+        ) : payrollData.length === 0 ? (
+          <div className="flex flex-col center absolute top-[50%] gap-8 left-[50%] xl:translate-x-[36%] md:translate-x-[-50%] translate-x-[-50%] translate-y-[-50%]">
+            <img src={images.PayrollIcon} alt="" />
+            <h3 className="text-black font-bold text-md">
+              No Payroll yet?{' '}
+              <span className="text-lightBlue cursor-pointer" onClick={onSetupClick}>
+                Set up Payroll
+              </span>
+            </h3>
+          </div>
         ) : (
           <div className="grid grid-cols-3 justify-center items-center gap-4 mt-[4rem] px-[5rem] py-2">
             {filteredPayrollData.map((employee) => (
@@ -239,7 +250,7 @@ const PayrollView = ({ onBackClick }) => {
       </div>
       <div
         onClick={onBackClick}
-        className="flex flex-row gap-2 text-xl items-left justify-left ml-80 mt-[5rem] cursor-pointer">
+        className="flex flex-row gap-2 text-xl items-left justify-left ml-80 mt-[20rem] cursor-pointer">
         <FaArrowLeft className="text-lightBlue" />
         <span className="text-lightBlue text-xl">Back</span>
       </div>
