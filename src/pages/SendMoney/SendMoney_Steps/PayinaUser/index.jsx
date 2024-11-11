@@ -7,12 +7,7 @@ import EnterPin from './step4';
 import Stepper from '../../stepper';
 import backArrow from '../../../../assets/images/Group-backArrow.png';
 
-<<<<<<< HEAD
 const PayinaUser = ({ currentStep, totalSteps, handleNext, handlePrev, resetFormSelection }) => {
-=======
-// eslint-disable-next-line react/prop-types
-const PayinaUser = ({ currentStep, totalSteps, handleNext, handlePrev }) => {
->>>>>>> 8e4fdbb19fa1340e6fc65581d576d7a0ed9b13db
   const [transactionData, setTransactionData] = useState({
     payinaTag: '',
     amount: '',
