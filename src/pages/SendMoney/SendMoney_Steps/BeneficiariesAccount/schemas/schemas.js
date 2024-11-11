@@ -8,8 +8,3 @@ export const AmountSchema = Yup.object().shape({
   amount: Yup.string().required('Amount is required'),
   purpose: Yup.string().required('purpose is required'),
 });
-
-// export const TransactionSchema = Yup.object().shape({
-//   amount: Yup.string().required('Amount is required'),
-//   purpose: Yup.string().required('purpose is required'),
-// });
