@@ -2,8 +2,9 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/navbar/navbar';
 import Footer from '../../components/footer/footer';
-import { bet1, bet2, bet3, bet4, bet5, bet6 } from '../../constants/images';
+import ServiceImages from '../../assets/serviceImages.jsx';
 import apiService from '../../services/apiService';
+import CustomButton from '../../components/button/button.jsx';
 
 const Bettwo = () => {
   const location = useLocation();
@@ -20,34 +21,12 @@ const Bettwo = () => {
   const [customerDetails, setCustomerDetails] = useState(null);
   const [plans, setPlans] = useState([]);
   const [selectedPlan, setSelectedPlan] = useState(null);
-
-  const billerImages = {
-    BET9JA: bet3,
-    SPORTY: bet6,
-    '1XBET': bet5,
-    NAIRABET: bet4,
-    '22BET': bet1,
-    BETKING: bet2
-  };
-
-  const renderBillerImage = (billerSlug, name) => (
-    <div
-      key={billerSlug}
-      className={`flex-col cursor-pointer ${selectedBiller?.slug === billerSlug ? 'border-2 border-yellow p-2 rounded' : ''}`}
-      onClick={() => handleImageClick(billerSlug)}>
-      <img height={58} width={58} src={billerImages[billerSlug]} alt={name} />
-      <p>{name}</p>
-    </div>
-  );
+  const [selectedPlanSlug, setSelectedPlanSlug] = useState(null);
 
   const handleImageClick = (billerSlug) => {
     const selectedBillerObj = billerOptions.find((biller) => biller.slug === billerSlug);
     setSelectedBiller(selectedBillerObj || null);
-    setVerificationResult(null);
-    setCustomerDetails(null);
-    setError(null);
-    setSelectedPlan(null);
-    setAmount('');
+    resetForm();
   };
 
   const fetchBillerOptions = useCallback(async (billerGroupSlug) => {
@@ -87,46 +66,44 @@ const Bettwo = () => {
   const verifyUser = useCallback(
     async (customerId) => {
       if (!selectedBiller) return;
-
       setIsLoading(true);
-      setError(null);
-      setVerificationResult(null);
-      setCustomerDetails(null);
+      resetVerification();
 
       try {
         const response = await apiService.verifyCustomer({
           customerId,
-          productName: `${selectedBiller.name}_PREPAID`,
-          billerSlug: selectedBiller.slug
+          billerSlug: selectedBiller.slug,
+          productName: selectedPlan.slug,
         });
 
         if (response.error) {
-          setError(response.message || 'An error occurred during verification.');
           setVerificationResult({
             status: 'failed',
-            narration: response.responseData?.narration || 'Verification failed.'
+            narration: response.message || 'Verification failed.',
           });
+          setError(response.message || 'An error occurred during verification.');
+          setCustomerDetails(null);
         } else {
           setVerificationResult({
             status: 'success',
-            narration: response.message || 'Verification successful.'
+            narration: response.message || 'Verification successful.',
           });
-          if (response.responseData?.customer) {
-            setCustomerDetails(response.responseData.customer);
-          }
+          setCustomerDetails(response.responseData?.customer || null);
+          setError(null);
         }
       } catch (error) {
-        console.error('Error verifying user:', error);
-        setError('Failed to verify user. Please check your customer reference.');
+        // console.error('Error verifying user:', error);
         setVerificationResult({
           status: 'failed',
-          narration: "An error occurred while validating the customer's identity."
+          narration: "An error occurred while validating the customer's identity.",
         });
+        setError('Failed to verify user. Please check your customer reference.');
+        setCustomerDetails(null);
       } finally {
         setIsLoading(false);
       }
     },
-    [selectedBiller]
+    [selectedBiller, selectedPlan]
   );
 
   useEffect(() => {
@@ -147,23 +124,32 @@ const Bettwo = () => {
     const selectedBillerSlug = e.target.value;
     const selectedBillerObj = billerOptions.find((biller) => biller.slug === selectedBillerSlug);
     setSelectedBiller(selectedBillerObj || null);
-    setVerificationResult(null);
-    setCustomerDetails(null);
-    setError(null);
-    setSelectedPlan(null);
-    setAmount('');
+    resetForm();
   };
 
   const handlePlanChange = (e) => {
     const selectedPlanId = e.target.value;
-    const selectedPlanObj = plans.find((plan) => plan.id.toString() === selectedPlanId);
+
+    if (!selectedPlanId) {
+      // console.warn('No plan selected');
+      setSelectedPlan(null);
+      setAmount('');
+      setSelectedPlanSlug(null);
+      return;
+    }
+
+    const selectedPlanObj = plans.find((plan) => plan.id && plan.id.toString() === selectedPlanId);
 
     if (selectedPlanObj) {
       setSelectedPlan(selectedPlanObj);
-      setAmount(selectedPlanObj.amount.toString());
+      setAmount(selectedPlanObj.amount?.toString() || '');
+      setSelectedPlanSlug(selectedPlanObj.slug || '');
+      // console.log('Selected Plan Slug:', selectedPlanObj.slug);
     } else {
+      // console.warn('Selected plan not found in the list');
       setSelectedPlan(null);
       setAmount('');
+      setSelectedPlanSlug(null);
     }
   };
 
@@ -180,7 +166,7 @@ const Bettwo = () => {
       setError('Customer verification is required before proceeding.');
       return;
     }
-    navigate('/befour', {
+    navigate('/bills/review', {
       state: {
         selectedBiller,
         amount,
@@ -189,37 +175,52 @@ const Bettwo = () => {
         phoneNumber,
         customerDetails,
         verificationResult,
-        selectedPlan
-      }
+        selectedPlan,
+        packageSlug: selectedPlanSlug,
+      },
     });
   };
 
+  const getServiceTitle = () => {
+    const titles = {
+      BETTING_AND_LOTTERY: 'Choose Your Betting Platform',
+      PAY_TV: 'Select Your TV Provider',
+      ELECTRIC_DISCO: 'Choose Your Electricity Provider',
+      AIRTIME_AND_DATA: 'Select Your Network Provider',
+      ENTERTAINMENT_AND_LIFESTYLE: 'Choose Your Entertainment Service',
+    };
+    return titles[selectedBettingService] || 'Select Service Provider';
+  };
+
+  const resetForm = () => {
+    setVerificationResult(null);
+    setCustomerDetails(null);
+    setError(null);
+    setSelectedPlan(null);
+    setAmount('');
+  };
+
+  const resetVerification = () => {
+    setVerificationResult(null);
+    setCustomerDetails(null);
+    setError(null);
+  };
+
   return (
-    <section>
+    <section className="bg-black">
       <Navbar />
-      <div className="container">
+      <div className="container bg-black">
         <div className="w-[80%] h-1 border-none mr-auto ml-auto mt-[-2px] mb-40 bg-yellow"></div>
         <p className="mt-[-120px] pb-8 text-6xl text-center font-extrabold text-lightBlue">
-          Choose Your Betting Platform
+          {getServiceTitle()}
         </p>
-        <button className="text-primary text-left p-10 border-none rounded-[5px] w-[64%] bg-neutral mb-3 px-4 py-2">
-          Want to enjoy discounts?
-          <span className="text-yellow"> Register</span> or{' '}
-          <span className="text-yellow">Login</span>{' '}
-        </button>
-        <p className="text-primary mb-3 mt-2">Popular Platforms</p>
 
-        <div className="mb-10 text-lightBlue">
-          <div className="flex gap-36">
-            {renderBillerImage('BET9JA', 'Bet 9ja')}
-            {renderBillerImage('SPORTY', 'Sporty')}
-            {renderBillerImage('1XBET', '1x Bet')}
-          </div>
-          <div className="flex mt-10 gap-36">
-            {renderBillerImage('NAIRABET', 'Naira Bet')}
-            {renderBillerImage('22BET', '22 Bet')}
-            {renderBillerImage('BETKING', 'Bet King')}
-          </div>
+        <div className="flex justify-start">
+          <ServiceImages
+            selectedService={selectedBettingService}
+            selectedBiller={selectedBiller}
+            onBillerSelect={handleImageClick}
+          />
         </div>
 
         <div className="flex-col">
@@ -231,7 +232,7 @@ const Bettwo = () => {
             value={selectedBiller?.slug || ''}
             onChange={handleBillerChange}
             className="border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-black text-slate-600 w-[64%] mb-3">
-            <option value="">Select a betting platform</option>
+            <option value="">Select a Service platform</option>
             {billerOptions.map((biller) => (
               <option key={biller.slug} value={biller.slug}>
                 {biller.name}
@@ -261,21 +262,6 @@ const Bettwo = () => {
         )}
 
         <div className="flex-col">
-          <label htmlFor="amount" className="block text-primary mb-2">
-            Amount
-          </label>
-          <input
-            id="amount"
-            type="text"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className="border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-black text-slate-600 w-[64%] mb-3"
-            placeholder="Enter amount"
-            // readOnly={selectedPlan !== null}
-          />
-        </div>
-
-        <div className="flex-col">
           <label htmlFor="customer-reference" className="block text-primary mb-2">
             Customer Reference
           </label>
@@ -289,56 +275,43 @@ const Bettwo = () => {
           />
         </div>
 
-        <div className="flex-col">
-          <label htmlFor="phone-number" className="block text-primary mb-2">
-            Phone Number
-          </label>
-          <input
-            id="phone-number"
-            type="text"
-            value={phoneNumber || ''}
-            readOnly
-            className="border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-black text-slate-600 w-[64%] mb-3"
-          />
-        </div>
-
-        {verificationResult && (
-          <p
-            className={`mt-1 ${verificationResult.status === 'success' ? 'text-green-500' : 'text-red-500'}`}>
-            {verificationResult.narration}
-          </p>
-        )}
         {customerDetails && (
-          <div className="mt-3 text-primary">
-            <p>
-              <strong>Customer Name:</strong> {customerDetails.customerName}
-            </p>
-            <p>
-              <strong>Address:</strong> {customerDetails.address}
-            </p>
-            <p>
-              <strong>Phone Number:</strong> {customerDetails.phoneNumber}
-            </p>
+          <div className="">
+            <p className="text-lightBlue">Name: {customerDetails.customerName}</p>
+            {customerDetails.address && (
+              <p className="text-lightBlue">Address: {customerDetails.address}</p>
+            )}
           </div>
         )}
 
-        {isLoading && <p className="text-primary">Loading...</p>}
-        {error && <p className="text-red-500">Error: {error}</p>}
+        {error && <div className="mb-4 p-4 bg-red-900 text-white rounded-md w-[64%]">{error}</div>}
 
-        <button
+        <div className="flex-col">
+          <label htmlFor="amount" className="block text-primary mb-2">
+            Amount
+          </label>
+          <input
+            id="amount"
+            type="text"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className="border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-black text-slate-600 w-[64%] mb-3"
+            placeholder="Enter amount"
+          />
+        </div>
+
+        <CustomButton
           onClick={handleProceed}
-          className="text-primary mb-10 mt-5 text-left px-16 py-4 border-none rounded-[5px] bg-lightBlue cursor-pointer hover:bg-neutral transition-all duration-200"
-          disabled={
-            !selectedBiller ||
-            !amount ||
-            !customerReference ||
-            !email ||
-            !phoneNumber ||
-            isLoading ||
-            verificationResult?.status !== 'success'
-          }>
-          Proceed to Befour
-        </button>
+          className="mt-4 mb-10 px-16 py-4 bg-lightBlue text-white rounded-md hover:bg-blue-600 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed"
+          disabled={isLoading || !customerDetails}>
+          {isLoading ? 'Loading...' : 'Proceed'}
+        </CustomButton>
+        {/*<button*/}
+        {/*  onClick={handleProceed}*/}
+        {/*  className="mt-4 mb-10 px-16 py-4 bg-lightBlue text-white rounded-md hover:bg-blue-600 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed"*/}
+        {/*  disabled={isLoading || !customerDetails}>*/}
+        {/*  {isLoading ? 'Loading...' : 'Proceed'}*/}
+        {/*</button>*/}
       </div>
       <Footer />
     </section>

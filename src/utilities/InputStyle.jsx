@@ -23,7 +23,7 @@ const InputStyle = ({
       onChange={onChange}
       onBlur={onBlur}
       placeholder={placeholder}
-      className="border-2 border-slate-400 rounded-[5px] px-5 py-2 bg-black text-slate-600 w-full"
+      className="border-2 border-slate-400 rounded-[5px] px-5 py-2 bg-white text-slate-600 w-full"
       readOnly={readOnly}
     />
     {error && <span className="text-red-500 text-sm">{error}</span>}

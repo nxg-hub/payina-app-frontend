@@ -8,6 +8,7 @@ import DataPlansSelection from '../../components/DataPlansSelection';
 import { useForm } from '../../context/formContext';
 import EmailVerification from '../../components/EmailVerification';
 import { useDataPlans } from '../../hooks/useDataPlans';
+import NetworkSelectionNonPayinaUsers from '../../components/NetworkSelectionNonPayinaUsers.jsx';
 
 export const DataPurchaseForm = () => {
   const { formValues, updateFormValues } = useForm();
@@ -32,10 +33,20 @@ export const DataPurchaseForm = () => {
     [formValues.userType, navigate, updateFormValues]
   );
 
+  const clearError = (field) => {
+    setErrors((prevErrors) => {
+      const newErrors = { ...prevErrors };
+      delete newErrors[field];
+      return newErrors;
+    });
+  };
+
   const handleEmailChange = useCallback((e) => {
     const email = e.target.value;
     setLocalEmail(email);
   }, []);
+
+  const phone = formValues.phoneNumber;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -44,6 +55,8 @@ export const DataPurchaseForm = () => {
     const newErrors = {};
     if (!localEmail) newErrors.email = 'Email is required';
     if (!formValues.phoneNumber) newErrors.phoneNumber = 'Phone number is required';
+    if (phone.length < 11) newErrors.phoneNumber = 'Phone number is incorrect';
+    if (phone.length > 11) newErrors.phoneNumber = 'Phone number is over 11  digits';
     if (!formValues.selectedNetwork) newErrors.selectedNetwork = 'Network selection is required';
     if (!selectedPlan) newErrors.selectedPlan = 'Plan selection is required';
 
@@ -57,17 +70,17 @@ export const DataPurchaseForm = () => {
         ...formValues,
         email: localEmail,
         phoneNumber: formValues.phoneNumber,
-        selectedNetwork: formValues.selectedNetwork,
+        selectedNetwork: formValues.selectedNetwork
       },
       selectedPlan: {
         id: selectedPlan.id,
         planName: selectedPlan.name,
         planPrice: selectedPlan.amount,
-        planSlug: selectedPlan.slug,
-      },
+        planSlug: selectedPlan.slug
+      }
     };
 
-    navigate('/planb', { state: stateToPass });
+    navigate('/plans/review', { state: stateToPass });
   };
   const handlePlanSelection = useCallback(
     (plan) => {
@@ -77,11 +90,12 @@ export const DataPurchaseForm = () => {
     [setSelectedPlan, updateFormValues]
   );
 
+
   return (
-    <section>
+    <section className="bg-black">
       <Navbar />
 
-      <div className="container">
+      <div className="container bg-black">
         <div className="w-[80%] h-1 border-none mr-auto ml-auto mt-[-2px] mb-40 bg-yellow"></div>
         <p className="mt-[-120px] pb-8 text-6xl text-center font-extrabold text-lightBlue">
           Buy Data & get Cashback
@@ -114,7 +128,7 @@ export const DataPurchaseForm = () => {
                   value={formValues.phoneNumber}
                   onChange={(e) => updateFormValues({ phoneNumber: e.target.value })}
                 />
-                <NetworkSelection
+                <NetworkSelectionNonPayinaUsers
                   selectedNetwork={formValues.selectedNetwork}
                   onNetworkChange={(network) => updateFormValues({ selectedNetwork: network })}
                   error={errors.selectedNetwork}
@@ -123,9 +137,14 @@ export const DataPurchaseForm = () => {
                   <DataPlansSelection
                     networkSlug={formValues.selectedNetwork}
                     selectedPlan={selectedPlan}
-                    onPlanChange={handlePlanSelection}
-                    error={errors.selectedPlan}
+                    // onPlanChange={handlePlanSelection}
+                    // error={errors.selectedPlan}
                     plans={plans}
+                    onPlanChange={(plan) => {
+                      setSelectedPlan(plan);
+                      clearError('selectedPlan');
+                    }}
+                    error={errors.selectedPlan}
                   />
                 )}
               </>

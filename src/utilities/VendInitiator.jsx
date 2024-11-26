@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import useLocalStorage from '../hooks/useLocalStorage';
 import Loader from '../assets/LoadingSpinner.jsx';
+import CustomButton from '../components/button/button.jsx';
 
 const VendInitiator = ({
   selectedPlan,
@@ -73,7 +74,7 @@ const VendInitiator = ({
       onError(error);
       return null;
     }
-  }, []);
+  }, [newAuthToken, apiKey, onError]);
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -95,7 +96,6 @@ const VendInitiator = ({
         const userDataResponse = await userResponse.json();
         setUserData(userDataResponse);
 
-        // Only fetch wallet details if not already loaded
         if (!hasLoadedWalletRef.current) {
           await fetchWalletDetails();
         }
@@ -106,7 +106,7 @@ const VendInitiator = ({
     };
 
     fetchInitialData();
-  }, []);
+  }, [apiKey, newAuthToken]);
 
   const handleVendProcess = async () => {
     if (!packageSlug) {
@@ -181,7 +181,7 @@ const VendInitiator = ({
           {statusMessage}
         </div>
       )}
-      <button
+      <CustomButton
         onClick={handleVendProcess}
         disabled={isProcessing || !userData || !walletData || !packageSlug}
         className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors">
@@ -193,7 +193,7 @@ const VendInitiator = ({
         ) : (
           'Proceed to Vend'
         )}
-      </button>
+      </CustomButton>
     </div>
   );
 };

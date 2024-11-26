@@ -31,7 +31,7 @@ const Payroll = () => {
       <Navbar />
       <Sidebar />
       {showPayrollView ? (
-        <PayrollView onBackClick={handleBackClick} />
+        <PayrollView onBackClick={handleBackClick} onSetupClick={handleSetupPayrollClick} />
       ) : showPayrollSubmit ? (
         <PayrollSubmit onSuccess={handleSuccess} />
       ) : (

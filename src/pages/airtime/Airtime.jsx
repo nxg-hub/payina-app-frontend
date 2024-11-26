@@ -5,8 +5,9 @@ import Footer from '../../components/footer/footer';
 import EmailVerification from '../../components/EmailVerification';
 import { useForm } from '../../context/formContext';
 import { useDataPlans } from '../../hooks/useDataPlans';
-import NetworkSelection from '../../components/NetworkSelection';
+import NetworkSelection from '../../components/NetworkSelectionNonPayinaUsers';
 import DataPlansSelection from '../../components/DataPlansSelection';
+// import PhoneInput from '../../hooks/phoneNumberInput.jsx';
 
 const Airtime = () => {
   const { formValues, updateFormValues } = useForm();
@@ -23,7 +24,7 @@ const Airtime = () => {
 
   useEffect(() => {
     if (filteredPlans.length > 0 && !selectedPlan) {
-      setSelectedPlan(filteredPlans[0]); // Set the first plan as the selected plan
+      setSelectedPlan(filteredPlans[0]);
     }
   }, [filteredPlans, selectedPlan, setSelectedPlan]);
 
@@ -61,12 +62,16 @@ const Airtime = () => {
     setLocalEmail(email);
   }, []);
 
+  const phone = formValues.phoneNumber;
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const newErrors = {};
     if (!localEmail) newErrors.email = 'Email is required';
     if (!formValues.phoneNumber) newErrors.phoneNumber = 'Phone number is required';
+    if (phone.length < 11) newErrors.phoneNumber = 'Phone number is incomplete';
+    if (phone.length > 11) newErrors.phoneNumber = 'Phone number is over 11 digits';
     if (!formValues.selectedNetwork) newErrors.selectedNetwork = 'Network selection is required';
     if (!amount) newErrors.amount = 'Amount is required';
     if (amount && Number(amount) < 70) newErrors.amount = 'Amount must be 70 Naira or above';
@@ -80,7 +85,7 @@ const Airtime = () => {
     const updatedFormValues = {
       ...formValues,
       email: localEmail,
-      amount: amount
+      amount: amount,
     };
 
     updateFormValues(updatedFormValues);
@@ -92,16 +97,16 @@ const Airtime = () => {
             planName: selectedPlan.name,
             planPrice: selectedPlan.amount || amount,
             planData: `${formValues.selectedNetwork} - ${selectedPlan.name}`,
-            planSlug: selectedPlan.slug
+            planSlug: selectedPlan.slug,
           }
-        : null
+        : null,
     };
 
-    navigate('/planb', { state: stateToPass });
+    navigate('/plans/review', { state: stateToPass });
   };
 
   return (
-    <section className="text-primary w-full h-screen">
+    <section className="w-full h-screen text-white bg-black">
       <Navbar className="pt-6" />
       <div className="container">
         <div className="w-[80%] h-1 border-none mr-auto ml-auto mt-[-2px] mb-40 bg-yellow"></div>
@@ -134,11 +139,15 @@ const Airtime = () => {
                 error={errors.selectedNetwork}
               />
               <DataPlansSelection
-                plans={filteredPlans} // Pass the filtered plans with only the first item
+                plans={filteredPlans}
                 selectedPlan={selectedPlan}
                 onPlanChange={setSelectedPlan}
                 error={errors.selectedPlan}
               />
+              {/*<PhoneInput*/}
+              {/*  value={formValues.phoneNumber}*/}
+              {/*  onChange={(e) => updateFormValues({ phoneNumber: e.target.value })}*/}
+              {/*/>*/}
               <div className="flex flex-col w-[64%]">
                 <label className="py-4">Phone</label>
                 <input

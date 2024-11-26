@@ -26,7 +26,7 @@ const QuickAction = () => {
               <img src={images.AddMoney} className="md:w-[49px] w-[39px] p-2  bg-center" alt="" />
             </div>
             <Link
-              to="/addmoney"
+              to="/addMoney"
               className="hover:text-lightBlue transition-colors text-center opacity-75 text-sm md:text-base">
               Add Money
             </Link>

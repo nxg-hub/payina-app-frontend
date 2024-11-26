@@ -11,12 +11,14 @@ import useLocalStorage from '../../../../hooks/useLocalStorage.js';
 export const MobileSidebar = () => {
   const location = useLocation();
   const currentRoute = location.pathname;
-  const [customerUserName, setCustomerUserName] = useState('User'); // Default display name
+  const [customerUserName, setCustomerUserName] = useState('User');
+  const [userImage, setUserImage] = useState('');
   const [newAuthToken] = useLocalStorage('authToken', '');
+
   useEffect(() => {
     const fetchAccountDetails = async () => {
       try {
-        const response = await fetch(import.meta.env.VITE_ACCOUNT_DETAILS, {
+        const response = await fetch(import.meta.env.VITE_GET_USER, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -29,8 +31,8 @@ export const MobileSidebar = () => {
         }
 
         const data = await response.json();
-        console.log('FETCHED username:', data.customerUserName);
-        setCustomerUserName(data.customerUserName || '');
+        setCustomerUserName(data.payinaUserName || '');
+        setUserImage(data.passportUrl || '');
       } catch (error) {
         console.error('Error fetching account details:', error);
       }
@@ -40,10 +42,26 @@ export const MobileSidebar = () => {
   }, []);
 
   return (
-    <div className="bg-[#CCDFE6] rounded-[10px] px-10 py-10 mt-4 w-[312px] h-[999px] overflow-y-scroll">
+    <div style={{
+      overflowY: 'auto',
+      scrollbarWidth: 'none',
+      msOverflowStyle: 'none'
+    }} className="bg-[#CCDFE6] fixed left-0 top-[5.5rem] w-[312px] h-[calc(100vh-5.5rem)] overflow-y-auto rounded-[10px] px-4 py-4 xl:block">
       <div className="flex flex-col justify-center items-center">
         <div className="mb-20">
-          <img src={images.Profile} alt="profile image" />
+          {userImage ? (
+            <img
+              src={userImage}
+              alt="profile image"
+              className="w-24 h-24 rounded-full object-cover"
+              onError={(e) => {
+                e.target.src = images.Profile; // Fallback to default profile image
+                console.log('Error loading passport image, using fallback');
+              }}
+            />
+          ) : (
+            <img src={images.Profile} alt="profile image" className="w-24 h-24" />
+          )}
           <div className="font-semibold text-xl mt-2">Hi, {customerUserName}</div>
         </div>
         <div className="space-y-[42px] flex flex-col w-full">
