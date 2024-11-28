@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import backArrow from '../../../../assets/images/Group-backArrow.png';
 import SuccessMessage from './step5';
 import DeclineMessage from './step6';
 import useLocalStorage from '../../../../hooks/useLocalStorage.js';
@@ -35,20 +34,23 @@ const EnterPin = ({ data }) => {
 
     const fetchDestinationId = async (payinaTag) => {
       try {
-        const endpoint = import.meta.env.VITE_GET_PAYINA_TAG_ENDPOINT.replace(
-          '{username}',
-          payinaTag
-        );
+        let endpoint;
+        if (isNaN(payinaTag)) {
+          endpoint = import.meta.env.VITE_GET_PAYINA_TAG_ENDPOINT.replace('{username}', payinaTag);
+        } else {
+          endpoint = `${import.meta.env.VITE_GET_ACCOUNT_NUMBER_ENDPOINT}?accountNumber=${payinaTag}`;
+        }
+
         const payinaResponse = await axios.get(endpoint, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${newAuthToken}`,
           },
         });
-        console.log('Payina tag data fetched successfully:', payinaResponse.data);
+        console.log('Destination data fetched successfully:', payinaResponse.data);
         setDestinationId(payinaResponse.data.walletId);
       } catch (error) {
-        console.error('Error fetching payina tag:', error.response?.data || error.message);
+        console.error('Error fetching destination ID:', error.response?.data || error.message);
       }
     };
 
@@ -117,12 +119,17 @@ const EnterPin = ({ data }) => {
         );
 
         console.log('Full Transaction Response:', transactionResponse);
-
-        if (transactionResponse.data.success) {
-          console.log('Transaction Success: Transaction completed successfully.');
-          setShowSuccess(true);
+        if (transactionResponse.status === 200) {
+          const responseData = transactionResponse.data;
+          if (responseData.response === 'Transfer was successful') {
+            console.log('Transaction Success: Transaction completed successfully.');
+            setShowSuccess(true);
+          } else {
+            console.log('Transaction Declined: Transaction could not be completed.', responseData);
+            setShowDecline(true);
+          }
         } else {
-          console.log('Transaction Declined: Transaction could not be completed.');
+          console.log('Unexpected response structure:', transactionResponse.data);
           setShowDecline(true);
         }
       } else {

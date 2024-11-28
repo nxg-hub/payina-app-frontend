@@ -160,6 +160,7 @@ const EnterPin = ({ data }) => {
     try {
       const transactionPayload = {
         amount: data.amount,
+        reference: data.purpose,
         recipient: data.account_name,
         reason: data.purpose,
         name: data.bankName,

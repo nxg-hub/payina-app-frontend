@@ -4,28 +4,38 @@ import { RecieverSchema } from './schemas/schemas.js';
 import axios from 'axios';
 
 const RecipientDetails = ({ nextStep }) => {
-  const verifyPayinaTag = async (payinaTag) => {
+  const verifyPayinaUsername = async (payinaUsername) => {
     try {
       const endpoint = import.meta.env.VITE_GET_PAYINA_TAG_ENDPOINT.replace(
         '{username}',
-        payinaTag
+        payinaUsername
       );
-      console.log(`Requesting endpoint: ${endpoint}`);
+      console.log(`Requesting endpoint for username: ${endpoint}`);
 
       const response = await axios.get(endpoint);
-      console.log('API response data:', response.data);
-      if (response.data && response.data.payinaUserName) {
-        return response.data.payinaUserName;
-      } else {
-        return null;
-      }
+      console.log('API username response data:', response.data);
+      return response.data && response.data.payinaUserName ? response.data.payinaUserName : null;
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        console.error(`Payina tag "${payinaTag}" not found.`);
+        console.error(`Payina username "${payinaUsername}" not found.`);
       } else {
-        console.error('Error verifying payina tag:', error);
+        console.error('Error verifying payina username:', error);
       }
       return null;
+    }
+  };
+
+  const verifyAccountNumber = async (accountNumber) => {
+    try {
+      const endpoint = import.meta.env.VITE_GET_ACCOUNT_NUMBER_ENDPOINT;
+      const response = await axios.get(`${endpoint}?accountNumber=${accountNumber}`);
+      console.log('API account number response:', response.data);
+
+      const isValid = response.data && response.data.customerId != null;
+      return isValid;
+    } catch (error) {
+      console.error('Error verifying account number:', error);
+      return false;
     }
   };
 
@@ -35,15 +45,34 @@ const RecipientDetails = ({ nextStep }) => {
       return;
     }
 
-    const payinaUsername = await verifyPayinaTag(values.confirmPayinaTag);
-    console.log('Submitting form with values:', values);
+    let isValid;
+    if (isNaN(values.payinaTag)) {
+      const payinaUsername = await verifyPayinaUsername(values.payinaTag);
+      isValid = payinaUsername !== null;
 
-    if (payinaUsername) {
-      nextStep({ payinaTag: values.payinaTag });
+      if (isValid) {
+        nextStep({ payinaTag: values.payinaTag });
+      } else {
+        setFieldError(
+          'confirmPayinaTag',
+          'Invalid Payina username. Please re-enter the correct one.'
+        );
+      }
     } else {
-      setFieldError('confirmPayinaTag', 'Incorrect payinaTag. Please re-enter the correct one.');
+      isValid = await verifyAccountNumber(values.payinaTag);
+      console.log(`Account number validity for "${values.payinaTag}":`, isValid);
+
+      if (isValid) {
+        nextStep({ payinaTag: values.payinaTag });
+      } else {
+        setFieldError(
+          'confirmPayinaTag',
+          'Invalid account number. Please re-enter the correct one.'
+        );
+      }
     }
   };
+
   return (
     <div className="flex flex-col items-left justify-left gap-4 form mt-5">
       <span className="text-md md:text-xl font-medium mt-5">Recipient Details</span>
@@ -63,7 +92,7 @@ const RecipientDetails = ({ nextStep }) => {
               <Field
                 name="payinaTag"
                 type="text"
-                placeholder="Enter Recipient Payina Tag"
+                placeholder="Enter Recipient Payina Tag or Account Number"
                 className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
               />
               <ErrorMessage
@@ -72,9 +101,9 @@ const RecipientDetails = ({ nextStep }) => {
                 className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
               />
             </div>
-            <div className="flex flex-col  w-full py-4 space-y-4">
+            <div className="flex flex-col w-full py-4 space-y-4">
               <label htmlFor="confirmPayinaTag" className="text-left font-md text-md">
-                Confirm Reciever Name
+                Confirm Payina Tag
               </label>
               <Field
                 name="confirmPayinaTag"
@@ -91,7 +120,7 @@ const RecipientDetails = ({ nextStep }) => {
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="rounded-[5px] text-xs md:text-base  py-2 border border-lightBlue bg-lightBlue w-[250px] xl:mr-0 mr-5 xl:w-[300px] text-primary">
+                className="rounded-[5px] text-xs md:text-base py-2 border border-lightBlue bg-lightBlue w-[250px] xl:mr-0 mr-5 xl:w-[300px] text-primary">
                 Next
               </button>
             </div>

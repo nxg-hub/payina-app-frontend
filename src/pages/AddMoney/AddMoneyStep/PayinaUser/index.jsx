@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import backArrow from '../../../../assets/images/Group-backArrow.png';
-import PhoneNumber from './PhoneNumber';
-import PayinaTag from './EmailDetails';
+import PhoneNumber from './phoneNumber';
+import PayinaTag from './payinaTag';
 
-const AnotherPerson = ({ backClick }) => {
-  const [activeForm, setActiveForm] = useState('emailDetails');
+const PayinaDetails = ({ backClick }) => {
+  const [activeForm, setActiveForm] = useState('payinaTag');
 
   const renderForm = () => {
-    if (activeForm === 'emailDetails') {
+    if (activeForm === 'payinaTag') {
       return <PayinaTag />;
     } else if (activeForm === 'phoneNumber') {
       return <PhoneNumber />;
@@ -25,8 +25,8 @@ const AnotherPerson = ({ backClick }) => {
       <div className="flex flex-row gap-4 cursor-pointer">
         <div
           className="text-center font-bold text-md xl:text-[18px] hover:border-b-2 border-lightBlue"
-          onClick={() => setActiveForm('emailDetails')}>
-          Email Address
+          onClick={() => setActiveForm('payinaTag')}>
+          Payina Tag
         </div>
         <div
           className="text-center font-bold text-md xl:text-[18px] hover:border-b-2 border-lightBlue"
@@ -39,4 +39,4 @@ const AnotherPerson = ({ backClick }) => {
   );
 };
 
-export default AnotherPerson;
+export default PayinaDetails;
