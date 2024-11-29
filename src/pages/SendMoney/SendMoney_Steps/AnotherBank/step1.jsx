@@ -140,11 +140,11 @@ const RecipientDetails = ({ nextStep }) => {
                 className="xl:w-[700px] w-[400px]  border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm">
                 <option value="" label="Select a country" />
                 <option value="NG" label="Nigeria" />
-                {/* <option value="GH" label="Ghana" />
+                <option value="GH" label="Ghana" />
                 <option value="KE" label="Kenya" />
                 <option value="UG" label="Uganda" />
                 <option value="SA" label="South Africa" />
-                <option value="TZ" label="Tanzania" /> */}
+                <option value="TZ" label="Tanzania" />
               </Field>
             </div>
             <div className="flex flex-col w-full py-4 space-y-4">

@@ -1,20 +1,27 @@
 import React, { useState } from 'react';
 import backArrow from '../../../assets/images/Group-backArrow.png';
 import { Link } from 'react-router-dom';
-import PayinaDetails from './PayinaDetails/index';
-import AnotherPerson from './AnotherPerson/index';
 import payinaUserImg from '../../../assets/images/Layer_x0020_1.png';
 import anotherPersonImg from '../../../assets/images/Group-AnotherPerson.png';
+import RequestMoney from './requestMoney';
+import AccountDetails from './AccountDetails';
+import FundWallet from './fundWallet';
 
-const AddMoneyStep = () => {
+const AddMoney = () => {
   const [selectedForm, setSelectedForm] = useState(null);
+
+  const goBack = () => {
+    setSelectedForm(null);
+  };
 
   const renderForm = () => {
     switch (selectedForm) {
-      case 'payinaDetails':
-        return <PayinaDetails />;
-      case 'anotherPerson':
-        return <AnotherPerson />;
+      case 'accountDetails':
+        return <AccountDetails goBack={goBack} />;
+      case 'fundWallet':
+        return <FundWallet goBack={goBack} />;
+      case 'requestMoney':
+        return <RequestMoney goBack={goBack} />;
       default:
         return (
           <div className="flex flex-col justify-center items-start ml-[50px] xl:ml-80 xl:pt-28 md:pt-10 mx-auto">
@@ -29,7 +36,7 @@ const AddMoneyStep = () => {
             </div>
             <div className="text-md md:text-xl font-bold mt-12">How do you want to add money?</div>
             <div
-              onClick={() => setSelectedForm('payinaDetails')}
+              onClick={() => setSelectedForm('accountDetails')}
               className="flex flex-row gap-8 justify-center items-start cursor-pointer hover:border-yellow mt-5 px-10 py-2 bg-[#D9D9D9] text-black border border-[#006181] rounded-lg">
               <div className="border border-yellow rounded-full p-3">
                 <img src={payinaUserImg} alt="payrollSelect" />
@@ -39,13 +46,23 @@ const AddMoneyStep = () => {
               </div>
             </div>
             <div
-              onClick={() => setSelectedForm('anotherPerson')}
+              onClick={() => setSelectedForm('fundWallet')}
               className="flex flex-row gap-8 justify-center items-start cursor-pointer hover:border-yellow mt-5 px-20 py-2 bg-[#D9D9D9] text-black border border-[#006181] rounded-lg">
               <div className="border border-yellow rounded-full p-3">
                 <img src={anotherPersonImg} alt="payrollSelect" />
               </div>
               <div className="text-center font-medium mt-5 ml-2 text-md md:text-xl">
-                Another Person
+                Fund With Card
+              </div>
+            </div>
+            <div
+              onClick={() => setSelectedForm('requestMoney')}
+              className="flex flex-row gap-8 justify-center items-start cursor-pointer hover:border-yellow mt-5 px-20 py-2 bg-[#D9D9D9] text-black border border-[#006181] rounded-lg">
+              <div className="border border-yellow rounded-full p-3">
+                <img src={anotherPersonImg} alt="payrollSelect" />
+              </div>
+              <div className="text-center font-medium mt-5 ml-2 text-md md:text-xl">
+                Request Money
               </div>
             </div>
           </div>
@@ -56,4 +73,4 @@ const AddMoneyStep = () => {
   return <div className="">{renderForm()}</div>;
 };
 
-export default AddMoneyStep;
+export default AddMoney;
