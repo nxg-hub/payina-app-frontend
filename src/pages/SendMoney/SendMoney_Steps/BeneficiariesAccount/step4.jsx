@@ -14,7 +14,7 @@ const EnterPin = ({ data }) => {
   const [showDecline, setShowDecline] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [newAuthToken] = useLocalStorage('authToken', '');
-  const [bankCode, setBankCode] = useState('');
+  // const [bankCode, setBankCode] = useState('');
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -35,34 +35,34 @@ const EnterPin = ({ data }) => {
     fetchUserData();
   }, [newAuthToken]);
 
-  useEffect(() => {
-    const fetchBankCode = async (selectedCountry) => {
-      const endpoint = import.meta.env.VITE_GET_BANKS_NAME_ENDPOINT.replace(
-        '{country}',
-        selectedCountry
-      );
-      try {
-        const response = await axios.get(endpoint, {
-          headers: {
-            Authorization: `Bearer ${newAuthToken}`,
-          },
-        });
-        if (response.data.success) {
-          setBankCode(response.data.bank_code);
-          console.log('Fetched bank code:', response.data.bankCode);
-          console.log('bank data:', response.data);
-        } else {
-          console.error('Failed to fetch bank code:', response.data);
-          setErrorMessage('Failed to fetch bank code.');
-        }
-      } catch (error) {
-        console.error('Error fetching bank code:', error);
-        setErrorMessage('Error while fetching bank code.');
-      }
-    };
+  // useEffect(() => {
+  //   const fetchBankCode = async (selectedCountry) => {
+  //     const endpoint = import.meta.env.VITE_GET_BANKS_NAME_ENDPOINT.replace(
+  //       '{country}',
+  //       selectedCountry
+  //     );
+  //     try {
+  //       const response = await axios.get(endpoint, {
+  //         headers: {
+  //           Authorization: `Bearer ${newAuthToken}`,
+  //         },
+  //       });
+  //       if (response.data.success) {
+  //         setBankCode(response.data.bank_code);
+  //         console.log('Fetched bank code:', response.data.bankCode);
+  //         console.log('bank data:', response.data);
+  //       } else {
+  //         console.error('Failed to fetch bank code:', response.data);
+  //         setErrorMessage('Failed to fetch bank code.');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching bank code:', error);
+  //       setErrorMessage('Error while fetching bank code.');
+  //     }
+  //   };
 
-    fetchBankCode();
-  }, [data.selectedBeneficiaryName, newAuthToken]);
+  //   fetchBankCode();
+  // }, [data.selectedBeneficiaryName, newAuthToken]);
 
   const handlePinChange = (e, index) => {
     const newPin = pin.split('');
@@ -108,7 +108,7 @@ const EnterPin = ({ data }) => {
           reason: data.purpose,
           name: data.bankName,
           account_number: data.accountNumber,
-          bank_code: bankCode,
+          bank_code: data.bankCode,
           currency: data.currency,
           customerEmail: userEmail,
           walletId: walletId,
@@ -196,6 +196,7 @@ EnterPin.propTypes = {
     selectedBeneficiaryName: PropTypes.string.isRequired,
     purpose: PropTypes.string.isRequired,
     bankName: PropTypes.string.isRequired,
+    bankCode: PropTypes.string.isRequired,
     accountNumber: PropTypes.string.isRequired,
     accountBankCode: PropTypes.string.isRequired,
     currency: PropTypes.string.isRequired,

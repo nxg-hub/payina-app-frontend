@@ -42,14 +42,13 @@ const EmailDetails = () => {
       return;
     }
     const requestData = {
-      approvalEmail: values.emailAddress,
+      approverPhoneNumber: values.phoneNumber,
+      approverEmail: values.emailAddress,
       requesterEmail: loginUserData.email,
       requesterName: loginUserData.firstName,
-      senderName: values.receiverName,
-      requesterWalletId: loginUserData.walletId,
+      approverName: values.receiverName,
       amount: Number(values.amount),
       purpose: values.purpose,
-      requestType: 'APPROVER_EMAIL',
     };
 
     console.log('Request Data:', JSON.stringify(requestData, null, 2));
@@ -138,7 +137,7 @@ const EmailDetails = () => {
                 className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
               />
             </div>
-            {/* <div className="flex flex-col w-full gap-2">
+            <div className="flex flex-col w-full gap-2">
               <label htmlFor="phoneNumber" className="text-left font-md text-md">
                 Phone Number
               </label>
@@ -153,7 +152,7 @@ const EmailDetails = () => {
                 component="span"
                 className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
               />
-            </div> */}
+            </div>
             <div className="flex flex-col  w-full gap-2 py-2">
               <label htmlFor="amount" className="text-left font-md text-md">
                 How Much are you requesting?

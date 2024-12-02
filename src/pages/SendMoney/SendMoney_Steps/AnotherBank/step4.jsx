@@ -54,7 +54,8 @@ const EnterPin = ({ data }) => {
         (beneficiary) =>
           beneficiary.accountNumber === data.accountNumber &&
           beneficiary.bankName === data.bankName &&
-          beneficiary.name === data.account_name
+          beneficiary.name === data.account_name &&
+          beneficiary.bankCode === data.accountBankCode
       );
     } catch (error) {
       console.error('Error fetching beneficiaries:', error.response?.data || error.message);
@@ -83,6 +84,7 @@ const EnterPin = ({ data }) => {
           name: data.account_name,
           accountNumber: data.accountNumber,
           bankName: data.bankName,
+          bankCode: data.accountBankCode,
         },
         {
           headers: {
@@ -160,7 +162,6 @@ const EnterPin = ({ data }) => {
     try {
       const transactionPayload = {
         amount: data.amount,
-        reference: data.purpose,
         recipient: data.account_name,
         reason: data.purpose,
         name: data.bankName,

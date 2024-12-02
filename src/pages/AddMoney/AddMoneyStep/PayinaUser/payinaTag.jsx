@@ -140,7 +140,7 @@ const PayinaTag = () => {
         const loginUserData = await getLoginUserData();
 
         Object.assign(requestData, {
-          phoneNumber: requesterData.phoneNumber,
+          phoneNumber: loginUserData.phoneNumber,
           approverEmail: requesterData.email,
           requesterEmail: loginUserData.email,
           requesterName: loginUserData.firstName,
@@ -164,7 +164,7 @@ const PayinaTag = () => {
         const loginUserData = await getLoginUserData();
 
         Object.assign(requestData, {
-          phoneNumber: accountData.phoneNumber,
+          phoneNumber: loginUserData.phoneNumber,
           approverEmail: accountData.email,
           requesterEmail: loginUserData.email,
           requesterName: loginUserData.firstName,
