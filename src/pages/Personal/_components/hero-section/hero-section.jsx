@@ -8,7 +8,6 @@ const HeroSection = () => {
     <section className="xl:py-20 py-10 xl:pt-0 px-8 xl:px-10 bg-[#000]">
       <hr className="border-none bg-yellow h-1 w-[87%] mx-auto" />
       <div className="md:items-center flex flex-col">
-
         <div className="lg:text-5xl xl:w-1/2 md:text-center xl:text-[64px] text-4xl flex justify-center font-bold text-lightBlue pt-10 !leading-normal">
           Manage money on the go, anytime, anywhere.
         </div>

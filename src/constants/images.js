@@ -46,6 +46,8 @@ export { default as bet6 } from '../assets/images/bet6.png';
 import AddMoney from '../assets/images/add_money.svg';
 import SendMoney from '../assets/images/send_money.svg';
 import Invoice from '../assets/images/create_invoice.svg';
+import Code from '../assets/images/code.svg'
+import Scan from '../assets/images/scan.svg'
 import Bills from '../assets/images/bills.svg';
 import GreenArrow from '../assets/images/green_arrow.svg';
 import RedArrow from '../assets/images/red_arrow.svg';
@@ -110,6 +112,8 @@ export default {
   AddMoney,
   SendMoney,
   Invoice,
+  Code,
+  Scan,
   Bills,
   RedArrow,
   GreenArrow,

@@ -22,6 +22,11 @@
 //         navigate('/login');
 //         return;
 //       }
+//       if (location.pathname === '/personal/login') {
+//         // navigate('/account/dashboard');
+//         navigate('/personal/dashboard');
+//         return;
+//       }
 //
 //       const response = await axios.get(import.meta.env.VITE_REG_LEVEL_ENDPOINT, {
 //         headers: {
@@ -74,6 +79,12 @@ export function useAuth() {
         return;
       }
 
+      if (location.pathname === '/personal/login') {
+        // navigate('/account/dashboard');
+        navigate('/personal/dashboard');
+        return;
+      }
+
       const response = await axios.get(import.meta.env.VITE_REG_LEVEL_ENDPOINT, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -98,3 +109,4 @@ export function useAuth() {
 
   return { checkUserRegistrationLevel };
 }
+

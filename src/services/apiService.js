@@ -1,21 +1,6 @@
 import axios from 'axios';
 
 const apiService = {
-//   checkEmailRegistration: async (email) => {
-//     try {
-//       if (!email) {
-//         throw new Error('Email is required');
-//       }
-//
-//       const encodedEmail = encodeURIComponent(email);
-//       const response = await axios.get(`${import.meta.env.VITE_EMAIL_CHECK}?email=${encodedEmail}`);
-//       return response.data;
-//     } catch (error) {
-//       console.error('Error checking email registration:', error);
-//       throw error;
-//     }
-//   },
-
   checkEmailRegistration: async (email) => {
     try {
       if (!email) {
@@ -31,12 +16,9 @@ const apiService = {
           }
         }
       );
-
-      // Response structure: { exists: boolean, message: string, userType: string }
       return response.data;
     } catch (error) {
       if (error.response?.status === 404) {
-        // If email doesn't exist in DB
         return { exists: false, message: 'User not found', userType: null };
       }
       console.error('Error checking email registration:', error);
@@ -55,10 +37,10 @@ const apiService = {
           'Content-Type': 'application/json'
         }
       });
-      if (!response.data || !response.data.email) {
-        throw new Error('User email not found in the response');
+      if (!response.data || !response.data.phoneNumber) {
+        throw new Error('User phone Number  could not be fetched');
       }
-      return response.data.email;
+      return response.data.phoneNumber;
     } catch (error) {
       console.error('Error authenticating user email:', error);
       if (error.response && error.response.status === 401) {

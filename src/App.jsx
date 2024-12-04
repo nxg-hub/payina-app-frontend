@@ -39,9 +39,16 @@ import Billers from './pages/Account/UserPages/billers';
 import Electricity from './pages/Account/UserPages/electricity';
 import TransactionHistory from './pages/Account/Dashboard/_components/transaction-history/transaction-history.jsx';
 import BillerDetails from './pages/Account/UserPages/billerDetails.jsx';
-import PlansReview from './pages/befour/PlansReview.jsx';
+// import PlansReview from './pages/befour/PlansReview.jsx';
 import BillerPlans from './pages/Account/UserPages/billerPlans.jsx';
+import PersonalLogin from './pages/PersonalLogin/index.jsx';
+import PersonalSignup from './pages/PersonalSignup/index.jsx';
 // import PaymentPage from './pages/Account/UserPages/fund_wallet';
+// import Register from './pages/PersonalSignup/Register.jsx';
+import PersonalDashboard from './pages/Account/PersonalDashboard/index.jsx';
+import Onboarding from './pages/Onboarding/Onboarding.jsx';
+import { StepEight } from './pages/PersonalSignup/_components/step-eight.jsx';
+import TierTwo from './pages/PersonalSignup/tier-two.jsx';
 
 function App() {
   const location = useLocation();
@@ -74,12 +81,25 @@ function App() {
               path="/signup"
               element={<Signup data={data} handleNextStep={handleNextStep} />}
             />
+            <Route
+              path="/tier-two"
+              element={
+                <TierTwo data={data} currentStep={currentStep} handleNextStep={handleNextStep} />
+              }
+            />
+            <Route
+              path="/tier-two"
+              element={<TierTwo data={data} handleNextStep={handleNextStep} />}
+            />
             <Route path="/paybills" element={<Paybills />} />
             Payina-in-app-transaction-one
             {/*<Route path="/account/fund_wallet" element={<PaymentPage />} />*/}
             <Route path="/sendMoney" element={<SendMoney />} />
             <Route path="/login" element={<Login />} />
+            {/*<Route path="/register" element={<Register />} />*/}
             <Route path="/account/dashboard" element={<Dashboard />} />
+            <Route path="/personal/dashboard" element={<PersonalDashboard />} />
+            <Route path="/account/onboarding" element={<Onboarding />} />
             <Route path="/account/invoice" element={<Invoice />} />
             <Route path="invoice/createinvoice" element={<Createinvoice />} />
             <Route path="/account/payroll" element={<Payroll />} />
@@ -97,6 +117,9 @@ function App() {
             <Route path="/account/billers" element={<BillPayment />} />
             <Route path="/account/electricity" element={<Electricity />} />
             <Route path="/card" element={<Card />} />
+            <Route path="/personal/login" element={<PersonalLogin />} />
+            <Route path="/personal/signup" element={<PersonalSignup />} />
+            {/*<Route path="/personal/tier-two" element={<StepEight />} />*/}
             <Route path="/ren" element={<Ren />} />
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
