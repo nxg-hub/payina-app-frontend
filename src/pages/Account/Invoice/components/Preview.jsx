@@ -1,14 +1,12 @@
 import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 
-const Preview = ({ className = "", updatedLineItems= [], corporateCustomerId= '', email }) => {
+const Preview = ({ className = "", updatedLineItems= [], corporateCustomerId= '', email}) => {
 
   const { invoiceNumber, dateOfIssue, dueDate } = updatedLineItems[updatedLineItems.length - 1] || {};
-  const subtotal = updatedLineItems.reduce((sum, item) => sum + item.total, 0);
-  const totalVAT = updatedLineItems.reduce((sum, item) => sum + item.vat, 0);
-  const totalAmount = subtotal + totalVAT;
-
-
+  const totalAmount = updatedLineItems.reduce((sum, item) => sum + item.total, 0); // Sum of item totals
+  const taxAmount = totalAmount * 0.075; // 7.5% tax of total amount
+  const totalAmountWithTax = totalAmount + taxAmount; 
 
   const [profileData, setProfileData] = useState({
     businessName: "",
@@ -24,7 +22,7 @@ const Preview = ({ className = "", updatedLineItems= [], corporateCustomerId= ''
       const response = await fetch(`${import.meta.env.VITE_GET_USER_BY_EMAIL_ENDPOINT}?email=${encodeURIComponent(email)}`);
       if (response.ok) {
         const data = await response.json();
-        return data.customerId; // Return the customerId
+        return data.customerId; 
       } else {
         console.error('Failed to authenticate email:', response.statusText);
         return null;
@@ -59,7 +57,7 @@ const Preview = ({ className = "", updatedLineItems= [], corporateCustomerId= ''
           return;
         }
         
-        setCustomerId(fetchedCustomerId);  // Set the fetched customer ID
+        setCustomerId(fetchedCustomerId);  
 
         const response = await fetch(`${import.meta.env.VITE_VIEW_PROFILE_ENDPOINT}${fetchedCustomerId}`);
         
@@ -102,7 +100,7 @@ const Preview = ({ className = "", updatedLineItems= [], corporateCustomerId= ''
   <div className="relative w-full border border-black rounded">
     <div className="flex flex-col gap-4 text-lg p-2">
     <div className="flex flex-row justify-between " >
-            <b>Invoice date:</b>
+            <b>Invoice Number:</b>
                 <span>{invoiceNumber}</span>
               </div>
     
@@ -131,27 +129,18 @@ const Preview = ({ className = "", updatedLineItems= [], corporateCustomerId= ''
       </tr>
     </thead>
     <tbody>
-                    {updatedLineItems.map((item, index) => (
-                        <tr key={index}>
-                            <td className="p-2 border-r border-black">{item.itemName}</td>
-                            <td className="p-2 border-r border-black">{item.quantity}</td>
-                            <td className="p-2 border-r border-black">{item.amount}</td>
-                            <td className="p-2 border-r border-black">{item.vat}</td>
-                            <td className="p-2">{item.total}</td>
-                        </tr>
-                    ))}
-                 <tr className="font-bold border-t-2 border-black">
-          <td colSpan="4" className="p-2 border-black">Sub Total:</td>
-          <td className="p-2">{subtotal}</td>
-          </tr>   
-          <tr className="font-bold border border-black">
-          <td colSpan="4" className="p-2  border-black">Total VAT:</td>
-          <td className="p-2">{totalVAT}</td>
-
-            </tr>
+    {updatedLineItems.map((item, index) => (
+  <tr key={index}>
+    <td className="p-2 border-r border-black">{item.itemName}</td>
+    <td className="p-2 border-r border-black">{item.quantity}</td>
+    <td className="p-2 border-r border-black">{item.amount}</td>
+    <td className="p-2 border-r border-black">0.075 </td>
+    <td className="p-2">{item.total}</td>
+  </tr>
+))}
           <tr className="font-bold border border-black">
           <td colSpan="4" className="p-2 border-black">Total Amount:</td>
-          <td className="p-2">{totalAmount}</td>
+          <td className="p-2">{totalAmountWithTax}</td>
           </tr>
                 </tbody>
   </table>
@@ -179,7 +168,7 @@ Preview.defaultProps = {
     quantity: 0,
     amount: 0,
     total: 0,
-    vat: 0,
+    tax: 0,
     invoiceNumber: '',
     dateOfIssue: '',
     due_date: '',

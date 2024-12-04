@@ -174,7 +174,7 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
       <button
         onClick={handleProceedToFund}
         disabled={isProcessing}
-        className="w-full bg-blue-500 text-white py-2 px-4 rounded disabled:opacity-50">
+        className="w-full bg-lightBlue text-white py-2 px-4 rounded disabled:opacity-50">
         {isProcessing ? 'Processing...' : 'Proceed to Fund'}
       </button>
     </div>

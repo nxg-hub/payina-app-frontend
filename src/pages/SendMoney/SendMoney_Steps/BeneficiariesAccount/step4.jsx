@@ -6,7 +6,7 @@ import DeclineMessage from './step6';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 
-const EnterPin = ({ prevStep, data }) => {
+const EnterPin = ({ data }) => {
   const [pin, setPin] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [walletId, setWalletId] = useState('');
@@ -36,9 +36,13 @@ const EnterPin = ({ prevStep, data }) => {
   }, [newAuthToken]);
 
   useEffect(() => {
-    const fetchBankCode = async () => {
+    const fetchBankCode = async (selectedCountry) => {
+      const endpoint = import.meta.env.VITE_GET_BANKS_NAME_ENDPOINT.replace(
+        '{country}',
+        selectedCountry
+      );
       try {
-        const response = await axios.get(import.meta.env.VITE_GET_BANKS_NAME_ENDPOINT, {
+        const response = await axios.get(endpoint, {
           headers: {
             Authorization: `Bearer ${newAuthToken}`,
           },
@@ -46,6 +50,7 @@ const EnterPin = ({ prevStep, data }) => {
         if (response.data.success) {
           setBankCode(response.data.bank_code);
           console.log('Fetched bank code:', response.data.bankCode);
+          console.log('bank data:', response.data);
         } else {
           console.error('Failed to fetch bank code:', response.data);
           setErrorMessage('Failed to fetch bank code.');
