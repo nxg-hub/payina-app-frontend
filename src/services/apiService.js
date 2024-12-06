@@ -25,30 +25,30 @@ const apiService = {
       throw error;
     }
   },
-  authUserEmail: async () => {
-    try {
-      const token = localStorage.getItem('authToken');
-      if (!token) {
-        throw new Error('No authentication token found');
-      }
-      const response = await axios.get(import.meta.env.VITE_GET_USER, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      if (!response.data || !response.data.phoneNumber) {
-        throw new Error('User phone Number  could not be fetched');
-      }
-      return response.data.phoneNumber;
-    } catch (error) {
-      console.error('Error authenticating user email:', error);
-      if (error.response && error.response.status === 401) {
-        throw new Error('Authentication failed. Please log in again.');
-      }
-      throw error;
-    }
-  },
+  // authUserEmail: async () => {
+  //   try {
+  //     const token = localStorage.getItem('authToken');
+  //     if (!token) {
+  //       throw new Error('No authentication token found');
+  //     }
+  //     const response = await axios.get(import.meta.env.VITE_GET_USER, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //         'Content-Type': 'application/json'
+  //       }
+  //     });
+  //     if (!response.data || !response.data.phoneNumber) {
+  //       throw new Error('User phone Number  could not be fetched');
+  //     }
+  //     return response.data.phoneNumber;
+  //   } catch (error) {
+  //     console.error('Error authenticating user email:', error);
+  //     if (error.response && error.response.status === 401) {
+  //       throw new Error('Authentication failed. Please log in again.');
+  //     }
+  //     throw error;
+  //   }
+  // },
 
   fundWallet: async (email, amount) => {
     try {
@@ -83,7 +83,7 @@ const apiService = {
     }
   },
 
-  getUserData: async () => {
+  getUser: async () => {
     try {
       const token = localStorage.getItem('authToken');
       if (!token) {
@@ -192,24 +192,21 @@ const apiService = {
     }
   },
 
-  getWalletBalance: async () => {
+  signout: async () => {
     try {
-      const token = localStorage.getItem('authToken');
-      if (!token) {
-        throw new Error('No authentication token found');
-      }
-      const response = await axios.get(import.meta.env.VITE_GET_WALLET_ENDPOINT, {
+      const response = await axios.post(import.meta.env.VITE_SIGNOUT, {}, {
         headers: {
-          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
-      return response.data.balance.amount;
+
+      return response.data;
     } catch (error) {
-      console.error('Error fetching wallet balance:', error);
+      console.error('Error during signout:', error);
       throw error;
     }
-  },
+  }
 };
+
 
 export default apiService;

@@ -1,315 +1,3 @@
-// import { useEffect, useState } from 'react';
-// import Logo from './_components/logo';
-// import ActionButtons from './_components/action-buttons';
-// import { images } from '../../../../constants';
-// import { GiHamburgerMenu } from 'react-icons/gi';
-// import { LuX } from 'react-icons/lu';
-// import { MobileSidebar } from '../sidebar/mobile-sidebar';
-// import useLocalStorage from '../../../../hooks/useLocalStorage.js';
-//
-// export const Navbar = () => {
-//   const [toggleMenu, setToggleMenu] = useState(false);
-//   const [customerUserName, setCustomerUserName] = useState('User');
-//   const [userImage, setUserImage] = useState('');
-//   const [newAuthToken] = useLocalStorage('authToken', '');
-//
-//   useEffect(() => {
-//     const fetchAccountDetails = async () => {
-//       try {
-//         const response = await fetch(import.meta.env.VITE_GET_USER, {
-//           method: 'GET',
-//           headers: {
-//             'Content-Type': 'application/json',
-//             Authorization: `Bearer ${newAuthToken}`,
-//           },
-//         });
-//
-//         if (!response.ok) {
-//           throw new Error('Failed to fetch user data');
-//         }
-//
-//         const data = await response.json();
-//         setCustomerUserName(data.payinaUserName || 'User');
-//         setUserImage(data.passportUrl || '');
-//       } catch (error) {
-//         console.error('Error fetching account details:', error);
-//       }
-//     };
-//
-//     fetchAccountDetails();
-//   }, []);
-//
-//   const selectArrow = `
-//     select {
-//       -webkit-appearance: none;
-//       -moz-appearance: none;
-//       appearance: none;
-//       background-position: calc(100% - .5rem);
-//       background-image: url(/blue-dropdown.svg);
-//       background-repeat: no-repeat;
-//     }
-//   `;
-//
-//   return (
-//     <div className="flex items-center justify-between pr-10 h-20 bg-[#CCDFE6] xl:fixed w-full text-primary">
-//       <div className="px-6 xl:px-4 flex space-x-16 gap-20 items-center">
-//         <div className="w-40">
-//           <Logo />
-//         </div>
-//         <div className="md:space-x-6 hidden xl:flex text-black text-base font-medium">
-//           <img src={images.Bank} />
-//           <div className="text-nowrap font-medium text-base">Business Account</div>
-//           <select className="pl-4 pr-8 outline-none border border-lightBlue">
-//             <option className="capitalize p-2 text-base font-semibold">
-//               {customerUserName}
-//             </option>
-//           </select>
-//         </div>
-//       </div>
-//
-//       <div className="items-center hidden xl:flex">
-//         <ActionButtons />
-//       </div>
-//
-//       <style>{selectArrow}</style>
-//
-//       <div className={`xl:hidden block cursor-pointer ${toggleMenu && 'hidden'}`}>
-//         <GiHamburgerMenu
-//           color="#000000"
-//           fontSize={27}
-//           onClick={() => setToggleMenu(true)}
-//         />
-//       </div>
-//
-//       {toggleMenu && (
-//         <div className="text-black fixed top-0 left-0 right-0 w-full h-[150%] mt-[-1rem] z-50 backdrop-blur-[2px] transition-all duration-150 flex flex-col animate-slideLeft xl:hidden">
-//           <LuX
-//             color="#000000"
-//             className="text-2xl absolute top-8 right-8 cursor-pointer"
-//             fontSize={30}
-//             onClick={() => setToggleMenu(false)}
-//           />
-//           <MobileSidebar />
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// import { useContext, useEffect, useState } from 'react';
-//
-// import Logo from './_components/logo';
-// import ActionButtons from './_components/action-buttons';
-// import { images } from '../../../../constants';
-// import { UserContext } from '../../../../context/context';
-// import { GiHamburgerMenu } from 'react-icons/gi';
-// import { LuX } from 'react-icons/lu';
-// import { MobileSidebar } from '../sidebar/mobile-sidebar';
-// import useLocalStorage from '../../../../hooks/useLocalStorage.js';
-//
-// export const Navbar = () => {
-//   // const [userDetails, setUserDetails] = useState();
-//   const [toggleMenu, setToggleMenu] = useState(false);
-//   // const { data } = useContext(UserContext);
-//   const [customerUserName, setCustomerUserName] = useState('User');
-//   const [userImage, setUserImage] = useState('');
-//   const [newAuthToken] = useLocalStorage('authToken', '');
-//
-//   useEffect(() => {
-//     const fetchAccountDetails = async () => {
-//       try {
-//         const response = await fetch(import.meta.env.VITE_GET_USER, {
-//           method: 'GET',
-//           headers: {
-//             'Content-Type': 'application/json',
-//             Authorization: `Bearer ${newAuthToken}`,
-//           },
-//         });
-//         if (!response.ok) {
-//           throw new Error('Failed to fetch user data');
-//         }
-//
-//         const data = await response.json();
-//         setCustomerUserName(data.payinaUserName || 'User');
-//         setUserImage(data.passportUrl || '');
-//       } catch (error) {
-//         console.error('Error fetching account details:', error);
-//       }
-//     };
-//     fetchAccountDetails();
-//   }, []);
-//
-//   const selectArrow = `
-//       select{
-//         -webkit-appearance: none;
-//        -moz-appearance: none;
-//             appearance: none;
-//
-//         background-position: calc(100% - .5rem);
-//         background-image: url(/blue-dropdown.svg);
-//         background-repeat: no-repeat;
-//
-//       }
-//
-//       `;
-//
-//   return (
-//     <div className="flex items-center justify-between pr-10 h-20 bg-[#CCDFE6] xl:fixed w-full  text-primary">
-//       <div className="px-6 xl:px-4 flex space-x-16 gap-20 items-center">
-//         <div className="w-40">
-//           <Logo />
-//         </div>
-//         <div className="md:space-x-6 hidden xl:flex text-black text-base font-medium">
-//           <img src={images.Bank} />
-//           <div className="text-nowrap font-medium text-base">Personal Account</div>
-//           <select className="pl-4 pr-8 outline-none border border-lightBlue">
-//             <option className="capitalize p-2 text-base font-semibold">{customerUserName}</option>
-//           </select>
-//         </div>
-//       </div>
-//
-//       <div className="items-center hidden xl:flex">
-//         <ActionButtons />
-//       </div>
-//       <style>{selectArrow}</style>
-//       <div className={`xl:hidden block cursor-pointer ${toggleMenu && 'hidden'}`}>
-//         <GiHamburgerMenu color="#000000" fontSize={27} onClick={() => setToggleMenu(true)} />
-//       </div>
-//       {toggleMenu && (
-//         <div className="text-black fixed top-0 left-0 right-0 w-full h-[150%] mt-[-1rem] z-50 backdrop-blur-[2px] transition-all duration-150 flex flex-col animate-slideLeft xl:hidden">
-//           <LuX
-//             color="#000000"
-//             className="text-2xl absolute top-8 right-8  cursor-pointer"
-//             fontSize={30}
-//             onClick={() => setToggleMenu(false)}
-//           />
-//           <MobileSidebar />
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-
-// import { useContext, useEffect, useState } from 'react';
-// import Logo from './_components/logo';
-// import ActionButtons from './_components/action-buttons';
-// import { images } from '../../../../constants';
-// import { GiHamburgerMenu } from 'react-icons/gi';
-// import { LuX } from 'react-icons/lu';
-// import { MobileSidebar } from '../sidebar/mobile-sidebar';
-// import useLocalStorage from '../../../../hooks/useLocalStorage.js';
-// import axios from 'axios';
-//
-// export const Navbar = () => {
-//   const [toggleMenu, setToggleMenu] = useState(false);
-//   const [customerUserName, setCustomerUserName] = useState('User');
-//   const [userImage, setUserImage] = useState('');
-//   const [newAuthToken] = useLocalStorage('authToken', '');
-//   const [userTier, setUserTier] = useState('');
-//
-//   const TIER_LEVELS = {
-//     1: 'Tier 1 (Basic)',
-//     2: 'Tier 1 (Basic)',
-//     3: 'Tier 1 (Basic)',
-//     4: 'Tier 1 (Basic)',
-//     5: 'Tier 2 (Advanced)',
-//     6: 'Tier 2 (Advanced)',
-//     7: 'Tier 3 (Premium)',
-//   };
-//
-//   useEffect(() => {
-//     const fetchAccountDetails = async () => {
-//       try {
-//         const response = await fetch(import.meta.env.VITE_GET_USER, {
-//           method: 'GET',
-//           headers: {
-//             'Content-Type': 'application/json',
-//             Authorization: `Bearer ${newAuthToken}`,
-//           },
-//         });
-//         if (!response.ok) {
-//           throw new Error('Failed to fetch user data');
-//         }
-//
-//         const data = await response.json();
-//         setCustomerUserName(data.payinaUserName || 'User');
-//         setUserImage(data.passportUrl || '');
-//       } catch (error) {
-//         console.error('Error fetching account details:', error);
-//       }
-//     };
-//
-//     const fetchUserTier = async () => {
-//       try {
-//         const response = await axios.get(import.meta.env.VITE_REG_LEVEL_ENDPOINT, {
-//           headers: {
-//             Authorization: `Bearer ${newAuthToken}`,
-//           },
-//         });
-//         const registrationLevel = response.data;
-//         const tier = TIER_LEVELS[registrationLevel] || 'Tier 1';
-//         setUserTier(tier);
-//       } catch (error) {
-//         console.error('Error fetching user tier:', error);
-//       }
-//     };
-//
-//     fetchAccountDetails();
-//     fetchUserTier();
-//   }, [newAuthToken]);
-//
-//   const selectArrow = `
-//     select{
-//       -webkit-appearance: none;
-//       -moz-appearance: none;
-//       appearance: none;
-//       background-position: calc(100% - .5rem);
-//       background-image: url(/blue-dropdown.svg);
-//       background-repeat: no-repeat;
-//     }
-//   `;
-//
-//   return (
-//     <div className="flex items-center justify-between pr-10 h-20 bg-[#CCDFE6] xl:fixed w-full  text-primary">
-//       <div className="px-6 xl:px-4 flex space-x-16 gap-20 items-center">
-//         <div className="w-40">
-//           <Logo />
-//         </div>
-//         <div className="md:space-x-6 hidden xl:flex text-black text-base font-medium">
-//           <img src={images.Bank} />
-//           <div className="text-nowrap font-medium text-base">Personal Account</div>
-//           <select className="pl-4 pr-8 outline-none border border-lightBlue">
-//             <option className="capitalize p-2 text-base font-semibold">{customerUserName}</option>
-//           </select>
-//           {/* Display user tier on the navbar */}
-//           <span className="ml-4 text-sm text-gray-600">{userTier}</span>
-//         </div>
-//       </div>
-//
-//       <div className="items-center hidden xl:flex">
-//         <ActionButtons />
-//       </div>
-//       <style>{selectArrow}</style>
-//       <div className={`xl:hidden block cursor-pointer ${toggleMenu && 'hidden'}`}>
-//         <GiHamburgerMenu color="#000000" fontSize={27} onClick={() => setToggleMenu(true)} />
-//       </div>
-//       {toggleMenu && (
-//         <div className="text-black fixed top-0 left-0 right-0 w-full h-[150%] mt-[-1rem] z-50 backdrop-blur-[2px] transition-all duration-150 flex flex-col animate-slideLeft xl:hidden">
-//           <LuX
-//             color="#000000"
-//             className="text-2xl absolute top-8 right-8 cursor-pointer"
-//             fontSize={30}
-//             onClick={() => setToggleMenu(false)}
-//           />
-//           <MobileSidebar />
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from './_components/logo';
@@ -330,7 +18,6 @@ export const Navbar = () => {
   const [userTier, setUserTier] = useState('');
   const [showTierAlert, setShowTierAlert] = useState(false);
 
-  // Map API tier levels to display names
   const TIER_LEVELS = {
     'TIER_ONE': 'Tier 1 (Basic)',
     'TIER_TWO': 'Tier 2 (Advanced)',
@@ -340,7 +27,7 @@ export const Navbar = () => {
   const TIER_REQUIREMENTS = {
     'Tier 1': {
       nextTier: 'Tier 2 (Advanced)',
-      documents: ['Proof of Address', 'Government ID', 'Utility Bill'],
+      documents: ['Facials', 'Proof of Address', 'Government ID', 'Utility Bill'],
     },
     'Tier 2': {
       nextTier: 'Tier 3 (Premium)',
@@ -368,18 +55,16 @@ export const Navbar = () => {
 
         const data = await response.json();
 
-        // Extract user details from the response
         setCustomerUserName(data.payinaUserName || 'User');
         // setUserImage(data.passportUrl || '');
 
-        // Map the API tierLevel to display name
         const tier = TIER_LEVELS[data.tierLevel] || 'Tier 1';
         setUserTier(tier);
 
-        console.log('Current tier:', tier); // Debug log
+        console.log('Current tier:', tier);
       } catch (error) {
         console.error('Error fetching account details:', error);
-        setUserTier('Tier 1 (Basic)'); // Fallback to default if an error occurs
+        setUserTier('Tier 1 (Basic)');
       }
     };
 

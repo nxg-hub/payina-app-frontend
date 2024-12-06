@@ -50,6 +50,7 @@ import PersonalDashboard from './pages/Account/PersonalDashboard/index.jsx';
 import Onboarding from './pages/Onboarding/Onboarding.jsx';
 import { StepEight } from './pages/PersonalSignup/_components/step-eight.jsx';
 import TierTwo from './pages/PersonalSignup/tier-two.jsx';
+import More from './pages/More/More.jsx';
 
 function App() {
   const location = useLocation();
@@ -98,7 +99,7 @@ function App() {
             <Route path="/sendMoney" element={<SendMoney />} />
             <Route path="/addMoney" element={<AddMoney />} />
             <Route path="/login" element={<Login />} />
-            {/*<Route path="/register" element={<Register />} />*/}
+            <Route path="/personal" element={<PersonalPage />} />
             <Route path="/account/dashboard" element={<Dashboard />} />
             <Route path="/personal/dashboard" element={<PersonalDashboard />} />
             <Route path="/account/onboarding" element={<Onboarding />} />
@@ -107,6 +108,7 @@ function App() {
             <Route path="/account/payroll" element={<Payroll />} />
             <Route path="/account/transaction" element={<Transaction />} />
             <Route path="/account/inventory" element={<Inventory />} />
+            <Route path="/account/more" element={<More />} />
             <Route path="/account/settings" element={<Settings />} />
             <Route path="/airtime" element={<Airtime />} />
             <Route path="/account/airtime" element={<UserAirtime />} />

@@ -10,7 +10,6 @@ const AccountCard = () => {
   const [error, setError] = useState('');
   const [newAuthToken] = useLocalStorage('authToken', ''); // Get authToken from localStorage
 
-  // Function to copy account number to clipboard
   const handleCopyClick = async () => {
     try {
       await navigator.clipboard.writeText(accountDetails.accountNumber);
@@ -25,7 +24,6 @@ const AccountCard = () => {
     }
   };
 
-  // Fetch account details
   useEffect(() => {
     const fetchAccountDetails = async () => {
       console.log('Fetching account details...');
