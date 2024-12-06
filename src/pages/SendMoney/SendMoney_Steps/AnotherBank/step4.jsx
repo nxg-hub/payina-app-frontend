@@ -54,7 +54,7 @@ const EnterPin = ({ data }) => {
         (beneficiary) =>
           beneficiary.accountNumber === data.accountNumber &&
           beneficiary.bankName === data.bankName &&
-          beneficiary.name === data.account_name &&
+          beneficiary.name === data.receiverName &&
           beneficiary.bankCode === data.accountBankCode
       );
     } catch (error) {
@@ -81,7 +81,7 @@ const EnterPin = ({ data }) => {
       const response = await axios.post(
         endpoint,
         {
-          name: data.account_name,
+          name: data.receiverName,
           accountNumber: data.accountNumber,
           bankName: data.bankName,
           bankCode: data.accountBankCode,
@@ -162,16 +162,27 @@ const EnterPin = ({ data }) => {
     try {
       const transactionPayload = {
         amount: data.amount,
-        recipient: data.account_name,
-        reason: data.purpose,
-        name: data.bankName,
+        name: data.receiverName,
         account_number: data.accountNumber,
         bank_code: data.accountBankCode,
-        currency: data.currency,
         customerEmail: userEmail,
         walletId: walletId,
         description: data.purpose,
       };
+
+      // const transactionPayload = {
+      //   amount: data.amount,
+      //   recipient: data.account_name,
+      //   reason: data.purpose,
+      //   name: data.bankName,
+      //   account_number: data.accountNumber,
+      //   bank_code: data.accountBankCode,
+      //   currency: data.currency,
+      //   customerEmail: userEmail,
+      //   walletId: walletId,
+      //   description: data.purpose,
+      // };
+
       console.log('Transaction payload:', transactionPayload);
 
       const transactionResponse = await axios.post(
@@ -186,7 +197,13 @@ const EnterPin = ({ data }) => {
         }
       );
 
-      if (transactionResponse.data.success) {
+      console.log('Transaction Response Data:', transactionResponse.data);
+
+      const isSuccess =
+        transactionResponse.data?.statusCode === 'OK' &&
+        transactionResponse.data?.response?.toLowerCase() === 'transfer sucessful';
+
+      if (isSuccess) {
         setShowSuccess(true);
         console.log('Transaction Success: Transaction completed successfully.');
       } else {
@@ -195,8 +212,8 @@ const EnterPin = ({ data }) => {
       }
     } catch (error) {
       setErrorMessage('Transaction process failed. Please try again.');
-      console.error('Error Status:', error.response.status);
-      console.error('Error Data:', error.response.data);
+      console.error('Error Status:', error.response?.status);
+      console.error('Error Data:', error.response?.data);
       setShowDecline(true);
     }
   };
@@ -256,7 +273,7 @@ EnterPin.propTypes = {
   prevStep: PropTypes.func.isRequired,
   data: PropTypes.shape({
     amount: PropTypes.string.isRequired,
-    account_name: PropTypes.string.isRequired,
+    receiverName: PropTypes.string.isRequired,
     purpose: PropTypes.string.isRequired,
     bankName: PropTypes.string.isRequired,
     accountNumber: PropTypes.string.isRequired,
@@ -266,3 +283,17 @@ EnterPin.propTypes = {
 };
 
 export default EnterPin;
+
+// {
+//   "amount": "1000",
+//   "recipient": "OLOWOOKERE ESTHER PELUMI",
+//   "reason": "Data",
+//   "name": "Guaranty Trust Bank",
+//   "senderEmailAddress": "pelumiolowo2018@gmail.com",
+//   "account_number": "0114789126",
+//   "bank_code": "058",
+//   "currency": "NG",
+//   "customerEmail": "estherolowo2018@gmail.com",
+//   "walletId": "6750bb47f594b761e7a42e6e",
+//   "description": "Data"
+// }

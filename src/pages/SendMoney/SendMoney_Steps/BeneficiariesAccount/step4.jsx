@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import backArrow from '../../../../assets/images/Group-backArrow.png';
 import useLocalStorage from '../../../../hooks/useLocalStorage.js';
 import SuccessMessage from './step5';
 import DeclineMessage from './step6';
@@ -14,7 +13,6 @@ const EnterPin = ({ data }) => {
   const [showDecline, setShowDecline] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [newAuthToken] = useLocalStorage('authToken', '');
-  // const [bankCode, setBankCode] = useState('');
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -34,35 +32,6 @@ const EnterPin = ({ data }) => {
     };
     fetchUserData();
   }, [newAuthToken]);
-
-  // useEffect(() => {
-  //   const fetchBankCode = async (selectedCountry) => {
-  //     const endpoint = import.meta.env.VITE_GET_BANKS_NAME_ENDPOINT.replace(
-  //       '{country}',
-  //       selectedCountry
-  //     );
-  //     try {
-  //       const response = await axios.get(endpoint, {
-  //         headers: {
-  //           Authorization: `Bearer ${newAuthToken}`,
-  //         },
-  //       });
-  //       if (response.data.success) {
-  //         setBankCode(response.data.bank_code);
-  //         console.log('Fetched bank code:', response.data.bankCode);
-  //         console.log('bank data:', response.data);
-  //       } else {
-  //         console.error('Failed to fetch bank code:', response.data);
-  //         setErrorMessage('Failed to fetch bank code.');
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching bank code:', error);
-  //       setErrorMessage('Error while fetching bank code.');
-  //     }
-  //   };
-
-  //   fetchBankCode();
-  // }, [data.selectedBeneficiaryName, newAuthToken]);
 
   const handlePinChange = (e, index) => {
     const newPin = pin.split('');
@@ -104,12 +73,9 @@ const EnterPin = ({ data }) => {
 
         const transactionPayload = {
           amount: data.amount,
-          recipient: data.selectedBeneficiaryName,
-          reason: data.purpose,
-          name: data.bankName,
+          name: data.selectedBeneficiaryName,
           account_number: data.accountNumber,
           bank_code: data.bankCode,
-          currency: data.currency,
           customerEmail: userEmail,
           walletId: walletId,
           description: data.purpose,
@@ -128,30 +94,27 @@ const EnterPin = ({ data }) => {
           }
         );
 
-        console.log('Full Transaction Response:', transactionResponse);
+        console.log('Transaction Response Data:', transactionResponse.data);
 
-        if (transactionResponse.data.success) {
-          console.log('Transaction Success: Transaction completed successfully.');
+        const isSuccess =
+          transactionResponse.data?.statusCode === 'OK' &&
+          transactionResponse.data?.response?.toLowerCase() === 'transfer sucessful';
+
+        if (isSuccess) {
           setShowSuccess(true);
+          console.log('Transaction Success: Transaction completed successfully.');
         } else {
-          console.log('Transaction Declined: Transaction could not be completed.');
           setShowDecline(true);
+          console.log('Transaction Declined: Transaction could not be completed.');
         }
       } else {
         console.log('PIN validation failed.');
         setShowDecline(true);
       }
     } catch (error) {
-      console.error('Error during transaction process:', error);
-
-      if (error.response) {
-        console.error('Error Status:', error.response.status);
-        console.error('Error Data:', error.response.data);
-      } else {
-        console.error('Error Message:', error.message);
-      }
-
       setErrorMessage('Transaction process failed. Please try again.');
+      console.error('Error Status:', error.response?.status);
+      console.error('Error Data:', error.response?.data);
       setShowDecline(true);
     }
   };

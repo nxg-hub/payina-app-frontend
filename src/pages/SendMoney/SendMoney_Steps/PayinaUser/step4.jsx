@@ -10,6 +10,9 @@ const EnterPin = ({ data }) => {
   const [userEmail, setUserEmail] = useState('');
   const [sourceId, setSourceId] = useState('');
   const [destinationId, setDestinationId] = useState('');
+  const [senderName, setSenderName] = useState('');
+  const [receiverName, setReceiverName] = useState('');
+  const [receiverEmailAddress, setReceiverEmailAddress] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const [showDecline, setShowDecline] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -26,6 +29,7 @@ const EnterPin = ({ data }) => {
         });
         console.log('User data fetched successfully:', userResponse.data);
         setUserEmail(userResponse.data.email);
+        setSenderName(userResponse.data.firstName);
         setSourceId(userResponse.data.walletId);
       } catch (error) {
         console.error('Error fetching user data:', error.response?.data || error.message);
@@ -49,6 +53,8 @@ const EnterPin = ({ data }) => {
         });
         console.log('Destination data fetched successfully:', payinaResponse.data);
         setDestinationId(payinaResponse.data.walletId);
+        setReceiverName(payinaResponse.data.firstName);
+        setReceiverEmailAddress(payinaResponse.data.email);
       } catch (error) {
         console.error('Error fetching destination ID:', error.response?.data || error.message);
       }
@@ -67,7 +73,14 @@ const EnterPin = ({ data }) => {
   };
 
   const handleNext = async () => {
-    if (!userEmail || !sourceId || !destinationId) {
+    if (
+      !userEmail ||
+      !sourceId ||
+      !destinationId ||
+      !senderName ||
+      !receiverName ||
+      !receiverEmailAddress
+    ) {
       setErrorMessage('User data is not available. Please try again.');
       return;
     }
@@ -102,8 +115,13 @@ const EnterPin = ({ data }) => {
           sourceId: sourceId,
           destinationId: destinationId,
           amount: data.amount,
+          senderName: senderName,
+          receiverName: receiverName,
+          senderEmailAddress: userEmail,
+          receiverEmailAddress: receiverEmailAddress,
           description: data.purpose,
         };
+
         console.log('Transaction payload:', transactionPayload);
 
         const transactionResponse = await axios.post(
