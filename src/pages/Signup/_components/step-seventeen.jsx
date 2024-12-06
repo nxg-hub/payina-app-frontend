@@ -27,15 +27,15 @@ export const StepSeventeen = ({ data }) => {
                 accept: '*/*',
                 apiKey: import.meta.env.VITE_API_KEY,
                 Authorization: `Bearer ${newAuthToken}`,
-                'Content-Type': 'application/json'
-              }
+                'Content-Type': 'application/json',
+              },
             }),
             fetch(import.meta.env.VITE_GET_WALLET_ENDPOINT, {
               headers: {
                 Authorization: `Bearer ${newAuthToken}`,
-                'Content-Type': 'application/json'
-              }
-            })
+                'Content-Type': 'application/json',
+              },
+            }),
           ]);
 
           if (!userResponse.ok || !walletResponse.ok) {
@@ -44,7 +44,7 @@ export const StepSeventeen = ({ data }) => {
 
           const [userDataResponse, walletDataResponse] = await Promise.all([
             userResponse.json(),
-            walletResponse.json()
+            walletResponse.json(),
           ]);
 
           setUserData(userDataResponse);

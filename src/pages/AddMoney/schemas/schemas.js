@@ -30,11 +30,18 @@ export const OthersPhoneNumberSchema = Yup.object().shape({
       'Invalid phone number'
     ),
   receiverName: Yup.string().required('Sender Name is required'),
+  emailAddress: Yup.string().required('Email Address is required'),
   amount: Yup.number().required('Amount is required').positive('Amount must be a positive number'),
   purpose: Yup.string().required('Purpose is required'),
 });
 
 export const EmailSchema = Yup.object().shape({
+  phoneNumber: Yup.string()
+    .required('Phone number is required')
+    .matches(
+      /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/,
+      'Invalid phone number'
+    ),
   emailAddress: Yup.string().required('Email Address is required'),
   receiverName: Yup.string().required('Sender Name is required'),
   amount: Yup.string().required('Amount is required'),

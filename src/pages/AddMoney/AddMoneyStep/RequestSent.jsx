@@ -8,7 +8,7 @@ const RequestSent = () => {
       <div className="img">
         <img src={successImg} alt="suceessImg"></img>
       </div>
-      <div className="text-md md:text-xl font-medium">Reques Sent</div>
+      <div className="text-md md:text-xl font-medium">Request Sent</div>
       <Link to="/account/dashboard">
         <button
           type="submit"

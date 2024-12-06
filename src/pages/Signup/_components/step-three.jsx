@@ -22,9 +22,9 @@ export const StepThree = ({ next, data }) => {
       const response = await fetch(import.meta.env.VITE_VALIDATE_OTP_ENDPOINT, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ otp: values.otp })
+        body: JSON.stringify({ otp: values.otp }),
       });
       const data = await response.json();
 

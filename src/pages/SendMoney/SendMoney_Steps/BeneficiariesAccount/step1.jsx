@@ -71,9 +71,9 @@ const RecipientDetails = ({ nextStep }) => {
           );
 
           if (selectedBeneficiary) {
-            const { id, accountNumber, bankName } = selectedBeneficiary;
+            const { id, accountNumber, bankCode, bankName } = selectedBeneficiary;
             console.log('Selected Beneficiary:', selectedBeneficiary);
-            nextStep({ selectedBeneficiaryName, accountNumber, bankName, id });
+            nextStep({ selectedBeneficiaryName, accountNumber, bankCode, bankName, id });
           }
         }}>
         {() => (

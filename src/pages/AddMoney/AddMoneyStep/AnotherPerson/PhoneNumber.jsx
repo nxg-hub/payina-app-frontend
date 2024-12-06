@@ -37,14 +37,13 @@ const PhoneNumber = () => {
 
   const handleSubmit = async (values) => {
     const requestData = {
+      approverPhoneNumber: values.phoneNumber,
+      approverEmail: values.emailAddress,
       requesterEmail: loginUserData.email,
       requesterName: loginUserData.firstName,
-      senderName: values.receiverName,
-      requesterWalletId: loginUserData.walletId,
-      phoneNumber: values.phoneNumber,
+      approverName: values.receiverName,
       amount: Number(values.amount),
       purpose: values.purpose,
-      requestType: 'PHONE_NUMBER',
     };
 
     console.log('Request Data:', JSON.stringify(requestData, null, 2));
@@ -92,6 +91,7 @@ const PhoneNumber = () => {
       <Formik
         initialValues={{
           phoneNumber: '',
+          emailAddress: '',
           receiverName: '',
           amount: '',
           purpose: '',
@@ -112,6 +112,22 @@ const PhoneNumber = () => {
               />
               <ErrorMessage
                 name="phoneNumber"
+                component="span"
+                className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
+              />
+            </div>
+            <div className="flex flex-col w-full gap-2">
+              <label htmlFor="emailAddress" className="text-left font-md text-md">
+                Email Address
+              </label>
+              <Field
+                name="emailAddress"
+                type="text"
+                placeholder="Enter Email Address"
+                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+              />
+              <ErrorMessage
+                name="emailAddress"
                 component="span"
                 className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
               />
