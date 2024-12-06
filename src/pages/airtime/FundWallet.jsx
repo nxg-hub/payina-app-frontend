@@ -60,7 +60,7 @@ const FundWallet = () => {
         </div>
         <div className="flex-1 flex flex-col">
           <Navbar />
-          <div className="container mx-auto px-4 md:px-8 flex-grow bg-black">
+          <div className="container mx-auto px-4 md:px-8 flex-grow">
             <div className="md:ml-80 w-full max-w-2xl mx-auto py-8">
               <div className="flex flex-col space-y-6">
                 <div className="flex flex-col w-full">

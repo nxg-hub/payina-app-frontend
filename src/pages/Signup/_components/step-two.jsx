@@ -115,6 +115,20 @@ export const StepTwo = ({ next, initialValues }) => {
         enableReinitialize>
         {() => (
           <Form>
+            <div className="mt-4 ml-[8%]">
+              <label htmlFor="userType" className="text-sm font-normal text-lightBlue mr-3">
+                User Type
+              </label>
+              <select
+                id="userType"
+                value={userType}
+                onChange={(e) => setUserType(e.target.value)}
+                // className="justify-center items-center !text-lightBlue xl:text-[19px] !border-none font-extrabold duration-300 xl:w-[87%] w-[90%] mx-auto my-10 !mb-12 xl:my-12 xl:mb-20">
+                className="w-3/4 h-[3.0rem] border border-[#9ca3af] outline-none font-light text-base text-gray rounded-[5px] py-2 px-[10px]">
+                <option value="personal">Personal</option>
+                <option value="corporate">Corporate</option>
+              </select>
+            </div>
             <PhoneInput
               defaultCountry="ng"
               value={phone}

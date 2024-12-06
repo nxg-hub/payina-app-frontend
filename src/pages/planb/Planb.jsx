@@ -187,7 +187,7 @@ const Planb = () => {
 
         // Open Paystack inline payment modal
         if (window.PaystackPop) {
-          console.log('AAAAA:', authorization_url);
+          // console.log('AAAAA:', authorization_url);
           const handler = window.PaystackPop.setup({
             key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
             email: formValues.email,
@@ -240,7 +240,6 @@ const Planb = () => {
   const phoneNumber = formValues?.phoneNumber || '';
   const email = formValues?.email || '';
 
-
   return (
     <section className="text-primary bg-black">
       <Navbar />
@@ -272,7 +271,7 @@ const Planb = () => {
         errorIcon={errorIcon}
         buttonStyles={{
           login: 'bg-blue-600 hover:bg-blue-700',
-          register: 'bg-blue-500 hover:bg-blue-600'
+          register: 'bg-blue-500 hover:bg-blue-600',
         }}
         onLogin={handleLogin}
         onRegister={handleRegister}

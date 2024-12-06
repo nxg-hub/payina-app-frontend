@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/navbar/navbar';
 import Footer from '../../components/footer/footer';
 import InputStyle from '../../utilities/InputStyle';
-import NetworkSelection from '../../components/NetworkSelection';
 import DataPlansSelection from '../../components/DataPlansSelection';
 import { useForm } from '../../context/formContext';
 import EmailVerification from '../../components/EmailVerification';
@@ -70,14 +69,14 @@ export const DataPurchaseForm = () => {
         ...formValues,
         email: localEmail,
         phoneNumber: formValues.phoneNumber,
-        selectedNetwork: formValues.selectedNetwork
+        selectedNetwork: formValues.selectedNetwork,
       },
       selectedPlan: {
         id: selectedPlan.id,
         planName: selectedPlan.name,
         planPrice: selectedPlan.amount,
-        planSlug: selectedPlan.slug
-      }
+        planSlug: selectedPlan.slug,
+      },
     };
 
     navigate('/plans/review', { state: stateToPass });
@@ -89,7 +88,6 @@ export const DataPurchaseForm = () => {
     },
     [setSelectedPlan, updateFormValues]
   );
-
 
   return (
     <section className="bg-black">
@@ -137,8 +135,6 @@ export const DataPurchaseForm = () => {
                   <DataPlansSelection
                     networkSlug={formValues.selectedNetwork}
                     selectedPlan={selectedPlan}
-                    // onPlanChange={handlePlanSelection}
-                    // error={errors.selectedPlan}
                     plans={plans}
                     onPlanChange={(plan) => {
                       setSelectedPlan(plan);

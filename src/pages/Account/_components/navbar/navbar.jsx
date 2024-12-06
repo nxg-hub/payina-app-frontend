@@ -17,7 +17,6 @@ export const Navbar = () => {
   const [userImage, setUserImage] = useState('');
   const [newAuthToken] = useLocalStorage('authToken', '');
 
-
   useEffect(() => {
     const fetchAccountDetails = async () => {
       try {
@@ -35,8 +34,8 @@ export const Navbar = () => {
         const data = await response.json();
         setCustomerUserName(data.payinaUserName || 'User');
         setUserImage(data.passportUrl || '');
-      } catch (error){
-        console.error('Error fetching account details:', error)
+      } catch (error) {
+        console.error('Error fetching account details:', error);
       }
     };
     fetchAccountDetails();
@@ -66,9 +65,7 @@ export const Navbar = () => {
           <img src={images.Bank} />
           <div className="text-nowrap font-medium text-base">Business Account</div>
           <select className="pl-4 pr-8 outline-none border border-lightBlue">
-            <option className="capitalize p-2 text-base font-semibold">
-              {customerUserName}
-            </option>
+            <option className="capitalize p-2 text-base font-semibold">{customerUserName}</option>
           </select>
         </div>
       </div>
