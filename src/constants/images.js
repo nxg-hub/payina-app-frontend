@@ -46,6 +46,8 @@ export { default as bet6 } from '../assets/images/bet6.png';
 import AddMoney from '../assets/images/add_money.svg';
 import SendMoney from '../assets/images/send_money.svg';
 import Invoice from '../assets/images/create_invoice.svg';
+import Code from '../assets/images/code.svg';
+import Scan from '../assets/images/scan.svg';
 import Bills from '../assets/images/bills.svg';
 import GreenArrow from '../assets/images/green_arrow.svg';
 import RedArrow from '../assets/images/red_arrow.svg';
@@ -70,6 +72,12 @@ import BusinessPayroll from '../assets/images/business_payroll.png';
 import BusinessSignatory from '../assets/images/business_signatory.png';
 import Revenue from '../assets/images/revenue.png';
 import TansIcon from '../assets/images/tansIcon.png';
+import ArrowRight from '../assets/images/arrow-right.svg';
+import Recurr from '../assets/images/recurring.svg';
+import ContactUs from '../assets/images/contact-us.svg';
+import IdentityVerification from '../assets/images/identity-ver.svg';
+import TermsAndConditions from '../assets/images/terms.svg';
+import SwitchAccount from '../assets/images/switch-account.svg';
 
 export default {
   logo,
@@ -110,6 +118,8 @@ export default {
   AddMoney,
   SendMoney,
   Invoice,
+  Code,
+  Scan,
   Bills,
   RedArrow,
   GreenArrow,
@@ -133,5 +143,11 @@ export default {
   BusinessPayroll,
   BusinessSignatory,
   Revenue,
-  TansIcon
+  TansIcon,
+  ArrowRight,
+  Recurr,
+  ContactUs,
+  IdentityVerification,
+  TermsAndConditions,
+  SwitchAccount
 };

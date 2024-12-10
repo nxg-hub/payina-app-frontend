@@ -142,7 +142,7 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
         import.meta.env.VITE_FUND_WALLET_API,
         {
           email: userData?.email || formValues.email,
-          amount: Number(amount) * 100,
+          amount: Number(amount),
           channels: ['card'],
           walletId: walletData?.walletId || userData?.walletId,
         },

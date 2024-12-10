@@ -23,6 +23,7 @@ const UserData = () => {
   const [modalDetails, setModalDetails] = useState('');
   const [isProcessingVend, setIsProcessingVend] = useState(false);
   const [userPhone, setUserPhone] = useState('');
+  const [submitDisabled, setSubmitDisabled] = useState(false);
   const auth = useAuth();
   const [userDetails] = useLocalStorage('userDetails', '');
   const [authToken] = useLocalStorage('authToken', '');
@@ -55,9 +56,9 @@ const UserData = () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authToken}`,
-            'apiKey': import.meta.env.VITE_API_KEY
-          }
+            Authorization: `Bearer ${authToken}`,
+            apiKey: import.meta.env.VITE_API_KEY,
+          },
         });
 
         if (!response.ok) {
@@ -85,6 +86,31 @@ const UserData = () => {
     }
   }, [packageSlug]);
 
+  const handlePlanSelect = async (event) => {
+    const plan = plans.find((p) => p.slug === event.target.value);
+    setSelectedPlan(plan);
+
+    if (plan) {
+      await checkWalletBalance(plan.amount);
+    }
+  };
+
+  const checkWalletBalance = async (amount) => {
+    try {
+      await walletCheckerRef.current.checkBalance(amount);
+    } catch (error) {
+      setModalStatus('error');
+      setModalTitle('Insufficient Funds');
+      setModalMessage('Insufficient funds on merchant wallet');
+      setModalDetails(`Required Amount: ₦${amount}`);
+      setShowModal(true);
+      setSubmitDisabled(true);
+      return false;
+    }
+    setSubmitDisabled(false);
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
@@ -99,7 +125,11 @@ const UserData = () => {
       return;
     }
 
-    await walletCheckerRef.current.checkBalance();
+    const hasBalance = await checkWalletBalance(selectedPlan.amount);
+    if (!hasBalance) {
+      return;
+    }
+
     setIsProcessingVend(true);
   };
 
@@ -110,18 +140,33 @@ const UserData = () => {
     setModalMessage('Successfully processed the vend request');
     setShowModal(true);
 
-    setTimeout(() => {
-      window.location.reload();
-    }, 2000);
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, 2000);
   };
 
   const handleError = (err) => {
     setIsProcessingVend(false);
     setModalStatus('error');
     setModalTitle('Transaction Failed');
-    setModalMessage(err.message || 'An unknown error occurred');
+
+    let errorMessage = err.message;
+    try {
+      const errorResponse = JSON.parse(err.message);
+      if (errorResponse.debugMessage) {
+        errorMessage = errorResponse.debugMessage;
+      }
+    } catch (e) {
+      console.error('Error parsing API response:', e);
+    }
+
+    setModalMessage(errorMessage);
     setModalDetails('');
     setShowModal(true);
+
+    if (errorMessage.toLowerCase().includes('insufficient funds')) {
+      setSubmitDisabled(true);
+    }
   };
 
   const handleFundWallet = () => {
@@ -155,9 +200,17 @@ const UserData = () => {
               <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="space-y-4">
+                    {/*<NetworkSelection*/}
+                    {/*  selectedNetwork={formValues.selectedNetwork}*/}
+                    {/*  onNetworkChange={(network) => updateFormValues({ selectedNetwork: network })}*/}
+                    {/*  error={errors.selectedNetwork}*/}
+                    {/*/>*/}
+
                     <NetworkSelection
                       selectedNetwork={formValues.selectedNetwork}
                       onNetworkChange={(network) => updateFormValues({ selectedNetwork: network })}
+                      phoneNumber={formValues.phoneNumber}
+                      onPhoneChange={(e) => updateFormValues({ phoneNumber: e.target.value })}
                       error={errors.selectedNetwork}
                     />
 
@@ -176,12 +229,8 @@ const UserData = () => {
                       </label>
                       <select
                         value={selectedPlan?.slug || ''}
-                        onChange={(e) => {
-                          const plan = plans.find(p => p.slug === e.target.value);
-                          setSelectedPlan(plan);
-                        }}
-                        className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
+                        onChange={handlePlanSelect}
+                        className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="">Select a plan</option>
                         {plans.map((plan) => (
                           <option key={plan.slug} value={plan.slug}>
@@ -200,13 +249,16 @@ const UserData = () => {
                       onInsufficientFunds={(balance, requiredAmount) => {
                         setModalStatus('error');
                         setModalTitle('Insufficient Funds');
-                        setModalMessage('Wallet balance too low. Fund your wallet to proceed.');
+                        setModalMessage('Insufficient funds on merchant wallet');
                         setModalDetails(
                           `Wallet Balance: ₦${balance.toFixed(2)}, Required Amount: ₦${requiredAmount}`
                         );
                         setShowModal(true);
+                        setSubmitDisabled(true);
                       }}
-                      onSufficientFunds={() => {}}
+                      onSufficientFunds={() => {
+                        setSubmitDisabled(false);
+                      }}
                     />
                   </div>
 
@@ -220,6 +272,7 @@ const UserData = () => {
                       selectedNetwork: formValues.selectedNetwork,
                     }}
                     amount={selectedPlan?.amount}
+                    phoneNumber={formValues.phoneNumber}
                     packageSlug={packageSlug}
                     onVendInitiated={handleVendInitiated}
                     onError={handleError}
@@ -228,7 +281,7 @@ const UserData = () => {
                     <CustomButton
                       type="submit"
                       className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                      disabled={isProcessingVend}>
+                      disabled={submitDisabled || isProcessingVend}>
                       {isProcessingVend ? 'Processing...' : 'Next'}
                     </CustomButton>
                   </VendInitiator>
@@ -238,16 +291,21 @@ const UserData = () => {
           </div>
         </main>
       </div>
+
       <TransactionModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
-        status={modalStatus}
         title={modalTitle}
-        message={modalMessage}
+        message={
+          modalMessage === 'Request failed'
+            ? ['Request failed, wallet balance too low']
+            : ['Request failed, please try again.']
+        }
+        status={modalStatus}
         details={modalDetails}
-        onBack={() => setShowModal(false)}
-        onProceed={handleFundWallet}
-        proceedText="Fund Wallet"
+        buttons={modalStatus === 'error' ? ['fundWallet', 'back'] : ['back']}
+        onFundWallet={handleFundWallet}
+        successButtonText="Fund Wallet"
       />
     </div>
   );

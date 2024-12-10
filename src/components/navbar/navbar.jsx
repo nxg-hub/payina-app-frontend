@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { LuX, LuMoveRight } from 'react-icons/lu';
@@ -72,10 +73,6 @@ const Navbar = () => {
               </div>
             </li>
             <li className="m-6 mt-12 cursor-pointer text-primary text-xl">
-              {/* <div className="flex justify-between items-center">
-                <Link to="#" className="hover:text-lightBlue font-semibold">
-                  Features
-                </Link> */}
               <div className="flex space-x-10 absolute bottom-0 my-8">
                 <Link to="/paybills">
                   <Button
@@ -83,18 +80,17 @@ const Navbar = () => {
                     children="Paybills"
                   />
                 </Link>
-                {/*<LuMoveRight />*/}
               </div>
             </li>
           </ul>
           <div className="flex space-x-10 absolute bottom-0 my-8">
-            <Link to="/signup">
+            <Link to={route === '/' ? '/account/onboarding' : '/personal/login'}>
               <Button
                 className="hover:bg-lightBlue hover:scale-95 font-extrabold duration-300 center"
                 children="Sign Up"
               />
             </Link>
-            <Link to="/login">
+            <Link to={route === '/' ? '/personal/login' : '/login'}>
               <Button
                 backgroundColor="transparent"
                 textColor={'#fff'}
