@@ -10,7 +10,7 @@ const uploadImage = async (imageFile, email) => {
 
     const response = await fetch(import.meta.env.VITE_UPLOAD_IMAGE_ENDPOINT, {
       method: 'POST',
-      body: formData
+      body: formData,
     });
 
     if (!response.ok) {
@@ -76,7 +76,7 @@ export const StepSix = ({ next, email }) => {
                 onChange={(event) => {
                   setFieldValue('passport', event.currentTarget.files);
                 }}
-                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+                className=" w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
               />
               <ErrorMessage
                 name="passport"

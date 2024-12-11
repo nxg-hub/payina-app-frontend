@@ -55,12 +55,12 @@ const Ren = () => {
             <input
               type="number"
               placeholder="YY"
-              className=" border-primary mb-5 md:static text-xs pl-2 py-2 px-24 border-2 rounded-[5px]  border-primary bg-black text-slate-600"
+              className=" mb-5 md:static text-xs pl-2 py-2 px-24 border-2 rounded-[5px]  border-primary bg-black text-slate-600"
             />
             <input
               type="number"
               placeholder="CVV"
-              className="border-2 text-xs mb-5 md:static border-primary rounded-[5px] pl-2 px-24 py-2 border-primary bg-black text-slate-600"
+              className="border-2 text-xs mb-5 md:static  rounded-[5px] pl-2 px-24 py-2 border-primary bg-black text-slate-600"
             />
           </div>
           <Link to="/thanks">

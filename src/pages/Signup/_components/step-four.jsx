@@ -7,7 +7,7 @@ const StepFourValidationSchema = Yup.object().shape({
   idType: Yup.string().required('Please select an ID type'),
   identificationNumber: Yup.string()
     .required('Please enter an identification number')
-    .matches(/^\d+$/, 'Please enter a valid identification number (numeric)')
+    .matches(/^\d+$/, 'Please enter a valid identification number (numeric)'),
 });
 
 export const StepFour = ({ next }) => {
@@ -16,15 +16,15 @@ export const StepFour = ({ next }) => {
 
   const handleSubmit = async (values) => {
     const requestBody = JSON.stringify({ bvn: values.identificationNumber });
-    // console.log('Request Body:', requestBody);
+    console.log('Request Body:', requestBody);
     setLoading(true);
     try {
       const response = await fetch(import.meta.env.VITE_BVN_VERIFY_ENDPOINT, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: requestBody
+        body: requestBody,
       });
 
       const data = await response.json();
@@ -34,7 +34,7 @@ export const StepFour = ({ next }) => {
           firstName: data.firstName,
           lastName: data.lastName,
           gender: data.gender,
-          dob: data.dob
+          dob: data.dob,
         });
       } else {
         setApiError(data.message || 'Verification failed. Please try again.');
@@ -48,8 +48,8 @@ export const StepFour = ({ next }) => {
   localStorage.setItem('currentStep', 4);
 
   const Options = [
-    { value: 'BVN', label: 'BVN' }
-    // { value: "National ID", label: "National ID" },
+    { value: 'BVN', label: 'BVN' },
+    // { value: 'NIN', label: 'NIN' },
     // { value: "Drivers License", label: "Drivers License" },
     // { value: "International Passport", label: "International Passport" },
     // { value: "Voters Card", label: "Voters Card" },
@@ -61,7 +61,7 @@ export const StepFour = ({ next }) => {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    borderBottom: '1px solid white'
+    borderBottom: '1px solid white',
   };
 
   return (
@@ -78,7 +78,7 @@ export const StepFour = ({ next }) => {
           <Formik
             initialValues={{
               idType: '',
-              identificationNumber: ''
+              identificationNumber: '',
             }}
             validationSchema={StepFourValidationSchema}
             onSubmit={(values) => handleSubmit(values)}>

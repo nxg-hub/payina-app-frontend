@@ -31,7 +31,7 @@ const BalanceCard = () => {
         }
 
         const data = await response.json();
-        console.log('Fetched balance:', data.data.balance.amount);
+        // console.log('Fetched balance:', data.data.balance.amount);
         setBalance(data.data.balance.amount);
       } catch (error) {
         console.error('Error fetching balance:', error);

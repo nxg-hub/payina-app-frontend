@@ -5,6 +5,8 @@ import { images } from '../../../constants';
 import { useState } from 'react';
 import { useAuth } from '../../../useAuth';
 import useLocalStorage from '../../../hooks/useLocalStorage';
+import { useNavigate } from 'react-router-dom';
+import { BsEye, BsEyeSlash } from 'react-icons/bs';
 
 const parseXML = (xml) => {
   const parser = new DOMParser();
@@ -19,7 +21,11 @@ const LoginForm = () => {
   const auth = useAuth(); // Use the useAuth hook
   const [authToken, setAuthToken] = useLocalStorage('authToken', '');
   const [userDetails, setuserDetails] = useLocalStorage('userDetails', '');
-
+  const [showPassword, setShowPassword] = useState(false);
+  // const navigate = useNavigate();
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
   const handleSubmit = async (values) => {
     setIsLoading(true);
     localStorage.setItem('userEmail', values.email);
@@ -46,13 +52,10 @@ const LoginForm = () => {
           setAuthToken(token);
           const decodedString = decodeJWT(token);
           setuserDetails(decodedString);
-          console.log(userDetails, authToken);
           localStorage.setItem('authToken', token);
-          console.log('token:', token);
-          console.log('Log in successful:', token);
-          // console.log(decodeJWT(token));
 
           await auth.checkUserRegistrationLevel(); // Trigger the redirection after login
+          // navigate('/account/dashboard');
         } else {
           setErrorMessage('Login failed: Invalid token structure');
         }
@@ -99,17 +102,22 @@ const LoginForm = () => {
                   />
                   <ErrorMessage name="email" component="span" className="text-[#db3a3a]" />
                 </div>
-                <div className="xl:w-[120%] flex flex-col space-y-2">
+                <div className="xl:w-[120%] flex flex-col space-y-2 relative">
                   <label htmlFor="password" className="text-sm font-normal text-lightBlue">
                     Password
                   </label>
                   <Field
                     name="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="Enter Password"
                     className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-light text-base text-gray rounded-[5px] py-2 px-[10px]"
                   />
                   <ErrorMessage name="password" component="span" className="text-[#db3a3a]" />
+                  {showPassword ? (
+                    <BsEye onClick={handleShowPassword} className="absolute top-10 right-1" />
+                  ) : (
+                    <BsEyeSlash onClick={handleShowPassword} className="absolute top-10 right-1" />
+                  )}
                 </div>
                 {errorMessage && <div className="text-[#db3a3a]">{errorMessage}</div>}
                 <CustomButton

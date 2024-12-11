@@ -13,7 +13,7 @@ const uploadDocument = async (documentFile, email) => {
 
     const response = await fetch(import.meta.env.VITE_UPLOAD_DOCUMENT_ENDPOINT, {
       method: 'POST',
-      body: formData
+      body: formData,
     });
 
     const data = await response.text();
@@ -118,7 +118,7 @@ export const StepNine = ({ next, email }) => {
                   <Field
                     as="select"
                     name="document_type"
-                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-8 bg-secondary">
+                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base  rounded-[5px] py-2 px-8 bg-secondary">
                     <option value="" className="!bg-secondary text-primary font-medium" disabled>
                       Select Document
                     </option>
