@@ -2,14 +2,19 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
 import { SignUpSchema } from '../schemas/schema';
+import { useNavigate } from 'react-router-dom';
 
 export const StepOne = ({ next }) => {
   const savedEmail = localStorage.getItem('userEmail') || ''; // Fallback to an empty string if no email is stored
 
+  const navigate = useNavigate();
   const handleSubmit = (values) => {
     // localStorage.setItem('currentStep', 1);
     localStorage.setItem('userEmail', values.email);
     next(values);
+  };
+  const handleToggle = () => {
+    navigate('/personal/signup');
   };
   return (
     <>
@@ -29,6 +34,13 @@ export const StepOne = ({ next }) => {
               <div className="xl:py-16 p-4 pt-[2.2rem] xl:p-10 xl:pl-[5rem] xl:pr-40 xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
                 <div className="text-lightBlue text-start font-bold xl:text-[32px] text-xl">
                   Enter Email and Password
+                </div>
+                <div className="text-center mt-4">
+                  <button
+                    onClick={handleToggle}
+                    className="text-yellow font-bold underline hover:no-underline focus:outline-none">
+                    Sign up as a personal User Instead
+                  </button>
                 </div>
                 <div className="xl:w-[120%] flex flex-col space-y-2 ">
                   <label htmlFor="email" className="text-sm font-normal text-lightBlue">

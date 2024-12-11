@@ -8,6 +8,7 @@ const VendInitiator = ({
   selectedPlan,
   formValues,
   packageSlug,
+  phoneNumber,
   amount,
   onVendInitiated,
   onError,
@@ -24,7 +25,6 @@ const VendInitiator = ({
   const hasLoadedWalletRef = useRef(false);
 
   const fetchWalletDetails = useCallback(async () => {
-    // Prevent duplicate wallet fetches
     if (hasLoadedWalletRef.current) {
       return walletDetailsRef.current;
     }
@@ -94,6 +94,7 @@ const VendInitiator = ({
         }
 
         const userDataResponse = await userResponse.json();
+        // console.log('Fetched User Data:', userDataResponse.phoneNumber);
         setUserData(userDataResponse);
 
         if (!hasLoadedWalletRef.current) {
@@ -128,7 +129,7 @@ const VendInitiator = ({
         channel: 'web',
         amount: amount,
         customerName: userData ? `${userData.firstName} ${userData.lastName}` : '',
-        phoneNumber: formValues.phoneNumber,
+        phoneNumber: phoneNumber,
         accountNumber: userData?.accountNumber || accountNumber,
         email: userData?.email || formValues.email,
         merchantId: walletDetailsRef.current.businessId,
@@ -149,13 +150,11 @@ const VendInitiator = ({
         onVendInitiated(vendValueResponse.data);
         setStatusMessage('Transaction completed successfully');
       } else {
-        // Handle the error case with debug message
         const errorMessage = vendValueResponse.data.debugMessage || 'Vend value failed';
         throw new Error(errorMessage);
       }
     } catch (err) {
       console.error('Error in vend process:', err);
-      // Use the debug message from the API response if available
       const errorMessage = err.response?.data?.debugMessage || err.message || 'Vend process failed';
       setStatusMessage(errorMessage);
       onError(err);
