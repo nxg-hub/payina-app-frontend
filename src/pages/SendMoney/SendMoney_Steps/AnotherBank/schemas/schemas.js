@@ -6,7 +6,6 @@ export const RecieverSchema = Yup.object().shape({
     .required('Account number is required'),
   bankName: Yup.string().required('Bank Name is required'),
   country: Yup.string().required('Country Code is required'),
-  recieverName: Yup.string().required('Receiver Name Confirmation is required'),
 });
 
 export const AmountSchema = Yup.object().shape({

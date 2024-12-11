@@ -8,7 +8,12 @@ const ReviewTransaction = ({ data, nextStep }) => {
       <div className="flex flex-col items-left justify-between gap-4 bg-[#EBEBEB] rounded-md py-5 px-8 xl:py-10 xl:px-14 mt-5">
         <div className="flex flex-row justify-between xl:gap-[20rem] md:gap-[5px]">
           <div className="text-md font-medium">Receiver Name</div>
-          <div className="text-md font-medium">{data.receiverName}</div>
+          <div className="text-md font-medium">{data.accountName}</div>
+        </div>
+
+        <div className="flex flex-row justify-between xl:gap-[20rem] md:gap-[5px]">
+          <div className="text-md font-medium">Account Number</div>
+          <div className="text-md font-medium">{data.accountNumber}</div>
         </div>
 
         <div className="flex flex-row justify-between xl:gap-[20rem] md:gap-[5px]">
@@ -40,7 +45,8 @@ const ReviewTransaction = ({ data, nextStep }) => {
 
 ReviewTransaction.propTypes = {
   data: PropTypes.shape({
-    receiverName: PropTypes.string.isRequired,
+    accountName: PropTypes.string.isRequired,
+    accountNumber: PropTypes.string.isRequired,
     amount: PropTypes.string.isRequired,
     currency: PropTypes.string.isRequired,
     purpose: PropTypes.string.isRequired,

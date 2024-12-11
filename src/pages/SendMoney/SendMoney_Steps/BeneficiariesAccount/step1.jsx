@@ -65,7 +65,6 @@ const RecipientDetails = ({ nextStep }) => {
         validationSchema={RecieverSchema}
         onSubmit={(values) => {
           const selectedBeneficiaryName = values.beneficiaryName;
-          // Find selected beneficiary details based on name
           const selectedBeneficiary = beneficiaries.find(
             (beneficiary) => beneficiary.name === selectedBeneficiaryName
           );

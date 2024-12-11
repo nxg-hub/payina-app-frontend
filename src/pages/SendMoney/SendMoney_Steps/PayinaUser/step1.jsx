@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import { RecieverSchema } from './schemas/schemas.js';
 import axios from 'axios';
 
 const RecipientDetails = ({ nextStep }) => {
+  const [confirmationMessage, setConfirmationMessage] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
+  const debounceTimeoutRef = useRef(null);
+
   const verifyPayinaUsername = async (payinaUsername) => {
     try {
       const endpoint = import.meta.env.VITE_GET_PAYINA_TAG_ENDPOINT.replace(
@@ -14,14 +18,21 @@ const RecipientDetails = ({ nextStep }) => {
 
       const response = await axios.get(endpoint);
       console.log('API username response data:', response.data);
-      return response.data && response.data.payinaUserName ? response.data.payinaUserName : null;
+      return response.data && response.data.payinaUserName
+        ? {
+            isValid: true,
+            message: `${response.data.firstName} ${response.data.lastName}`,
+          }
+        : {
+            isValid: false,
+            message: `PayinaTag "${payinaUsername}" not found.`,
+          };
     } catch (error) {
-      if (error.response && error.response.status === 404) {
-        console.error(`Payina username "${payinaUsername}" not found.`);
-      } else {
-        console.error('Error verifying payina username:', error);
-      }
-      return null;
+      console.error('Error verifying payina username:', error);
+      return {
+        isValid: false,
+        message: 'PayinaTag not found',
+      };
     }
   };
 
@@ -32,45 +43,61 @@ const RecipientDetails = ({ nextStep }) => {
       console.log('API account number response:', response.data);
 
       const isValid = response.data && response.data.customerId != null;
-      return isValid;
+      return {
+        isValid,
+        message: isValid
+          ? `${response.data.firstName} ${response.data.lastName}`
+          : `PayinaTag "${accountNumber}" not found.`,
+      };
     } catch (error) {
       console.error('Error verifying account number:', error);
-      return false;
+      return {
+        isValid: false,
+        message: 'Account number not found',
+      };
     }
   };
 
-  const handleSubmit = async (values, { setFieldError }) => {
-    if (values.payinaTag !== values.confirmPayinaTag) {
-      setFieldError('confirmPayinaTag', 'Payina Tag and Confirm Payina Tag must match.');
+  const handleValidation = async (payinaTag) => {
+    if (isNaN(payinaTag)) {
+      return await verifyPayinaUsername(payinaTag);
+    } else {
+      return await verifyAccountNumber(payinaTag);
+    }
+  };
+
+  const handleInputChange = (payinaTag, setFieldValue) => {
+    if (!payinaTag) {
+      setConfirmationMessage('');
+      setFieldValue('confirmPayinaTag', '');
       return;
     }
 
-    let isValid;
-    if (isNaN(values.payinaTag)) {
-      const payinaUsername = await verifyPayinaUsername(values.payinaTag);
-      isValid = payinaUsername !== null;
-
-      if (isValid) {
-        nextStep({ payinaTag: values.payinaTag });
-      } else {
-        setFieldError(
-          'confirmPayinaTag',
-          'Invalid Payina username. Please re-enter the correct one.'
-        );
-      }
-    } else {
-      isValid = await verifyAccountNumber(values.payinaTag);
-      console.log(`Account number validity for "${values.payinaTag}":`, isValid);
-
-      if (isValid) {
-        nextStep({ payinaTag: values.payinaTag });
-      } else {
-        setFieldError(
-          'confirmPayinaTag',
-          'Invalid account number. Please re-enter the correct one.'
-        );
-      }
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
     }
+
+    debounceTimeoutRef.current = setTimeout(async () => {
+      setIsVerifying(true);
+
+      const validation = await handleValidation(payinaTag);
+      setIsVerifying(false);
+      setConfirmationMessage(validation.message);
+
+      if (validation.isValid) {
+        setFieldValue('confirmPayinaTag', validation.message);
+      } else {
+        setFieldValue('confirmPayinaTag', '');
+      }
+    }, 1800);
+  };
+
+  const handleSubmit = async (values, { setFieldError }) => {
+    if (!confirmationMessage || confirmationMessage.includes('not found')) {
+      setFieldError('payinaTag', 'Invalid PayinaTag or Account Number. Please try again.');
+      return;
+    }
+    nextStep({ payinaTag: values.payinaTag });
   };
 
   return (
@@ -79,11 +106,10 @@ const RecipientDetails = ({ nextStep }) => {
       <Formik
         initialValues={{
           payinaTag: '',
-          confirmPayinaTag: '',
         }}
         validationSchema={RecieverSchema}
         onSubmit={handleSubmit}>
-        {() => (
+        {({ setFieldValue }) => (
           <Form>
             <div className="flex flex-col items-left gap-2">
               <label htmlFor="payinaTag" className="text-left font-md text-md">
@@ -94,6 +120,11 @@ const RecipientDetails = ({ nextStep }) => {
                 type="text"
                 placeholder="Enter Recipient Payina Tag or Account Number"
                 className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                onChange={(e) => {
+                  const payinaTag = e.target.value;
+                  setFieldValue('payinaTag', payinaTag);
+                  handleInputChange(payinaTag, setFieldValue);
+                }}
               />
               <ErrorMessage
                 name="payinaTag"
@@ -105,17 +136,26 @@ const RecipientDetails = ({ nextStep }) => {
               <label htmlFor="confirmPayinaTag" className="text-left font-md text-md">
                 Confirm Payina Tag
               </label>
-              <Field
+              <div
                 name="confirmPayinaTag"
-                type="text"
+                type=""
                 placeholder=""
-                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
-              />
-              <ErrorMessage
-                name="confirmPayinaTag"
-                component="span"
-                className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
-              />
+                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm text"
+                readOnly>
+                {isVerifying
+                  ? 'Verifying...'
+                  : confirmationMessage || 'Enter PayinaTag to confirm here'}
+              </div>
+              <span
+                className={`text-xs md:text-sm mt-1 ${
+                  confirmationMessage.includes('not found') ? 'text-[#db3a3a]' : 'text-[#00678F]'
+                }`}>
+                {confirmationMessage.includes('not found')
+                  ? 'PayinaTag not found'
+                  : confirmationMessage && !isVerifying
+                    ? 'PayinaTag Verified'
+                    : ''}
+              </span>
             </div>
             <div className="flex justify-end">
               <button

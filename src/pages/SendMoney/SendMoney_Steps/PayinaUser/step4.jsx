@@ -4,9 +4,10 @@ import SuccessMessage from './step5';
 import DeclineMessage from './step6';
 import useLocalStorage from '../../../../hooks/useLocalStorage.js';
 import PropTypes from 'prop-types';
+import ReactLoading from 'react-loading';
 
 const EnterPin = ({ data }) => {
-  const [pin, setPin] = useState('');
+  const [pin, setPin] = useState(['', '', '', '']);
   const [userEmail, setUserEmail] = useState('');
   const [sourceId, setSourceId] = useState('');
   const [destinationId, setDestinationId] = useState('');
@@ -17,6 +18,7 @@ const EnterPin = ({ data }) => {
   const [showDecline, setShowDecline] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [newAuthToken] = useLocalStorage('authToken', '');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -53,7 +55,7 @@ const EnterPin = ({ data }) => {
         });
         console.log('Destination data fetched successfully:', payinaResponse.data);
         setDestinationId(payinaResponse.data.walletId);
-        setReceiverName(payinaResponse.data.firstName);
+        setReceiverName(`${payinaResponse.data.firstName} ${payinaResponse.data.lastName}`);
         setReceiverEmailAddress(payinaResponse.data.email);
       } catch (error) {
         console.error('Error fetching destination ID:', error.response?.data || error.message);
@@ -67,9 +69,17 @@ const EnterPin = ({ data }) => {
   }, [newAuthToken, data.payinaTag]);
 
   const handlePinChange = (e, index) => {
-    const newPin = pin.split('');
-    newPin[index] = e.target.value;
-    setPin(newPin.join(''));
+    const value = e.target.value;
+    if (value.length > 1) return;
+    const newPin = [...pin];
+    newPin[index] = value;
+    setPin(newPin);
+
+    if (value && index < 3) {
+      document.getElementById(`pin-input-${index + 1}`).focus();
+    } else if (!value && index > 0) {
+      document.getElementById(`pin-input-${index - 1}`).focus();
+    }
   };
 
   const handleNext = async () => {
@@ -85,11 +95,13 @@ const EnterPin = ({ data }) => {
       return;
     }
 
-    if (pin.length < 4) {
+    const pinString = pin.join('');
+    if (pinString.length < 4) {
       setErrorMessage('Please enter a complete PIN.');
       return;
     }
 
+    setLoading(true);
     try {
       const pinResponse = await axios.post(
         import.meta.env.VITE_VALIDATE_TRANSACTION_PIN_ENDPOINT,
@@ -97,7 +109,7 @@ const EnterPin = ({ data }) => {
         {
           params: {
             email: userEmail,
-            transactionPin: pin,
+            transactionPin: pinString,
           },
           headers: {
             'Content-Type': 'application/json',
@@ -166,6 +178,8 @@ const EnterPin = ({ data }) => {
 
       setErrorMessage('Transaction process failed. Please try again.');
       setShowDecline(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -174,30 +188,40 @@ const EnterPin = ({ data }) => {
 
   return (
     <div className="transaction-pin flex flex-col justify-center items-center bg-[#D2D2D285] rounded-md md:p-[2rem] sm:p-[2rem] xl:py-[3rem] xl:px-[5rem] mt-[5rem] gap-8 mx-auto">
-      <span>Enter Transaction Pin</span>
-      {errorMessage && <div className="text-red-500">{errorMessage}</div>}
-      <div className="circle flex flex-row justify-center items-center gap-6">
-        {[0, 1, 2, 3].map((_, i) => (
-          <input
-            key={i}
-            type="text"
-            maxLength="1"
-            pattern="[0-9]*"
-            inputMode="numeric"
-            className="rounded-full border-2 border-lightBlue bg-[#D2D2D285] w-12 h-12 text-center text-lg"
-            value={pin[i] || ''}
-            onChange={(e) => handlePinChange(e, i)}
-          />
-        ))}
-      </div>
-      <div className="flex mt-5 justify-center">
-        <button
-          type="submit"
-          onClick={handleNext}
-          className="rounded-[5px] text-xs md:text-base py-2 border border-lightBlue bg-lightBlue w-[200px] text-primary">
-          Next
-        </button>
-      </div>
+      {loading ? (
+        <div className="flex flex-col items-center">
+          <ReactLoading type="spin" color="#00678F" height={50} width={50} />
+          <span className="mt-4 text-ligthBlue">Transaction processing...</span>
+        </div>
+      ) : (
+        <>
+          <span>Enter Transaction Pin</span>
+          {errorMessage && <div className="text-red-500">{errorMessage}</div>}
+          <div className="circle flex flex-row justify-center items-center gap-6">
+            {pin.map((_, i) => (
+              <input
+                key={i}
+                id={`pin-input-${i}`}
+                type="password"
+                maxLength="1"
+                pattern="[0-9]*"
+                inputMode="numeric"
+                className="rounded-full border-2 border-lightBlue bg-[#D2D2D285] w-12 h-12 text-center text-lg"
+                value={pin[i]}
+                onChange={(e) => handlePinChange(e, i)}
+              />
+            ))}
+          </div>
+          <div className="flex mt-5 justify-center">
+            <button
+              type="submit"
+              onClick={handleNext}
+              className="rounded-[5px] text-xs md:text-base py-2 border border-lightBlue bg-lightBlue w-[200px] text-primary">
+              Next
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

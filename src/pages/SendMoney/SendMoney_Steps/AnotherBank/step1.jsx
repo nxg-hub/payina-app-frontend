@@ -8,10 +8,11 @@ const RecipientDetails = ({ nextStep }) => {
   const [filteredBanks, setFilteredBanks] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState('');
   const [isBankSelected, setIsBankSelected] = useState(false);
-  const [receiverConfirmationMessage, setReceiverConfirmationMessage] = useState('');
-  const [isReceiverConfirmed, setIsReceiverConfirmed] = useState(false);
   const [accountBankCode, setAccountBankCode] = useState('');
-  const [responseDetails, setResponseDetails] = useState({ accountNumber: '', accountName: '' });
+  const [confirmationMessage, setConfirmationMessage] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [accountNumber, setAccountNumber] = useState('');
+  const [accountName, setAccountName] = useState('');
 
   useEffect(() => {
     if (selectedCountry) {
@@ -37,49 +38,66 @@ const RecipientDetails = ({ nextStep }) => {
     }
   }, [selectedCountry]);
 
-  const handleBankSearch = (e) => {
-    const query = e.target.value.toLowerCase();
-    setFilteredBanks(banks.filter((bank) => bank.name.toLowerCase().includes(query)));
-  };
+  useEffect(() => {
+    const verifyAccountNumber = async () => {
+      if (!accountNumber || !accountBankCode) return;
 
-  const confirmReceiverDetails = async (values, accountNumber, receiverName) => {
-    try {
-      const response = await axios.post(
-        import.meta.env.VITE_API_CONFIRM_OTHER_BANK_RECEIVER_DETAILS,
-        {
-          accountNumber,
-          accountBankCode,
-        }
-      );
+      console.log('Verifying account details:', { accountNumber, accountBankCode });
 
-      const { account_name, account_number } = response.data;
-
-      if (account_name) {
-        setReceiverConfirmationMessage('Receiver name is confirmed.');
-        setIsReceiverConfirmed(true);
-        setResponseDetails({ accountNumber: account_number, accountName: account_name });
-        setTimeout(() => {
-          nextStep({
-            receiverName,
-            account_name,
+      try {
+        setIsVerifying(true);
+        const response = await axios.post(
+          import.meta.env.VITE_API_CONFIRM_OTHER_BANK_RECEIVER_DETAILS,
+          {
             accountNumber,
             accountBankCode,
-            bankName: values.bankName,
-          });
-        }, 1000);
-      } else {
-        setReceiverConfirmationMessage(
-          'Receiver name could not be confirmed. Please re-check the account number.'
+          }
         );
-        setIsReceiverConfirmed(false);
-        setResponseDetails({ accountNumber: '', accountName: '' });
+        console.log('API Response:', response.data);
+
+        if (response.data.account_name && response.data.account_number) {
+          setConfirmationMessage(`Receiver Details confirmed: ${response.data.account_name}`);
+          setAccountName(response.data.account_name);
+        } else {
+          setConfirmationMessage(`Account details for "${accountNumber}" not found.`);
+          setAccountName('');
+        }
+      } catch (error) {
+        console.error('Error verifying account details:', error);
+        if (error.response) {
+          setConfirmationMessage(
+            `Error verifying account details: ${error.response.data.message || 'Receiver name not found.'}`
+          );
+        } else {
+          setConfirmationMessage('Error verifying account details. Please try again.');
+        }
+        setAccountName('');
+      } finally {
+        setIsVerifying(false);
       }
-    } catch (error) {
-      console.error('Error confirming receiver details:', error);
-      setReceiverConfirmationMessage('Error confirming receiver details.');
-      setIsReceiverConfirmed(false);
-      setResponseDetails({ accountNumber: '', accountName: '' });
+    };
+
+    verifyAccountNumber();
+  }, [accountNumber, accountBankCode]);
+
+  const handleSubmit = async (values, { setFieldError }) => {
+    if (!confirmationMessage.toLowerCase().includes('confirmed')) {
+      setFieldError('accountNumber', 'Account verification failed. Please try again.');
+      return;
     }
+
+    console.log('Navigating to next step with data:', {
+      accountName: accountName,
+      bankName: values.bankName,
+      accountNumber,
+      accountBankCode,
+    });
+    nextStep({
+      accountName: accountName,
+      bankName: values.bankName,
+      accountNumber,
+      accountBankCode,
+    });
   };
 
   return (
@@ -90,34 +108,25 @@ const RecipientDetails = ({ nextStep }) => {
           accountNumber: '',
           country: '',
           bankName: '',
-          recieverName: '',
         }}
         validationSchema={RecieverSchema}
-        onSubmit={async (values) => {
-          if (isReceiverConfirmed) {
-            nextStep(
-              values.recieverName,
-              values.account_name,
-              values.bankName,
-              values.accountNumber,
-              values.accountBankCode
-            );
-          }
-        }}>
+        onSubmit={handleSubmit}>
         {({ values, setFieldValue }) => (
           <Form>
             <div className="flex flex-col items-left gap-2">
               <label htmlFor="accountNumber" className="text-left font-md text-md">
                 Enter Account Details
               </label>
-              <Field
-                name="accountNumber"
+              <input
                 type="text"
+                name="accountNumber"
                 placeholder="Enter Recipient Account Number"
-                className="xl:w-[700px] w-[400px]  border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                 onChange={(e) => {
-                  setFieldValue('accountNumber', e.target.value);
-                  setReceiverConfirmationMessage('');
+                  const value = e.target.value;
+                  setAccountNumber(value);
+                  setFieldValue('accountNumber', value);
+                  setConfirmationMessage('');
                 }}
               />
               <ErrorMessage
@@ -140,11 +149,11 @@ const RecipientDetails = ({ nextStep }) => {
                 className="xl:w-[700px] w-[400px]  border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm">
                 <option value="" label="Select a country" />
                 <option value="NG" label="Nigeria" />
-                <option value="GH" label="Ghana" />
+                {/* <option value="GH" label="Ghana" />
                 <option value="KE" label="Kenya" />
                 <option value="UG" label="Uganda" />
                 <option value="SA" label="South Africa" />
-                <option value="TZ" label="Tanzania" />
+                <option value="TZ" label="Tanzania" /> */}
               </Field>
             </div>
             <div className="flex flex-col w-full py-4 space-y-4">
@@ -159,8 +168,11 @@ const RecipientDetails = ({ nextStep }) => {
                   placeholder="Type to search bank"
                   onChange={(e) => {
                     setFieldValue('bankName', e.target.value);
-                    handleBankSearch(e);
-                    setIsBankSelected(false);
+                    setFilteredBanks(
+                      banks.filter((bank) =>
+                        bank.name.toLowerCase().includes(e.target.value.toLowerCase())
+                      )
+                    );
                   }}
                   className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                 />
@@ -189,44 +201,36 @@ const RecipientDetails = ({ nextStep }) => {
               />
             </div>
             <div className="flex flex-col w-full py-4 space-y-4">
-              <label htmlFor="recieverName" className="text-left font-md text-md">
+              <label htmlFor="confirmReceiverName" className="text-left font-md text-md">
                 Confirm Receiver's Name
               </label>
-              <Field
-                name="recieverName"
-                type="text"
-                onChange={(e) => {
-                  setFieldValue('recieverName', e.target.value);
-                  setReceiverConfirmationMessage('');
-                }}
-                onBlur={() => {
-                  confirmReceiverDetails(values, values.accountNumber, values.recieverName);
-                }}
-                className="xl:w-[700px] w-[400px]  border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
-              />
-              <ErrorMessage
-                name="recieverName"
-                component="span"
-                className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
-              />
-              {receiverConfirmationMessage && (
-                <span
-                  className={`text-xs md:text-base ${isReceiverConfirmed ? 'text-lightBlue' : 'text-red-500'}`}>
-                  {receiverConfirmationMessage}
-                </span>
-              )}
-              {isReceiverConfirmed && (
-                <div className="text-xs md:text-base text-lightBlue">
-                  <p>Account Number: {responseDetails.accountNumber}</p>
-                  <p>Account Name: {responseDetails.accountName}</p>
-                </div>
-              )}
+              <div
+                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                readOnly>
+                {isVerifying
+                  ? 'Verifying...'
+                  : confirmationMessage.includes('confirmed')
+                    ? confirmationMessage.split(': ')[1]
+                    : 'Enter account number to verify'}
+              </div>
+              <span
+                className={`text-xs md:text-sm mt-1 ${
+                  confirmationMessage.includes('not found') || confirmationMessage.includes('Error')
+                    ? 'text-[#db3a3a]'
+                    : 'text-[#00678F]'
+                }`}>
+                {confirmationMessage.includes('not found') || confirmationMessage.includes('Error')
+                  ? 'Receiver name not found or verification failed'
+                  : confirmationMessage.includes('confirmed')
+                    ? 'Receiver name confirmed'
+                    : ''}
+              </span>
             </div>
             <div className="flex justify-end">
               <button
                 type="submit"
-                disabled={!isReceiverConfirmed}
-                className={`rounded-[5px] text-xs md:text-base py-2 border border-lightBlue bg-lightBlue w-[250px] xl:mr-0 mr-5 xl:w-[300px] text-primary ${!isReceiverConfirmed ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                disabled={isVerifying || !confirmationMessage.toLowerCase().includes('confirmed')}
+                className="rounded-[5px] text-xs md:text-base py-2 border border-lightBlue bg-lightBlue w-[250px] xl:mr-0 mr-5 xl:w-[300px] text-primary">
                 Next
               </button>
             </div>
