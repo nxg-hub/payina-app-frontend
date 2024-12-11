@@ -334,157 +334,161 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import TransactionModal from '../utilities/TransactionModal';
 import CustomButton from '../components/button/button';
 
-const WalletBalanceChecker = forwardRef(({ amount, onInsufficientFunds, onSufficientFunds }, ref) => {
-  const navigate = useNavigate();
-  const [balance, setBalance] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [newAuthToken] = useLocalStorage('authToken', '');
-  const [showTransferModal, setShowTransferModal] = useState(false);
-  const [showInsufficientModal, setShowInsufficientModal] = useState(false);
-  const [bankDetails, setBankDetails] = useState({
-    accountNumber: '',
-    bankName: '',
-  });
+const WalletBalanceChecker = forwardRef(
+  ({ amount, onInsufficientFunds, onSufficientFunds }, ref) => {
+    const navigate = useNavigate();
+    const [balance, setBalance] = useState(null);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [newAuthToken] = useLocalStorage('authToken', '');
+    const [showTransferModal, setShowTransferModal] = useState(false);
+    const [showInsufficientModal, setShowInsufficientModal] = useState(false);
+    const [bankDetails, setBankDetails] = useState({
+      accountNumber: '',
+      bankName: '',
+    });
 
-  const fetchWalletBalance = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await fetch(import.meta.env.VITE_GET_WALLET_ENDPOINT, {
-        method: 'GET',
-        headers: {
-          accept: '*/*',
-          apiKey: import.meta.env.VITE_API_KEY,
-          Authorization: `Bearer ${newAuthToken}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        const text = await response.text();
-        console.error('Raw API Response:', text);
-        throw new Error(`API error: ${response.status} ${response.statusText}`);
-      }
-
-      const text = await response.text();
-      if (!text) {
-        throw new Error('Empty response from server');
-      }
-
-      let data;
+    const fetchWalletBalance = async () => {
       try {
-        data = JSON.parse(text);
-        console.log('Wallet API Response:', data);
-      } catch (e) {
-        console.error('JSON Parse Error:', e);
-        console.error('Raw Response:', text);
-        throw new Error('Invalid JSON response from server');
+        setLoading(true);
+        setError(null);
+
+        const response = await fetch(import.meta.env.VITE_GET_WALLET_ENDPOINT, {
+          method: 'GET',
+          headers: {
+            accept: '*/*',
+            apiKey: import.meta.env.VITE_API_KEY,
+            Authorization: `Bearer ${newAuthToken}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          const text = await response.text();
+          console.error('Raw API Response:', text);
+          throw new Error(`API error: ${response.status} ${response.statusText}`);
+        }
+
+        const text = await response.text();
+        if (!text) {
+          throw new Error('Empty response from server');
+        }
+
+        let data;
+        try {
+          data = JSON.parse(text);
+          console.log('Wallet API Response:', data);
+        } catch (e) {
+          console.error('JSON Parse Error:', e);
+          console.error('Raw Response:', text);
+          throw new Error('Invalid JSON response from server');
+        }
+
+        const {
+          balance: { amount: ledgerBalance },
+          payStackVirtualAccountNumber,
+          bankName,
+        } = data.data;
+
+        setBalance(ledgerBalance);
+        setBankDetails({
+          accountNumber: payStackVirtualAccountNumber || '',
+          bankName: bankName || '',
+        });
+
+        if (amount && Number(amount) > ledgerBalance) {
+          setShowInsufficientModal(true);
+          onInsufficientFunds?.(ledgerBalance, Number(amount));
+        } else if (amount) {
+          onSufficientFunds?.();
+        }
+      } catch (err) {
+        console.error('Error fetching balance:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
+    };
 
-      const { balance: { amount: ledgerBalance }, payStackVirtualAccountNumber, bankName } = data.data;
+    useImperativeHandle(ref, () => ({
+      checkBalance: fetchWalletBalance,
+    }));
 
-      setBalance(ledgerBalance);
-      setBankDetails({
-        accountNumber: payStackVirtualAccountNumber || '',
-        bankName: bankName || '',
-      });
-
-      if (amount && Number(amount) > ledgerBalance) {
-        setShowInsufficientModal(true);
-        onInsufficientFunds?.(ledgerBalance, Number(amount));
-      } else if (amount) {
-        onSufficientFunds?.();
+    useEffect(() => {
+      if (newAuthToken) {
+        fetchWalletBalance();
+      } else {
+        setError('No authentication token available');
+        setLoading(false);
       }
-    } catch (err) {
-      console.error('Error fetching balance:', err);
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    }, [newAuthToken]);
+
+    const handleFundWithCard = () => {
+      navigate('/account/fund-wallet');
+      setShowInsufficientModal(false);
+    };
+
+    const handleTransfer = () => {
+      setShowInsufficientModal(false);
+      setShowTransferModal(true);
+    };
+
+    if (!CustomButton) {
+      return null; // Or a fallback UI
     }
-  };
 
-  useImperativeHandle(ref, () => ({
-    checkBalance: fetchWalletBalance
-  }));
+    return (
+      <div>
+        <div className="flex justify-start text-black">
+          <h2>Available Balance: </h2>
+          <p>
+            {loading
+              ? 'Checking balance...'
+              : balance !== null
+                ? `₦${Number(balance).toLocaleString()}`
+                : 'Unable to fetch balance'}
+          </p>
+        </div>
 
-  useEffect(() => {
-    if (newAuthToken) {
-      fetchWalletBalance();
-    } else {
-      setError('No authentication token available');
-      setLoading(false);
-    }
-  }, [newAuthToken]);
-
-  const handleFundWithCard = () => {
-    navigate('/account/fund-wallet');
-    setShowInsufficientModal(false);
-  };
-
-  const handleTransfer = () => {
-    setShowInsufficientModal(false);
-    setShowTransferModal(true);
-  };
-
-  if (!CustomButton) {
-    return null; // Or a fallback UI
-  }
-
-  return (
-    <div>
-      <div className="flex justify-start text-black">
-        <h2>Available Balance: </h2>
-        <p>
-          {loading ? (
-            'Checking balance...'
-          ) : balance !== null ? (
-            `₦${Number(balance).toLocaleString()}`
-          ) : (
-            'Unable to fetch balance'
-          )}
-        </p>
+        {showTransferModal && (
+          <TransactionModal
+            isOpen={showTransferModal}
+            onClose={() => setShowTransferModal(false)}
+            status="info"
+            title="Bank Transfer Details"
+            message={
+              <div className="space-y-4">
+                {bankDetails.accountNumber && (
+                  <div>
+                    <p className="font-semibold">Account Number:</p>
+                    <p className="text-lg">{bankDetails.accountNumber}</p>
+                  </div>
+                )}
+                {bankDetails.bankName && (
+                  <div>
+                    <p className="font-semibold">Bank Name:</p>
+                    <p className="text-lg">{bankDetails.bankName}</p>
+                  </div>
+                )}
+                <p className="text-sm text-gray-400 mt-4">
+                  Please note that it may take a few minutes for your transfer to reflect in your
+                  wallet balance.
+                </p>
+              </div>
+            }
+            customButtons={
+              <button
+                onClick={() => setShowTransferModal(false)}
+                className="w-full px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 mt-4">
+                Close
+              </button>
+            }
+          />
+        )}
       </div>
-
-      {showTransferModal && (
-        <TransactionModal
-          isOpen={showTransferModal}
-          onClose={() => setShowTransferModal(false)}
-          status="info"
-          title="Bank Transfer Details"
-          message={
-            <div className="space-y-4">
-              {bankDetails.accountNumber && (
-                <div>
-                  <p className="font-semibold">Account Number:</p>
-                  <p className="text-lg">{bankDetails.accountNumber}</p>
-                </div>
-              )}
-              {bankDetails.bankName && (
-                <div>
-                  <p className="font-semibold">Bank Name:</p>
-                  <p className="text-lg">{bankDetails.bankName}</p>
-                </div>
-              )}
-              <p className="text-sm text-gray-400 mt-4">
-                Please note that it may take a few minutes for your transfer to reflect in your wallet balance.
-              </p>
-            </div>
-          }
-          customButtons={
-            <button
-              onClick={() => setShowTransferModal(false)}
-              className="w-full px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 mt-4"
-            >
-              Close
-            </button>
-          }
-        />
-      )}
-    </div>
-  );
-});
+    );
+  }
+);
 
 WalletBalanceChecker.displayName = 'WalletBalanceChecker';
 
