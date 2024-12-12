@@ -1,5 +1,6 @@
 // import { useContext } from 'react';
 import React, { createContext, useContext, useState, useCallback } from 'react';
+import { persistor } from '../Redux/Store';
 
 const AuthContext = createContext();
 
@@ -16,6 +17,7 @@ export const AuthProvider = ({ children }) => {
     // Perform logout logic here
     setUserCredentials(null);
     localStorage.removeItem('userEmail');
+    persistor.purge(); // Clears all persisted state
   }, []);
 
   return (

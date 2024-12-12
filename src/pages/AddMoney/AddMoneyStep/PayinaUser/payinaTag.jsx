@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import { PayinaSchema } from '../../schemas/schemas.js';
 import axios from 'axios';
@@ -11,190 +11,171 @@ const PayinaTag = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showDecline, setShowDecline] = useState(false);
   const [confirmationMessage, setConfirmationMessage] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [loginUserData, setLoginUserData] = useState(null);
+  const debounceTimeoutRef = useRef(null);
 
-  const verifyPayinaUsername = async (payinaUsername) => {
-    try {
-      const endpoint = import.meta.env.VITE_GET_PAYINA_TAG_ENDPOINT.replace(
-        '{username}',
-        payinaUsername
-      );
-      console.log(`Requesting endpoint for username: ${endpoint}`);
-
-      const response = await axios.get(endpoint);
-      console.log('API username response data:', response.data);
-      if (response.data && response.data.payinaUserName) {
-        const successMessage = `Username "${response.data.payinaUserName}" verified successfully.`;
-        setConfirmationMessage(successMessage);
-        return response.data.payinaUserName;
+  useEffect(() => {
+    const fetchLoginUserData = async () => {
+      if (!newAuthToken) {
+        console.error('No auth token available');
+        return;
       }
-      setConfirmationMessage('Verification failed, user not found.');
-      return null;
-    } catch (error) {
-      if (error.response && error.response.status === 404) {
-        console.error(`Payina username "${payinaUsername}" not found.`);
-        setConfirmationMessage(`Payina username "${payinaUsername}" not found.`);
-      } else {
-        console.error('Error verifying payina username:', error);
-        setConfirmationMessage('Error verifying Payina username.');
+      console.log('Auth Token:', newAuthToken);
+      try {
+        const endpoint = import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT;
+        const response = await axios.get(endpoint, {
+          headers: { Authorization: `Bearer ${newAuthToken}` },
+        });
+        if (response.data) {
+          setLoginUserData(response.data);
+        } else {
+          console.warn('No user data found in response.');
+          setLoginUserData({});
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        setLoginUserData(null);
       }
-      return null;
-    }
-  };
-
-  const verifyAccountNumber = async (accountNumber) => {
-    try {
-      const endpoint = import.meta.env.VITE_GET_ACCOUNT_NUMBER_ENDPOINT;
-      const response = await axios.get(`${endpoint}?accountNumber=${accountNumber}`);
-      console.log('API account number response:', response.data);
-
-      const isValid = response.data && response.data.customerId != null;
-      if (isValid) {
-        setConfirmationMessage(`Account number "${accountNumber}" verified successfully.`);
-      } else {
-        setConfirmationMessage('Invalid account number.');
-      }
-      return isValid;
-    } catch (error) {
-      console.error('Error verifying account number:', error);
-      setConfirmationMessage('Error verifying account number.');
-      return false;
-    }
-  };
-
-  const getRequesterData = async (payinaTag) => {
-    const endpoint = import.meta.env.VITE_GET_PAYINA_TAG_ENDPOINT.replace('{username}', payinaTag);
-    const response = await axios.get(endpoint);
-    return response.data;
-  };
-
-  const getAccountData = async (accountNumber) => {
-    const endpoint = import.meta.env.VITE_GET_ACCOUNT_NUMBER_ENDPOINT;
-    const response = await axios.get(`${endpoint}?accountNumber=${accountNumber}`);
-    return response.data;
-  };
-
-  const getLoginUserData = async () => {
-    if (!newAuthToken) {
-      console.error('No auth token available');
-      throw new Error('Authentication token is required');
-    }
-    console.log('Auth Token:', newAuthToken);
-    try {
-      const response = await axios.get(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${newAuthToken}`,
-        },
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Error getting login user data:', error);
-      throw error;
-    }
-  };
-
-  const requestMoney = async (data) => {
-    const endpoint = import.meta.env.VITE_REQUEST_MONEY_ENDPOINT;
-    const headers = {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${newAuthToken}`,
     };
 
+    fetchLoginUserData();
+  }, [newAuthToken]);
+
+  const verifyPayinaTag = async (payinaTag) => {
     try {
-      console.log('Data being sent to request money:', data);
-      const response = await axios.post(endpoint, data, { headers });
-      console.log('Request money response:', response.data);
-      console.log('Money request successfully sent');
-      setShowSuccess(true);
+      if (isNaN(payinaTag)) {
+        const endpoint = import.meta.env.VITE_GET_PAYINA_TAG_ENDPOINT.replace(
+          '{username}',
+          payinaTag
+        );
+        const response = await axios.get(endpoint);
+        if (response.data && response.data.payinaUserName) {
+          return {
+            isValid: true,
+            message: `${response.data.firstName} ${response.data.lastName}`,
+            walletId: response.data.walletId,
+            email: response.data.email,
+          };
+        }
+        return { isValid: false, message: 'PayinaTag not found.' };
+      } else {
+        const endpoint = import.meta.env.VITE_GET_ACCOUNT_NUMBER_ENDPOINT;
+        const response = await axios.get(`${endpoint}?accountNumber=${payinaTag}`);
+        if (response.data && response.data.customerId != null) {
+          return {
+            isValid: true,
+            message: `${response.data.firstName} ${response.data.lastName}`,
+            walletId: response.data.walletId,
+            email: response.data.email,
+          };
+        }
+        return { isValid: false, message: 'Account number not found.' };
+      }
     } catch (error) {
-      console.error(
-        'Error requesting money:',
-        error.response ? error.response.data : error.message
-      );
+      console.error('Error verifying PayinaTag:', error);
+      return { isValid: false, message: 'Error verifying PayinaTag.' };
+    }
+  };
+
+  const handleInputChange = (payinaTag, setFieldValue) => {
+    if (!payinaTag) {
+      setConfirmationMessage('');
+      setFieldValue('confirmName', '');
+      return;
+    }
+
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    debounceTimeoutRef.current = setTimeout(async () => {
+      setIsVerifying(true);
+      const validation = await verifyPayinaTag(payinaTag);
+      setIsVerifying(false);
+      setConfirmationMessage(validation.message);
+
+      if (validation.isValid) {
+        setFieldValue('confirmName', validation.message);
+        setFieldValue('destinationId', validation.walletId);
+        setFieldValue('destinationEmail', validation.email);
+      } else {
+        setFieldValue('confirmName', '');
+        setFieldValue('destinationId', '');
+        setFieldValue('destinationEmail', '');
+      }
+    }, 1800);
+  };
+
+  const requestMoney = async (payload) => {
+    try {
+      const endpoint = import.meta.env.VITE_REQUEST_MONEY_ENDPOINT;
+      const response = await axios.post(endpoint, payload, {
+        headers: { Authorization: `Bearer ${newAuthToken}` },
+      });
+      if (response.status === 200) {
+        setShowSuccess(true);
+      } else {
+        setShowDecline(true);
+      }
+    } catch (error) {
+      console.error('Error requesting money:', error);
       setShowDecline(true);
-      throw new Error('Failed to request money');
     }
   };
 
   const handleSubmit = async (values, { setFieldError }) => {
     setConfirmationMessage('');
-    if (values.payinaTag !== values.confirmName) {
-      setFieldError('confirmName', 'Payina Tag and Confirm Payina Tag must match.');
-      setConfirmationMessage('Payina Tag and Confirm Payina Tag must match.');
+
+    if (!values.confirmName || confirmationMessage.includes('not found')) {
+      setFieldError('confirmName', 'Invalid PayinaTag or Account Number. Please try again.');
       return;
     }
 
-    let isValid;
-    const requestData = {
+    if (!loginUserData || !loginUserData.phoneNumber || !loginUserData.email) {
+      console.error('Incomplete user data for transaction.');
+      setFieldError('confirmName', 'Error fetching user data. Please try again later.');
+      return;
+    }
+
+    const isAccountNumber = !isNaN(values.payinaTag);
+
+    const payload = {
       amount: Number(values.amount),
       purpose: values.purpose,
       requestType: 'PAYINA_USERNAME',
+      phoneNumber: loginUserData.phoneNumber,
+      approverEmail: values.destinationEmail,
+      requesterEmail: loginUserData.email,
+      requesterName: `${loginUserData.firstName} ${loginUserData.lastName}`,
+      senderName: values.confirmName,
+      payinaUsername: isAccountNumber ? '' : values.payinaTag,
+      payinaUserAccountNumber: isAccountNumber ? values.payinaTag : '',
+      requesterWalletId: loginUserData.walletId,
+      senderWalletId: values.destinationId,
     };
-    console.log('Payload being sent to backend:', requestData);
-    if (isNaN(values.payinaTag)) {
-      const payinaUsername = await verifyPayinaUsername(values.payinaTag);
-      isValid = payinaUsername !== null;
 
-      if (isValid) {
-        const requesterData = await getRequesterData(values.payinaTag);
-        const loginUserData = await getLoginUserData();
-
-        Object.assign(requestData, {
-          phoneNumber: loginUserData.phoneNumber,
-          approverEmail: requesterData.email,
-          requesterEmail: loginUserData.email,
-          requesterName: loginUserData.firstName,
-          senderName: requesterData.firstName,
-          payinaUsername: values.payinaTag,
-          requesterWalletId: loginUserData.walletId,
-          senderWalletId: requesterData.walletId,
-        });
-
-        await requestMoney(requestData);
-      } else {
-        setFieldError('confirmName', 'Invalid Payina username. Please re-enter the correct one.');
-        setConfirmationMessage('Invalid Payina username. Please try again.');
-      }
-    } else {
-      isValid = await verifyAccountNumber(values.payinaTag);
-      console.log(`Account number validity for "${values.payinaTag}":`, isValid);
-
-      if (isValid) {
-        const accountData = await getAccountData(values.payinaTag);
-        const loginUserData = await getLoginUserData();
-
-        Object.assign(requestData, {
-          phoneNumber: loginUserData.phoneNumber,
-          approverEmail: accountData.email,
-          requesterEmail: loginUserData.email,
-          requesterName: loginUserData.firstName,
-          senderName: accountData.firstName,
-          payinaUserAccountNumber: values.payinaTag,
-          requesterWalletId: loginUserData.walletId,
-          senderWalletId: accountData.walletId,
-        });
-
-        await requestMoney(requestData);
-      } else {
-        setFieldError('confirmName', 'Invalid account number. Please re-enter the correct one.');
-        setConfirmationMessage('Invalid Account Number Please try again.');
-      }
-    }
+    console.log('Payload being sent to backend:', payload);
+    await requestMoney(payload);
   };
+
   if (showSuccess) return <RequestSent />;
   if (showDecline) return <RequestDecline />;
+
   return (
-    <div className="">
+    <div>
       <Formik
         initialValues={{
           payinaTag: '',
           confirmName: '',
           amount: '',
           purpose: '',
+          destinationId: '',
+          destinationEmail: '',
         }}
         validationSchema={PayinaSchema}
         onSubmit={handleSubmit}>
-        {() => (
+        {({ setFieldValue }) => (
           <Form>
             <div className="flex flex-col w-full gap-2">
               <label htmlFor="payinaTag" className="text-left font-md text-md">
@@ -203,8 +184,13 @@ const PayinaTag = () => {
               <Field
                 name="payinaTag"
                 type="text"
-                placeholder="Enter Recipient Payina Tag"
+                placeholder="Enter Recipient Payina Tag or Account Number"
                 className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                onChange={(e) => {
+                  const payinaTag = e.target.value;
+                  setFieldValue('payinaTag', payinaTag);
+                  handleInputChange(payinaTag, setFieldValue);
+                }}
               />
               <ErrorMessage
                 name="payinaTag"
@@ -212,6 +198,7 @@ const PayinaTag = () => {
                 className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
               />
             </div>
+
             <div className="flex flex-col w-full gap-2 py-2">
               <label htmlFor="confirmName" className="text-left font-md text-md">
                 Confirm Payina Tag
@@ -221,21 +208,28 @@ const PayinaTag = () => {
                 type="text"
                 placeholder=""
                 className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                readOnly
+                value={confirmationMessage || ''}
               />
-              <ErrorMessage
-                name="confirmName"
-                component="span"
-                className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
-              />
-              <span className="text-green-600 text-xs">{confirmationMessage}</span>
+              <span
+                className={`text-xs md:text-sm mt-1 ${
+                  confirmationMessage.includes('not found') ? 'text-[#db3a3a]' : 'text-[#00678F]'
+                }`}>
+                {isVerifying
+                  ? 'Verifying...'
+                  : confirmationMessage.includes('not found')
+                    ? 'PayinaTag not found'
+                    : confirmationMessage}
+              </span>
             </div>
-            <div className="flex flex-col  w-full gap-2 py-2">
+
+            <div className="flex flex-col w-full gap-2 py-2">
               <label htmlFor="amount" className="text-left font-md text-md">
-                How Much are you requesting?
+                Amount
               </label>
               <Field
                 name="amount"
-                type="text"
+                type="number"
                 placeholder="Enter Amount"
                 className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
               />
@@ -245,14 +239,15 @@ const PayinaTag = () => {
                 className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
               />
             </div>
-            <div className="flex flex-col  w-full gap-2 py-2">
+
+            <div className="flex flex-col w-full gap-2 py-2">
               <label htmlFor="purpose" className="text-left font-md text-md">
                 Purpose
               </label>
               <Field
                 name="purpose"
                 type="text"
-                placeholder=""
+                placeholder="Enter Purpose"
                 className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
               />
               <ErrorMessage
@@ -261,11 +256,12 @@ const PayinaTag = () => {
                 className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
               />
             </div>
+
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="rounded-[5px] text-xs md:text-base  py-2 border border-lightBlue bg-lightBlue w-[250px] xl:mr-0 mr-5 xl:w-[300px] text-primary">
-                Next
+                className="rounded-[5px] text-xs md:text-base py-2 border border-lightBlue bg-lightBlue w-[250px] xl:mr-0 mr-5 xl:w-[300px] text-primary">
+                Submit
               </button>
             </div>
           </Form>

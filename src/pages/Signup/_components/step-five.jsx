@@ -4,7 +4,7 @@ import CustomButton from '../../../components/button/button';
 import { useState } from 'react';
 
 const StepFiveValidationSchema = Yup.object().shape({
-  username: Yup.string().required('Username is required')
+  username: Yup.string().required('Username is required'),
 });
 export const StepFive = ({ next, bvnData, email, initialValues }) => {
   const [apiError, setApiError] = useState('');
@@ -18,7 +18,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
       const response = await fetch(import.meta.env.VITE_SAVE_USERNAME_ENDPOINT, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           payinaUserName: values.username,
@@ -28,8 +28,8 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
           lastName: bvnData.lastName,
           dob: bvnData.dob,
           bvn: initialValues.identificationNumber,
-          accountType: 'corporate'
-        })
+          accountType: 'corporate',
+        }),
       });
 
       const data = await response.json();
@@ -54,7 +54,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
       </div>
       <Formik
         initialValues={{
-          username: ''
+          username: '',
         }}
         validationSchema={StepFiveValidationSchema}
         onSubmit={(values) => handleSubmit(values)}>
@@ -70,7 +70,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 name="firstName"
                 value={bvnData.firstName}
                 readOnly
-                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+                className=" w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
               />
             </div>
 
@@ -84,7 +84,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 name="lastName"
                 value={bvnData.lastName}
                 readOnly
-                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+                className="w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
               />
             </div>
 
@@ -98,7 +98,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 name="gender"
                 value={bvnData.gender}
                 readOnly
-                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+                className=" w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
               />
             </div>
 
@@ -112,7 +112,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 name="dob"
                 value={bvnData.dob}
                 readOnly
-                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+                className="w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
               />
             </div>
 
@@ -125,7 +125,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 id="username"
                 name="username"
                 placeholder="Enter Your Username"
-                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+                className="w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
               />
               <ErrorMessage
                 name="username"

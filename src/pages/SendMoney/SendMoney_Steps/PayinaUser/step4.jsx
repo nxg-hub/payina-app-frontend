@@ -31,7 +31,7 @@ const EnterPin = ({ data }) => {
         });
         console.log('User data fetched successfully:', userResponse.data);
         setUserEmail(userResponse.data.email);
-        setSenderName(userResponse.data.firstName);
+        setSenderName(`${userResponse.data.firstName} ${userResponse.data.lastName}`);
         setSourceId(userResponse.data.walletId);
       } catch (error) {
         console.error('Error fetching user data:', error.response?.data || error.message);

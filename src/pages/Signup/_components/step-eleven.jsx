@@ -155,7 +155,7 @@ export const StepEleven = ({ next, HomeAddress }) => {
                       handleChange(e);
                       setBusinessState(e.target.value);
                     }}
-                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-[10px] bg-secondary">
+                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base  rounded-[5px] py-2 px-[10px] bg-secondary">
                     <option value="" disabled>
                       Select State
                     </option>
@@ -177,7 +177,7 @@ export const StepEleven = ({ next, HomeAddress }) => {
                   <Field
                     as="select"
                     name="businessLGA"
-                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-[10px] bg-secondary">
+                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base rounded-[5px] py-2 px-[10px] bg-secondary">
                     <option value="" disabled>
                       Select Local Government
                     </option>
