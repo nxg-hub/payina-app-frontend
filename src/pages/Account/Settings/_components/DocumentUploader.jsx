@@ -42,8 +42,6 @@ const DocumentUploader = () => {
       // Wait for all uploads to complete
       let responses = await Promise.all(uploadFiles);
 
-      console.log(responses[0].ok && responses[1].ok && responses[2].ok);
-
       if (responses[0].ok && responses[1].ok && responses[2].ok) {
         setUploadStatus('Files uploaded successfully!');
         setSuccess(true);

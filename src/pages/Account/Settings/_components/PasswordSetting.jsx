@@ -69,7 +69,7 @@ const PasswordSetting = () => {
                 }`}
                 type="submit"
                 disabled={isSubmitting}>
-                {loading ? 'Loading...' : 'Save Changes'}
+                {loading ? 'Loading...' : 'Reset'}
               </button>
             </div>
           </Form>
