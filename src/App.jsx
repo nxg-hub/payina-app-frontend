@@ -42,6 +42,7 @@ import TransactionHistory from './pages/Account/Dashboard/_components/transactio
 import BillerDetails from './pages/Account/UserPages/billerDetails.jsx';
 // import PlansReview from './pages/befour/PlansReview.jsx';
 import BillerPlans from './pages/Account/UserPages/billerPlans.jsx';
+import AddInventory from './pages/Account/Inventory/AddInventory.jsx';
 import PersonalLogin from './pages/PersonalLogin/index.jsx';
 import PersonalSignup from './pages/PersonalSignup/index.jsx';
 // import PaymentPage from './pages/Account/UserPages/fund_wallet';
@@ -108,10 +109,11 @@ function App() {
             <Route path="/account/payroll" element={<Payroll />} />
             <Route path="/account/transaction" element={<Transaction />} />
             <Route path="/account/inventory" element={<Inventory />} />
+            <Route path="/account/inventoryAdd" element={<AddInventory />} />
             <Route path="/account/more" element={<More />} />
             <Route path="/account/settings" element={<Settings />} />
-            <Route path="/airtime" element={<Airtime />} />
             <Route path="/account/airtime" element={<UserAirtime />} />
+            <Route path="/airtime" element={<Airtime />} />
             <Route path="/account/bills" element={<Billers />} />
             <Route path="/account/bills/details" element={<BillerDetails />} />
             <Route path="/account/bills/plans" element={<BillerPlans />} />

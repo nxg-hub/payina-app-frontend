@@ -233,7 +233,7 @@ const Bettwo = () => {
             onChange={handleBillerChange}
             className="border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-black text-slate-600 w-[64%] mb-3">
             <option value="">Select a Service platform</option>
-            {billerOptions.map((biller) => (
+            {billerOptions?.map((biller) => (
               <option key={biller.slug} value={biller.slug}>
                 {biller.name}
               </option>

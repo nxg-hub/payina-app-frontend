@@ -134,7 +134,7 @@ export const StepEight = ({ next }) => {
                   <Field
                     as="select"
                     name="country"
-                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-[10px] bg-secondary">
+                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base rounded-[5px] py-2 px-[10px] bg-secondary">
                     <option value="" disabled>
                       Select Country
                     </option>
@@ -162,7 +162,7 @@ export const StepEight = ({ next }) => {
                       formik.setFieldValue('state', e.target.value);
                     }}
                     value={formik.values.state}
-                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-[10px] bg-secondary">
+                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base  rounded-[5px] py-2 px-[10px] bg-secondary">
                     <option value="" disabled>
                       Select State
                     </option>
@@ -184,7 +184,7 @@ export const StepEight = ({ next }) => {
                   <Field
                     as="select"
                     name="lga"
-                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-[10px] bg-secondary">
+                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base  rounded-[5px] py-2 px-[10px] bg-secondary">
                     <option value="" disabled>
                       Select Local Government
                     </option>
