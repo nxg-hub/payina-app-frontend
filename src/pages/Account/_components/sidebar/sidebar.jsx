@@ -33,12 +33,12 @@ export const Sidebar = () => {
   };
   const isPersonalDashboard = currentRoute === '/personal/dashboard';
 
-  const handleLogout = () => {
-    localStorage.removeItem('userEmail');
-    persistor.purge(); // Clears all persisted state
-    dispatch(reSetUserDetails());
-    navigate('/');
-  };
+  // const handleLogout = () => {
+  //   localStorage.removeItem('userEmail');
+  //   persistor.purge(); // Clears all persisted state
+  //   dispatch(reSetUserDetails());
+  //   navigate('/');
+  // };
   // useEffect(() => {
   //   const fetchUserDetails = async () => {
   //     if (!newAuthToken) {
