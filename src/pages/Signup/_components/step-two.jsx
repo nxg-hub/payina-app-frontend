@@ -8,6 +8,7 @@ import CustomButton from '../../../components/button/button';
 export const StepTwo = ({ next, initialValues }) => {
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
+  // const [userType, setUserType] = useState('corporate')
 
   const handleSubmit = async (values) => {
     try {
@@ -115,7 +116,7 @@ export const StepTwo = ({ next, initialValues }) => {
         enableReinitialize>
         {() => (
           <Form>
-            <div className="mt-4 ml-[8%]">
+            {/* <div className="mt-4 ml-[8%]">
               <label htmlFor="userType" className="text-sm font-normal text-lightBlue mr-3">
                 User Type
               </label>
@@ -128,7 +129,7 @@ export const StepTwo = ({ next, initialValues }) => {
                 <option value="personal">Personal</option>
                 <option value="corporate">Corporate</option>
               </select>
-            </div>
+            </div> */}
             <PhoneInput
               defaultCountry="ng"
               value={phone}
