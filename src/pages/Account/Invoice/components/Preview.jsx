@@ -3,9 +3,9 @@ import { useState, useEffect } from "react";
 
 const Preview = ({ className = "", updatedLineItems= [], corporateCustomerId= '', email}) => {
 
-  const { invoiceNumber, dateOfIssue, dueDate } = updatedLineItems[updatedLineItems.length - 1] || {};
-  const totalAmount = updatedLineItems.reduce((sum, item) => sum + item.total, 0); // Sum of item totals
-  const taxAmount = totalAmount * 0.075; // 7.5% tax of total amount
+  const { invoiceNumber, dateOfIssue, due_date } = updatedLineItems[updatedLineItems.length - 1] || {};
+  const totalAmount = updatedLineItems.reduce((sum, item) => sum + item.total, 0); 
+  const taxAmount = totalAmount * 0.075; 
   const totalAmountWithTax = totalAmount + taxAmount; 
 
   const [profileData, setProfileData] = useState({
@@ -16,14 +16,19 @@ const Preview = ({ className = "", updatedLineItems= [], corporateCustomerId= ''
     businessLGA: "",
   });
   const [customerId, setCustomerId] = useState(corporateCustomerId);
+  const [companyLogoUrl, setCompanyLogoUrl] = useState('');
+
 
   const authenticateEmail = async (email) => {
     try {
       const response = await fetch(`${import.meta.env.VITE_GET_USER_BY_EMAIL_ENDPOINT}?email=${encodeURIComponent(email)}`);
       if (response.ok) {
         const data = await response.json();
-        return data.customerId; 
-      } else {
+        return {
+          customerId: data.customerId,
+          companyLogoUrl: data.companyLogoUrl, 
+        };
+       } else {
         console.error('Failed to authenticate email:', response.statusText);
         return null;
       }
@@ -49,17 +54,18 @@ const Preview = ({ className = "", updatedLineItems= [], corporateCustomerId= ''
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        // Fetch customerId using the provided email
-        const fetchedCustomerId = await authenticateEmail(email);
+        const { customerId, companyLogoUrl } = await authenticateEmail(email);
         
-        if (!fetchedCustomerId) {
-          console.error('Failed to fetch customer ID.');
+        if (!customerId || !companyLogoUrl) {
+          console.error('Failed to fetch customer ID or company logo');
           return;
         }
         
-        setCustomerId(fetchedCustomerId);  
+        setCustomerId(customerId);  
+        setCompanyLogoUrl(companyLogoUrl);
 
-        const response = await fetch(`${import.meta.env.VITE_VIEW_PROFILE_ENDPOINT}${fetchedCustomerId}`);
+
+        const response = await fetch(`${import.meta.env.VITE_VIEW_PROFILE_ENDPOINT}${customerId}`);
         
         if (response.ok) {
           const xmlString = await response.text(); 
@@ -86,8 +92,8 @@ const Preview = ({ className = "", updatedLineItems= [], corporateCustomerId= ''
           <img
             className="w-24 h-24 rounded-full object-contain"
             alt="Company logo"
-            src="https://images.pexels.com/photos/258174/pexels-photo-258174.jpeg"
-          />
+            src={companyLogoUrl}
+            />
 
            <div className="w-full font-medium">
             <p className="m-0">{profileData.businessName}</p>
@@ -110,7 +116,7 @@ const Preview = ({ className = "", updatedLineItems= [], corporateCustomerId= ''
               </div>
               <div className="flex flex-row justify-between">
               <b>Due date:</b>
-                <span>{dueDate}</span>
+                <span>{due_date}</span>
               </div>
             </div>
           </div>
@@ -131,7 +137,7 @@ const Preview = ({ className = "", updatedLineItems= [], corporateCustomerId= ''
     <tbody>
     {updatedLineItems.map((item, index) => (
   <tr key={index}>
-    <td className="p-2 border-r border-black">{item.itemName}</td>
+    <td className="p-2 border-r border-black">{item.itemName||item.name}</td>
     <td className="p-2 border-r border-black">{item.quantity}</td>
     <td className="p-2 border-r border-black">{item.amount}</td>
     <td className="p-2 border-r border-black">0.075 </td>
@@ -164,7 +170,7 @@ Preview.propTypes = {
 
 Preview.defaultProps = {
   updatedLineItems: {
-    itemName: '',
+    name: '',
     quantity: 0,
     amount: 0,
     total: 0,
@@ -172,7 +178,7 @@ Preview.defaultProps = {
     invoiceNumber: '',
     dateOfIssue: '',
     due_date: '',
-  }, // Default to an empty object if no data is passed
+  }, 
 };
 
 export default Preview;

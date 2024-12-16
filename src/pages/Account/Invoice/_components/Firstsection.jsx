@@ -33,7 +33,6 @@ const Firstsection = ({ onClientSelect, setFilteredInvoices, setShowFiltered, cl
         if (response.ok) {
           const responseData = await response.json();
 
-          // Map response data to extract relevant client information
           const clientsData = responseData.map(client => ({
             id: client.id,
             firstName: client.firstName,
@@ -91,7 +90,7 @@ const Firstsection = ({ onClientSelect, setFilteredInvoices, setShowFiltered, cl
         const data = await response.json();
         setFilteredInvoices(data);
         setShowFiltered(true);
-        console.log("Filtered Invoices:", data);
+        // console.log("Filtered Invoices:", data);
       } catch (error) {
         console.error("Error filtering invoices:", error);
       } finally {
@@ -100,7 +99,7 @@ const Firstsection = ({ onClientSelect, setFilteredInvoices, setShowFiltered, cl
     };
 
     fetchFilteredInvoices();
-  }, [selectedClientId, beginDate, endDate, status]); // Trigger when any dependency changes
+  }, [selectedClientId, beginDate, endDate, status]); 
 
 
 
@@ -171,7 +170,7 @@ const Firstsection = ({ onClientSelect, setFilteredInvoices, setShowFiltered, cl
       handleClientClick(clientId, clientName);
     }}
     className="h-[30px] md:h-[48px] p-2 text-[9px] sm:text-[13px] md:text-base rounded-md w-[100%] md:w-full bg-[#A3F5FB]"
-    disabled={loadingClients} // Disable dropdown while loading
+    disabled={loadingClients}  
   >
     {loadingClients ? (
       <option value="" disabled>
