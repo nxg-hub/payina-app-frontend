@@ -23,7 +23,7 @@ const Card = ({ icon, title }) => (
 
 Card.propTypes = {
   icon: PropTypes.element.isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
 };
 
 export default Card;
