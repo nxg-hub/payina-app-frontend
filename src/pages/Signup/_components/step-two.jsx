@@ -8,6 +8,7 @@ import CustomButton from '../../../components/button/button';
 export const StepTwo = ({ next, initialValues }) => {
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
+  const [userType, setUserType] = useState('Corporate');
 
   const handleSubmit = async (values) => {
     try {

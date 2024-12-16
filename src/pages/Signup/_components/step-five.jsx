@@ -6,10 +6,11 @@ import { useState } from 'react';
 const StepFiveValidationSchema = Yup.object().shape({
   username: Yup.string().required('Username is required'),
 });
+
 export const StepFive = ({ next, bvnData, email, initialValues }) => {
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
-
+  const userEmail = localStorage.getItem('userEmail');
   const handleSubmit = async (values) => {
     setLoading(true);
     setApiError('');
@@ -23,7 +24,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
         body: JSON.stringify({
           payinaUserName: values.username,
           gender: bvnData.gender,
-          email: email,
+          email: userEmail,
           firstName: bvnData.firstName,
           lastName: bvnData.lastName,
           dob: bvnData.dob,

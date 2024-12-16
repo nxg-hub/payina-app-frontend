@@ -3,6 +3,7 @@ import CustomButton from '../../../components/button/button';
 import * as Yup from 'yup';
 
 export const StepSixteen = ({ next, email }) => {
+  const userEmail = localStorage.getItem('userEmail');
   const handleSubmit = async (values) => {
     // Merge OTP and Confirm OTP values into strings
     const otpValue = values.otp.join('');
@@ -13,16 +14,16 @@ export const StepSixteen = ({ next, email }) => {
       const requestData = {
         pin: otpValue,
         verifyPin: confirmOtpValue,
-        email: email // Pass the email from previous steps
+        email: userEmail, // Pass the email from previous steps
       };
 
       try {
         const response = await fetch(import.meta.env.VITE_TRANSACTION_PIN_ENDPOINT, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
-          body: JSON.stringify(requestData)
+          body: JSON.stringify(requestData),
         });
 
         if (response.ok) {
@@ -49,7 +50,7 @@ export const StepSixteen = ({ next, email }) => {
       .required('Confirm Transaction Pin is required')
       .test('match', 'Transaction Pins do not match', function (value) {
         return this.parent.otp.join('') === value.join('');
-      })
+      }),
   });
 
   return (

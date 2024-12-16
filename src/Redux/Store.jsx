@@ -3,17 +3,21 @@ import { combineReducers } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // Defaults to localStorage for web
 import userReducer from './UserSlice';
+import personalSignUpReducer from './PersonalSignUpSlice';
+import businessSignUpReducer from './BusinessSignUpSlice';
 
 // Configuration for redux-persist
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['user'], // Add reducers you want to persist here
+  whitelist: ['user', 'personalSignUp', 'businessSignUp'], // Add reducers you want to persist here
 };
 
 // Combine all reducers
 const rootReducer = combineReducers({
   user: userReducer,
+  personalSignUp: personalSignUpReducer,
+  businessSignUp: businessSignUpReducer,
 });
 
 // Create persisted reducer

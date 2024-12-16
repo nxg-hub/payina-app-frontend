@@ -14,16 +14,17 @@ const StepFifteenValidationSchema = Yup.object().shape({
         .matches(/^[0-9]+$/, 'Phone number must only contain digits')
         .min(10, 'Phone number must be at least 10 digits')
         .max(15, "Phone number can't exceed 15 digits")
-        .required('Phone number is required')
+        .required('Phone number is required'),
     })
-  )
+  ),
 });
 
 export const StepFifteen = ({ next, email }) => {
   const handleSubmit = async (values) => {
+    const userEmail = localStorage.getItem('userEmail');
     try {
       // Fetch customerId using the provided email
-      const customerId = await authenticateEmail(email);
+      const customerId = await authenticateEmail(userEmail);
 
       if (!customerId) {
         console.error('Failed to fetch customer ID.');
@@ -39,16 +40,16 @@ export const StepFifteen = ({ next, email }) => {
         signatories: values.signatories.map((signatory) => ({
           name: signatory.name,
           phoneNumber: signatory.phoneNumber,
-          email: signatory.emailAddress
-        }))
+          email: signatory.emailAddress,
+        })),
       };
 
       const response = await fetch(import.meta.env.VITE_ADD_SIGNATORIES_ENDPOINT, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(requestBody)
+        body: JSON.stringify(requestBody),
       });
 
       // console.log('Uploaded Data:',requestBody );
@@ -100,7 +101,7 @@ export const StepFifteen = ({ next, email }) => {
       </div>
       <Formik
         initialValues={{
-          signatories: [{ name: '', emailAddress: '', phoneNumber: '' }]
+          signatories: [{ name: '', emailAddress: '', phoneNumber: '' }],
         }}
         validationSchema={StepFifteenValidationSchema}
         onSubmit={(values) => handleSubmit(values)}>

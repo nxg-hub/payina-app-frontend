@@ -84,7 +84,7 @@ export const Sidebar = () => {
       <div className="space-y-[52px] flex flex-col w-full pb-20">
         <div className="flex flex-col justify-center items-center">
           <div className="mb-20">
-            {userImage ? (
+            {profilePic ? (
               <img
                 src={profilePic}
                 // src={userImage}

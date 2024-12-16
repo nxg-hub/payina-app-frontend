@@ -7,7 +7,7 @@ import CustomButton from '../../../components/button/button';
 const validationSchema = Yup.object().shape({
   businessDescription: Yup.string().required('Business description is required'),
   numberOfStaff: Yup.string().required('Number of staff is required'),
-  annualIncomeRange: Yup.string().required('Annual income range is required')
+  annualIncomeRange: Yup.string().required('Annual income range is required'),
 });
 
 // Sample data for the number of staff and annual income range
@@ -17,12 +17,13 @@ const incomeRangeOptions = [
   '100,000 - 500,000',
   '500,001 - 1,000,000',
   '1,000,001 - 10,000,000',
-  '10,000,001 - 50,000,000'
+  '10,000,001 - 50,000,000',
 ];
 
 export const StepThirteen = ({ next, email, initialValues }) => {
+  const userEmail = localStorage.getItem('userEmail');
   const handleSubmit = async (values) => {
-    const customerId = await authenticateEmail(email); // Ensure email is passed correctly
+    const customerId = await authenticateEmail(userEmail); // Ensure email is passed correctly
     console.log('Authenticated User ID:', customerId);
 
     // Combine previous data with the current step's data
@@ -43,7 +44,7 @@ export const StepThirteen = ({ next, email, initialValues }) => {
       businessDescription: values.businessDescription,
       staffNumber: values.numberOfStaff,
       annualIncome: values.annualIncomeRange,
-      customerId: values.customerId
+      customerId: values.customerId,
     };
 
     try {
@@ -52,9 +53,9 @@ export const StepThirteen = ({ next, email, initialValues }) => {
         {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
-          body: JSON.stringify(requestData)
+          body: JSON.stringify(requestData),
         }
       );
       // console.log ('Uploaded Data:', requestData)
@@ -78,8 +79,8 @@ export const StepThirteen = ({ next, email, initialValues }) => {
         {
           method: 'GET',
           headers: {
-            'Content-Type': 'application/json'
-          }
+            'Content-Type': 'application/json',
+          },
 
           //  mode: 'no-cors'
         }
@@ -111,7 +112,7 @@ export const StepThirteen = ({ next, email, initialValues }) => {
           initialValues={{
             businessDescription: '',
             numberOfStaff: '',
-            annualIncomeRange: ''
+            annualIncomeRange: '',
           }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}>

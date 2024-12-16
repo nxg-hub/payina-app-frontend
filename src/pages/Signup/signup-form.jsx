@@ -19,6 +19,8 @@ import {
   StepTwelve,
   StepTwo,
 } from './_components';
+import { useDispatch, useSelector } from 'react-redux';
+import { nextStep } from '../../Redux/BusinessSignUpSlice';
 
 export default function SignUpForm() {
   const [data, setData] = useState({
@@ -41,11 +43,14 @@ export default function SignUpForm() {
     businessCategory: '',
     businessType: '',
   });
-  const [currentStep, setCurrentStep] = useState(0);
+  // const [currentStep, setCurrentStep] = useState(0);
+  const currentStep = useSelector((state) => state.businessSignUp.step);
+  const dispatch = useDispatch();
 
   const handleNextStep = (newData) => {
     setData((prevData) => ({ ...prevData, ...newData }));
-    setCurrentStep((prevStep) => prevStep + 1);
+    // setCurrentStep((prevStep) => prevStep + 1);
+    dispatch(nextStep());
   };
 
   const steps = [

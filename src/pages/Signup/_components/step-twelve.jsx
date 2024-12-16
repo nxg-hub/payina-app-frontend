@@ -6,14 +6,15 @@ import { MdOutlineFileUpload } from 'react-icons/md';
 import { BusinessAddressVerification } from '../schemas/schema';
 
 const uploadDocument = async (documentFile, email) => {
+  const userEmail = localStorage.getItem('userEmail');
   try {
     const formData = new FormData();
     formData.append('document', documentFile);
-    formData.append('email', email);
+    formData.append('email', userEmail);
 
     const response = await fetch(import.meta.env.VITE_UPLOAD_BUSINESS_DOCUMENT_ENDPOINT, {
       method: 'POST',
-      body: formData
+      body: formData,
     });
     const data = await response.text();
 
@@ -43,7 +44,7 @@ export const StepTwelve = ({ next, email }) => {
       const response = await uploadDocument(businessDocumentDetails, email);
       next({
         businessDocumentDetails: response,
-        business_confirm_document: values.business_confirm_document
+        business_confirm_document: values.business_confirm_document,
       });
     } catch (error) {
       setApiError(error.message);
