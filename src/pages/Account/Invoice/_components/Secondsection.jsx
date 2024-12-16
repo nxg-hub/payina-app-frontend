@@ -11,7 +11,9 @@ const Secondsection = ({ next }) => {
   const [totalInvoices, setTotalInvoices] = useState(0);
   const [loadingCustomers, setLoadingCustomers] = useState(false); 
   const [loadingInvoices, setLoadingInvoices] = useState(false); 
-
+  const [paidCount, setPaidCount] = useState(0);
+  const [unpaidCount, setUnpaidCount] = useState(0);
+  const [loadingPaymentStatus, setLoadingPaymentStatus] = useState(false);
   
    
     const fetchTotalCustomers = async () => {
@@ -58,12 +60,48 @@ const Secondsection = ({ next }) => {
         setLoadingInvoices(false);
       }
     };
+
+    const fetchPaymentStatus = async () => {
+      setLoadingPaymentStatus(true);
+      try {
+        const response = await fetch (
+          `${import.meta.env.VITE_PAYMENT_STATUS_COUNT_ENDPOINT}?corporateCustomerId=${corporateCustomerId}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+        );
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch payment status counts');
+        }
+        const data = await response.json();
+        const paymentStatusCounts = data.reduce(
+          (acc, item) => ({
+            ...acc,
+            [item.paymentStatus]: item.count,
+          }),
+          {}
+        );
+
+        setPaidCount(paymentStatusCounts.PAID);
+        setUnpaidCount(paymentStatusCounts.UNPAID);
+      } catch (error) {
+        console.error ('Error fetching payment status: error');
+      } finally{
+        setLoadingPaymentStatus(false);
+      }
+ };
+    
     
 
     useEffect(() => {
       if (corporateCustomerId) {
         fetchTotalCustomers();
         fetchTotalInvoices();
+        fetchPaymentStatus();
       }
     }, [corporateCustomerId]); 
 
@@ -96,14 +134,22 @@ const Secondsection = ({ next }) => {
               <img src={notes} alt="" />
             </div>
             <p className="text-center md:text-[18px] font-bold">Paid Invoices</p>
-            <p className="text-center md:text-[18px] font-bold"> 223</p>
+            {loadingPaymentStatus ? (
+            <p className="text-center md:text-[18px] font-bold">Loading...</p>
+            ) : (
+            <p className="text-center md:text-[18px] font-bold">{paidCount}</p>
+            )}
           </div>
           <div className="shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px] py-6 px-3 rounded-md md:h-[200px] grid place-content-center">
             <div className="grid place-content-center">
               <img src={notes} alt="" />
             </div>
             <p className="text-center md:text-[18px] font-bold">Unpaid Invoices</p>
-            <p className="text-center md:text-[18px] font-bold">223</p>
+            {loadingPaymentStatus ? (
+            <p className="text-center md:text-[18px] font-bold"> Loading... </p>
+            ) : (
+              <p className="text-center md:text-[18px] font-bold"> {unpaidCount}</p>
+            )}
           </div>
         </div>
       </div>
