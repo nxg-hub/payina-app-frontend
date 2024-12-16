@@ -170,7 +170,7 @@ const UserData = () => {
   };
 
   const handleFundWallet = () => {
-    navigate('/account/fund-wallet');
+    navigate('/addmoney');
   };
 
   const handleUseMyNumber = () => {

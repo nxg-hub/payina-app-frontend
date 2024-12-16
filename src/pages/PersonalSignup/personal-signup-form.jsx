@@ -8,7 +8,7 @@ import {
   StepSeventeen,
   StepSixteen,
   StepThree,
-  StepTwo,
+  StepTwo
 } from './_components';
 
 export default function PersonalSignupForm() {

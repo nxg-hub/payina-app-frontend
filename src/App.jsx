@@ -50,8 +50,9 @@ import PersonalSignup from './pages/PersonalSignup/index.jsx';
 import PersonalDashboard from './pages/Account/PersonalDashboard/index.jsx';
 import Onboarding from './pages/Onboarding/Onboarding.jsx';
 import { StepEight } from './pages/PersonalSignup/_components/step-eight.jsx';
-import TierTwo from './pages/PersonalSignup/tier-two.jsx';
+import TierTwo from './pages/PersonalSignup/upgrade/tier-two.jsx';
 import More from './pages/More/More.jsx';
+import TierOne from './pages/PersonalSignup/id-verification/tier-one.jsx';
 
 function App() {
   const location = useLocation();
@@ -85,13 +86,13 @@ function App() {
               element={<Signup data={data} handleNextStep={handleNextStep} />}
             />
             <Route
-              path="/tier-two"
+              path="/upgrade"
               element={
                 <TierTwo data={data} currentStep={currentStep} handleNextStep={handleNextStep} />
               }
             />
             <Route
-              path="/tier-two"
+              path="/upgrade"
               element={<TierTwo data={data} handleNextStep={handleNextStep} />}
             />
             <Route path="/paybills" element={<Paybills />} />
@@ -125,7 +126,7 @@ function App() {
             <Route path="/card" element={<Card />} />
             <Route path="/personal/login" element={<PersonalLogin />} />
             <Route path="/personal/signup" element={<PersonalSignup />} />
-            {/*<Route path="/personal/tier-two" element={<StepEight />} />*/}
+            <Route path="/verify" element={<TierOne />} />
             <Route path="/ren" element={<Ren />} />
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />

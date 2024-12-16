@@ -424,7 +424,7 @@ const WalletBalanceChecker = forwardRef(
     }, [newAuthToken]);
 
     const handleFundWithCard = () => {
-      navigate('/account/fund-wallet');
+      navigate('/addmoney');
       setShowInsufficientModal(false);
     };
 

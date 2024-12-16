@@ -2,29 +2,16 @@ import React, { useState } from 'react';
 
 import {
   StepEight,
-  StepEleven,
-  StepFifteen,
-  StepFive,
-  StepFour,
-  StepFourteen,
   StepNine,
-  StepOne,
   StepSeven,
   StepSeventeen,
   StepSix,
-  StepSixteen,
-  StepTen,
-  StepThirteen,
-  StepThree,
-  StepTwelve,
-  StepTwo,
-} from './_components';
+} from '../_components/index.js';
 
-export default function SignUpForm() {
+export default function TierThreeSignupForm() {
   const [data, setData] = useState({
     email: '',
     bvnData: {},
-    ninData: {},
     password: '',
     confirmPassword: '',
     identificationNumber: '',
@@ -50,23 +37,10 @@ export default function SignUpForm() {
   };
 
   const steps = [
-    <StepOne next={handleNextStep} />,
-    <StepTwo next={handleNextStep} initialValues={data} />,
-    <StepThree next={handleNextStep} data={data} />,
-    <StepFour next={handleNextStep} />,
-    <StepFive next={handleNextStep} bvnData={data} ninData= {data} initialValues={data} email={data.email} />,
     <StepSix next={handleNextStep} email={data.email} />,
     <StepSeven next={handleNextStep} text="Your Identity Has been Verified!" />,
     <StepEight next={handleNextStep} />,
     <StepNine next={handleNextStep} email={data.email} />,
-    <StepTen next={handleNextStep} />,
-    <StepEleven next={handleNextStep} data={data} />,
-    <StepTwelve next={handleNextStep} email={data.email} />,
-    <StepThirteen next={handleNextStep} email={data.email} initialValues={data} />,
-    <StepFourteen next={handleNextStep} />,
-    <StepFifteen next={handleNextStep} email={data.email} />,
-    <StepSixteen next={handleNextStep} email={data.email} />,
-    <StepSeven next={handleNextStep} text="You Have Successfully Set Your Pin" />,
     <StepSeventeen next={handleNextStep} data={data} />,
   ];
 

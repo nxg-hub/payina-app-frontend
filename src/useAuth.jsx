@@ -115,11 +115,11 @@ import axios from 'axios';
 import apiService from './services/apiService.js';
 
 const REGISTRATION_LEVELS = {
-  VALIDATE_OTP: 2,
-  BVN_VERIFICATION_DOCUMENT_UPLOAD: 3,
-  BVN_DETAILS_CONFIRMATION_SAVE_USERNAME: 4,
-  FACIAL_CAPTURE_AND_UPLOAD: 5,
-  CORPORATE_PROFILE_UPDATE_SET_PIN: 7,
+  VALIDATE_OTP: 3,
+  BVN_VERIFICATION_DOCUMENT_UPLOAD: 4,
+  BVN_DETAILS_CONFIRMATION_SAVE_USERNAME: 5,
+  FACIAL_CAPTURE_AND_UPLOAD: 6,
+  CORPORATE_PROFILE_UPDATE_SET_PIN: 8,
   KYC_COMPLETED: 17,
 };
 
@@ -154,13 +154,13 @@ export function useAuth() {
 
       // Special handling for personal users
       if (isPersonalUser) {
-        // Allow access if registration level is >= 4 (BVN_DETAILS_CONFIRMATION_SAVE_USERNAME)
-        if (step >= REGISTRATION_LEVELS.BVN_DETAILS_CONFIRMATION_SAVE_USERNAME) {
+        // Allow access if registration level is >= 3 (BVN_DETAILS_CONFIRMATION_SAVE_USERNAME)
+        if (step >= REGISTRATION_LEVELS.VALIDATE_OTP) {
           navigate('/personal/dashboard');
           return;
         }
         // If not completed level 4, redirect to signup
-        navigate('/signup');
+        navigate('/personal/dashboard');
         return;
       }
 

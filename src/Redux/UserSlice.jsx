@@ -5,7 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 
 const initialState = {
-  user: [],
+  user: null,
   success: false,
 };
 
@@ -18,14 +18,16 @@ const userSlice = createSlice({
       state.success = true;
     },
     updateProfilePicture(state, action) {
-      state.user.passportUrl = action.payload; // Only update the profile picture
+      if (state.user.picture) {
+        state.user.passportUrl = action.payload; // Only update the profile picture
+      }
     },
     reSetUserDetails(state, action) {
-      state.user = [];
+      state.user = null;
       state.success = false;
     },
   },
-  extraReducers: (builder) => {},
+  // extraReducers: (builder) => {},
 });
 
 export const { fetchDataSuccess, updateProfilePicture, reSetUserDetails } = userSlice.actions;
