@@ -142,7 +142,7 @@ export function useAuth() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
+        }),
       ]);
 
       // Process registration level
@@ -171,7 +171,6 @@ export function useAuth() {
       }
 
       navigate('/account/dashboard');
-
     } catch (error) {
       console.error('Error in authentication flow:', error);
       navigate('/login');
