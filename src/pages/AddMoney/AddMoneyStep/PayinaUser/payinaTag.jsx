@@ -14,6 +14,7 @@ const PayinaTag = () => {
   const [isVerifying, setIsVerifying] = useState(false);
   const [loginUserData, setLoginUserData] = useState(null);
   const debounceTimeoutRef = useRef(null);
+  const [payinaTagError, setPayinaTagError] = useState(false);
 
   useEffect(() => {
     const fetchLoginUserData = async () => {
@@ -99,10 +100,12 @@ const PayinaTag = () => {
         setFieldValue('confirmName', validation.message);
         setFieldValue('destinationId', validation.walletId);
         setFieldValue('destinationEmail', validation.email);
+        setPayinaTagError(false);
       } else {
         setFieldValue('confirmName', '');
         setFieldValue('destinationId', '');
         setFieldValue('destinationEmail', '');
+        setPayinaTagError(true);
       }
     }, 1800);
   };
@@ -185,7 +188,7 @@ const PayinaTag = () => {
                 name="payinaTag"
                 type="text"
                 placeholder="Enter Recipient Payina Tag or Account Number"
-                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                className="lg:w-[700px] w-[300px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                 onChange={(e) => {
                   const payinaTag = e.target.value;
                   setFieldValue('payinaTag', payinaTag);
@@ -207,20 +210,17 @@ const PayinaTag = () => {
                 name="confirmName"
                 type="text"
                 placeholder=""
-                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                className="lg:w-[700px] w-[300px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                 readOnly
-                value={confirmationMessage || ''}
+                value={
+                  isVerifying
+                    ? 'Verifying...'
+                    : confirmationMessage || 'Enter PayinaTag to confirm here'
+                }
               />
-              <span
-                className={`text-xs md:text-sm mt-1 ${
-                  confirmationMessage.includes('not found') ? 'text-[#db3a3a]' : 'text-[#00678F]'
-                }`}>
-                {isVerifying
-                  ? 'Verifying...'
-                  : confirmationMessage.includes('not found')
-                    ? 'PayinaTag not found'
-                    : confirmationMessage}
-              </span>
+              {payinaTagError && (
+                <span className="text-red-500 text-xs mt-2">PayinaTag not found</span>
+              )}
             </div>
 
             <div className="flex flex-col w-full gap-2 py-2">
@@ -231,7 +231,7 @@ const PayinaTag = () => {
                 name="amount"
                 type="number"
                 placeholder="Enter Amount"
-                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                className="lg:w-[700px] w-[300px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
               />
               <ErrorMessage
                 name="amount"
@@ -248,7 +248,7 @@ const PayinaTag = () => {
                 name="purpose"
                 type="text"
                 placeholder="Enter Purpose"
-                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                className="lg:w-[700px] w-[300px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
               />
               <ErrorMessage
                 name="purpose"
@@ -260,7 +260,7 @@ const PayinaTag = () => {
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="rounded-[5px] text-xs md:text-base py-2 border border-lightBlue bg-lightBlue w-[250px] xl:mr-0 mr-5 xl:w-[300px] text-primary">
+                className="rounded-[5px] text-xs md:text-base py-2 border border-lightBlue bg-lightBlue w-[200px] lg:mr-0 mr-5 lg:w-[300px] text-primary">
                 Submit
               </button>
             </div>

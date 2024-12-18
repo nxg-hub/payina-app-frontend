@@ -14,6 +14,9 @@ const PhoneNumber = () => {
   const [confirmationMessage, setConfirmationMessage] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const [showDecline, setShowDecline] = useState(false);
+  const [payinaTagError, setPayinaTagError] = useState(false);
+  const [debounceTimeout, setDebounceTimeout] = useState(null);
+  const [isVerifying, setIsVerifying] = useState(false);
 
   useEffect(() => {
     const fetchLoginUserData = async () => {
@@ -64,19 +67,52 @@ const PhoneNumber = () => {
 
       const data = await response.json();
       setRequesterData(data);
-      const successMessage = data.message || 'Confirmation successful';
-      setConfirmationMessage(successMessage);
+      setConfirmationMessage(`${data.firstName} ${data.lastName}`);
+      setPayinaTagError(false);
 
       return true;
     } catch (error) {
       console.error('Error confirming phone number:', error);
+      setPayinaTagError(true);
+      setConfirmationMessage('Phone number confirmation failed');
       return false;
     }
   };
 
+  // const handlePhoneInputChange = (phone, setFieldValue) => {
+  //   setFieldValue('confirmPhoneNumber', formatPhoneNumber(phone));
+  //   if (phone.length > 0) {
+  //     handleConfirmPhone(formatPhoneNumber(phone)).then((isConfirmed) => {
+  //       if (!isConfirmed) {
+  //         setFieldValue('confirmPhoneNumber', '');
+  //       }
+  //     });
+  //   }
+  // };
+  const handlePhoneInputChange = (phone, setFieldValue) => {
+    setFieldValue('confirmPhoneNumber', formatPhoneNumber(phone));
+
+    // Clear any previous timeout to ensure we're debouncing properly
+    if (debounceTimeout) {
+      clearTimeout(debounceTimeout);
+    }
+    // Set a new timeout to call the verification after 1800ms
+    const timeout = setTimeout(() => {
+      setIsVerifying(true);
+      handleConfirmPhone(formatPhoneNumber(phone)).then((isConfirmed) => {
+        if (!isConfirmed) {
+          setFieldValue('confirmPhoneNumber', ''); // Clear input if not confirmed
+        }
+        setIsVerifying(false);
+      });
+    }, 1800);
+
+    setDebounceTimeout(timeout);
+  };
+
   const handleSubmit = async (values) => {
     console.log('Form Values:', values);
-    const formattedPhoneNumber = formatPhoneNumber(values.confirmPhoneNumber);
+    const formattedPhoneNumber = formatPhoneNumber(values.phoneNumber);
 
     const isConfirmed = await handleConfirmPhone(formattedPhoneNumber);
     console.log('phoneNumber confirmed:', isConfirmed);
@@ -143,9 +179,12 @@ const PhoneNumber = () => {
               <PhoneInput
                 country={'ng'}
                 value={values.phoneNumber}
-                onChange={(phone) => setFieldValue('phoneNumber', formatPhoneNumber(phone))}
+                onChange={(phone) => {
+                  setFieldValue('phoneNumber', formatPhoneNumber(phone));
+                  handlePhoneInputChange(phone, setFieldValue);
+                }}
                 inputClass={
-                  'xl:w-[700px] w-[400px] border outline-none rounded-[5px] py-5 h-20 !w-full xl:px-[1.95rem] px-[1.2rem] py-2 font-light opacity-70 text-xs md:text-sm'
+                  'lg:w-[700px] w-[300px] border outline-none rounded-[5px] py-5 h-20 !w-full lg:px-[1.95rem] px-[1.2rem] py-2 font-light opacity-70 text-xs md:text-sm'
                 }
               />
               <ErrorMessage
@@ -158,7 +197,23 @@ const PhoneNumber = () => {
               <label htmlFor="confirmPhoneNumber" className="text-left font-md text-md">
                 Confirm Phone Number
               </label>
-              <PhoneInput
+              <Field
+                name="confirmPhoneNumber"
+                type="text"
+                placeholder=""
+                className="lg:w-[700px] w-[300px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                value={
+                  isVerifying
+                    ? 'Verifying...'
+                    : confirmationMessage || 'Enter PayinaTag to confirm here'
+                }
+              />
+              {payinaTagError && (
+                <span className="text-red-500 text-xs mt-2">
+                  Phone number not found or confirmation failed
+                </span>
+              )}
+              {/* <PhoneInput
                 country={'ng'}
                 value={values.confirmPhoneNumber}
                 onChange={(phone) => {
@@ -174,13 +229,12 @@ const PhoneNumber = () => {
                 inputClass={
                   'xl:w-[700px] w-[400px] !w-full xl:px-[1.95rem] px-[1.2rem] border outline-none rounded-[5px] py-5 h-20 font-light opacity-70 text-xs md:text-sm'
                 }
-              />
+              /> */}
               <ErrorMessage
                 name="confirmPhoneNumber"
                 component="span"
                 className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
               />
-              <span className="text-green-600 text-xs">{confirmationMessage}</span>
             </div>
             <div className="flex flex-col w-full gap-2 py-2">
               <label htmlFor="amount" className="text-left font-md text-md">
@@ -190,7 +244,7 @@ const PhoneNumber = () => {
                 name="amount"
                 type="text"
                 placeholder="Enter Amount"
-                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                className="lg:w-[700px] w-[300px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
               />
               <ErrorMessage
                 name="amount"
@@ -206,7 +260,7 @@ const PhoneNumber = () => {
                 name="purpose"
                 type="text"
                 placeholder=""
-                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                className="lg:w-[700px] w-[300px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
               />
               <ErrorMessage
                 name="purpose"
@@ -217,7 +271,7 @@ const PhoneNumber = () => {
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="rounded-[5px] text-xs md:text-base py-2 border border-lightBlue bg-lightBlue w-[250px] xl:mr-0 mr-5 xl:w-[300px] text-primary">
+                className="rounded-[5px] text-xs md:text-base py-2 border border-lightBlue bg-lightBlue w-[200px] lg:mr-0 mr-5 lg:w-[300px] text-primary">
                 Next
               </button>
             </div>

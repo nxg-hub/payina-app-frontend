@@ -113,7 +113,7 @@ const EmailDetails = () => {
                 name="emailAddress"
                 type="text"
                 placeholder="Enter Email Address"
-                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                className="lg:w-[700px] w-[300px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
               />
               <ErrorMessage
                 name="emailAddress"
@@ -129,7 +129,7 @@ const EmailDetails = () => {
                 name="receiverName"
                 type="text"
                 placeholder=""
-                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                className="lg:w-[700px] w-[300px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
               />
               <ErrorMessage
                 name="receiverName"
@@ -145,7 +145,7 @@ const EmailDetails = () => {
                 name="phoneNumber"
                 type="text"
                 placeholder="Enter Phone Number"
-                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                className="lg:w-[700px] w-[300px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
               />
               <ErrorMessage
                 name="phoneNumber"
@@ -161,7 +161,7 @@ const EmailDetails = () => {
                 name="amount"
                 type="text"
                 placeholder="Enter Amount"
-                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                className="lg:w-[700px] w-[300px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
               />
               <ErrorMessage
                 name="amount"
@@ -177,7 +177,7 @@ const EmailDetails = () => {
                 name="purpose"
                 type="text"
                 placeholder=""
-                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                className="lg:w-[700px] w-[300px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
               />
               <ErrorMessage
                 name="purpose"
@@ -188,7 +188,7 @@ const EmailDetails = () => {
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="rounded-[5px] text-xs md:text-base  py-2 border border-lightBlue bg-lightBlue w-[250px] xl:mr-0 mr-5 xl:w-[300px] text-primary">
+                className="rounded-[5px] text-xs md:text-base  py-2 border border-lightBlue bg-lightBlue w-[200px] lg:mr-0 mr-5 lg:w-[300px] text-primary">
                 Next
               </button>
             </div>
