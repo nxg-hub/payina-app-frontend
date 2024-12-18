@@ -51,7 +51,7 @@ const AnotherBank = ({ currentStep, totalSteps, handleNext, handlePrev, resetFor
 
   return (
     <div className="flex flex-col justify-center items-start xl:ml-80 xl:pt-28 md:pt-10 sm:ml-[30px] md:ml-[25px] mx-auto">
-      <div className="flex flex-row justify-between items-left xl:gap-[45rem] gap-[5rem]">
+      <div className="flex flex-row justify-between items-left lg:gap-[45rem] gap-[5rem]">
         <div className="text-xl md:text-3xl font-medium">Send Money</div>
         <div
           className="flex flex-row gap-2 cancelAction-img cursor-pointer"
