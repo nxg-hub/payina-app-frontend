@@ -18,7 +18,7 @@ export const StepTen = ({ next }) => {
       businessType: business_details.businessType,
       businessRegNumber:
         business_is_registered === 'yes' ? business_details.businessRegNumber : null,
-      tin_No: business_is_registered === 'yes' ? business_details.tin_No : null
+      tin_No: business_is_registered === 'yes' ? business_details.tin_No : null,
     };
     try {
       // console.log('Submitting business data:', businessData);
@@ -84,32 +84,43 @@ export const StepTen = ({ next }) => {
   `;
 
   return (
-    <>
-      <div className="hidden md:block fixed md:top-[-24.5rem] xl:top-[-3.5rem] md:right-[-0.1rem] xl:right-[-40rem]">
-        <img src={images.Group} alt="" />
-      </div>
-      <div className="hidden md:block fixed md:-z-10 md:top-[-4.5rem] xl:top-[-1rem] right-[6.5rem]">
-        <img src={images.Vector3} alt="" />
-      </div>
-      <div className="hidden md:block fixed md:top-[8rem] xl:top-[12.5rem] right-[20rem] -z-10">
-        <img src={images.Vector2} alt="" />
-      </div>
-      <div className="hidden md:block fixed md:top-[10.5rem] xl:top-[14.6rem] right-[24rem] -z-10">
-        <img src={images.Vector1} alt="" />
-      </div>
-      <div className="hidden md:block fixed md:top-[15rem] xl:top-[23rem] right-[6.5rem] -z-10">
-        <img src={images.Vector2} alt="" />
-      </div>
-      <div className="hidden md:block fixed md:top-[22rem] xl:top-[30rem] right-[7.4rem] -z-10">
-        <img src={images.Vector5} alt="" />
-      </div>
-      <div className="hidden md:block fixed md:top-[20rem] xl:top-[27.5rem] right-[9.4rem] -z-10">
-        <img src={images.Vector4} alt="" />
-      </div>
-      <div className="hidden md:block fixed md:top-[11.5rem] xl:top-[19rem] right-[10.6rem] -z-10">
-        <img src={images.Vector6} alt="" />
-      </div>
-      <div className="mb-10 bg-primary xl:mt-0 flex flex-col justify-center items-start mx-auto">
+     <div className="relative bg-black min-h-screen flex items-center justify-center">
+      <img
+        src={images.Vector3}
+        alt="Background Design"
+        className="absolute top-0 right-[32rem] w-24 h-24"
+      />
+      <img
+        src={images.Vector2}
+        alt="Background Design"
+        className="absolute bottom-[11.5rem] right-[41rem] w-20 h-20"
+      />
+      <img
+        src={images.Vector1}
+        alt="Background Design"
+        className="absolute bottom-[11.5rem] right-[43rem] w-20 h-20"
+      />
+      <img
+        src={images.Vector2}
+        alt="Background Design"
+        className="absolute bottom-[6rem] right-[31rem] w-[100px] h-[100px]"
+      />
+      <img
+        src={images.Vector5}
+        alt="Background Design"
+        className="absolute bottom-[7rem] right-[31.5rem] w-3 h-3"
+      />
+      <img
+        src={images.Vector4}
+        alt="Background Design"
+        className="absolute bottom-[9rem] right-[32rem] w-15 h-15"
+      />
+      <img
+        src={images.Vector6}
+        alt="Background Design"
+        className="absolute bottom-[10rem] right-[32rem] w-20 h-20"
+      />
+      <div className="relative z-10 flex flex-col justify-center items-center bg-white shadow-md xl:p-8 px-4 rounded-lg mx-auto sm:w-[300px] md:w-[400px] lg:w-[800px]">
         <Formik
           initialValues={{
             businessName: '',
@@ -118,14 +129,14 @@ export const StepTen = ({ next }) => {
             businessCategory: '',
             businessType: '',
             business_registered: [],
-            business_address: [{}]
+            business_address: [{}],
           }}
           // validationSchema={BusinessDetailsSchema}
           onSubmit={handleSubmit}>
           {(formik) => (
             <Form className="xl:w-[600px] w-full space-y-4">
               <div className="xl:pt-8 p-4 pt-[1rem] md:px-12 xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
-                <div className="text-lightBlue text-start font-bold md:text-[24px]  xl:text-[32px] text-xl xl:leading-10">
+                <div className="text-lightBlue text-start font-bold md:text-[24px]  xl:text-[32px] text-nowrap text-xl xl:leading-10">
                   Enter Business Details
                 </div>
 
@@ -400,7 +411,7 @@ export const StepTen = ({ next }) => {
                   padding="10px 15px"
                   type="submit"
                   children={loading ? 'loading...' : 'Next'}
-                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 mx-auto md:mx-0 w-full md:w-[85%] xl:w-full !mt-0 xl:mb-0"
+                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
                   disabled={loading}
                 />
               </div>
@@ -409,6 +420,6 @@ export const StepTen = ({ next }) => {
         </Formik>
       </div>
       <style>{selectArrow}</style>
-    </>
+    </div>
   );
 };

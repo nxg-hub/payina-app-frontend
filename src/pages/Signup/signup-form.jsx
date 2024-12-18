@@ -54,7 +54,13 @@ export default function SignUpForm() {
     <StepTwo next={handleNextStep} initialValues={data} />,
     <StepThree next={handleNextStep} data={data} />,
     <StepFour next={handleNextStep} />,
-    <StepFive next={handleNextStep} bvnData={data} ninData= {data} initialValues={data} email={data.email} />,
+    <StepFive
+      next={handleNextStep}
+      bvnData={data}
+      ninData={data}
+      initialValues={data}
+      email={data.email}
+    />,
     <StepSix next={handleNextStep} email={data.email} />,
     <StepSeven next={handleNextStep} text="Your Identity Has been Verified!" />,
     <StepEight next={handleNextStep} />,
@@ -70,9 +76,5 @@ export default function SignUpForm() {
     <StepSeventeen next={handleNextStep} data={data} />,
   ];
 
-  return (
-    <div className="xl:mb-14 space-y-10 xl:w-fit w-full px-6 mx-auto absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
-      {steps[currentStep]}
-    </div>
-  );
+  return <div className="">{steps[currentStep]}</div>;
 }

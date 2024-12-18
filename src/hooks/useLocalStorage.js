@@ -26,7 +26,6 @@ const useLocalStorage = (key, defaultValue) => {
 
 export default useLocalStorage;
 
-
 // import { useState, useEffect } from 'react';
 //
 // const useLocalStorage = (key, defaultValue) => {

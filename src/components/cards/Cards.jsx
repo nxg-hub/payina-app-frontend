@@ -29,5 +29,5 @@ export default Cards;
 Cards.propTypes = {
   src: propTypes.string.isRequired,
   icon: propTypes.node.isRequired,
-  title: propTypes.string.isRequired
+  title: propTypes.string.isRequired,
 };
