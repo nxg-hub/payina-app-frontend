@@ -26,6 +26,7 @@ export default function SignUpForm() {
   const [data, setData] = useState({
     email: '',
     bvnData: {},
+    ninData: {},
     password: '',
     confirmPassword: '',
     identificationNumber: '',
@@ -58,7 +59,7 @@ export default function SignUpForm() {
     <StepTwo next={handleNextStep} initialValues={data} />,
     <StepThree next={handleNextStep} data={data} />,
     <StepFour next={handleNextStep} />,
-    <StepFive next={handleNextStep} bvnData={data} initialValues={data} email={data.email} />,
+    <StepFive next={handleNextStep} bvnData={data} ninData= {data} initialValues={data} email={data.email} />,
     <StepSix next={handleNextStep} email={data.email} />,
     <StepSeven next={handleNextStep} text="Your Identity Has been Verified!" />,
     <StepEight next={handleNextStep} />,

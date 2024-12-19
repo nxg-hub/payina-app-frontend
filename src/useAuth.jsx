@@ -115,11 +115,11 @@ import axios from 'axios';
 import apiService from './services/apiService.js';
 
 const REGISTRATION_LEVELS = {
-  VALIDATE_OTP: 2,
-  BVN_VERIFICATION_DOCUMENT_UPLOAD: 3,
-  BVN_DETAILS_CONFIRMATION_SAVE_USERNAME: 4,
-  FACIAL_CAPTURE_AND_UPLOAD: 5,
-  CORPORATE_PROFILE_UPDATE_SET_PIN: 7,
+  VALIDATE_OTP: 3,
+  BVN_VERIFICATION_DOCUMENT_UPLOAD: 4,
+  BVN_DETAILS_CONFIRMATION_SAVE_USERNAME: 5,
+  FACIAL_CAPTURE_AND_UPLOAD: 6,
+  CORPORATE_PROFILE_UPDATE_SET_PIN: 8,
   KYC_COMPLETED: 17,
 };
 
@@ -142,11 +142,12 @@ export function useAuth() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
+        }),
       ]);
 
       // Process registration level
       const registrationLevel = registrationResponse.data;
+
       const step = REGISTRATION_LEVELS[registrationLevel] || 0;
       localStorage.setItem('currentStep', step);
 
@@ -171,7 +172,6 @@ export function useAuth() {
       }
 
       navigate('/account/dashboard');
-
     } catch (error) {
       console.error('Error in authentication flow:', error);
       navigate('/login');

@@ -31,9 +31,32 @@ const uploadDocument = async (documentFile, email) => {
     throw error;
   }
 };
+const uploadLogo = async (logoFile, email) => {
+  const userEmail = localStorage.getItem('userEmail');
+  try {
+    const formData = new FormData();
+    formData.append('document', logoFile);
+    formData.append('email', userEmail);
+
+    const response = await fetch(import.meta.env.VITE_UPLOAD_BUSINESS_LOGO_ENDPOINT, {
+      method: 'POST',
+
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to upload business logo');
+    }
+
+    return await response.json();
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 
 export const StepTwelve = ({ next, email }) => {
   const [businessDocumentDetails, setBusinessDocumentDetails] = useState('');
+  const [businessLogoDetails, setBusinessLogoDetails] = useState('');
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState('');
 
@@ -42,8 +65,12 @@ export const StepTwelve = ({ next, email }) => {
     setApiError('');
     try {
       const response = await uploadDocument(businessDocumentDetails, email);
+      const logoResponse = await uploadLogo(businessLogoDetails, email);
+
       next({
         businessDocumentDetails: response,
+        businessLogoDetails: logoResponse,
+
         business_confirm_document: values.business_confirm_document,
       });
     } catch (error) {
@@ -102,20 +129,20 @@ export const StepTwelve = ({ next, email }) => {
       </div>
       <div className="bg-primary !mt-24 xl:mt-0 flex flex-col justify-center items-start mx-auto">
         <Formik
-          initialValues={{ business_confirm_document: '' }}
+          initialValues={{ business_confirm_document: '', logo: null }}
           onSubmit={handleSubmit}
           validationSchema={BusinessAddressVerification}>
           {(formik) => (
             <Form className="w-full space-y-4">
               <div className="xl:pt-16 p-4 pt-[2.2rem] xl:px-16 xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
                 <div className="text-lightBlue text-start font-bold xl:text-[32px] text-xl w-5/6 xl:leading-10">
-                  Kindly Upload Business Proof of Residence
+                  Kindly Upload Business Proof of Residence and Company Logo
                 </div>
                 <div className="xl:w-full md:w-[85%] items-start flex flex-col space-y-2 ">
                   <Field
                     as="select"
                     name="business_confirm_document"
-                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-8 bg-secondary">
+                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base rounded-[5px] py-2 px-8 bg-secondary">
                     <option value="" className="!bg-secondary text-primary font-medium" disabled>
                       Select Document
                     </option>
@@ -147,6 +174,27 @@ export const StepTwelve = ({ next, email }) => {
                       <span className="text-[#E80516]">Upload Document</span>
                     </label>
                     <span className="text-lightBlue">{businessDocumentDetails?.name}</span>
+                  </div>
+                </div>
+                {/* Business Logo Upload */}
+                <div className="xl:w-full md:w-[85%] items-start flex flex-col space-y-2 mt-6">
+                  <div className="flex flex-col items-center border rounded-[10px] border-[#006181] w-full text-center p-4">
+                    <input
+                      id="logo"
+                      name="logo"
+                      type="file"
+                      onChange={(e) => {
+                        setBusinessLogoDetails(e.currentTarget.files[0]);
+                        formik.setFieldValue('logo', e.currentTarget.files[0]);
+                      }}
+                    />
+                    <label
+                      htmlFor="logo"
+                      className="cursor-pointer font-bold flex items-center flex-col">
+                      <MdOutlineFileUpload size={22} opacity={0.65} />
+                      <span className="text-[#E80516]">Upload Logo</span>
+                    </label>
+                    <span className="text-lightBlue">{businessLogoDetails?.name}</span>
                   </div>
                 </div>
                 <CustomButton

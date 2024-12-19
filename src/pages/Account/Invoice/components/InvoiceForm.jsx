@@ -21,6 +21,14 @@ export const InvoiceForm = ({next, }) => {
   const [isCreatingInvoice, setIsCreatingInvoice] = useState(false); 
   const [updatedLineItems, setUpdatedLineItems] = useState ([]);
   const [corporateCustomerId, setCorporateCustomerId] = useState ([]);
+  const [invoiceId, setInvoiceId] = useState(null);  
+  const [isSendingInvoice, setIsSendingInvoice] = useState(false);
+  const [invoiceSent, setInvoiceSent] = useState(false);
+  // const [populateTotal, setPopulateTotal] = useState(0);
+  // const [lineItems, setLineItems] = useState([
+  //   { amount: 0, quantity: 0 },
+  // ]);
+
 
 
   useEffect(() => {
@@ -29,7 +37,7 @@ export const InvoiceForm = ({next, }) => {
       setEmail(storedEmail);
     }
   }, []);
-
+ 
 
   const handleAddCustomer = async (values,) => {
     setIsAddingClient(true);
@@ -95,10 +103,11 @@ export const InvoiceForm = ({next, }) => {
                const newItem = {
               invoiceNumber: values.invoice.invoiceNumber,
               dateOfIssue: values.invoice.dateOfIssue,
-              dueDate: values.invoice.dateOfDue,
-              itemName: values.invoice.itemName,
+              due_date: values.invoice.due_date,
+              name: values.invoice.name,
               quantity: values.invoice.quantity,
               amount: values.invoice.amount,
+              invoiceValidity: values.invoice.invoiceValidity,
               tax: 0.075,
               total: (values.invoice.amount * values.invoice.quantity),
               description: values.invoice.itemDescription,
@@ -106,6 +115,7 @@ export const InvoiceForm = ({next, }) => {
            }
       
            const storedItems = JSON.parse(localStorage.getItem('lineItems')) || [];
+      
            const updatedLineItems = [...storedItems, newItem];
            localStorage.setItem('lineItems', JSON.stringify(updatedLineItems));
       
@@ -115,11 +125,10 @@ export const InvoiceForm = ({next, }) => {
             setFieldValue('invoice.lineItems', updatedLineItems);
         
       
-            setFieldValue('invoice.itemName', '');
+            setFieldValue('invoice.name', '');
             setFieldValue('invoice.quantity', '');
-            setFieldValue('invoice.amount', '');
+            setFieldValue('invoice.amount', '');  
       
-        
             setItemAdded(true); 
             setTimeout(() => setItemAdded(false), 10000); 
           } catch (error) {
@@ -132,65 +141,85 @@ export const InvoiceForm = ({next, }) => {
         useEffect(() => {
           const storedItems = JSON.parse(localStorage.getItem('lineItems')) || [];
         }, []);
-
+ 
           const handleCreateInvoice = async (values) => {  
             setIsCreatingInvoice(true);          
             try {
               if (!clientId) {
                 throw new Error('No client ID available');
               }
+
+              // Check if there are items in local storage
+              let storedLineItems = JSON.parse(localStorage.getItem('lineItems')) || [];
+
+              // Fallback for single-item input if storedLineItems is empty
+              if (storedLineItems.length === 0 && values.invoice.name && values.invoice.quantity && values.invoice.amount) {
+                storedLineItems = [
+                  {
+                    name: values.invoice.name,
+                    amount: parseFloat(values.invoice.amount), 
+                    quantity: parseInt(values.invoice.quantity, 10),
+                  },
+                ];
+              }
+      
         
             
      const invoiceRequestBody = {
       invoiceNumber: values.invoice.invoiceNumber,
       description: values.invoice.itemDescription,
       dateOfIssue: values.invoice.dateOfIssue,
-      due_date: values.invoice.dateOfDue,
-      totalAmount: calculateTotalAmount(values.invoice.lineItems),  
-      lineItems: values.invoice.lineItems.map(item => ({
-        name: item.itemName,
-        amount: item.amount,
-        quantity: item.quantity,
-      })),
+      due_date: values.invoice.due_date,
+      totalAmount: calculateTotalAmount(storedLineItems), 
+      invoiceValidity: values.invoice.invoiceValidity,
+      lineItems: storedLineItems, // Use the populated or fallback lineItems array
+
       tax: [
         {
           name: "VAT",
-          amount: calculateTaxAmount(values.invoice.lineItems), 
+          amount: calculateTaxAmount(storedLineItems), 
         },
       ],
     };
     
-    // Function to calculate the total amount from line items
     function calculateTotalAmount(lineItems) {
       const lineItemTotal = lineItems.reduce((total, item) => {
         const itemTotal = item.amount * item.quantity;
         return total + itemTotal;
       }, 0);
     
-      // Calculate tax amount (7.5%)
+      // Use calculateTaxAmount for the tax
       const taxAmount = calculateTaxAmount(lineItems);
     
-      // Return the combined total amount (lineItems total + tax)
       return lineItemTotal + taxAmount;
     }
     
-    // Function to calculate the tax (7.5% of total line items)
     function calculateTaxAmount(lineItems) {
       const lineItemTotal = lineItems.reduce((total, item) => {
-        return total + item.amount * item.quantity;
+        if (item.amount && item.quantity) {
+          return total + item.amount * item.quantity;
+        }
+        return total; // Ignore invalid items
       }, 0);
     
-      return lineItemTotal * 0.075; 
+      const taxAmount = lineItemTotal * 0.075; // 7.5% tax
+    
+      return taxAmount;
+     
     }
-    
-    // console.log(invoiceRequestBody);
-    
-           
-            const token = localStorage.getItem('authToken');
+   
+    // useEffect(() => {
+    //   const total = calculateTotalAmount(lineItems);
+    //   setPopulateTotal(total);
+    // }, [lineItems]);
+               
+           const token = localStorage.getItem('authToken');
             if (!token) {
               console.error("Authorization token is missing");
               return;
             }
+            
+
      const invoiceResponse = await fetch (`${import.meta.env.VITE_CREATE_INVOICE_ENDPOINT}${clientId}/create-invoice`,{
      method: 'POST',
      headers: {
@@ -209,18 +238,19 @@ export const InvoiceForm = ({next, }) => {
       const invoiceData = await invoiceResponse.json().catch(() => null);
 
     if (invoiceData && Object.keys(invoiceData).length > 0) {
-      // console.log('Invoice created successfully:', invoiceData);
+const { id: invoiceId } = invoiceData; 
+
+setInvoiceId(invoiceId);
     } else {
       console.error('Invoice creation failed: No response data returned');
     }
       localStorage.removeItem('lineItems');
 
-      
       setInvoiceCreated(true);
       setTimeout(() => setInvoiceCreated(false), 10000); 
-      
     }catch (error) {
       console.error('Error:', error);
+      return false;
     }finally {
       setIsCreatingInvoice(false);
     }
@@ -278,13 +308,94 @@ export const InvoiceForm = ({next, }) => {
     setClientId(client.id);    
     setShowClientList(false); 
 };
- 
-// function to handle preview button
-  const handlePreviewClick = () => {
-    setShowPreview(!showPreview); 
-  };
-  
-       // Function to authenticate email and fetch customerId
+const sendInvoice = async () => {
+  if (!invoiceId) {
+    console.error('No invoiceId available to send.');
+    return;
+  }
+
+
+  if (!selectedClient?.email) {
+    console.error('No recipient email available for sending the invoice.');
+    return;
+  }
+
+  try {
+    setIsSendingInvoice(true);
+    
+      const requestBody = {
+        invoiceId: invoiceId,
+        recipientEmail: selectedClient.email,
+      };
+    const sendInvoiceResponse = await fetch(
+      `${import.meta.env.VITE_SEND_INVOICE_ENDPOINT}${invoiceId}/send-invoice?recipientEmail=${encodeURIComponent(selectedClient.email)}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody)
+          
+      }
+    );
+
+    if (!sendInvoiceResponse.ok) {
+      throw new Error(`Failed to send invoice: ${sendInvoiceResponse.statusText}`);
+    }
+    const responseText = await sendInvoiceResponse.text();
+
+    setInvoiceSent(true); 
+    setTimeout(() => setInvoiceSent(false), 10000);
+  } catch (error) {
+    console.error('Error sending invoice:', error);
+  } finally {
+    setIsSendingInvoice(false);
+  }
+};
+
+
+const handlePreviewClick = (values) => {
+  // Get stored items from localStorage
+  const storedItems = JSON.parse(localStorage.getItem('lineItems')) || [];
+
+  // Check if there are unadded items in the form
+  const unaddedItem =
+  (values?.invoice?.name || 'Default Item') &&
+  values?.invoice?.quantity &&
+  values?.invoice?.amount &&
+  values?.invoice?.invoiceNumber &&
+  values?.invoice?.dateOfIssue &&
+  values?.invoice?.due_date 
+
+    ? {
+        name: values.invoice.name || 'Default Item',
+        amount: values.invoice.amount,
+        quantity: values.invoice.quantity,
+        invoiceNumber: values.invoice.invoiceNumber,
+        dateOfIssue: values.invoice.dateOfIssue,
+        due_date: values.invoice.due_date,
+        total: values.invoice.amount * values.invoice.quantity,
+      }
+    : null;
+
+
+  // Merge stored items and unadded items
+  const updatedLineItems = unaddedItem
+    ? [...storedItems, unaddedItem]
+    : storedItems;
+
+  setUpdatedLineItems(updatedLineItems);
+
+  // Toggle the preview
+  setShowPreview(!showPreview);
+};
+// const handleInputChange = (id, field, value) => {
+//   setLineItems((prevItems) =>
+//     prevItems.map((item) =>
+//       item.id === id ? { ...item, [field]: Number(value) } : item
+//     )
+//   );
+// };
   const authenticateEmail = async (email) => {
     try {
       const response = await fetch(`${import.meta.env.VITE_GET_USER_BY_EMAIL_ENDPOINT}?email=${encodeURIComponent(email)}`);
@@ -300,6 +411,7 @@ export const InvoiceForm = ({next, }) => {
       throw error;
     }
   };
+
    
   return (
     <div className="md:px-[.5rem] pb-4 w-auto md:clear-right ml-3 md:ml-2 xl:ml-[19.5rem] mr-3 md:mr-2">
@@ -318,16 +430,18 @@ export const InvoiceForm = ({next, }) => {
           invoice: {
             invoiceNumber: '',
             dateOfIssue: '',
-            dateOfDue: '',
+            due_date: '',
             lineItems: [
               {
-                itemName: '',
+                name: '',
                 quantity: '',
                 amount: '',
                 vat: '',
                 total: '',
               },
             ],
+            invoiceValidity: '',
+
             itemDescription: '',
             tax: [
               {
@@ -350,20 +464,20 @@ export const InvoiceForm = ({next, }) => {
           invoice: Yup.object().shape({
             invoiceNumber: Yup.string().required('Required'),
             dateOfIssue: Yup.string().required('Required'),
-            dateOfDue: Yup.string().required('Required'),
-            // itemName: Yup.string().required('Required'),
-            // quantity: Yup.number().required('Required'),
-            // amount: Yup.number().required('Required'),
-            // vat: Yup.number().required('Required'),
-            // total: Yup.number().required('Required'),
-            // itemDescription: Yup.string().required('Required')
+            due_date: Yup.string().required('Required'),
+            name: Yup.string().required('Required'),
+            quantity: Yup.number().required('Required'),
+            amount: Yup.number().required('Required'),
+            vat: Yup.number().required('Required'),
+            total: Yup.number().required('Required'),
+            itemDescription: Yup.string().required('Required')
           })
         })}
         onSubmit={(values) => {
         }}
 
       >
-        {({ isSubmitting, setFieldValue, values, }) => (
+        {({ isSubmitting, setFieldValue, values, resetForm }) => (
           
           <Form className="bg-white  rounded px-4 pt-0 pb-8 mb-4 ">
             <fieldset className="mb-6 shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px] py-6  pt-0 px-4 rounded-md   ">
@@ -438,12 +552,12 @@ export const InvoiceForm = ({next, }) => {
        <li key={client.id} className="flex justify-between items-center">
          <div>
            <span className="font-medium">{client.firstName} {client.lastName}</span>
-           <p className="text-sm text-gray-500">{client.email}</p>
+           {/* <p className="text-sm text-gray-500">{client.email}</p> */}
          </div>
          <button 
            type="button"
            onClick={() => handleSelectClient(client)}
-           className="text-xs text-white bg-blue-500 hover:bg-blue-600 py-1 px-2 rounded"
+           className="text-xs text-white bg-[#126180] hover:bg-[#26428B] py-1 px-2 rounded"
            >
            Select
          </button>
@@ -470,30 +584,36 @@ export const InvoiceForm = ({next, }) => {
               </div>
 
               <div className="mb-4">
-                <label htmlFor="invoice.dateOfDue" className="block text-[10px] sm:text-[13px] md:text-base mb-2">Date of Due</label>
-                <Field type="date" name="invoice.dateOfDue" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-                <ErrorMessage name="invoice.dateOfDue" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
+                <label htmlFor="invoice.due_date" className="block text-[10px] sm:text-[13px] md:text-base mb-2">Due Date</label>
+                <Field type="date" name="invoice.due_date" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                <ErrorMessage name="invoice.due_date" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
               </div>
 
               <div className="mb-4">
-                <label htmlFor="invoice.itemName" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">Item Name</label>
-                <Field type="text" name="invoice.itemName" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-                <ErrorMessage name="invoice.itemName" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
+                <label htmlFor="invoice.name" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">Item Name</label>
+                <Field type="text" name="invoice.name" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                <ErrorMessage name="invoice.name" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
 
               <div className='grid grid-cols-4 gap-4 '> 
               <div className="mb-4 ">
                 <label htmlFor="invoice.quantity" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">Quantity</label>
-                <Field type="number" name="invoice.quantity" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                <Field type="number" name="invoice.quantity" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                // onChange={(e) => handleInputChange( "quantity", e.target.value)}
+/>
                 <ErrorMessage name="invoice.quantity" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
 
               <div className="mb-4">
                 <label htmlFor="invoice.amount" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">Amount</label>
-                <Field type="number" name="invoice.amount" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                <Field type="number" name="invoice.amount"                     
+                //  onChange={(e) => handleInputChange( "amount", e.target.value)}
+ className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      />
                 <ErrorMessage name="invoice.amount" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
+             
               <div className="mb-4">
   <label htmlFor="invoice.tax[0].amount" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">
     VAT (7.5%)
@@ -518,8 +638,16 @@ export const InvoiceForm = ({next, }) => {
 
               <div className="mb-4">
                 <label htmlFor="invoice.total" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">Total</label>
-                <Field type="number" name="invoice.total" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                <Field type="number" name="invoice.total" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                value ={populateTotal}/>
                 <ErrorMessage name="invoice.total" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="invoice.invoiceValidity" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">Invoice Validity</label>
+                <Field type="text" name="invoice.invoiceValidity" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                 placeholder="20 days"  
+                     />
+                <ErrorMessage name="invoice.invoiceValidity" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
               </div>
 
@@ -549,11 +677,11 @@ export const InvoiceForm = ({next, }) => {
               <div className='flex justify-center'>
                 <div className='pb-6'>
               <button type="button" className="text-secondary text-[10px] sm:text-[13px] md:text-base font-bold py-2 px-4 border border-secondary  rounded focus:outline-none focus:shadow-outline mr-2"
-
-              >
+            onClick={resetForm} >
                 Cancel
               </button>
               </div>
+              
               <div className='pb-6'>
               <button type="submit" 
                onClick={() => handleCreateInvoice(values)}
@@ -567,12 +695,26 @@ export const InvoiceForm = ({next, }) => {
   </div>
 )}
               </div>
-               {/* Preview Button */}
+              <div className='pb-6'>
+              <button type="submit" 
+  onClick={() => sendInvoice(invoiceId)}
+  disabled={isSendingInvoice}
+              className="bg-secondary text-primary text-[10px] sm:text-[13px] md:text-base font-bold py-2 px-4 border border-secondary  rounded focus:outline-none focus:shadow-outline mr-2">
+               {isSendingInvoice ? 'Sending Invoice...' : 'Send Invoice'}
+               </button>
+
+               {invoiceSent && (
+  <div className="item-added-box border border-blue-100 bg-blue-100 rounded-lg p-4 mt-4 text-blue-700 max-w-md mx-auto shadow-md">
+    <p className="mt-2 text-blue-500 font-bold">Invoice sent</p>
+  </div>
+)}
+</div>
+
       <div className='pb-6'>
         <button
           type="button"
-          onClick={handlePreviewClick} 
-          className="bg-secondary text-primary text-[10px] sm:text-[13px] md:text-base font-bold py-2 px-4 border border-secondary rounded focus:outline-none focus:shadow-outline"
+          onClick={() => handlePreviewClick(values)}
+                    className="bg-secondary text-primary text-[10px] sm:text-[13px] md:text-base font-bold py-2 px-4 border border-secondary rounded focus:outline-none focus:shadow-outline"
         >
           {showPreview ? "Close Preview" : "Preview"}
           </button>

@@ -7,9 +7,8 @@ import { useState, useEffect, } from 'react';
 
 const Invoice = () => {
   const [selectedClient, setSelectedClient] = useState(null);
-  const [showFiltered, setShowFiltered] = useState(false); // Flag to toggle filtered/all invoices
-  const [filteredInvoices, setFilteredInvoices] = useState([]); // State to hold filtered invoices
-  
+  const [showFiltered, setShowFiltered] = useState(false); 
+  const [filteredInvoices, setFilteredInvoices] = useState([]);
 
 
   const handleClientSelect = (clientId, clientName) => {

@@ -18,9 +18,12 @@ const businessSignUpSlice = createSlice({
       console.log(state.step);
       //   state.success = true;
     },
+    resetState(state) {
+      state.step = 0;
+    },
   },
   extraReducers: (builder) => {},
 });
 
-export const { nextStep } = businessSignUpSlice.actions;
+export const { nextStep, resetState } = businessSignUpSlice.actions;
 export default businessSignUpSlice.reducer;

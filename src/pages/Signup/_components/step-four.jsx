@@ -145,10 +145,9 @@ import { Form, Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import CustomButton from '../../../components/button/button';
 import { useState } from 'react';
+
 // const StepFourValidationSchema = Yup.object().shape({
-//   idType: Yup.string()
-//     .required('ID Type is required')
-//     .oneOf(['BVN', 'NIN'], 'Invalid ID Type'),
+//   idType: Yup.string().required('ID Type is required').oneOf(['BVN', 'NIN'], 'Invalid ID Type'),
 //   identificationNumber: Yup.string()
 //     .required('ID Number is required')
 //     .when('idType', {
@@ -157,14 +156,16 @@ import { useState } from 'react';
 //       otherwise: Yup.string().length(10, 'NIN must be 10 digits'),
 //     }),
 // });
+
 export const StepFour = ({ next }) => {
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
+
   const handleIDVerification = async (values) => {
     const idType = values.idType; // Example: 'NIN' or 'BVN'
     const identificationNumber = values.identificationNumber; // Example: NIN or BVN entered by the user
     setLoading(true);
-    // Define API endpoints dynamically
+
     const endpoints = {
       NIN: {
         search: import.meta.env.VITE_NIN_SEARCH_EXISTING_PROFILE_ENDPOINT,
@@ -182,12 +183,13 @@ export const StepFour = ({ next }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        // mode: 'no-cors',
+
         body: JSON.stringify({ [idType.toLowerCase()]: identificationNumber }), // Send { nin: 'value' } or { bvn: 'value' }
       });
+
       const searchResult = await searchResponse.json();
       if (searchResponse.ok && searchResult.data) {
-        const { firstname, lastname, gender, dob } = searchResult.data.identity || {};
+        const { firstname, lastname, gender, dob } = searchResult?.data?.identity || {};
         next({
           ...values,
           firstname: firstname,
@@ -202,13 +204,13 @@ export const StepFour = ({ next }) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          mode: 'no-cors',
+
           body: JSON.stringify({ [idType.toLowerCase()]: identificationNumber }),
         });
+
         const verifyResult = await verifyResponse.json();
         if (verifyResponse.ok && verifyResult.data) {
-          // Proceed with the verification response
-          const { firstname, lastname, gender, dob } = verifyResult.data.identity || {};
+          const { firstname, lastname, gender, dob } = searchResult?.data?.identity || {};
           next({
             ...values,
             firstname: firstname,
@@ -228,66 +230,7 @@ export const StepFour = ({ next }) => {
       setLoading(false);
     }
   };
-  // const handleBVN = async (values) => {
-  //   const requestBody = JSON.stringify({ bvn: values.BVN });
-  //   console.log('Request Body:', requestBody);
-  //   setLoading(true);
-  //   try {
-  //     const response = await fetch(import.meta.env.VITE_BVN_VERIFY_NEW_PROFILE_ENDPOINT, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: requestBody,
-  //     });
-  //     const data = await response.json();
-  //     if (response.ok) {
-  //       next({
-  //         ...values,
-  //         firstname: data.firstname,
-  //         lastname: data.lastname,
-  //         gender: data.gender,
-  //         dob: data.dob,
-  //       });
-  //     } else {
-  //       setApiError(data.message || 'Verification failed. Please try again.');
-  //     }
-  //   } catch (error) {
-  //     setApiError('An error occurred. Please try again.');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-  // const handleNIN = async (values) => {
-  //   const requestBody = JSON.stringify({ nin: values.NIN });
-  //   console.log('Request Body:', requestBody);
-  //   setLoading(true);
-  //   try {
-  //     const response = await fetch(import.meta.env.VITE_NIN_VERIFY_NEW_PROFILE_ENDPOINT, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: requestBody,
-  //     });
-  //     const data = await response.json();
-  //     if (response.ok) {
-  //       next({
-  //         ...values,
-  //         firstname: data.firstname,
-  //         lastname: data.lastname,
-  //         gender: data.gender,
-  //         dob: data.dob,
-  //       });
-  //     } else {
-  //       setApiError(data.message || 'Verification failed. Please try again.');
-  //     }
-  //   } catch (error) {
-  //     setApiError('An error occurred. Please try again.');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+
   localStorage.setItem('currentStep', 4);
   const Options = [
     { value: 'BVN', label: 'BVN' },
@@ -324,9 +267,7 @@ export const StepFour = ({ next }) => {
               handleIDVerification(values); // Single handler for both BVN and NIN
             }}>
             {({ handleChange, values, isValid, dirty }) => (
-              <Form
-                // onSubmit={handleSubmit}
-                className="mt-[30px]">
+              <Form className="mt-[30px]">
                 <div className="my-4">
                   <label htmlFor="idType" className="text-white block mb-2"></label>
                   <Field
@@ -352,9 +293,9 @@ export const StepFour = ({ next }) => {
                   <Field
                     type="text"
                     id="identificationNumber"
+                    placeholder="Enter Identification Number"
                     value={values.identificationNumber}
                     onChange={handleChange}
-                    placeholder="Enter Identification Number"
                     className="w-full px-[27px] py-[16px] border-[0.5px] border-[#00678F] rounded-md"
                     required
                   />

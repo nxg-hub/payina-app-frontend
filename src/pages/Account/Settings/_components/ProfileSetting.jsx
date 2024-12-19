@@ -1,22 +1,23 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import React, { useState } from 'react';
+
 // Validation schema for the  form
 const InventorySchema = Yup.object().shape({
-  firstName: Yup.string().required('required'),
-  lastName: Yup.string().required('required'),
-  email: Yup.string().email('Invalid email').required('Email is required'),
-  phoneNumber: Yup.string().required('required'),
-  idNumber: Yup.string().required('required'),
+  // firstName: Yup.string().required('required'),
+  // lastName: Yup.string().required('required'),
+  // email: Yup.string().email('Invalid email').required('Email is required'),
+  // phoneNumber: Yup.string().required('required'),
+  // idNumber: Yup.string().required('required'),
   country: Yup.string().required('required'),
   residentialAddress: Yup.string().required('required'),
   city: Yup.string().required('required'),
-  businessAddress: Yup.string().required('required'),
-  businessName: Yup.string().required('required'),
+  // businessAddress: Yup.string().required('required'),
+  // businessName: Yup.string().required('required'),
   businessEmail: Yup.string().email('Invalid email').required('Email is required'),
   contactNumber: Yup.string().required('required'),
-  cacNumber: Yup.string().required('required'),
-  taxIdNumber: Yup.string().required('required'),
+  // cacNumber: Yup.string().required('required'),
+  // taxIdNumber: Yup.string().required('required'),
   socialMedia: Yup.string().required('required'),
   businessCountry: Yup.string().required('required'),
 });
@@ -35,9 +36,11 @@ const ProfileSetting = () => {
   const [success, setSuccess] = useState(false);
   const [newAuthToken] = useLocalStorage('authToken', '');
 
-  //getting the profile pic and email from the redux store
+  //getting the userProfile from the redux store
   const profilePic = useSelector((state) => state.user.user.passportUrl);
   const userEmail = useSelector((state) => state.user.user.email);
+  const userDetails = useSelector((state) => state.user.user);
+  const userBusinessDetails = useSelector((state) => state.coporateCustomerProfile.customerDetails);
 
   const handleFileChange = (e) => {
     setFiles(e.target.files);
@@ -86,22 +89,22 @@ const ProfileSetting = () => {
     }
   };
   const initialValues = {
-    firstName: '',
-    lastName: '',
-    phoneNumber: '',
-    email: '',
-    idNumber: '',
-    country: '',
-    residentialAddress: '',
-    city: '',
-    businessName: '',
+    // firstName: '',
+    // lastName: '',
+    // phoneNumber: '',
+    // email: '',
+    // idNumber: '',
+    country: 'Nigeria',
+    residentialAddress: `${userBusinessDetails?.houseNumber}, ${userBusinessDetails?.street},  ${userBusinessDetails?.state} State,  ${userBusinessDetails?.lga} LGA  `,
+    city: userBusinessDetails?.businessState,
+    // businessName: '',
     businessAddress: '',
-    businessEmail: '',
-    contactNumber: '',
-    cacNumber: '',
-    taxIdNumber: '',
+    businessEmail: userDetails.email,
+    contactNumber: userDetails.phoneNumber,
+    // cacNumber: '',
+    // taxIdNumber: '',
     socialMedia: '',
-    businessCountry: '',
+    businessCountry: 'Nigeria',
   };
 
   const handleSubmit = async (values, actions) => {
@@ -187,81 +190,91 @@ const ProfileSetting = () => {
               <div className="md:flex gap-2">
                 <div className="w-[80%] md:w-[60%] m-auto">
                   <div className="py-0">
-                    <label className="font-normal block md:text-md" htmlFor="firstName">
+                    <label className="font-semibold block md:text-md" htmlFor="firstName">
                       First Name
                     </label>
                     <Field
-                      className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                      className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                       type="text"
                       name="firstName"
+                      value={userDetails.firstName}
+                      readOnly
                     />
-                    <ErrorMessage className="text-red-500" name="firstName" component="div" />
+                    {/* <ErrorMessage className="text-red-500" name="firstName" component="div" /> */}
                   </div>
                 </div>
                 <div className="w-[80%] md:w-[60%] m-auto">
                   <div className="py-0">
-                    <label className="font-normal block md:text-md" htmlFor="lastName">
+                    <label className="font-semibold block md:text-md" htmlFor="lastName">
                       Last Name
                     </label>
                     <Field
-                      className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                      className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                       type="text"
                       name="lastName"
+                      value={userDetails.lastName}
+                      readOnly
                     />
-                    <ErrorMessage className="text-red-500" name="lastName" component="div" />
+                    {/* <ErrorMessage className="text-red-500" name="lastName" component="div" /> */}
                   </div>
                 </div>
               </div>
               <div className="md:flex gap-2">
                 <div className="w-[80%] md:w-[60%] m-auto">
                   <div className="py-0">
-                    <label className="font-normal block md:text-md" htmlFor="phoneNumber">
+                    <label className="font-semibold block md:text-md" htmlFor="phoneNumber">
                       Phone Number
                     </label>
                     <Field
-                      className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                      type="number"
+                      className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                      type="text"
                       name="phoneNumber"
+                      value={userDetails.phoneNumber}
+                      readOnly
                     />
-                    <ErrorMessage className="text-red-500" name="phoneNumber" component="div" />
+                    {/* <ErrorMessage className="text-red-500" name="phoneNumber" component="div" /> */}
                   </div>
                 </div>
 
                 <div className="w-[80%] md:w-[60%] m-auto">
                   <div className="py-0">
-                    <label className="font-normal block md:text-md" htmlFor="email">
+                    <label className="font-semibold block md:text-md" htmlFor="email">
                       Email Address
                     </label>
                     <Field
-                      className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                      className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                       type="email"
                       name="email"
+                      value={userDetails.email}
+                      readOnly
                     />
-                    <ErrorMessage className="text-red-500" name="email" component="div" />
+                    {/* <ErrorMessage className="text-red-500" name="email" component="div" /> */}
                   </div>
                 </div>
               </div>
               <div className="md:flex gap-2">
                 <div className="w-[80%] md:w-[60%] m-auto">
                   <div className="py-0">
-                    <label className="font-normal block md:text-md" htmlFor="idNumber">
+                    <label className="font-semibold block md:text-md" htmlFor="idNumber">
                       ID Number
                     </label>
                     <Field
-                      className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                      type="number"
+                      className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                      type="text"
                       name="idNumber"
+                      value={userDetails.customerId}
+                      readOnly
                     />
-                    <ErrorMessage className="text-red-500" name="idNumber" component="div" />
+                    {/* <ErrorMessage className="text-red-500" name="idNumber" component="div" /> */}
                   </div>
                 </div>
                 <div className="w-[80%] md:w-[60%] m-auto">
                   <div className="py-0">
-                    <label className="font-normal block md:text-md" htmlFor="country">
+                    <label className="font-semibold block md:text-md" htmlFor="country">
                       Country
                     </label>
                     <Field
-                      className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                      className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                       type="text"
                       name="country"
                     />
@@ -272,11 +285,11 @@ const ProfileSetting = () => {
               <div className="md:flex gap-2">
                 <div className="w-[80%] md:w-[60%] m-auto">
                   <div className="py-0">
-                    <label className="font-normal block md:text-md" htmlFor="city">
+                    <label className="font-semibold block md:text-md" htmlFor="city">
                       City
                     </label>
                     <Field
-                      className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                      className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                       type="text"
                       name="city"
                     />
@@ -285,11 +298,11 @@ const ProfileSetting = () => {
                 </div>
                 <div className="w-[80%] md:w-[60%] m-auto">
                   <div className="py-0">
-                    <label className="font-normal block md:text-md" htmlFor="residentialAddress">
+                    <label className="font-semibold block md:text-md" htmlFor="residentialAddress">
                       Residential Address
                     </label>
                     <Field
-                      className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                      className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                       type="text"
                       name="residentialAddress"
                     />
@@ -307,44 +320,48 @@ const ProfileSetting = () => {
                 <div className="md:flex gap-2">
                   <div className="w-[80%] md:w-[60%] m-auto">
                     <div className="py-0">
-                      <label className="font-normal block md:text-md" htmlFor="businessName">
+                      <label className="font-semibold block md:text-md" htmlFor="businessName">
                         Business Name
                       </label>
                       <Field
-                        className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                        className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                         type="text"
                         name="businessName"
+                        value={userBusinessDetails?.businessName}
+                        readOnly
                       />
-                      <ErrorMessage className="text-red-500" name="businessName" component="div" />
+
+                      {/* <ErrorMessage className="text-red-500" name="businessName" component="div" /> */}
                     </div>
                   </div>
                   <div className="w-[80%] md:w-[60%] m-auto">
                     <div className="py-0">
-                      <label className="font-normal block md:text-md" htmlFor="businessAddress">
+                      <label className="font-semibold block md:text-md" htmlFor="businessAddress">
                         Business Address
                       </label>
                       <Field
-                        className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                        className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                         type="text"
                         name="businessAddress"
+                        value={`${userBusinessDetails?.businessHouseNumber}, ${userBusinessDetails?.businessStreetName},  ${userBusinessDetails?.businessState} State,  ${userBusinessDetails?.businessLGA} LGA  `}
                       />
-                      <ErrorMessage
+                      {/* <ErrorMessage
                         className="text-red-500"
                         name="businessAddress"
                         component="div"
-                      />
+                      /> */}
                     </div>
                   </div>
                 </div>
                 <div className="md:flex gap-2">
                   <div className="w-[80%] md:w-[60%] m-auto">
                     <div className="py-0">
-                      <label className="font-normal block md:text-md" htmlFor="contactNumber">
+                      <label className="font-semibold block md:text-md" htmlFor="contactNumber">
                         Contact Number
                       </label>
                       <Field
-                        className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                        type="number"
+                        className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                        type="text"
                         name="contactNumber"
                       />
                       <ErrorMessage className="text-red-500" name="contactNumber" component="div" />
@@ -353,13 +370,14 @@ const ProfileSetting = () => {
 
                   <div className="w-[80%] md:w-[60%] m-auto">
                     <div className="py-0">
-                      <label className="font-normal block md:text-md" htmlFor="businessEmail">
+                      <label className="font-semibold block md:text-md" htmlFor="businessEmail">
                         Email Address
                       </label>
                       <Field
-                        className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                        className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                         type="email"
                         name="businessEmail"
+                        value={userDetails.email}
                       />
                       <ErrorMessage className="text-red-500" name="businessEmail" component="div" />
                     </div>
@@ -368,39 +386,44 @@ const ProfileSetting = () => {
                 <div className="md:flex gap-2">
                   <div className="w-[80%] md:w-[60%] m-auto">
                     <div className="py-0">
-                      <label className="font-normal block md:text-md" htmlFor="cacNumber">
+                      <label className="font-semibold block md:text-md" htmlFor="cacNumber">
                         CAC Number
                       </label>
                       <Field
-                        className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                        className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                         type="number"
                         name="cacNumber"
+                        value={userBusinessDetails?.businessRegNumber}
+                        readOnly
                       />
-                      <ErrorMessage className="text-red-500" name="cacNumber" component="div" />
+
+                      {/* <ErrorMessage className="text-red-500" name="cacNumber" component="div" /> */}
                     </div>
                   </div>
                   <div className="w-[80%] md:w-[60%] m-auto">
                     <div className="py-0">
-                      <label className="font-normal block md:text-md" htmlFor="taxIdNumber">
+                      <label className="font-semibold block md:text-md" htmlFor="taxIdNumber">
                         Tax Identification Number
                       </label>
                       <Field
-                        className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                        className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                         type="text"
                         name="taxIdNumber"
+                        value={userBusinessDetails?.tin_No}
+                        readOnly
                       />
-                      <ErrorMessage className="text-red-500" name="taxIdNumber" component="div" />
+                      {/* <ErrorMessage className="text-red-500" name="taxIdNumber" component="div" /> */}
                     </div>
                   </div>
                 </div>
                 <div className="md:flex gap-2">
                   <div className="w-[80%] md:w-[60%] m-auto">
                     <div className="py-0">
-                      <label className="font-normal block md:text-md" htmlFor="socialMedia">
+                      <label className="font-semibold block md:text-md" htmlFor="socialMedia">
                         Social Media
                       </label>
                       <Field
-                        className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                        className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                         type="text"
                         name="socialMedia"
                       />
@@ -409,11 +432,11 @@ const ProfileSetting = () => {
                   </div>
                   <div className="w-[80%] md:w-[60%] m-auto">
                     <div className="py-0">
-                      <label className="font-normal block md:text-md" htmlFor="businessCountry">
+                      <label className="font-semibold block md:text-md" htmlFor="businessCountry">
                         Country
                       </label>
                       <Field
-                        className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                        className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                         type="text"
                         name="businessCountry"
                       />
@@ -427,7 +450,7 @@ const ProfileSetting = () => {
                 </div>
                 <div className="w-[80%] md:w-[60%] py-2 bg-secondary rounded-md m-auto mt-2 mb-4">
                   <button
-                    className="text-center w-full text-primary font-normal"
+                    className="text-center w-full  text-primary font-semibold"
                     type="submit"
                     disabled={isSubmitting}>
                     {loading ? 'Loading...' : 'Save Changes'}

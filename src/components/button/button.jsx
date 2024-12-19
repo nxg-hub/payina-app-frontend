@@ -11,7 +11,8 @@ const CustomButton = ({
   children,
   padding,
   className,
-  type
+  type,
+  loading,
 }) => {
   const buttonStyle = {
     width,
@@ -20,12 +21,17 @@ const CustomButton = ({
     color: textColor,
     borderRadius,
     padding,
-    cursor: 'pointer'
+    cursor: 'pointer',
   };
 
   return (
-    <button style={buttonStyle} type={type} onClick={onClick} className={className}>
-      {children}
+    <button
+      disabled={loading}
+      style={buttonStyle}
+      type={type}
+      onClick={onClick}
+      className={className}>
+      {loading ? 'loading...' : children}
     </button>
   );
 };
@@ -38,7 +44,8 @@ CustomButton.propTypes = {
   borderRadius: PropTypes.string,
   onClick: PropTypes.func,
   children: PropTypes.node,
-  padding: PropTypes.string
+  padding: PropTypes.string,
+  loading: PropTypes.boolean,
 };
 
 CustomButton.defaultProps = {
@@ -47,7 +54,7 @@ CustomButton.defaultProps = {
   textColor: '#ffffff',
   borderRadius: '6px',
   padding: '10px 35px',
-  width: ''
+  width: '',
 };
 
 export default CustomButton;

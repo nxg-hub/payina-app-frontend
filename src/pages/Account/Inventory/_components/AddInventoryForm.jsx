@@ -1,31 +1,74 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import React, { useState } from 'react';
+import useLocalStorage from '../../../../hooks/useLocalStorage';
+import { useDispatch } from 'react-redux';
+import { storeUpdatedInventory } from '../../../../Redux/InventorySlice';
+
 // Validation schema for the  form
 const InventorySchema = Yup.object().shape({
   productName: Yup.string().required('required'),
   pricePerProduct: Yup.string().required('required'),
   totalQuantitySold: Yup.string().required('required'),
   totalQuantityStocked: Yup.string().required('required'),
-  stockLeft: Yup.string().required('required'),
-  totalSalesPerProduct: Yup.string().required('required'),
 });
 
 const AddInventoryForm = () => {
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [newAuthToken] = useLocalStorage('authToken', '');
+
   const initialValues = {
     productName: '',
     pricePerProduct: '',
     totalQuantityStocked: '',
     totalQuantitySold: '',
-    stockLeft: '',
-    totalSalesPerProduct: '',
   };
 
   const handleSubmit = async (values, actions) => {
     const { resetForm } = actions;
-    resetForm();
-    console.log(values);
+    setLoading(true);
+    setUploadStatus('');
+    try {
+      // Example of an API call to authenticate the user
+      const response = await fetch(import.meta.env.VITE_ADD_INVENTORY, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${newAuthToken}`,
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error: Something went wrong'); // Handle unsuccessful login
+      }
+
+      if (response.ok) {
+        setSuccess(true);
+        setUploadStatus('Inventory added successfully!');
+        setLoading(false);
+        // Fetch the updated inventory
+        const response = await fetch(import.meta.env.VITE_GET_INVENTORY, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await response.json();
+
+        //storing the updated inventory in the inventorySlice using the redux store
+        dispatch(storeUpdatedInventory(data));
+      }
+
+      resetForm();
+      // console.log(values);
+    } catch (error) {
+      setUploadStatus(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <div className="">
@@ -92,36 +135,11 @@ const AddInventoryForm = () => {
                 <ErrorMessage className="text-red-500" name="totalQuantitySold" component="div" />
               </div>
             </div>
-            <div className="w-[80%] md:w-[60%] m-auto">
-              <div className="py-5">
-                <label className="font-bold block md:text-md" htmlFor="stockLeft">
-                  Stock Left
-                </label>
-                <Field
-                  className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                  type="number"
-                  name="stockLeft"
-                />
-                <ErrorMessage className="text-red-500" name="stockLeft" component="div" />
-              </div>
-            </div>
-            <div className="w-[80%] md:w-[60%] m-auto">
-              <div className="py-5">
-                <label className="font-bold block md:text-md" htmlFor="totalSalesPerProduct">
-                  Total Sales Per Product
-                </label>
-                <Field
-                  className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                  type="number"
-                  name="totalSalesPerProduct"
-                />
-                <ErrorMessage
-                  className="text-red-500"
-                  name="totalSalesPerProduct"
-                  component="div"
-                />
-              </div>
-            </div>
+            {uploadStatus && (
+              <p className={`mt-4 ${success ? 'text-green-500' : 'text-red-500'} text-center`}>
+                {uploadStatus}
+              </p>
+            )}
             <div className="w-[80%] md:w-[60%] py-2 bg-secondary rounded-md m-auto mt-2 mb-4">
               <button
                 className="text-center w-full text-primary font-bold"

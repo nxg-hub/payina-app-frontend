@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
 import useLocalStorage from '../../../hooks/useLocalStorage';
+import { useDispatch } from 'react-redux';
+import { resetState } from '../../../Redux/BusinessSignUpSlice';
 
 export const StepSeventeen = ({ data }) => {
   const [userData, setUserData] = useState(null);
@@ -12,8 +14,9 @@ export const StepSeventeen = ({ data }) => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const dataFetched = useRef(false);
-
+  const dispatch = useDispatch();
   useEffect(() => {
+    console.log('hey', newAuthToken);
     // Only fetch if we haven't already and have an auth token
     if (!dataFetched.current && newAuthToken) {
       const fetchUserAndWalletData = async () => {
@@ -41,7 +44,6 @@ export const StepSeventeen = ({ data }) => {
           if (!userResponse.ok || !walletResponse.ok) {
             throw new Error('One or more API calls failed');
           }
-
           const [userDataResponse, walletDataResponse] = await Promise.all([
             userResponse.json(),
             walletResponse.json(),
@@ -58,11 +60,10 @@ export const StepSeventeen = ({ data }) => {
           setIsLoading(false);
         }
       };
-
       dataFetched.current = true; // Mark as fetched before starting
       fetchUserAndWalletData();
     }
-
+    // console.log(userData, walletData);
     // Cleanup function
     return () => {
       dataFetched.current = false; // Reset if component unmounts
@@ -70,6 +71,7 @@ export const StepSeventeen = ({ data }) => {
   }, [newAuthToken]); // Only depend on authToken
 
   const handleClick = () => {
+    dispatch(resetState());
     navigate('/account/dashboard');
   };
 
@@ -77,13 +79,13 @@ export const StepSeventeen = ({ data }) => {
     return <div className="text-center py-8">Loading...</div>;
   }
 
-  if (error) {
-    return <div className="text-center py-8 text-red-600">Error: {error}</div>;
-  }
+  // if (error) {
+  //   return <div className="text-center py-8 text-red-600">Error: {error}</div>;
+  // }
 
   return (
     <>
-      <div className="hidden xl:block fixed top-[-1rem] right-[-32rem]">
+      <div className="hidden  xl:block fixed top-[-1rem] right-[-32rem]">
         <img src={images.Group} alt="" />
       </div>
       <div className="hidden md:block fixed top-[-1rem] right-[-2.5rem] -z-10">
@@ -141,7 +143,7 @@ export const StepSeventeen = ({ data }) => {
               <div className="w-full text-primary absolute top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%] flex flex-col md:space-y-4">
                 <span className="md:text-2xl text-xs font-medium">Payina Account Number</span>
                 <span className="md:text-3xl text-sm font-bold">
-                  {walletData?.payStackVirtualAccountNumber || 'N/A'}
+                  {walletData?.nombaBankAccountNumber || 'N/A'}
                 </span>
               </div>
             </div>

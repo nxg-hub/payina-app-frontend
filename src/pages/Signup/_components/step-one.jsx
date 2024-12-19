@@ -3,19 +3,25 @@ import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
 import { SignUpSchema } from '../schemas/schema';
 import { useNavigate } from 'react-router-dom';
+import { BsEye, BsEyeSlash } from 'react-icons/bs';
+import { useState } from 'react';
 
 export const StepOne = ({ next }) => {
   const savedEmail = localStorage.getItem('userEmail') || ''; // Fallback to an empty string if no email is stored
+  const [showPassword, setShowPassword] = useState(false);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
   const handleSubmit = (values) => {
-    // localStorage.setItem('currentStep', 1);
+    localStorage.setItem('currentStep', 1);
     localStorage.setItem('userEmail', values.email);
     next(values);
   };
-  const handleToggle = () => {
-    navigate('/personal/signup');
-  };
+  // const handleToggle = () => {
+  //   navigate('/personal/signup');
+  // };
   return (
     <>
       <div className="text-center mt-20 xl:mt-0 text-primary font-extrabold xl:text-5xl text-2xl">
@@ -35,13 +41,13 @@ export const StepOne = ({ next }) => {
                 <div className="text-lightBlue text-start font-bold xl:text-[32px] text-xl">
                   Enter Email and Password
                 </div>
-                <div className="text-center mt-4">
+                {/* <div className="text-center mt-4">
                   <button
                     onClick={handleToggle}
                     className="text-yellow font-bold underline hover:no-underline focus:outline-none">
                     Sign up as a personal User Instead
                   </button>
-                </div>
+                </div> */}
                 <div className="xl:w-[120%] flex flex-col space-y-2 ">
                   <label htmlFor="email" className="text-sm font-normal text-lightBlue">
                     Email Address
@@ -60,16 +66,22 @@ export const StepOne = ({ next }) => {
                   </label>
                   <Field
                     name="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="Enter Password"
                     className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-light text-base text-gray rounded-[5px] py-2 px-[10px]"
                   />
                   {/* Helper Text for Password Instructions */}
                   <span className="text-xs text-gray-500">
-                    Password should contain alphabets and numbers (alphanumeric)
+                    Password should not be less than 8 characters and should contain alphabets and
+                    numbers (alphanumeric)
                   </span>
 
                   <ErrorMessage name="password" component="span" className="text-[#db3a3a]" />
+                  {showPassword ? (
+                    <BsEye onClick={handleShowPassword} className="absolute top-10 right-1" />
+                  ) : (
+                    <BsEyeSlash onClick={handleShowPassword} className="absolute top-10 right-1" />
+                  )}
                 </div>
                 <div className="xl:w-[120%] flex flex-col space-y-2 ">
                   <label htmlFor="password2" className="text-sm font-normal text-lightBlue">
@@ -77,10 +89,11 @@ export const StepOne = ({ next }) => {
                   </label>
                   <Field
                     name="confirmPassword"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="Confirm Password"
                     className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-light text-base text-gray rounded-[5px] py-2 px-[10px]"
                   />
+
                   <ErrorMessage
                     name="confirmPassword"
                     component="span"

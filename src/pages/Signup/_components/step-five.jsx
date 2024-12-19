@@ -6,8 +6,7 @@ import { useState } from 'react';
 const StepFiveValidationSchema = Yup.object().shape({
   username: Yup.string().required('Username is required'),
 });
-
-export const StepFive = ({ next, bvnData, email, initialValues }) => {
+export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
   const userEmail = localStorage.getItem('userEmail');
@@ -23,13 +22,14 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
         },
         body: JSON.stringify({
           payinaUserName: values.username,
-          gender: bvnData.gender,
+          gender: bvnData.gender || ninData.gender,
           email: userEmail,
-          firstName: bvnData.firstName,
-          lastName: bvnData.lastName,
-          dob: bvnData.dob,
+          firstName: bvnData.firstname || ninData.firstname,
+          lastName: bvnData.lastaame || ninData.lastname,
+          dob: bvnData.dob || ninData.dob,
           bvn: initialValues.identificationNumber,
           accountType: 'corporate',
+          bvnverificationStatus: 'VERIFIED',
         }),
       });
 
@@ -62,28 +62,28 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
         {({ isValid, dirty }) => (
           <Form className="mt-8">
             <div className="my-2">
-              <label htmlFor="firstName" className="text-secondary block mb-4 w-full text-sm">
+              <label htmlFor="firstname" className="text-secondary block mb-4 w-full text-sm">
                 First Name
               </label>
               <Field
                 type="text"
-                id="firstName"
-                name="firstName"
-                value={bvnData.firstName}
+                id="firstname"
+                name="firstname"
+                value={bvnData.firstname || ninData.firstname}
                 readOnly
                 className=" w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
               />
             </div>
 
             <div className="my-2">
-              <label htmlFor="lastName" className="text-secondary block mb-4 w-full text-sm">
+              <label htmlFor="lastname" className="text-secondary block mb-4 w-full text-sm">
                 Last Name
               </label>
               <Field
                 type="text"
-                id="lastName"
-                name="lastName"
-                value={bvnData.lastName}
+                id="lastname"
+                name="lastname"
+                value={bvnData.lastName || ninData.lastname}
                 readOnly
                 className="w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
               />
@@ -97,7 +97,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 type="text"
                 id="gender"
                 name="gender"
-                value={bvnData.gender}
+                value={bvnData.gender || ninData.gender}
                 readOnly
                 className=" w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
               />
@@ -111,7 +111,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 type="text"
                 id="dob"
                 name="dob"
-                value={bvnData.dob}
+                value={bvnData.dob || ninData.dob}
                 readOnly
                 className="w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
               />

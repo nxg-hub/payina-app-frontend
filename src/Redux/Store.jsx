@@ -5,12 +5,15 @@ import storage from 'redux-persist/lib/storage'; // Defaults to localStorage for
 import userReducer from './UserSlice';
 import personalSignUpReducer from './PersonalSignUpSlice';
 import businessSignUpReducer from './BusinessSignUpSlice';
+import corporateCustomerReducer from './CoorperateCustomerSlice';
+import inventoryReducer from './InventorySlice';
+import inventoryByIdReducer from './InventoryByIdSlice';
 
 // Configuration for redux-persist
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['user', 'personalSignUp', 'businessSignUp'], // Add reducers you want to persist here
+  whitelist: ['user', 'personalSignUp', 'businessSignUp', 'coporateCustomerProfile', 'inventory'], // Add reducers you want to persist here
 };
 
 // Combine all reducers
@@ -18,6 +21,9 @@ const rootReducer = combineReducers({
   user: userReducer,
   personalSignUp: personalSignUpReducer,
   businessSignUp: businessSignUpReducer,
+  coporateCustomerProfile: corporateCustomerReducer,
+  inventory: inventoryReducer,
+  inventoryById: inventoryByIdReducer,
 });
 
 // Create persisted reducer
