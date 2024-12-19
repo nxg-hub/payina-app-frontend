@@ -22,9 +22,10 @@ const StepFifteenValidationSchema = Yup.object().shape({
 
 export const StepFifteen = ({ next, email }) => {
   const handleSubmit = async (values) => {
+    const userEmail = localStorage.getItem('userEmail');
     try {
       // Fetch customerId using the provided email
-      const customerId = await authenticateEmail(email);
+      const customerId = await authenticateEmail(userEmail);
 
       if (!customerId) {
         console.error('Failed to fetch customer ID.');

@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
 import useLocalStorage from '../../../hooks/useLocalStorage';
+import { useDispatch } from 'react-redux';
+import { resetState } from '../../../Redux/PersonalSignUpSlice';
 
 export const StepSeventeen = ({ data }) => {
   const [userData, setUserData] = useState(null);
@@ -12,6 +14,7 @@ export const StepSeventeen = ({ data }) => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const dataFetched = useRef(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // Only fetch if we haven't already and have an auth token
@@ -27,15 +30,15 @@ export const StepSeventeen = ({ data }) => {
                 accept: '*/*',
                 apiKey: import.meta.env.VITE_API_KEY,
                 Authorization: `Bearer ${newAuthToken}`,
-                'Content-Type': 'application/json'
-              }
+                'Content-Type': 'application/json',
+              },
             }),
             fetch(import.meta.env.VITE_GET_WALLET_ENDPOINT, {
               headers: {
                 Authorization: `Bearer ${newAuthToken}`,
-                'Content-Type': 'application/json'
-              }
-            })
+                'Content-Type': 'application/json',
+              },
+            }),
           ]);
 
           if (!userResponse.ok || !walletResponse.ok) {
@@ -44,7 +47,7 @@ export const StepSeventeen = ({ data }) => {
 
           const [userDataResponse, walletDataResponse] = await Promise.all([
             userResponse.json(),
-            walletResponse.json()
+            walletResponse.json(),
           ]);
 
           setUserData(userDataResponse);
@@ -71,6 +74,7 @@ export const StepSeventeen = ({ data }) => {
 
   const handleClick = () => {
     navigate('/personal/dashboard');
+    dispatch(resetState());
   };
 
   if (isLoading) {

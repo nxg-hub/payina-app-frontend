@@ -7,13 +7,13 @@ export const StepSixteen = ({ next, email }) => {
     // Merge OTP and Confirm OTP values into strings
     const otpValue = values.otp.join('');
     const confirmOtpValue = values.confirmOtp.join('');
-
+    const userEmail = localStorage.getItem('userEmail');
     // Check if OTP and Confirm OTP match
     if (otpValue === confirmOtpValue) {
       const requestData = {
         pin: otpValue,
         verifyPin: confirmOtpValue,
-        email: email,
+        email: userEmail,
       };
 
       try {

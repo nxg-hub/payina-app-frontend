@@ -8,6 +8,7 @@ export const StepThree = ({ next, data }) => {
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [otpError, setOtpError] = useState('');
   const [canResendCode, setCanResendCode] = useState(false);
+  const [loading, setLoading] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -18,6 +19,7 @@ export const StepThree = ({ next, data }) => {
   }, []);
 
   const handleSubmit = async (values) => {
+    setLoading(true);
     try {
       const response = await fetch(import.meta.env.VITE_VALIDATE_OTP_ENDPOINT, {
         method: 'POST',
@@ -30,11 +32,13 @@ export const StepThree = ({ next, data }) => {
 
       if (response.ok) {
         next(values);
+        setLoading(false);
       } else {
         setOtpError(data.message || 'Invalid OTP');
       }
     } catch (error) {
       setOtpError('An error occurred. Please try again.');
+      setLoading(false);
     }
   };
 
@@ -203,6 +207,7 @@ export const StepThree = ({ next, data }) => {
                 Enter Code
               </span>
               <CustomButton
+                loading={loading}
                 padding="15px"
                 type="submit"
                 children="Next"

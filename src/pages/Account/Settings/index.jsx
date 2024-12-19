@@ -4,9 +4,11 @@ import AccountSetting from './_components/AccountSetting';
 const Settings = () => {
   return (
     <div className="bg-primary">
-      <Navbar />
-      <AccountSetting />
-      <Sidebar />
+      <>
+        <Navbar />
+        <AccountSetting />
+        <Sidebar />
+      </>
     </div>
   );
 };

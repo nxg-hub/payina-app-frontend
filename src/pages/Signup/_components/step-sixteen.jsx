@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import { images } from '../../../constants';
 
 export const StepSixteen = ({ next, email }) => {
+  const userEmail = localStorage.getItem('userEmail');
   const handleSubmit = async (values) => {
     // Merge OTP and Confirm OTP values into strings
     const otpValue = values.otp.join('');
@@ -14,7 +15,7 @@ export const StepSixteen = ({ next, email }) => {
       const requestData = {
         pin: otpValue,
         verifyPin: confirmOtpValue,
-        email: email, // Pass the email from previous steps
+        email: userEmail, // Pass the email from previous steps
       };
 
       try {

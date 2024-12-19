@@ -5,7 +5,7 @@ import { images } from '../../../constants';
 import { useState } from 'react';
 import { useAuth } from '../../../useAuth';
 import useLocalStorage from '../../../hooks/useLocalStorage';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
 
 const parseXML = (xml) => {
@@ -55,7 +55,6 @@ const LoginForm = () => {
           localStorage.setItem('authToken', token);
 
           await auth.checkUserRegistrationLevel(); // Trigger the redirection after login
-          // navigate('/account/dashboard');
         } else {
           setErrorMessage('Login failed: Invalid token structure');
         }

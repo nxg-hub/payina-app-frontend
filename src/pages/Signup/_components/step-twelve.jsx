@@ -6,10 +6,11 @@ import { MdOutlineFileUpload } from 'react-icons/md';
 import { BusinessAddressVerification } from '../schemas/schema';
 
 const uploadDocument = async (documentFile, email) => {
+  const userEmail = localStorage.getItem('userEmail');
   try {
     const formData = new FormData();
     formData.append('document', documentFile);
-    formData.append('email', email);
+    formData.append('email', userEmail);
 
     const response = await fetch(import.meta.env.VITE_UPLOAD_BUSINESS_DOCUMENT_ENDPOINT, {
       method: 'POST',
@@ -31,10 +32,11 @@ const uploadDocument = async (documentFile, email) => {
   }
 };
 const uploadLogo = async (logoFile, email) => {
+  const userEmail = localStorage.getItem('userEmail');
   try {
     const formData = new FormData();
     formData.append('document', logoFile);
-    formData.append('email', email);
+    formData.append('email', userEmail);
 
     const response = await fetch(import.meta.env.VITE_UPLOAD_BUSINESS_LOGO_ENDPOINT, {
       method: 'POST',
@@ -151,7 +153,7 @@ export const StepTwelve = ({ next, email }) => {
                   <Field
                     as="select"
                     name="business_confirm_document"
-                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[5px] py-2 px-8 bg-secondary">
+                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base rounded-[5px] py-2 px-8 bg-secondary">
                     <option value="" className="!bg-secondary text-primary font-medium" disabled>
                       Select Document
                     </option>

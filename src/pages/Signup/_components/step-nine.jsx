@@ -35,7 +35,7 @@ export const StepNine = ({ next, email }) => {
   const [documentDetails, setDocumentDetails] = useState('');
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState('');
-
+  const userEmail = localStorage.getItem('userEmail');
   const handleSubmit = async (values) => {
     setLoading(true);
     setApiError('');
@@ -44,7 +44,7 @@ export const StepNine = ({ next, email }) => {
       const documentFile = values.document_file; // Get the selected document file
       // console.log('Selected document file:', documentFile);
 
-      const uploadedDocumentUrl = await uploadDocument(documentFile, email);
+      const uploadedDocumentUrl = await uploadDocument(documentFile, userEmail);
 
       next({ document_type: values.document_type });
     } catch (error) {

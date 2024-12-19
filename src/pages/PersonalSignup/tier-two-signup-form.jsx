@@ -1,13 +1,6 @@
 import React, { useState } from 'react';
 
-import {
-  StepEight,
-  StepNine,
-  StepSeven,
-  StepSeventeen,
-  StepSix,
-  StepTwelve,
-} from './_components';
+import { StepEight, StepNine, StepSeven, StepSeventeen, StepSix, StepTwelve } from './_components';
 
 export default function TierTwoSignupForm() {
   const [data, setData] = useState({

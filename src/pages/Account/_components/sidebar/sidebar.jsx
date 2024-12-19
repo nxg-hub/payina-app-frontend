@@ -12,6 +12,8 @@ import { persistor } from '../../../../Redux/Store.jsx';
 import { reSetUserDetails } from '../../../../Redux/UserSlice.jsx';
 import { BsThreeDots } from 'react-icons/bs';
 import Signout from '../../../signout.jsx';
+import { resetCorporate } from '../../../../Redux/CoorperateCustomerSlice.jsx';
+import { resetInventory } from '../../../../Redux/InventorySlice.jsx';
 
 export const Sidebar = () => {
   const location = useLocation();
@@ -33,12 +35,15 @@ export const Sidebar = () => {
   };
   const isPersonalDashboard = currentRoute === '/personal/dashboard';
 
-  // const handleLogout = () => {
-  //   localStorage.removeItem('userEmail');
-  //   persistor.purge(); // Clears all persisted state
-  //   dispatch(reSetUserDetails());
-  //   navigate('/');
-  // };
+  const handleLogout = () => {
+    localStorage.removeItem('userEmail');
+    persistor.purge(); // Clears all persisted state
+    dispatch(reSetUserDetails());
+    dispatch(resetCorporate());
+    dispatch(resetInventory());
+    localStorage.clear();
+    navigate('/login');
+  };
   // useEffect(() => {
   //   const fetchUserDetails = async () => {
   //     if (!newAuthToken) {
@@ -84,7 +89,7 @@ export const Sidebar = () => {
       <div className="space-y-[52px] flex flex-col w-full pb-20">
         <div className="flex flex-col justify-center items-center">
           <div className="mb-20">
-            {userImage ? (
+            {profilePic ? (
               <img
                 src={profilePic}
                 // src={userImage}
@@ -233,14 +238,14 @@ export const Sidebar = () => {
               <TbSettings size={22} />
               <span className="hover:text-lightBlue ease transition-colors">Account Settings</span>
             </Link>
-            {/* <button
+            <button
               onClick={handleLogout}
               className={`!mt-[10rem] flex items-center space-x-6 ${
                 currentRoute === '/' ? '!ml-3 font-bold text-lightBlue' : ''
               }`}>
               <VscSignOut size={22} />
               <span className="hover:text-lightBlue ease transition-colors">Sign Out</span>
-            </button> */}
+            </button>
             <Signout />
           </div>
         </div>

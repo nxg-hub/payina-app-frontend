@@ -4,6 +4,7 @@ import TransactionModal from '../utilities/TransactionModal.jsx';
 import successIcon from '../assets/images/tansIcon.png';
 import errorIcon from '../assets/images/redrectangle.png';
 import apiService from '../services/apiService.js';
+import { persistor } from '../Redux/Store.jsx';
 
 const SignOut = () => {
   const navigate = useNavigate();
@@ -22,6 +23,8 @@ const SignOut = () => {
       if (response.status === 'ACCEPTED') {
         setModalMessage(response.message || 'Logged out successfully');
         setShowModal(true);
+
+        persistor.purge(); // Clears all persisted state
 
         // Delay navigation
         setTimeout(() => {
@@ -48,8 +51,7 @@ const SignOut = () => {
       <button
         onClick={handleSignOut}
         disabled={isLoading}
-        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
-      >
+        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
         {isLoading ? 'Signing Out...' : 'Sign Out'}
       </button>
 

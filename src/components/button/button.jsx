@@ -12,6 +12,7 @@ const CustomButton = ({
   padding = '10px 35px',
   className,
   type,
+  loading,
 }) => {
   const buttonStyle = {
     width,
@@ -24,8 +25,13 @@ const CustomButton = ({
   };
 
   return (
-    <button style={buttonStyle} type={type} onClick={onClick} className={className}>
-      {children}
+    <button
+      disabled={loading}
+      style={buttonStyle}
+      type={type}
+      onClick={onClick}
+      className={className}>
+      {loading ? 'loading...' : children}
     </button>
   );
 };
