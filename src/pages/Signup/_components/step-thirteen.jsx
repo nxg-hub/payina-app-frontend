@@ -22,8 +22,9 @@ const incomeRangeOptions = [
 ];
 
 export const StepThirteen = ({ next, email, initialValues }) => {
+  const userEmail = localStorage.getItem('userEmail');
   const handleSubmit = async (values) => {
-    const customerId = await authenticateEmail(email); // Ensure email is passed correctly
+    const customerId = await authenticateEmail(userEmail); // Ensure email is passed correctly
     console.log('Authenticated User ID:', customerId);
 
     // Combine previous data with the current step's data
@@ -185,7 +186,7 @@ export const StepThirteen = ({ next, email, initialValues }) => {
                     as="select"
                     id="numberOfStaff"
                     name="numberOfStaff"
-                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-sm text-gray rounded-[10px] py-2 px-[20px] bg-secondary">
+                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-sm  rounded-[10px] py-2 px-[20px] bg-secondary">
                     <option value="" disabled>
                       Select Number of Staff
                     </option>
@@ -210,7 +211,7 @@ export const StepThirteen = ({ next, email, initialValues }) => {
                     as="select"
                     id="annualIncomeRange"
                     name="annualIncomeRange"
-                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-sm text-gray rounded-[10px] py-2 px-[10px] bg-secondary">
+                    className="text-primary w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-sm rounded-[10px] py-2 px-[10px] bg-secondary">
                     <option value="" disabled>
                       Select Annual Income Range
                     </option>

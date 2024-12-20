@@ -147,6 +147,7 @@ export function useAuth() {
 
       // Process registration level
       const registrationLevel = registrationResponse.data;
+
       const step = REGISTRATION_LEVELS[registrationLevel] || 0;
       localStorage.setItem('currentStep', step);
 

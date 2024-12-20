@@ -80,6 +80,7 @@ export const StepTwo = ({ next, initialValues }) => {
       padding: 1.5rem !important;
     }  
   `;
+  localStorage.setItem('currentStep', 2);
   return (
     <div className="relative bg-black min-h-screen flex items-center justify-center">
       <img

@@ -36,14 +36,14 @@ export const StepSix = ({ next, email }) => {
   // Ensure email is passed as a prop
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState('');
-
+  const userEmail = localStorage.getItem('userEmail');
   const handleSubmit = async (values, actions) => {
     setLoading(true);
     setApiError('');
 
     try {
       const imageFile = values.passport[0];
-      await uploadImage(imageFile, email); // Pass the email to uploadImage function
+      await uploadImage(imageFile, userEmail); // Pass the email to uploadImage function
       next(values);
     } catch (error) {
       setApiError(error.message || 'An error occurred. Please try again.');

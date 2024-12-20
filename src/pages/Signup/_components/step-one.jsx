@@ -15,7 +15,7 @@ export const StepOne = ({ next }) => {
     setShowPassword(!showPassword);
   };
   const handleSubmit = (values) => {
-    // localStorage.setItem('currentStep', 1);
+    localStorage.setItem('currentStep', 1);
     localStorage.setItem('userEmail', values.email);
     next(values);
   };

@@ -10,7 +10,7 @@ const StepFiveValidationSchema = Yup.object().shape({
 export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
-
+  const userEmail = localStorage.getItem('userEmail');
   const handleSubmit = async (values) => {
     setLoading(true);
     setApiError('');
@@ -24,9 +24,9 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
         body: JSON.stringify({
           payinaUserName: values.username,
           gender: bvnData.gender || ninData.gender,
-          email: email,
-          firstname: bvnData.firstname || ninData.firstname,
-          lastname: bvnData.lastaame || ninData.lastname,
+          email: userEmail,
+          firstName: bvnData.firstname || ninData.firstname,
+          lastName: bvnData.lastaame || ninData.lastname,
           dob: bvnData.dob || ninData.dob,
           bvn: initialValues.identificationNumber,
           accountType: 'corporate',
