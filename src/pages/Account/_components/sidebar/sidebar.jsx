@@ -246,7 +246,7 @@ export const Sidebar = () => {
               <VscSignOut size={22} />
               <span className="hover:text-lightBlue ease transition-colors">Sign Out</span>
             </button>
-            <Signout />
+            {/* <Signout /> */}
           </div>
         </div>
       </div>
