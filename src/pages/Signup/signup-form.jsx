@@ -78,7 +78,7 @@ export default function SignUpForm() {
     <StepFifteen next={handleNextStep} email={data.email} />,
     <StepSixteen next={handleNextStep} email={data.email} />,
     <StepSeven next={handleNextStep} text="You Have Successfully Set Your Pin" />,
-    <StepSeventeen next={handleNextStep} data={data} />,
+    <StepSeventeen next={handleNextStep} email={data.email} />,
   ];
 
   return <div className="">{steps[currentStep]}</div>;
