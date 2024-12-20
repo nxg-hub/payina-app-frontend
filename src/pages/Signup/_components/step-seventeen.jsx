@@ -121,11 +121,14 @@ export const StepSeventeen = ({ data }) => {
         alt="Background Design"
         className="absolute bottom-[2rem] right-[32rem] w-20 h-20"
       />
-      <div className="relative z-10 flex flex-col justify-center items-center bg-white shadow-md xl:p-8 px-4 rounded-lg mx-auto sm:w-[300px] md:w-[400px] lg:w-[600px]">
+      <div className="relative z-10 lg:px-6 lg:mb-5 lg:mt-0 !mt-10 rounded-[10px] bg-lightBlue flex flex-col w-auto lg:w-[843px]">
         <div className="flex flex-col xl:w-[50%] text-center mx-auto space-y-2">
-          <span className="text-[24px] md:text-[32px] font-bold">Congrats Champ!</span>
-          <span className="md:text-2xl text-base text-yellow font-bold">
-            You have successfully set up your Payina Business account <br /> Here are your details
+          <span className="text-[24px] lg:text-[32px] font-bold">Congrats Champ!</span>
+          <span className="lg:text-2xl text-center text-yellow font-bold">
+            You have successfully set up your Payina Business account.
+          </span>
+          <span className="lg:text-2xl text-center text-yellow font-bold">
+            Here are your details
           </span>
         </div>
         <div className="mt-12 xl:mt-8">
@@ -194,7 +197,7 @@ export const StepSeventeen = ({ data }) => {
               />
               <div className="w-full text-primary absolute top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%] flex flex-col md:space-y-4">
                 <span className="md:text-2xl text-xs font-medium">Business Name</span>
-                <span className="md:text-3xl text-sm font-bold capitalize">
+                <span className="md:text-3xl text-sm font-bold capitalize text-nowrap">
                   {walletData?.name || data?.business_details?.business_name || 'N/A'}
                 </span>
               </div>
