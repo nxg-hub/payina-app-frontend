@@ -38,7 +38,9 @@ export const Sidebar = () => {
   const handleLogout = () => {
     localStorage.removeItem('userEmail');
     persistor.purge(); // Clears all persisted state
-    dispatch(reSetUserDetails(), resetCorporate(), resetInventory());
+    dispatch(reSetUserDetails());
+    dispatch(resetCorporate());
+    dispatch(resetInventory());
     localStorage.clear();
     navigate('/login');
   };
