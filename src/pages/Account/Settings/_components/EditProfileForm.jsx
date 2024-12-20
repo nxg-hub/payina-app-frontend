@@ -32,8 +32,7 @@ const EditProfileForm = () => {
     setUploadStatus('');
     try {
       const response = await fetch(
-        import.meta.env.VITE_UPDATE_PROFILE.replace('{customerId}', customerId, '{id}', customerId),
-        // `https://payina-be-6f08cdfb4414.herokuapp.com/api/corporate-customers/update-profile/${customerId}?customerId=${customerId}`,
+        import.meta.env.VITE_UPDATE_PROFILE.replace('{customerId}', customerId),
         {
           method: 'PUT',
           headers: {
