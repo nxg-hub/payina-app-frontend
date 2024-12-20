@@ -1,78 +1,55 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
-import useLocalStorage from '../../../hooks/useLocalStorage';
-import { useDispatch } from 'react-redux';
-import { resetState } from '../../../Redux/BusinessSignUpSlice';
 
-export const StepSeventeen = ({ data }) => {
+export const StepSeventeen = () => {
   const [userData, setUserData] = useState(null);
-  const [walletData, setWalletData] = useState(null);
-  const [newAuthToken] = useLocalStorage('authToken', '');
+  const userEmail = localStorage.getItem('userEmail');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const dataFetched = useRef(false);
-  const dispatch = useDispatch();
+
   useEffect(() => {
-    console.log('hey', newAuthToken);
-    // Only fetch if we haven't already and have an auth token
-    if (!dataFetched.current && newAuthToken) {
-      const fetchUserAndWalletData = async () => {
-        try {
-          console.log('Starting data fetch...');
-
-          const [userResponse, walletResponse] = await Promise.all([
-            fetch(import.meta.env.VITE_GET_USER, {
-              method: 'GET',
-              headers: {
-                accept: '*/*',
-                apiKey: import.meta.env.VITE_API_KEY,
-                Authorization: `Bearer ${newAuthToken}`,
-                'Content-Type': 'application/json',
-              },
-            }),
-            fetch(import.meta.env.VITE_GET_WALLET_ENDPOINT, {
-              headers: {
-                Authorization: `Bearer ${newAuthToken}`,
-                'Content-Type': 'application/json',
-              },
-            }),
-          ]);
-
-          if (!userResponse.ok || !walletResponse.ok) {
-            throw new Error('One or more API calls failed');
+    const fetchUserData = async () => {
+      if (!userEmail) {
+        setError('Email is required.');
+        setIsLoading(false);
+        return;
+      }
+      console.log('data.email:', userEmail);
+      try {
+        setIsLoading(true); // Start loading
+        const response = await fetch(
+          `${import.meta.env.VITE_GET_USER_BY_EMAIL_ENDPOINT}?email=${encodeURIComponent(userEmail)}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
           }
-          const [userDataResponse, walletDataResponse] = await Promise.all([
-            userResponse.json(),
-            walletResponse.json(),
-          ]);
+        );
 
-          setUserData(userDataResponse);
-          setWalletData(walletDataResponse.data);
-
-          console.log('Data fetch completed successfully'); // Debug log
-        } catch (error) {
-          console.error('Error fetching data:', error);
-          setError(error.message);
-        } finally {
-          setIsLoading(false);
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
         }
-      };
-      dataFetched.current = true; // Mark as fetched before starting
-      fetchUserAndWalletData();
-    }
-    // console.log(userData, walletData);
-    // Cleanup function
-    return () => {
-      dataFetched.current = false; // Reset if component unmounts
+
+        const userDataResponse = await response.json();
+        setUserData(userDataResponse);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
     };
-  }, [newAuthToken]); // Only depend on authToken
+
+    fetchUserData();
+  }, [userEmail]);
 
   const handleClick = () => {
-    dispatch(resetState());
-    navigate('/account/dashboard');
+    localStorage.removeItem('userEmail');
+    navigate('/login');
   };
 
   if (isLoading) {
@@ -82,7 +59,7 @@ export const StepSeventeen = ({ data }) => {
   if (error) {
     return <div className="text-center py-8 text-red-600">Error: {error}</div>;
   }
-  localStorage.setItem('currentStep', 17);
+  // localStorage.setItem('currentStep', 17);
 
   return (
     <div className="relative bg-black min-h-screen flex items-center justify-center">
@@ -152,7 +129,7 @@ export const StepSeventeen = ({ data }) => {
               <div className="w-full text-primary absolute top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%] flex flex-col md:space-y-4">
                 <span className="md:text-2xl text-xs font-medium">Payina Account Number</span>
                 <span className="md:text-3xl text-sm font-bold">
-                  {walletData?.nombaBankAccountNumber || 'N/A'}
+                  {userData?.accountNumber || 'N/A'}
                 </span>
               </div>
             </div>
@@ -198,7 +175,7 @@ export const StepSeventeen = ({ data }) => {
               <div className="w-full text-primary absolute top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%] flex flex-col md:space-y-4">
                 <span className="md:text-2xl text-xs font-medium">Business Name</span>
                 <span className="md:text-3xl text-sm font-bold capitalize text-nowrap">
-                  {walletData?.name || data?.business_details?.business_name || 'N/A'}
+                  {userData?.accountName || 'N/A'}
                 </span>
               </div>
             </div>
@@ -207,7 +184,7 @@ export const StepSeventeen = ({ data }) => {
             onClick={handleClick}
             padding="15px"
             type="submit"
-            children="Proceed to Dashboard"
+            children="Proceed to Sign in"
             className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
           />
         </div>
