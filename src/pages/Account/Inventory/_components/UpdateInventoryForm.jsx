@@ -24,6 +24,8 @@ const UpdateInventoryForm = ({ id }) => {
   const formData = useSelector((state) => state.inventoryById.inventoryById);
   const formLoading = useSelector((state) => state.inventoryById.loading);
   const error = useSelector((state) => state.inventoryById.error);
+  //getting the customerId state from the store
+  const customerId = useSelector((state) => state.user.user.customerId);
 
   useEffect(() => {
     dispatch(fetchInventoryById(id));
@@ -52,11 +54,14 @@ const UpdateInventoryForm = ({ id }) => {
         setUploadStatus('Inventory Updated successfully!');
         setLoading(false);
         // Fetch the updated inventory
-        const response = await fetch(import.meta.env.VITE_GET_INVENTORY, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await fetch(
+          import.meta.env.VITE_GET_INVENTORY_BY_CUSTOMER_ID.replace('{customerId}', customerId),
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
         const data = await response.json();
 
         //storing the updated inventory in the inventorySlice using the redux store

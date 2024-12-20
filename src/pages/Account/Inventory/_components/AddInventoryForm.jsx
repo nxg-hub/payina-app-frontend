@@ -2,7 +2,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import React, { useState } from 'react';
 import useLocalStorage from '../../../../hooks/useLocalStorage';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { storeUpdatedInventory } from '../../../../Redux/InventorySlice';
 
 // Validation schema for the  form
@@ -19,6 +19,8 @@ const AddInventoryForm = () => {
   const [uploadStatus, setUploadStatus] = useState('');
   const [success, setSuccess] = useState(false);
   const [newAuthToken] = useLocalStorage('authToken', '');
+  //getting the customerId state from the store
+  const id = useSelector((state) => state.user.user.customerId);
 
   const initialValues = {
     productName: '',
@@ -43,6 +45,7 @@ const AddInventoryForm = () => {
       });
 
       if (!response.ok) {
+        setUploadStatus('Something went wrong!');
         throw new Error('Error: Something went wrong'); // Handle unsuccessful login
       }
 
@@ -51,21 +54,25 @@ const AddInventoryForm = () => {
         setUploadStatus('Inventory added successfully!');
         setLoading(false);
         // Fetch the updated inventory
-        const response = await fetch(import.meta.env.VITE_GET_INVENTORY, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        const data = await response.json();
+        const res = await fetch(
+          import.meta.env.VITE_GET_INVENTORY_BY_CUSTOMER_ID.replace('{customerId}', id),
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        const data = await res.json();
 
         //storing the updated inventory in the inventorySlice using the redux store
         dispatch(storeUpdatedInventory(data));
       }
 
       resetForm();
-      // console.log(values);
     } catch (error) {
-      setUploadStatus(error.message);
+      console.log(error);
+      setSuccess(false);
+      setUploadStatus('Something went wrong!');
     } finally {
       setLoading(false);
     }

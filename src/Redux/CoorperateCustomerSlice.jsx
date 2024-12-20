@@ -40,6 +40,10 @@ const corporateCustomerSlice = createSlice({
       state.customerDetails = [];
       state.success = false;
     },
+    storeUpdatedProfile(state, action) {
+      state.customerDetails = action.payload; // Store fetched data in the state
+      state.success = true;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -61,5 +65,5 @@ const corporateCustomerSlice = createSlice({
   },
 });
 
-export const { resetCorporate } = corporateCustomerSlice.actions;
+export const { resetCorporate, storeUpdatedProfile } = corporateCustomerSlice.actions;
 export default corporateCustomerSlice.reducer;

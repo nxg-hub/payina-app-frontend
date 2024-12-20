@@ -10,14 +10,17 @@ const initialState = {
 export const fetchInventory = createAsyncThunk(
   'inventory/fecthInventory',
 
-  async (_, { rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
-      return await fetch(import.meta.env.VITE_GET_INVENTORY, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+      return await fetch(
+        import.meta.env.VITE_GET_INVENTORY_BY_CUSTOMER_ID.replace('{customerId}', id),
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
         .then((res) => {
           if (!res.ok) {
             throw new Error(`HTTP error! Status: ${res.status}`);

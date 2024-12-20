@@ -4,37 +4,24 @@ import React, { useState } from 'react';
 
 // Validation schema for the  form
 const InventorySchema = Yup.object().shape({
-  // firstName: Yup.string().required('required'),
-  // lastName: Yup.string().required('required'),
-  // email: Yup.string().email('Invalid email').required('Email is required'),
-  // phoneNumber: Yup.string().required('required'),
-  // idNumber: Yup.string().required('required'),
   country: Yup.string().required('required'),
-  residentialAddress: Yup.string().required('required'),
-  city: Yup.string().required('required'),
-  // businessAddress: Yup.string().required('required'),
-  // businessName: Yup.string().required('required'),
   businessEmail: Yup.string().email('Invalid email').required('Email is required'),
-  contactNumber: Yup.string().required('required'),
-  // cacNumber: Yup.string().required('required'),
-  // taxIdNumber: Yup.string().required('required'),
-  socialMedia: Yup.string().required('required'),
-  businessCountry: Yup.string().required('required'),
 });
 import DocumentUploader from './DocumentUploader';
 import { useDispatch, useSelector } from 'react-redux';
 import useLocalStorage from '../../../../hooks/useLocalStorage';
 import { fetchDataSuccess } from '../../../../Redux/UserSlice';
+import EditProfileForm from './EditProfileForm';
 
 const ProfileSetting = () => {
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
   const [uploadDocuments, setUploadDocuments] = useState(false);
   const [files, setFiles] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState('');
   const [success, setSuccess] = useState(false);
   const [newAuthToken] = useLocalStorage('authToken', '');
+  const [editProfile, setEditProfile] = useState(false);
 
   //getting the userProfile from the redux store
   const profilePic = useSelector((state) => state.user.user.passportUrl);
@@ -96,7 +83,7 @@ const ProfileSetting = () => {
     // idNumber: '',
     country: 'Nigeria',
     residentialAddress: `${userBusinessDetails?.houseNumber}, ${userBusinessDetails?.street},  ${userBusinessDetails?.state} State,  ${userBusinessDetails?.lga} LGA  `,
-    city: userBusinessDetails?.businessState,
+    state: userBusinessDetails?.state,
     // businessName: '',
     businessAddress: '',
     businessEmail: userDetails.email,
@@ -107,13 +94,12 @@ const ProfileSetting = () => {
     businessCountry: 'Nigeria',
   };
 
-  const handleSubmit = async (values, actions) => {
-    const { resetForm } = actions;
-    resetForm();
-    console.log(values);
+  const handleEdit = () => {
+    setEditProfile(true);
   };
   return (
     <div className="h-full">
+      {/* display upload form conditionally */}
       {uploadDocuments && (
         <>
           <div className=" z-50 fixed top-[25%] right-[5%] w-[80%]">
@@ -129,6 +115,26 @@ const ProfileSetting = () => {
           <div
             onClick={() => {
               setUploadDocuments(false);
+            }}
+            className="text-black fixed top-0 left-0 right-0 w-full h-[150%] mt-[-1rem] z-20 backdrop-blur-[2px] transition-all duration-150 animate-slideLeft "></div>
+        </>
+      )}
+      {/* display edit form conditionally */}
+      {editProfile && (
+        <>
+          <div className=" w-full z-50 fixed top-[-100px] right-[5%] md:w-[80%]">
+            <EditProfileForm />
+            <button
+              onClick={() => {
+                setEditProfile(false);
+              }}
+              className="bg-red-600 text-white z-50 absolute p-2 rounded-md top-[13%] md:top-[15%] right-[15%] md:right-[23%]">
+              Close
+            </button>
+          </div>
+          <div
+            onClick={() => {
+              setEditProfile(false);
             }}
             className="text-black fixed top-0 left-0 right-0 w-full h-[150%] mt-[-1rem] z-20 backdrop-blur-[2px] transition-all duration-150 animate-slideLeft "></div>
         </>
@@ -180,10 +186,7 @@ const ProfileSetting = () => {
           </div>
         </div>
 
-        <Formik
-          initialValues={initialValues}
-          validationSchema={InventorySchema}
-          onSubmit={handleSubmit}>
+        <Formik initialValues={initialValues} validationSchema={InventorySchema}>
           {({ isSubmitting }) => (
             <Form className="py-5 w-[100%]  m-auto bg-primary   rounded-xl mt-[10px] mb-[50px]">
               {/* personal details section */}
@@ -277,6 +280,7 @@ const ProfileSetting = () => {
                       className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                       type="text"
                       name="country"
+                      readOnly
                     />
                     <ErrorMessage className="text-red-500" name="country" component="div" />
                   </div>
@@ -285,15 +289,16 @@ const ProfileSetting = () => {
               <div className="md:flex gap-2">
                 <div className="w-[80%] md:w-[60%] m-auto">
                   <div className="py-0">
-                    <label className="font-semibold block md:text-md" htmlFor="city">
-                      City
+                    <label className="font-semibold block md:text-md" htmlFor="state">
+                      State
                     </label>
                     <Field
                       className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                       type="text"
-                      name="city"
+                      name="state"
+                      readOnly
                     />
-                    <ErrorMessage className="text-red-500" name="city" component="div" />
+                    <ErrorMessage className="text-red-500" name="state" component="div" />
                   </div>
                 </div>
                 <div className="w-[80%] md:w-[60%] m-auto">
@@ -305,6 +310,7 @@ const ProfileSetting = () => {
                       className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                       type="text"
                       name="residentialAddress"
+                      readOnly
                     />
                     <ErrorMessage
                       className="text-red-500"
@@ -344,6 +350,7 @@ const ProfileSetting = () => {
                         type="text"
                         name="businessAddress"
                         value={`${userBusinessDetails?.businessHouseNumber}, ${userBusinessDetails?.businessStreetName},  ${userBusinessDetails?.businessState} State,  ${userBusinessDetails?.businessLGA} LGA  `}
+                        readOnly
                       />
                       {/* <ErrorMessage
                         className="text-red-500"
@@ -363,6 +370,7 @@ const ProfileSetting = () => {
                         className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                         type="text"
                         name="contactNumber"
+                        readOnly
                       />
                       <ErrorMessage className="text-red-500" name="contactNumber" component="div" />
                     </div>
@@ -378,6 +386,7 @@ const ProfileSetting = () => {
                         type="email"
                         name="businessEmail"
                         value={userDetails.email}
+                        readOnly
                       />
                       <ErrorMessage className="text-red-500" name="businessEmail" component="div" />
                     </div>
@@ -426,6 +435,7 @@ const ProfileSetting = () => {
                         className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                         type="text"
                         name="socialMedia"
+                        readOnly
                       />
                       <ErrorMessage className="text-red-500" name="socialMedia" component="div" />
                     </div>
@@ -439,6 +449,7 @@ const ProfileSetting = () => {
                         className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                         type="text"
                         name="businessCountry"
+                        readOnly
                       />
                       <ErrorMessage
                         className="text-red-500"
@@ -449,12 +460,11 @@ const ProfileSetting = () => {
                   </div>
                 </div>
                 <div className="w-[80%] md:w-[60%] py-2 bg-secondary rounded-md m-auto mt-2 mb-4">
-                  <button
-                    className="text-center w-full  text-primary font-semibold"
-                    type="submit"
-                    disabled={isSubmitting}>
-                    {loading ? 'Loading...' : 'Save Changes'}
-                  </button>
+                  <div
+                    onClick={handleEdit}
+                    className="text-center w-full  text-primary font-semibold cursor-pointer">
+                    Edit
+                  </div>
                 </div>
               </section>
             </Form>

@@ -1,6 +1,6 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import CustomButton from '../../../components/button/button';
-import { images } from '../../../constants';
+// import { images } from '../../../constants';
 import { SignUpSchema } from '../schemas/schema';
 import { useNavigate } from 'react-router-dom';
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
@@ -23,14 +23,14 @@ export const StepOne = ({ next }) => {
   //   navigate('/personal/signup');
   // };
   return (
-    <>
-      <div className="text-center mt-20 xl:mt-0 text-primary font-extrabold xl:text-5xl text-2xl">
-        Sign In to Payina
+    <div className="flex flex-col items-center justify-center py-6 px-5 bg-black">
+      <div className="text-center mb-2 mt-20 xl:mt-0 text-primary font-extrabold xl:text-5xl text-2xl">
+        Sign up to Payina
       </div>
-      <div className="hidden md:block absolute md:top-[-13.6rem] md:right-[1rem] xl:top-[-12.5rem] xl:right-[-38.5rem]">
+      {/* <div className="hidden md:block absolute md:top-[-13.6rem] md:right-[1rem] xl:top-[-12.5rem] xl:right-[-38.5rem]">
         <img src={images.Group} alt="" />
-      </div>
-      <div className="bg-primary flex flex-col justify-center items-start mx-auto">
+      </div> */}
+      <div className="bg-primary flex flex-col justify-center items-start sm:w-[300px] md:w-[400px] xl:w-[600px]">
         <Formik
           initialValues={{ email: savedEmail, password: '', confirmPassword: '' }}
           validationSchema={SignUpSchema}
@@ -38,7 +38,7 @@ export const StepOne = ({ next }) => {
           {() => (
             <Form className="w-full space-y-4">
               <div className="xl:py-16 p-4 pt-[2.2rem] xl:p-10 xl:pl-[5rem] xl:pr-40 xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
-                <div className="text-lightBlue text-start font-bold xl:text-[32px] text-xl">
+                <div className="text-lightBlue text-start font-bold xl:text-[32px] text-nowrap text-xl">
                   Enter Email and Password
                 </div>
                 {/* <div className="text-center mt-4">
@@ -60,7 +60,7 @@ export const StepOne = ({ next }) => {
                   />
                   <ErrorMessage name="email" component="span" className="text-[#db3a3a]" />
                 </div>
-                <div className="xl:w-[120%] flex flex-col space-y-2 ">
+                <div className="xl:w-[120%] flex flex-col space-y-2 relative">
                   <label htmlFor="password" className="text-sm font-normal text-lightBlue">
                     Password
                   </label>
@@ -111,6 +111,6 @@ export const StepOne = ({ next }) => {
           )}
         </Formik>
       </div>
-    </>
+    </div>
   );
 };

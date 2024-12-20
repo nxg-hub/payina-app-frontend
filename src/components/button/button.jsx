@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const CustomButton = ({
-  width,
-  border,
-  backgroundColor,
-  textColor,
-  borderRadius,
+  width = '',
+  border = '1px solid #00678F',
+  backgroundColor = '#00678F',
+  textColor = '#ffffff',
+  borderRadius = '6px',
   onClick,
   children,
-  padding,
+  padding = '10px 35px',
   className,
   type,
   loading,
@@ -45,16 +45,8 @@ CustomButton.propTypes = {
   onClick: PropTypes.func,
   children: PropTypes.node,
   padding: PropTypes.string,
-  loading: PropTypes.boolean,
-};
-
-CustomButton.defaultProps = {
-  border: '1px solid #00678F',
-  backgroundColor: '#00678F',
-  textColor: '#ffffff',
-  borderRadius: '6px',
-  padding: '10px 35px',
-  width: '',
+  className: PropTypes.string,
+  type: PropTypes.string,
 };
 
 export default CustomButton;

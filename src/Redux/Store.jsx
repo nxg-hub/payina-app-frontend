@@ -13,7 +13,13 @@ import inventoryByIdReducer from './InventoryByIdSlice';
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['user', 'personalSignUp', 'businessSignUp', 'coporateCustomerProfile', 'inventory'], // Add reducers you want to persist here
+  whitelist: [
+    'user',
+    'personalSignUp',
+    'businessSignUp',
+    'coporateCustomerProfile',
+    // 'inventory'
+  ], // Add reducers you want to persist here
 };
 
 // Combine all reducers

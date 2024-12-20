@@ -72,7 +72,9 @@ const InventoryTable = ({ searchTerm }) => {
                 return (
                   <tr key={i} className="border-b">
                     <td className="border-b border-[#77777766] px-4 py-2">{i + 1}</td>
-                    <td className="border-b border-[#77777766] px-4 py-2">{data.productName}</td>
+                    <td className="border-b border-[#77777766] px-4 py-2 capitalize">
+                      {data.productName}
+                    </td>
                     <td className="border-b border-[#77777766] px-4 py-2">
                       {data.pricePerProduct}
                     </td>
