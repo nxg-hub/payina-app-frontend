@@ -12,6 +12,8 @@ import { reSetUserDetails } from '../../../../Redux/UserSlice.jsx';
 import { RiFileSettingsLine, RiBillLine } from 'react-icons/ri';
 import { BsThreeDots } from 'react-icons/bs';
 import Signout from '../../../signout.jsx';
+import { resetCorporate } from '../../../../Redux/CoorperateCustomerSlice.jsx';
+import { resetInventory } from '../../../../Redux/InventorySlice.jsx';
 
 export const MobileSidebar = () => {
   const location = useLocation();
@@ -31,7 +33,10 @@ export const MobileSidebar = () => {
     localStorage.removeItem('userEmail');
     persistor.purge(); // Clears all persisted state
     dispatch(reSetUserDetails());
-    navigate('/');
+    dispatch(resetCorporate());
+    dispatch(resetInventory());
+    localStorage.clear();
+    navigate('/login');
   };
 
   const isPersonalDashboard = currentRoute === '/personal/dashboard';
@@ -218,7 +223,15 @@ export const MobileSidebar = () => {
               <TbSettings size={22} />
               <span className="hover:text-lightBlue ease transition-colors">Account Settings</span>
             </Link>
-            <Signout />
+            <button
+              onClick={handleLogout}
+              className={`!mt-[10rem] flex items-center space-x-6 ${
+                currentRoute === '/' ? '!ml-3 font-bold text-lightBlue' : ''
+              }`}>
+              <VscSignOut size={22} />
+              <span className="hover:text-lightBlue ease transition-colors">Sign Out</span>
+            </button>
+            {/* <Signout /> */}
           </div>
         </div>
       </div>
