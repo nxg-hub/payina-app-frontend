@@ -156,14 +156,17 @@ const EnterPin = ({ data }) => {
             setShowSuccess(true);
           } else {
             console.log('Transaction Declined: Transaction could not be completed.', responseData);
+            setErrorMessage(responseData.response || 'Transaction failed.');
             setShowDecline(true);
           }
         } else {
           console.log('Unexpected response structure:', transactionResponse.data);
+          setErrorMessage('Unexpected error occurred. Please try again.');
           setShowDecline(true);
         }
       } else {
         console.log('PIN validation failed.');
+        setErrorMessage('PIN validation failed.');
         setShowDecline(true);
       }
     } catch (error) {
@@ -172,6 +175,9 @@ const EnterPin = ({ data }) => {
       if (error.response) {
         console.error('Error Status:', error.response.status);
         console.error('Error Data:', error.response.data);
+        const backendMessage =
+          error.response.data.response || error.response.data.debugMessage || 'Transaction failed.';
+        setErrorMessage(backendMessage);
       } else {
         console.error('Error Message:', error.message);
       }
@@ -184,7 +190,8 @@ const EnterPin = ({ data }) => {
   };
 
   if (showSuccess) return <SuccessMessage />;
-  if (showDecline) return <DeclineMessage />;
+  if (showDecline) return <DeclineMessage errorMessage={errorMessage} />;
+  // if (showDecline) return <DeclineMessage />;
 
   return (
     <div className="transaction-pin flex flex-col justify-center items-center bg-[#D2D2D285] rounded-md md:p-[2rem] sm:p-[2rem] xl:py-[3rem] xl:px-[5rem] mt-[5rem] gap-8 mx-auto">
@@ -231,6 +238,7 @@ EnterPin.propTypes = {
   data: PropTypes.shape({
     amount: PropTypes.string.isRequired,
     purpose: PropTypes.string.isRequired,
+    payinaTag: PropTypes.string.isRequired,
   }).isRequired,
 };
 
