@@ -9,7 +9,9 @@ export default function TransactionTable() {
 
   // Set default date range to last month
   const defaultEndDate = new Date().toISOString().split('T')[0];
-  const defaultStartDate = new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().split('T')[0];
+  const defaultStartDate = new Date(new Date().setMonth(new Date().getMonth() - 1))
+    .toISOString()
+    .split('T')[0];
 
   const [dateRange, setDateRange] = useState({
     startDate: defaultStartDate,
@@ -40,8 +42,13 @@ export default function TransactionTable() {
         }),
       });
 
+      // if (!response.ok) {
+      //   throw new Error(`Failed to fetch ${type} transactions: ${response.status}`);
+      //   // throw new Error(`Failed to fetch ${type} transactions: ${response.statusText}`);
+      // }
       if (!response.ok) {
-        throw new Error(`Failed to fetch ${type} transactions: ${response.statusText}`);
+        const errorResponse = await response.json(); // Get the server's error response
+        throw new Error(JSON.stringify(errorResponse)); // Pass the server's response as error
       }
 
       const data = await response.json();
@@ -73,7 +80,9 @@ export default function TransactionTable() {
       setTransactions(uniqueTransactions);
       setTotalPages(Math.ceil(uniqueTransactions.length / pageSize) || 1);
     } catch (err) {
-      setError(err.message);
+      const serverError = JSON.parse(err.message); // Parse the error message from the server
+      setError(serverError.response || 'An error occurred while fetching transactions.');
+      // setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -110,10 +119,7 @@ export default function TransactionTable() {
   };
 
   // Paginate filtered transactions
-  const paginatedTransactions = filteredTransactions.slice(
-    (page - 1) * pageSize,
-    page * pageSize
-  );
+  const paginatedTransactions = filteredTransactions.slice((page - 1) * pageSize, page * pageSize);
 
   return (
     <div className="md:px-[.7rem] pb-4 w-auto md:clear-right ml-5 md:ml-2 xl:ml-[19.5rem] mr-5 md:mr-3">
@@ -150,7 +156,6 @@ export default function TransactionTable() {
         </button>
       </div>
 
-
       {loading ? (
         <div className="w-full text-center font-manrope text-sm md:text-base font-normal leading-5 text-[#1a1d1f]">
           Loading...
@@ -163,86 +168,102 @@ export default function TransactionTable() {
         <div className="w-full overflow-x-auto">
           <table className="min-w-full table-auto border-collapse">
             <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
-              <th className="p-2 text-left text-xs md:text-sm">Type</th>
-              <th className="p-2 text-left text-xs md:text-sm">Description</th>
-              <th className="p-2 text-left text-xs md:text-sm">Reference</th>
-              <th className="p-2 text-left text-xs md:text-sm">Status</th>
-              <th className="p-2 text-left text-xs md:text-sm">Amount</th>
-              <th className="p-2 text-left text-xs md:text-sm">Date</th>
-              {showAllFields && (
-                <>
-                  <th className="p-2 text-left text-xs md:text-sm">ID</th>
-                  <th className="p-2 text-left text-xs md:text-sm">Previous Balance</th>
-                  <th className="p-2 text-left text-xs md:text-sm">New Balance</th>
-                </>
-              )}
-            </tr>
+              <tr className="bg-gray-50 border-b border-gray-200">
+                <th className="p-2 text-left text-xs md:text-sm">Type</th>
+                <th className="p-2 text-left text-xs md:text-sm">Description</th>
+                <th className="p-2 text-left text-xs md:text-sm">Reference</th>
+                <th className="p-2 text-left text-xs md:text-sm">Status</th>
+                <th className="p-2 text-left text-xs md:text-sm">Amount</th>
+                <th className="p-2 text-left text-xs md:text-sm">Date</th>
+                {showAllFields && (
+                  <>
+                    <th className="p-2 text-left text-xs md:text-sm">ID</th>
+                    <th className="p-2 text-left text-xs md:text-sm">Previous Balance</th>
+                    <th className="p-2 text-left text-xs md:text-sm">New Balance</th>
+                  </>
+                )}
+              </tr>
             </thead>
             <tbody>
-            {paginatedTransactions.length > 0 ? (
-              paginatedTransactions.map((transaction, index) => (
-                <tr key={transaction.id || index} className="border-b border-[#d9d9d9]">
-                  <td className="p-2">
-                    <div className="w-[32px] h-[32px] md:w-[42px] md:h-[42px]">
-                      {transaction.type.toLowerCase() === 'credit' ? (
-                        <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <circle cx="21" cy="21" r="21" fill="#00D222" />
-                          <path d="M20.5 32L11.4067 16.25H29.5933L20.5 32Z" fill="white" />
-                        </svg>
-                      ) : (
-                        <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <circle cx="21" cy="21" r="21" fill="#E80516" />
-                          <path d="M20.5 32L11.4067 16.25H29.5933L20.5 32Z" fill="white" />
-                        </svg>
-                      )}
-                    </div>
-                  </td>
-                  <td className="p-2 font-manrope text-xs md:text-base font-semibold leading-5 text-[#1a1d1f]">
-                    {transaction.description}
-                  </td>
-                  <td className="p-2 font-manrope text-xs md:text-base font-normal leading-5 text-[#1a1d1f]">
-                    {transaction.transactionRef}
-                  </td>
-                  <td className="p-2">
-                    <div className={`flex justify-center items-center gap-2 p-1 md:p-2.5 border rounded text-xs md:text-base ${
-                      transaction.status === 'PROCESSING' ? 'border-yellow-400 bg-yellow-50' :
-                        transaction.status === 'COMPLETED' ? 'border-green-400 bg-green-50' :
-                          'border-gray-400 bg-gray-50'
-                    }`}>
+              {paginatedTransactions.length > 0 ? (
+                paginatedTransactions.map((transaction, index) => (
+                  <tr key={transaction.id || index} className="border-b border-[#d9d9d9]">
+                    <td className="p-2">
+                      <div className="w-[32px] h-[32px] md:w-[42px] md:h-[42px]">
+                        {transaction.type.toLowerCase() === 'credit' ? (
+                          <svg
+                            width="42"
+                            height="42"
+                            viewBox="0 0 42 42"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="21" cy="21" r="21" fill="#00D222" />
+                            <path d="M20.5 32L11.4067 16.25H29.5933L20.5 32Z" fill="white" />
+                          </svg>
+                        ) : (
+                          <svg
+                            width="42"
+                            height="42"
+                            viewBox="0 0 42 42"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="21" cy="21" r="21" fill="#E80516" />
+                            <path d="M20.5 32L11.4067 16.25H29.5933L20.5 32Z" fill="white" />
+                          </svg>
+                        )}
+                      </div>
+                    </td>
+                    <td className="p-2 font-manrope text-xs md:text-base font-semibold leading-5 text-[#1a1d1f]">
+                      {transaction.description}
+                    </td>
+                    <td className="p-2 font-manrope text-xs md:text-base font-normal leading-5 text-[#1a1d1f]">
+                      {transaction.transactionRef}
+                    </td>
+                    <td className="p-2">
+                      <div
+                        className={`flex justify-center items-center gap-2 p-1 md:p-2.5 border rounded text-xs md:text-base ${
+                          transaction.status === 'PROCESSING'
+                            ? 'border-yellow-400 bg-yellow-50'
+                            : transaction.status === 'COMPLETED'
+                              ? 'border-green-400 bg-green-50'
+                              : 'border-gray-400 bg-gray-50'
+                        }`}>
                         <span className="font-manrope font-normal leading-5 text-[#1a1d1f]">
                           {transaction.status}
                         </span>
-                    </div>
+                      </div>
+                    </td>
+                    <td className="p-2 font-manrope text-xs md:text-base font-normal leading-5 text-[#1a1d1f]">
+                      ₦{transaction.amount.toLocaleString()}
+                    </td>
+                    <td className="p-2 font-manrope text-xs md:text-base font-normal leading-5 text-[#1a1d1f]">
+                      {new Date(transaction.createdAt).toLocaleString()}
+                    </td>
+                    {showAllFields && (
+                      <>
+                        <td className="p-2 font-manrope text-xs md:text-base font-normal leading-5 text-[#1a1d1f]">
+                          {transaction.id}
+                        </td>
+                        <td className="p-2 font-manrope text-xs md:text-base font-normal leading-5 text-[#1a1d1f]">
+                          ₦{transaction.previousBalance.toLocaleString()}
+                        </td>
+                        <td className="p-2 font-manrope text-xs md:text-base font-normal leading-5 text-[#1a1d1f]">
+                          ₦{transaction.newBalance.toLocaleString()}
+                        </td>
+                      </>
+                    )}
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={showAllFields ? 9 : 6}
+                    className="text-center font-manrope text-xs md:text-base font-normal leading-5 text-[#1a1d1f] py-4">
+                    {/*No transactions found for this period.*/}
+                    {error || "Wallet Id is required to fetch Ledgers"}
                   </td>
-                  <td className="p-2 font-manrope text-xs md:text-base font-normal leading-5 text-[#1a1d1f]">
-                    ₦{transaction.amount.toLocaleString()}
-                  </td>
-                  <td className="p-2 font-manrope text-xs md:text-base font-normal leading-5 text-[#1a1d1f]">
-                    {new Date(transaction.createdAt).toLocaleString()}
-                  </td>
-                  {showAllFields && (
-                    <>
-                      <td className="p-2 font-manrope text-xs md:text-base font-normal leading-5 text-[#1a1d1f]">
-                        {transaction.id}
-                      </td>
-                      <td className="p-2 font-manrope text-xs md:text-base font-normal leading-5 text-[#1a1d1f]">
-                        ₦{transaction.previousBalance.toLocaleString()}
-                      </td>
-                      <td className="p-2 font-manrope text-xs md:text-base font-normal leading-5 text-[#1a1d1f]">
-                        ₦{transaction.newBalance.toLocaleString()}
-                      </td>
-                    </>
-                  )}
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={showAllFields ? 9 : 6} className="text-center font-manrope text-xs md:text-base font-normal leading-5 text-[#1a1d1f] py-4">
-                  No transactions found for this period.
-                </td>
-              </tr>
-            )}
+              )}
             </tbody>
           </table>
 
@@ -250,8 +271,7 @@ export default function TransactionTable() {
             <button
               onClick={handlePreviousPage}
               disabled={page === 1}
-              className="font-manrope text-xs md:text-base font-normal leading-5 text-[#1a1d1f] px-2 md:px-4 py-1 md:py-2.5 border border-[#1a1d1f] rounded disabled:opacity-50"
-            >
+              className="font-manrope text-xs md:text-base font-normal leading-5 text-[#1a1d1f] px-2 md:px-4 py-1 md:py-2.5 border border-[#1a1d1f] rounded disabled:opacity-50">
               Previous
             </button>
             <span className="font-manrope text-xs md:text-base font-normal leading-5 text-[#1a1d1f]">
@@ -260,8 +280,7 @@ export default function TransactionTable() {
             <button
               onClick={handleNextPage}
               disabled={page === totalPages}
-              className="font-manrope text-xs md:text-base font-normal leading-5 text-[#1a1d1f] px-2 md:px-4 py-1 md:py-2.5 border border-[#1a1d1f] rounded disabled:opacity-50"
-            >
+              className="font-manrope text-xs md:text-base font-normal leading-5 text-[#1a1d1f] px-2 md:px-4 py-1 md:py-2.5 border border-[#1a1d1f] rounded disabled:opacity-50">
               Next
             </button>
           </div>
