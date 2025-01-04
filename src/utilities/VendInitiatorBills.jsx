@@ -46,7 +46,7 @@ const VendInitiator = ({
       const walletData = await response.json();
 
       if (walletData.statusCode !== 'OK' || !walletData.data) {
-        throw new Error('Invalid wallet data structure');
+        throw new Error('Wallet not found, upgrade your account now');
       }
 
       const {
