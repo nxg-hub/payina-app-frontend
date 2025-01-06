@@ -7,7 +7,7 @@ export function Breadcrumb() {
   const pathnames = location.pathname.split('/').filter((x) => x);
 
   return (
-    <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-4">
+    <nav className="flex items-center space-x-2 text-sm text-gray-600 mt-16">
       <Link to="/" className="hover:text-blue-600 flex items-center">
         <Home className="h-4 w-4 mr-1" />
         Home
