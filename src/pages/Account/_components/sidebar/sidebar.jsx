@@ -28,7 +28,9 @@ export const Sidebar = () => {
 
   //getting the passportPic from the redux store
   const userDetails = useSelector((state) => state.user.user);
+
   const profilePic = userDetails.passportUrl;
+  // console.log('url', profilePic);
   const userName = userDetails.firstName;
   const handleToggle = () => {
     setToggle(!toggle);
@@ -44,6 +46,7 @@ export const Sidebar = () => {
     localStorage.clear();
     navigate('/login');
   };
+  // console.log(profilePic);
   // useEffect(() => {
   //   const fetchUserDetails = async () => {
   //     if (!newAuthToken) {
