@@ -15,9 +15,7 @@ export const PhoneNumberSchema = Yup.object().shape({
       /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/,
       'Invalid phone number'
     ),
-  confirmPhoneNumber: Yup.string()
-    .required('Please confirm your phone number')
-    .oneOf([Yup.ref('phoneNumber'), null], 'Phone numbers must match'),
+  confirmPhoneNumber: Yup.string().required('Please confirm your phone number'),
   amount: Yup.number().required('Amount is required').positive('Amount must be a positive number'),
   purpose: Yup.string().required('Purpose is required'),
 });

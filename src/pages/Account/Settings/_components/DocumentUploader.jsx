@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 const DocumentUploader = () => {
   const [files, setFiles] = useState({
-    file1: null,
-    file2: null,
+    cacCertUrl: null,
+    meMartUrl: null,
     file3: null,
   });
   const [loading, setLoading] = useState(false);
@@ -19,7 +19,7 @@ const DocumentUploader = () => {
   const userEmail = localStorage.getItem('userEmail');
 
   const handleUpload = async () => {
-    if (!files.file1 || !files.file2 || !files.file3) {
+    if (!files.cacCertUrl || !files.meMartUrl || !files.file3) {
       alert('Please select all three files before uploading.');
       return;
     }
@@ -29,7 +29,7 @@ const DocumentUploader = () => {
       setUploadStatus('');
 
       // Create an array of file uploads
-      let uploadFiles = [files.file1, files.file2, files.file3].map(async (file) => {
+      let uploadFiles = [files.cacCertUrl, files.meMartUrl, files.file3].map(async (file) => {
         const formData = new FormData();
         formData.append('document', file);
         formData.append('email', userEmail);
@@ -63,7 +63,7 @@ const DocumentUploader = () => {
         <label className="block text-gray-700 mb-2 font-semibold">CAC Certificate:</label>
         <input
           type="file"
-          onChange={(e) => handleFileChange(e, 'file1')}
+          onChange={(e) => handleFileChange(e, 'cacCertUrl')}
           className="block w-full"
         />
       </div>
@@ -73,7 +73,7 @@ const DocumentUploader = () => {
         <label className="block text-gray-700 mb-2 font-semibold">Memart:</label>
         <input
           type="file"
-          onChange={(e) => handleFileChange(e, 'file2')}
+          onChange={(e) => handleFileChange(e, 'meMartUrl')}
           className="block w-full"
         />
       </div>

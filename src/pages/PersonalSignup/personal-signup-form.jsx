@@ -10,6 +10,8 @@ import {
   StepThree,
   StepTwo
 } from './_components';
+import { useDispatch, useSelector } from 'react-redux';
+import { nextStep } from '../../Redux/PersonalSignUpSlice';
 
 export default function PersonalSignupForm() {
   const [data, setData] = useState({
@@ -23,11 +25,13 @@ export default function PersonalSignupForm() {
     state: '',
     lga: '',
   });
-  const [currentStep, setCurrentStep] = useState(0);
-
+  // const [currentStep, setCurrentStep] = useState(0);
+  const currentStep = useSelector((state) => state.personalSignUp.step);
+  const dispatch = useDispatch();
   const handleNextStep = (newData) => {
     setData((prevData) => ({ ...prevData, ...newData }));
-    setCurrentStep((prevStep) => prevStep + 1);
+    // setCurrentStep((prevStep) => prevStep + 1);
+    dispatch(nextStep());
   };
 
   const steps = [

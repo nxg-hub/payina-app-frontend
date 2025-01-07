@@ -53,19 +53,19 @@ const FundWallet = ({ goBack }) => {
   return (
     <section className="">
       <div className="flex flex-col ml-[50px] items-center justify-center xl:ml-80 xl:pt-28 md:pt-10 mx-auto">
-        <div className="flex flex-row justify-between items-left gap-[45rem]">
+        <div className="flex flex-row justify-between items-left lg:gap-[45rem] gap-[10rem] mt-3">
           <div className="text-xl md:text-3xl">Add Money</div>
           <div className="flex flex-row gap-2 cancelAction-img cursor-pointer" onClick={goBack}>
             <img src={backArrow} alt="cancelAction"></img>
             <div className="text-md text-center mt-2">Back</div>
           </div>
         </div>
-        <div className="flex flex-col gap-5 mt-[80px] bg-[#EBEBEB] rounded-md py-5 px-8 xl:py-10 xl:px-14 w-[700px]">
+        <div className="flex flex-col gap-5 mt-[80px] bg-[#EBEBEB] rounded-md py-5 px-8 xl:py-10 xl:px-14 w-[300px] lg:w-[700px]">
           <label className="py-4 text-lg">How much would you like to add to your Wallet?</label>
           <input
             type="number"
             placeholder="Enter amount"
-            className="border-2 rounded-lg px-5 py-3 border-black text-slate-600 w-[500px] hover:border-yellow"
+            className="border-2 rounded-lg px-5 py-3 border-black text-slate-600 w-[250px] lg:w-[500px] hover:border-yellow"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             required

@@ -19,9 +19,7 @@ class ErrorBoundary extends React.Component {
       return (
         <div>
           <h1>Something went wrong.</h1>
-          <button onClick={() => window.location.href = '/'}>
-            Go back to home page
-          </button>
+          <button onClick={() => (window.location.href = '/')}>Go back to home page</button>
         </div>
       );
     }
