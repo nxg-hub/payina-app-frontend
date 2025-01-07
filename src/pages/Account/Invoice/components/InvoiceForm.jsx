@@ -1,11 +1,11 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage, useFormikContext } from 'formik';
 import * as Yup from 'yup';
 import { FaPlus, FaUser} from 'react-icons/fa'
 import Preview from './Preview';
 
-export const InvoiceForm = ({next, }) => {
+export const InvoiceForm = ({next, lineItems }) => {
   const [email, setEmail] = useState('');
   const [customerAdded, setCustomerAdded] = useState(false); 
   const [clientId, setClientId] = useState(null); 
@@ -24,12 +24,8 @@ export const InvoiceForm = ({next, }) => {
   const [invoiceId, setInvoiceId] = useState(null);  
   const [isSendingInvoice, setIsSendingInvoice] = useState(false);
   const [invoiceSent, setInvoiceSent] = useState(false);
-  // const [populateTotal, setPopulateTotal] = useState(0);
-  // const [lineItems, setLineItems] = useState([
-  //   { amount: 0, quantity: 0 },
-  // ]);
-
-
+   const [total, setTotal] = useState(0);
+  const [invoiceValidity, setInvoiceValidity] = useState('');
 
   useEffect(() => {
     const storedEmail = localStorage.getItem('userEmail');
@@ -37,8 +33,7 @@ export const InvoiceForm = ({next, }) => {
       setEmail(storedEmail);
     }
   }, []);
- 
-
+  
   const handleAddCustomer = async (values,) => {
     setIsAddingClient(true);
 
@@ -96,6 +91,18 @@ export const InvoiceForm = ({next, }) => {
           }
           
         };
+
+  // Function to calculate the difference in days between two dates
+  const calculateDaysDifference = (dateOfIssue, due_date) => {
+    const start = new Date(dateOfIssue);
+    const end = new Date(due_date);
+
+    if (start && end && end >= start) {
+      const diffTime = Math.abs(end - start);
+      return Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+    }
+    return '';
+  };
         
         const handleAddItem = (setFieldValue, values) => {
           setIsAddingItem(true);
@@ -128,6 +135,8 @@ export const InvoiceForm = ({next, }) => {
             setFieldValue('invoice.name', '');
             setFieldValue('invoice.quantity', '');
             setFieldValue('invoice.amount', '');  
+            setFieldValue('invoice.total', '');  
+
       
             setItemAdded(true); 
             setTimeout(() => setItemAdded(false), 10000); 
@@ -182,6 +191,7 @@ export const InvoiceForm = ({next, }) => {
       ],
     };
     
+   
     function calculateTotalAmount(lineItems) {
       const lineItemTotal = lineItems.reduce((total, item) => {
         const itemTotal = item.amount * item.quantity;
@@ -193,13 +203,13 @@ export const InvoiceForm = ({next, }) => {
     
       return lineItemTotal + taxAmount;
     }
-    
+   
     function calculateTaxAmount(lineItems) {
       const lineItemTotal = lineItems.reduce((total, item) => {
         if (item.amount && item.quantity) {
           return total + item.amount * item.quantity;
         }
-        return total; // Ignore invalid items
+        return total; 
       }, 0);
     
       const taxAmount = lineItemTotal * 0.075; // 7.5% tax
@@ -207,11 +217,6 @@ export const InvoiceForm = ({next, }) => {
       return taxAmount;
      
     }
-   
-    // useEffect(() => {
-    //   const total = calculateTotalAmount(lineItems);
-    //   setPopulateTotal(total);
-    // }, [lineItems]);
                
            const token = localStorage.getItem('authToken');
             if (!token) {
@@ -256,8 +261,18 @@ setInvoiceId(invoiceId);
     }
     
       };
-      
-     const handleGetClients = async (values) => {
+     
+      const handleCalculateTotal = (values, setFieldValue) => {
+        // console.log("Calculating total with values:", values);
+        const { amount = 0, quantity = 0 } = values.invoice;
+        const subtotal = amount * quantity;
+        const totalValue = subtotal + subtotal * 0.075;
+    
+        setTotal(totalValue);
+        setFieldValue("invoice.total", totalValue);
+    };
+     
+    const handleGetClients = async (values) => {
       setIsLoadingClients(true);
       try {
         const customerId = await authenticateEmail(email);
@@ -389,13 +404,7 @@ const handlePreviewClick = (values) => {
   // Toggle the preview
   setShowPreview(!showPreview);
 };
-// const handleInputChange = (id, field, value) => {
-//   setLineItems((prevItems) =>
-//     prevItems.map((item) =>
-//       item.id === id ? { ...item, [field]: Number(value) } : item
-//     )
-//   );
-// };
+
   const authenticateEmail = async (email) => {
     try {
       const response = await fetch(`${import.meta.env.VITE_GET_USER_BY_EMAIL_ENDPOINT}?email=${encodeURIComponent(email)}`);
@@ -476,8 +485,10 @@ const handlePreviewClick = (values) => {
         onSubmit={(values) => {
         }}
 
+        
       >
         {({ isSubmitting, setFieldValue, values, resetForm }) => (
+          
           
           <Form className="bg-white  rounded px-4 pt-0 pb-8 mb-4 ">
             <fieldset className="mb-6 shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px] py-6  pt-0 px-4 rounded-md   ">
@@ -579,13 +590,29 @@ const handlePreviewClick = (values) => {
               <div className='grid grid-cols-2 gap-4'>
               <div className="mb-4">
                 <label htmlFor="invoice.dateOfIssue" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">Date of Issue</label>
-                <Field type="date" name="invoice.dateOfIssue" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                <Field type="date" name="invoice.dateOfIssue" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+ onChange={(e) => {
+  setFieldValue("invoice.dateOfIssue", e.target.value);
+  const daysDifference = calculateDaysDifference(
+    e.target.value,
+    values.invoice.due_date
+  );
+  setFieldValue("invoice.invoiceValidity", daysDifference ? `${daysDifference} days` : "");
+}}                 />
                 <ErrorMessage name="invoice.dateOfIssue" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
 
               <div className="mb-4">
                 <label htmlFor="invoice.due_date" className="block text-[10px] sm:text-[13px] md:text-base mb-2">Due Date</label>
-                <Field type="date" name="invoice.due_date" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                <Field type="date" name="invoice.due_date" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+ onChange={(e) => {
+  setFieldValue("invoice.due_date", e.target.value);
+  const daysDifference = calculateDaysDifference(
+    values.invoice.dateOfIssue,
+    e.target.value
+  );
+  setFieldValue("invoice.invoiceValidity", daysDifference ? `${daysDifference} days` : "");
+}}                />
                 <ErrorMessage name="invoice.due_date" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
               </div>
@@ -600,20 +627,24 @@ const handlePreviewClick = (values) => {
               <div className="mb-4 ">
                 <label htmlFor="invoice.quantity" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">Quantity</label>
                 <Field type="number" name="invoice.quantity" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                // onChange={(e) => handleInputChange( "quantity", e.target.value)}
-/>
+                  onChange={(e) => {
+                  const quantity = parseInt(e.target.value);
+                  setFieldValue("invoice.quantity", quantity); 
+                  handleCalculateTotal(values, setFieldValue); }} />
                 <ErrorMessage name="invoice.quantity" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
-
               <div className="mb-4">
                 <label htmlFor="invoice.amount" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">Amount</label>
-                <Field type="number" name="invoice.amount"                     
-                //  onChange={(e) => handleInputChange( "amount", e.target.value)}
- className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                <Field type="number" name="invoice.amount"   
+                          onChange={(e) => {
+                            const amount = parseFloat(e.target.value) || 0;
+                            setFieldValue("invoice.amount", amount); // Update Formik state
+                            handleCalculateTotal({ ...values, invoice: { ...values.invoice, amount } }, setFieldValue);
+                        }}                  
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       />
                 <ErrorMessage name="invoice.amount" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
-             
               <div className="mb-4">
   <label htmlFor="invoice.tax[0].amount" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">
     VAT (7.5%)
@@ -634,17 +665,22 @@ const handlePreviewClick = (values) => {
     className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base mt-1"
   />
 </div>
+               <div className="mb-4">
+               <label htmlFor="invoice.total" 
+className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">Total</label>                
+<Field type="number" name="invoice.total" 
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                value={values.invoice.total ? values.invoice.total.toFixed(2): ''}
 
-
-              <div className="mb-4">
-                <label htmlFor="invoice.total" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">Total</label>
-                <Field type="number" name="invoice.total" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                value ={populateTotal}/>
+                readOnly
+                />
                 <ErrorMessage name="invoice.total" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />
               </div>
               <div className="mb-4">
                 <label htmlFor="invoice.invoiceValidity" className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">Invoice Validity</label>
-                <Field type="text" name="invoice.invoiceValidity" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                <Field type="text" name="invoice.invoiceValidity"       
+                    value={values.invoice.invoiceValidity}
+ className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
                  placeholder="20 days"  
                      />
                 <ErrorMessage name="invoice.invoiceValidity" component="div" className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base  mt-1" />

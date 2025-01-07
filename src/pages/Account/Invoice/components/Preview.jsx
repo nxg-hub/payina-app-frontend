@@ -38,18 +38,18 @@ const Preview = ({ className = "", updatedLineItems= [], corporateCustomerId= ''
     }
   };
 
-  const parseXML = (xmlString) => {
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+  // const parseXML = (xmlString) => {
+  //   const parser = new DOMParser();
+  //   const xmlDoc = parser.parseFromString(xmlString, "text/xml");
 
-    return {
-      businessName: xmlDoc.querySelector('businessName')?.textContent || "",
-      businessHouseNumber: xmlDoc.querySelector('businessHouseNumber')?.textContent || "",
-      businessStreetName: xmlDoc.querySelector('businessStreetName')?.textContent || "",
-      businessState: xmlDoc.querySelector('businessState')?.textContent || "",
-      businessLGA: xmlDoc.querySelector('businessLGA')?.textContent || "",
-    };
-  };
+  //   return {
+  //     businessName: xmlDoc.querySelector('businessName')?.textContent || "",
+  //     businessHouseNumber: xmlDoc.querySelector('businessHouseNumber')?.textContent || "",
+  //     businessStreetName: xmlDoc.querySelector('businessStreetName')?.textContent || "",
+  //     businessState: xmlDoc.querySelector('businessState')?.textContent || "",
+  //     businessLGA: xmlDoc.querySelector('businessLGA')?.textContent || "",
+  //   };
+  // };
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -68,9 +68,18 @@ const Preview = ({ className = "", updatedLineItems= [], corporateCustomerId= ''
         const response = await fetch(`${import.meta.env.VITE_VIEW_PROFILE_ENDPOINT}${customerId}`);
         
         if (response.ok) {
-          const xmlString = await response.text(); 
-          const parsedData = parseXML(xmlString); 
-          
+
+          const data = await response.json ();
+          // const xmlString = await response.text(); 
+          // const parsedData = parseXML(xmlString); 
+          const parsedData = {
+            businessName: data.businessName || "",
+            businessHouseNumber: data.businessHouseNumber || "",
+            businessStreetName: data.businessStreetName || "",
+            businessState: data.businessState || "",
+            businessLGA: data.businessLGA || "",
+          }
+
           setProfileData(parsedData); 
         } else {
           console.error("Failed to fetch profile data");
@@ -141,7 +150,7 @@ const Preview = ({ className = "", updatedLineItems= [], corporateCustomerId= ''
     <td className="p-2 border-r border-black">{item.quantity}</td>
     <td className="p-2 border-r border-black">{item.amount}</td>
     <td className="p-2 border-r border-black">0.075 </td>
-    <td className="p-2">{item.total}</td>
+    <td className="p-2">{item.total * 1.075}</td>
   </tr>
 ))}
           <tr className="font-bold border border-black">
