@@ -27,16 +27,16 @@ export const Navbar = () => {
   const TIER_REQUIREMENTS = {
     'Tier 1': {
       nextTier: 'Tier 2 (Advanced)',
-      documents: ['Facials', 'Proof of Address', 'Government ID', 'Utility Bill'],
+      documents: ['BVN', 'NIN',],
     },
     'Tier 2': {
       nextTier: 'Tier 3 (Premium)',
-      documents: ['Business Registration', 'Tax Information', 'Financial Statements'],
+      documents: ['Facials', 'Proof of Address', 'Government ID', 'Utility Bill'],
     },
   };
 
   const handleUpgradeClick = () => {
-    navigate('/tier-two');
+    navigate('/upgrade');
   };
 
   useEffect(() => {

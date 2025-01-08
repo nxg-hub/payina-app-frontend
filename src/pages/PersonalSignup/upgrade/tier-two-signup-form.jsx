@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 
-import { StepEight, StepNine, StepSeven, StepSeventeen, StepSix, StepTwelve } from './_components';
+import {
+  StepEight,
+  StepNine,
+  StepSeven,
+  StepSeventeen,
+  StepSix,
+} from '../_components/index.js';
 
 export default function TierTwoSignupForm() {
   const [data, setData] = useState({
@@ -35,7 +41,6 @@ export default function TierTwoSignupForm() {
     <StepSeven next={handleNextStep} text="Your Identity Has been Verified!" />,
     <StepEight next={handleNextStep} />,
     <StepNine next={handleNextStep} email={data.email} />,
-    <StepTwelve next={handleNextStep} email={data.email} />,
     <StepSeventeen next={handleNextStep} data={data} />,
   ];
 

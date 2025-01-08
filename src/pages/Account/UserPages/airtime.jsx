@@ -229,7 +229,7 @@ const UserAirtime = () => {
   };
 
   const handleFundWallet = () => {
-    navigate('/account/fund-wallet');
+    navigate('/addmoney');
   };
 
   // const handleUseMyNumber = () => {
