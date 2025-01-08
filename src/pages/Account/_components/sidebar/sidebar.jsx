@@ -11,9 +11,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { persistor } from '../../../../Redux/Store.jsx';
 import { reSetUserDetails } from '../../../../Redux/UserSlice.jsx';
 import { BsThreeDots } from 'react-icons/bs';
-import Signout from '../../../signout.jsx';
+// import Signout from '../../../signout.jsx';
 import { resetCorporate } from '../../../../Redux/CoorperateCustomerSlice.jsx';
 import { resetInventory } from '../../../../Redux/InventorySlice.jsx';
+import { resetState } from '../../../../Redux/BusinessSignUpSlice.jsx';
 
 export const Sidebar = () => {
   const location = useLocation();
@@ -30,7 +31,7 @@ export const Sidebar = () => {
   const userDetails = useSelector((state) => state.user.user);
 
   const profilePic = userDetails.passportUrl;
-  // console.log('url', profilePic);
+
   const userName = userDetails.firstName;
   const handleToggle = () => {
     setToggle(!toggle);
@@ -43,6 +44,7 @@ export const Sidebar = () => {
     dispatch(reSetUserDetails());
     dispatch(resetCorporate());
     dispatch(resetInventory());
+    dispatch(resetState());
     localStorage.clear();
     navigate('/login');
   };

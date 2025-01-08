@@ -28,6 +28,7 @@ const ProfileSetting = () => {
   const userEmail = useSelector((state) => state.user.user.email);
   const userDetails = useSelector((state) => state.user.user);
   const userBusinessDetails = useSelector((state) => state.coporateCustomerProfile.customerDetails);
+  const userType = userDetails.userType;
 
   const handleFileChange = (e) => {
     setFiles(e.target.files);
@@ -82,7 +83,10 @@ const ProfileSetting = () => {
     // email: '',
     // idNumber: '',
     country: 'Nigeria',
-    residentialAddress: `${userBusinessDetails?.houseNumber}, ${userBusinessDetails?.street},  ${userBusinessDetails?.state} State,  ${userBusinessDetails?.lga} LGA  `,
+    residentialAddress:
+      userType === 'CORPORATE'
+        ? `${userBusinessDetails?.houseNumber}, ${userBusinessDetails?.street},  ${userBusinessDetails?.state} State,  ${userBusinessDetails?.lga} LGA  `
+        : '',
     state: userBusinessDetails?.state,
     // businessName: '',
     businessAddress: '',
@@ -122,7 +126,8 @@ const ProfileSetting = () => {
       {/* display edit form conditionally */}
       {editProfile && (
         <>
-          <div className=" w-full z-50 fixed top-[-100px] right-[5%] md:w-[80%]">
+          <div
+            className={` w-full z-50 fixed ${userType === 'PERSONAL' ? '!mt-[100px]' : ''} top-[-100px] right-[5%] md:w-[80%]`}>
             <EditProfileForm />
             <button
               onClick={() => {
@@ -143,13 +148,15 @@ const ProfileSetting = () => {
         <div className="w-full flex justify-between">
           <h2 className="font-bold mb-4"> Personal Details</h2>
           {/* Upload documents button */}
-          <button
-            className="p-3 bg-secondary text-white font-bold rounded-md text-sm"
-            onClick={() => {
-              setUploadDocuments(true);
-            }}>
-            Upload Company Documents
-          </button>
+          {userType === 'CORPORATE' && (
+            <button
+              className="p-3 bg-secondary text-white font-bold rounded-md text-sm"
+              onClick={() => {
+                setUploadDocuments(true);
+              }}>
+              Upload Company Documents
+            </button>
+          )}
         </div>
         <div className="w-full md:w-[80%] lg:w-[80%] flex-col flex md:flex-row items-center gap-8">
           <div className="rounded-full">
@@ -321,152 +328,163 @@ const ProfileSetting = () => {
                 </div>
               </div>
               {/* business section */}
-              <section className="w-[100%] m-auto  mt-5">
-                <h2 className="font-bold mb-4 text-center md:text-justify"> Business Details</h2>
-                <div className="md:flex gap-2">
-                  <div className="w-[80%] md:w-[60%] m-auto">
-                    <div className="py-0">
-                      <label className="font-semibold block md:text-md" htmlFor="businessName">
-                        Business Name
-                      </label>
-                      <Field
-                        className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                        type="text"
-                        name="businessName"
-                        value={userBusinessDetails?.businessName}
-                        readOnly
-                      />
+              {userType === 'CORPORATE' && (
+                <section className="w-[100%] m-auto  mt-5">
+                  <h2 className="font-bold mb-4 text-center md:text-justify"> Business Details</h2>
+                  <div className="md:flex gap-2">
+                    <div className="w-[80%] md:w-[60%] m-auto">
+                      <div className="py-0">
+                        <label className="font-semibold block md:text-md" htmlFor="businessName">
+                          Business Name
+                        </label>
+                        <Field
+                          className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                          type="text"
+                          name="businessName"
+                          value={userBusinessDetails?.businessName}
+                          readOnly
+                        />
 
-                      {/* <ErrorMessage className="text-red-500" name="businessName" component="div" /> */}
+                        {/* <ErrorMessage className="text-red-500" name="businessName" component="div" /> */}
+                      </div>
                     </div>
-                  </div>
-                  <div className="w-[80%] md:w-[60%] m-auto">
-                    <div className="py-0">
-                      <label className="font-semibold block md:text-md" htmlFor="businessAddress">
-                        Business Address
-                      </label>
-                      <Field
-                        className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                        type="text"
-                        name="businessAddress"
-                        value={`${userBusinessDetails?.businessHouseNumber}, ${userBusinessDetails?.businessStreetName},  ${userBusinessDetails?.businessState} State,  ${userBusinessDetails?.businessLGA} LGA  `}
-                        readOnly
-                      />
-                      {/* <ErrorMessage
+                    <div className="w-[80%] md:w-[60%] m-auto">
+                      <div className="py-0">
+                        <label className="font-semibold block md:text-md" htmlFor="businessAddress">
+                          Business Address
+                        </label>
+                        <Field
+                          className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                          type="text"
+                          name="businessAddress"
+                          value={`${userBusinessDetails?.businessHouseNumber}, ${userBusinessDetails?.businessStreetName},  ${userBusinessDetails?.businessState} State,  ${userBusinessDetails?.businessLGA} LGA  `}
+                          readOnly
+                        />
+                        {/* <ErrorMessage
                         className="text-red-500"
                         name="businessAddress"
                         component="div"
                       /> */}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="md:flex gap-2">
-                  <div className="w-[80%] md:w-[60%] m-auto">
-                    <div className="py-0">
-                      <label className="font-semibold block md:text-md" htmlFor="contactNumber">
-                        Contact Number
-                      </label>
-                      <Field
-                        className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                        type="text"
-                        name="contactNumber"
-                        readOnly
-                      />
-                      <ErrorMessage className="text-red-500" name="contactNumber" component="div" />
+                  <div className="md:flex gap-2">
+                    <div className="w-[80%] md:w-[60%] m-auto">
+                      <div className="py-0">
+                        <label className="font-semibold block md:text-md" htmlFor="contactNumber">
+                          Contact Number
+                        </label>
+                        <Field
+                          className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                          type="text"
+                          name="contactNumber"
+                          readOnly
+                        />
+                        <ErrorMessage
+                          className="text-red-500"
+                          name="contactNumber"
+                          component="div"
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="w-[80%] md:w-[60%] m-auto">
-                    <div className="py-0">
-                      <label className="font-semibold block md:text-md" htmlFor="businessEmail">
-                        Email Address
-                      </label>
-                      <Field
-                        className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                        type="email"
-                        name="businessEmail"
-                        value={userDetails.email}
-                        readOnly
-                      />
-                      <ErrorMessage className="text-red-500" name="businessEmail" component="div" />
+                    <div className="w-[80%] md:w-[60%] m-auto">
+                      <div className="py-0">
+                        <label className="font-semibold block md:text-md" htmlFor="businessEmail">
+                          Email Address
+                        </label>
+                        <Field
+                          className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                          type="email"
+                          name="businessEmail"
+                          value={userDetails.email}
+                          readOnly
+                        />
+                        <ErrorMessage
+                          className="text-red-500"
+                          name="businessEmail"
+                          component="div"
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="md:flex gap-2">
-                  <div className="w-[80%] md:w-[60%] m-auto">
-                    <div className="py-0">
-                      <label className="font-semibold block md:text-md" htmlFor="cacNumber">
-                        CAC Number
-                      </label>
-                      <Field
-                        className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                        type="number"
-                        name="cacNumber"
-                        value={userBusinessDetails?.businessRegNumber}
-                        readOnly
-                      />
+                  <div className="md:flex gap-2">
+                    <div className="w-[80%] md:w-[60%] m-auto">
+                      <div className="py-0">
+                        <label className="font-semibold block md:text-md" htmlFor="cacNumber">
+                          CAC Number
+                        </label>
+                        <Field
+                          className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                          type="number"
+                          name="cacNumber"
+                          value={userBusinessDetails?.businessRegNumber}
+                          readOnly
+                        />
 
-                      {/* <ErrorMessage className="text-red-500" name="cacNumber" component="div" /> */}
+                        {/* <ErrorMessage className="text-red-500" name="cacNumber" component="div" /> */}
+                      </div>
+                    </div>
+                    <div className="w-[80%] md:w-[60%] m-auto">
+                      <div className="py-0">
+                        <label className="font-semibold block md:text-md" htmlFor="taxIdNumber">
+                          Tax Identification Number
+                        </label>
+                        <Field
+                          className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                          type="text"
+                          name="taxIdNumber"
+                          value={userBusinessDetails?.tin_No}
+                          readOnly
+                        />
+                        {/* <ErrorMessage className="text-red-500" name="taxIdNumber" component="div" /> */}
+                      </div>
                     </div>
                   </div>
-                  <div className="w-[80%] md:w-[60%] m-auto">
-                    <div className="py-0">
-                      <label className="font-semibold block md:text-md" htmlFor="taxIdNumber">
-                        Tax Identification Number
-                      </label>
-                      <Field
-                        className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                        type="text"
-                        name="taxIdNumber"
-                        value={userBusinessDetails?.tin_No}
-                        readOnly
-                      />
-                      {/* <ErrorMessage className="text-red-500" name="taxIdNumber" component="div" /> */}
+                  <div className="md:flex gap-2">
+                    <div className="w-[80%] md:w-[60%] m-auto">
+                      <div className="py-0">
+                        <label className="font-semibold block md:text-md" htmlFor="socialMedia">
+                          Social Media
+                        </label>
+                        <Field
+                          className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                          type="text"
+                          name="socialMedia"
+                          readOnly
+                        />
+                        <ErrorMessage className="text-red-500" name="socialMedia" component="div" />
+                      </div>
+                    </div>
+                    <div className="w-[80%] md:w-[60%] m-auto">
+                      <div className="py-0">
+                        <label className="font-semibold block md:text-md" htmlFor="businessCountry">
+                          Country
+                        </label>
+                        <Field
+                          className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                          type="text"
+                          name="businessCountry"
+                          readOnly
+                        />
+                        <ErrorMessage
+                          className="text-red-500"
+                          name="businessCountry"
+                          component="div"
+                        />
+                      </div>
                     </div>
                   </div>
+                </section>
+              )}
+              <div className="w-[80%] md:w-[60%] py-2 bg-secondary rounded-md m-auto mt-2 mb-4">
+                <div
+                  disabled={isSubmitting}
+                  onClick={handleEdit}
+                  className="text-center w-full  text-primary font-semibold cursor-pointer">
+                  Edit
                 </div>
-                <div className="md:flex gap-2">
-                  <div className="w-[80%] md:w-[60%] m-auto">
-                    <div className="py-0">
-                      <label className="font-semibold block md:text-md" htmlFor="socialMedia">
-                        Social Media
-                      </label>
-                      <Field
-                        className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                        type="text"
-                        name="socialMedia"
-                        readOnly
-                      />
-                      <ErrorMessage className="text-red-500" name="socialMedia" component="div" />
-                    </div>
-                  </div>
-                  <div className="w-[80%] md:w-[60%] m-auto">
-                    <div className="py-0">
-                      <label className="font-semibold block md:text-md" htmlFor="businessCountry">
-                        Country
-                      </label>
-                      <Field
-                        className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                        type="text"
-                        name="businessCountry"
-                        readOnly
-                      />
-                      <ErrorMessage
-                        className="text-red-500"
-                        name="businessCountry"
-                        component="div"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="w-[80%] md:w-[60%] py-2 bg-secondary rounded-md m-auto mt-2 mb-4">
-                  <div
-                    onClick={handleEdit}
-                    className="text-center w-full  text-primary font-semibold cursor-pointer">
-                    Edit
-                  </div>
-                </div>
-              </section>
+              </div>
             </Form>
           )}
         </Formik>

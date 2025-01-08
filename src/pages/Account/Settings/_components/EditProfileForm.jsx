@@ -20,6 +20,8 @@ const validationSchema = Yup.object().shape({
 const EditProfileForm = () => {
   const dispatch = useDispatch();
   const userBusinessDetails = useSelector((state) => state.coporateCustomerProfile.customerDetails);
+  const userDetails = useSelector((state) => state.user.user);
+  const userType = userDetails.userType;
 
   const customerId = useSelector((state) => state.user.user.customerId);
   const [loading, setLoading] = useState(false);
@@ -27,7 +29,7 @@ const EditProfileForm = () => {
   const [success, setSuccess] = useState(false);
   const [newAuthToken] = useLocalStorage('authToken', '');
   const handleSubmit = async (values, actions) => {
-    const { resetForm } = actions;
+    // const { resetForm } = actions;
     setLoading(true);
     setUploadStatus('');
     try {
@@ -60,7 +62,6 @@ const EditProfileForm = () => {
         //storing the updated profile in the inventorySlice using the redux store
         dispatch(storeUpdatedProfile(data));
       }
-      resetForm();
     } catch (err) {
       setUploadStatus(`Error:Something went wrong`);
       console.log(err);
@@ -69,14 +70,15 @@ const EditProfileForm = () => {
     }
   };
   const initialValues = {
-    houseNumber: userBusinessDetails.houseNumber,
-    lga: userBusinessDetails.lga,
-    state: userBusinessDetails.state,
-    street: userBusinessDetails.street,
-    businessHouseNumber: userBusinessDetails.businessHouseNumber,
-    businessLGA: userBusinessDetails.businessLGA,
-    businessState: userBusinessDetails.businessState,
-    businessStreetName: userBusinessDetails.businessStreetName,
+    houseNumber: userBusinessDetails?.houseNumber,
+    lga: userBusinessDetails?.lga,
+    state: userBusinessDetails?.state,
+    street: userBusinessDetails?.street,
+    businessHouseNumber:
+      userType === 'CORPORATE' ? userBusinessDetails?.businessHouseNumber : 'null',
+    businessLGA: userType === 'CORPORATE' ? userBusinessDetails?.businessLGA : 'null',
+    businessState: userType === 'CORPORATE' ? userBusinessDetails?.businessState : 'null',
+    businessStreetName: userType === 'CORPORATE' ? userBusinessDetails?.businessStreetName : 'null',
   };
   return (
     <div>
@@ -114,6 +116,19 @@ const EditProfileForm = () => {
             </div>
             <div className="w-[80%] md:w-[60%] m-auto">
               <div className="py-1 relative">
+                <label className="font-bold block md:text-md" htmlFor="street">
+                  Street Name
+                </label>
+                <Field
+                  className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                  type="text"
+                  name="street"
+                />
+                <ErrorMessage className="text-red-500" name="street" component="div" />
+              </div>
+            </div>
+            <div className="w-[80%] md:w-[60%] m-auto">
+              <div className="py-1 relative">
                 <label className="font-bold block md:text-md" htmlFor="state">
                   State
                 </label>
@@ -125,58 +140,71 @@ const EditProfileForm = () => {
                 <ErrorMessage className="text-red-500" name="state" component="div" />
               </div>
             </div>
-            <div className="w-[80%] md:w-[60%] m-auto">
-              <div className="py-1 relative">
-                <label className="font-bold block md:text-md" htmlFor="businessHouseNumber">
-                  Business House Number
-                </label>
-                <Field
-                  className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                  type="text"
-                  name="businessHouseNumber"
-                />
-                <ErrorMessage className="text-red-500" name="businessHouseNumber" component="div" />
-              </div>
-            </div>
-            <div className="w-[80%] md:w-[60%] m-auto">
-              <div className="py-1 relative">
-                <label className="font-bold block md:text-md" htmlFor="businessLGA">
-                  Business LGA
-                </label>
-                <Field
-                  className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                  type="text"
-                  name="businessLGA"
-                />
-                <ErrorMessage className="text-red-500" name="businessLGA" component="div" />
-              </div>
-            </div>
-            <div className="w-[80%] md:w-[60%] m-auto">
-              <div className="py-1 relative">
-                <label className="font-bold block md:text-md" htmlFor="businessState">
-                  Business State
-                </label>
-                <Field
-                  className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                  type="text"
-                  name="businessState"
-                />
-                <ErrorMessage className="text-red-500" name="businessState" component="div" />
-              </div>
-            </div>
-            <div className="w-[80%] md:w-[60%] m-auto">
-              <div className="py-1 relative">
-                <label className="font-bold block md:text-md" htmlFor="businessStreetName">
-                  Business Street Name
-                </label>
-                <Field
-                  className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                  type="text"
-                  name="businessStreetName"
-                />
-                <ErrorMessage className="text-red-500" name="businessStreetName" component="div" />
-              </div>
-            </div>
+            {/* business details */}
+            {userType === 'CORPORATE' && (
+              <>
+                <div className="w-[80%] md:w-[60%] m-auto">
+                  <div className="py-1 relative">
+                    <label className="font-bold block md:text-md" htmlFor="businessHouseNumber">
+                      Business House Number
+                    </label>
+                    <Field
+                      className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                      type="text"
+                      name="businessHouseNumber"
+                    />
+                    <ErrorMessage
+                      className="text-red-500"
+                      name="businessHouseNumber"
+                      component="div"
+                    />
+                  </div>
+                </div>
+                <div className="w-[80%] md:w-[60%] m-auto">
+                  <div className="py-1 relative">
+                    <label className="font-bold block md:text-md" htmlFor="businessLGA">
+                      Business LGA
+                    </label>
+                    <Field
+                      className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                      type="text"
+                      name="businessLGA"
+                    />
+                    <ErrorMessage className="text-red-500" name="businessLGA" component="div" />
+                  </div>
+                </div>
+                <div className="w-[80%] md:w-[60%] m-auto">
+                  <div className="py-1 relative">
+                    <label className="font-bold block md:text-md" htmlFor="businessState">
+                      Business State
+                    </label>
+                    <Field
+                      className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                      type="text"
+                      name="businessState"
+                    />
+                    <ErrorMessage className="text-red-500" name="businessState" component="div" />
+                  </div>
+                </div>
+                <div className="w-[80%] md:w-[60%] m-auto">
+                  <div className="py-1 relative">
+                    <label className="font-bold block md:text-md" htmlFor="businessStreetName">
+                      Business Street Name
+                    </label>
+                    <Field
+                      className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                      type="text"
+                      name="businessStreetName"
+                    />
+                    <ErrorMessage
+                      className="text-red-500"
+                      name="businessStreetName"
+                      component="div"
+                    />
+                  </div>
+                </div>
+              </>
+            )}
             {uploadStatus && (
               <p className={`mt-4 ${success ? 'text-green-500' : 'text-red-500'} text-center`}>
                 {uploadStatus}
