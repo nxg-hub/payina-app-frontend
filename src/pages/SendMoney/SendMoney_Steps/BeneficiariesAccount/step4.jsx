@@ -124,7 +124,7 @@ const EnterPin = ({ data }) => {
         setShowDecline(true);
       }
     } catch (error) {
-      setErrorMessage('Transaction process failed. Please try again.');
+      setErrorMessage(error.response?.response || 'Transaction process failed. Please try again.');
       console.error('Error Status:', error.response?.status);
       console.error('Error Data:', error.response?.data);
       setShowDecline(true);
@@ -134,7 +134,8 @@ const EnterPin = ({ data }) => {
   };
 
   if (showSuccess) return <SuccessMessage />;
-  if (showDecline) return <DeclineMessage />;
+  if (showDecline) return <DeclineMessage errorMessage={errorMessage} />;
+  // if (showDecline) return <DeclineMessage />;
 
   return (
     <div className="transaction-pin flex flex-col justify-center items-center bg-[#D2D2D285] rounded-md md:p-[2rem] sm:p-[2rem] xl:py-[3rem] xl:px-[5rem] mt-[5rem] gap-8 mx-auto">

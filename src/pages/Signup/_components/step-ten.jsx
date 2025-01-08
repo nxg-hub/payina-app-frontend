@@ -170,42 +170,36 @@ export const StepTen = ({ next }) => {
                     <Field
                       as="select"
                       name="businessCategory"
+                      value={formik.values.businessCategory}
                       className="text-primary w-full h-10 md:h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-xs md:text-base text-gray rounded-[5px] py-2 px-8 bg-secondary">
                       <option
-                        name="businessCategory"
                         value=""
                         className="!bg-secondary text-primary text-xs md:text-base font-medium"
-                        selected
                         disabled>
                         Select Business Category
                       </option>
                       <option
                         value="information-technology"
-                        name="businessCategory"
                         className="!bg-secondary text-primary text-xs md:text-base font-medium">
                         Information Technology
                       </option>
                       <option
                         value="e-commerce"
-                        name="businessCategory"
                         className="!bg-secondary text-primary text-sm md:text-base font-medium">
                         E-commerce
                       </option>
                       <option
                         value="real-estate"
-                        name="businessCategory"
                         className="!bg-secondary text-primary text-sm md:text-base font-medium">
                         Real Estate
                       </option>
                       <option
                         value="agriculture-and-farming"
-                        name="businessCategory"
                         className="!bg-secondary text-primary text-sm md:text-base font-medium">
                         Agriculture and Farming
                       </option>
                       <option
                         value="retail-and-wholesale"
-                        name="businessCategory"
                         className="!bg-secondary text-primary text-sm md:text-base font-medium">
                         Retail and Wholesale
                       </option>
@@ -243,30 +237,27 @@ export const StepTen = ({ next }) => {
                     <Field
                       as="select"
                       name="businessType"
+                      value={formik.values.businessType}
+                      onChange={formik.handleChange}
                       className="text-primary w-full h-10 md:h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-xs md:text-base text-gray rounded-[5px] py-2 px-8 bg-secondary">
                       <option
-                        name="businessType"
                         value=""
                         className="!bg-secondary text-primary text-sm md:text-base font-medium"
-                        selected
                         disabled>
                         Select Business Type
                       </option>
                       <option
                         value="ltd"
-                        name="businessType"
                         className="!bg-secondary text-primary text-sm md:text-base font-medium">
                         LTD
                       </option>
                       <option
                         value="plc"
-                        name="businessType"
                         className="!bg-secondary text-primary text-sm md:text-base font-medium">
                         PLC
                       </option>
                       <option
                         value="ngo"
-                        name="businessType"
                         className="!bg-secondary text-primary text-sm md:text-base font-medium">
                         NGO
                       </option>

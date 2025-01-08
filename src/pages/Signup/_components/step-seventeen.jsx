@@ -1,83 +1,58 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
-import useLocalStorage from '../../../hooks/useLocalStorage';
 import { useDispatch } from 'react-redux';
 import { resetState } from '../../../Redux/BusinessSignUpSlice';
 
-export const StepSeventeen = ({ data }) => {
+export const StepSeventeen = () => {
   const [userData, setUserData] = useState(null);
-  const [walletData, setWalletData] = useState(null);
-  const [newAuthToken] = useLocalStorage('authToken', '');
+  const userEmail = localStorage.getItem('userEmail');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const dataFetched = useRef(false);
   const dispatch = useDispatch();
-  const userEmail = localStorage.getItem('userEmail');
+
   useEffect(() => {
-    // Only fetch if we haven't already and have an auth token
-    if (!dataFetched.current) {
-      const fetchUserAndWalletData = async () => {
-        try {
-          console.log('Starting data fetch...');
-
-          const [
-            userResponse,
-            // walletResponse
-          ] = await Promise.all([
-            fetch(
-              `${import.meta.env.VITE_GET_USER_BY_EMAIL_ENDPOINT}?email=${encodeURIComponent(userEmail)}`,
-              {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              }
-            ),
-            // fetch(import.meta.env.VITE_GET_WALLET_ENDPOINT, {
-            //   headers: {
-            //     Authorization: `Bearer ${newAuthToken}`,
-            //     'Content-Type': 'application/json',
-            //   },
-            // }),
-          ]);
-
-          if (!userResponse.ok) {
-            throw new Error('One or more API calls failed');
+    const fetchUserData = async () => {
+      if (!userEmail) {
+        setError('Email is required.');
+        setIsLoading(false);
+        return;
+      }
+      // console.log('data.email:', userEmail);
+      try {
+        setIsLoading(true); // Start loading
+        const response = await fetch(
+          `${import.meta.env.VITE_GET_USER_BY_EMAIL_ENDPOINT}?email=${encodeURIComponent(userEmail)}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
           }
-          const [
-            userDataResponse,
-            //  walletDataResponse
-          ] = await Promise.all([
-            userResponse.json(),
-            // walletResponse.json(),
-          ]);
+        );
 
-          setUserData(userDataResponse);
-          // setWalletData(walletDataResponse.data);
-
-          console.log('Data fetch completed successfully'); // Debug log
-        } catch (error) {
-          console.error('Error fetching data:', error);
-          setError(error.message);
-        } finally {
-          setIsLoading(false);
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
         }
-      };
-      dataFetched.current = true; // Mark as fetched before starting
-      fetchUserAndWalletData();
-    }
-    // console.log(userData, walletData);
-    // Cleanup function
-    return () => {
-      dataFetched.current = false; // Reset if component unmounts
+
+        const userDataResponse = await response.json();
+        setUserData(userDataResponse);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
     };
-  }, []); // Only depend on authToken
+
+    fetchUserData();
+  }, [userEmail]);
 
   const handleClick = () => {
     dispatch(resetState());
+
     navigate('/login');
   };
 
@@ -88,7 +63,7 @@ export const StepSeventeen = ({ data }) => {
   if (error) {
     return <div className="text-center py-8 text-red-600">Error: {error}</div>;
   }
-  localStorage.setItem('currentStep', 17);
+  // localStorage.setItem('currentStep', 17);
 
   return (
     <div className="relative bg-black min-h-screen flex items-center justify-center">
@@ -127,11 +102,14 @@ export const StepSeventeen = ({ data }) => {
         alt="Background Design"
         className="absolute bottom-[2rem] right-[32rem] w-20 h-20"
       />
-      <div className="relative z-10 flex flex-col justify-center items-center bg-white shadow-md xl:p-8 px-4 rounded-lg mx-auto sm:w-[300px] md:w-[400px] lg:w-[600px]">
+      <div className="relative z-10 lg:px-6 lg:mb-5 lg:mt-0 !mt-10 rounded-[10px] bg-lightBlue flex flex-col w-auto lg:w-[843px]">
         <div className="flex flex-col xl:w-[50%] text-center mx-auto space-y-2">
-          <span className="text-[24px] md:text-[32px] font-bold">Congrats Champ!</span>
-          <span className="md:text-2xl text-base text-yellow font-bold">
-            You have successfully set up your Payina Business account <br /> Here are your details
+          <span className="text-[24px] lg:text-[32px] font-bold">Congrats Champ!</span>
+          <span className="lg:text-2xl text-center text-yellow font-bold">
+            You have successfully set up your Payina Business account.
+          </span>
+          <span className="lg:text-2xl text-center text-yellow font-bold">
+            Here are your details
           </span>
         </div>
         <div className="mt-12 xl:mt-8">
@@ -200,8 +178,8 @@ export const StepSeventeen = ({ data }) => {
               />
               <div className="w-full text-primary absolute top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%] flex flex-col md:space-y-4">
                 <span className="md:text-2xl text-xs font-medium">Business Name</span>
-                <span className="md:text-3xl text-sm font-bold capitalize">
-                  {userData?.name || data?.business_details?.business_name || 'N/A'}
+                <span className="md:text-3xl text-sm font-bold capitalize text-nowrap">
+                  {userData?.accountName || 'N/A'}
                 </span>
               </div>
             </div>
@@ -210,7 +188,7 @@ export const StepSeventeen = ({ data }) => {
             onClick={handleClick}
             padding="15px"
             type="submit"
-            children="Proceed to Login"
+            children="Proceed to Sign In"
             className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
           />
         </div>

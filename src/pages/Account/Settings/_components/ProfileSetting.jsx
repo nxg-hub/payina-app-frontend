@@ -83,17 +83,14 @@ const ProfileSetting = () => {
     // email: '',
     // idNumber: '',
     country: 'Nigeria',
-    residentialAddress:
-      userType === 'CORPORATE'
-        ? `${userBusinessDetails?.houseNumber}, ${userBusinessDetails?.street},  ${userBusinessDetails?.state} State,  ${userBusinessDetails?.lga} LGA  `
-        : '',
+    residentialAddress: `${userBusinessDetails?.houseNumber}, ${userBusinessDetails?.street},  ${userBusinessDetails?.state} State,  ${userBusinessDetails?.lga} LGA  `,
     state: userBusinessDetails?.state,
-    // businessName: '',
+    businessName: '',
     businessAddress: '',
     businessEmail: userDetails.email,
     contactNumber: userDetails.phoneNumber,
-    // cacNumber: '',
-    // taxIdNumber: '',
+    cacNumber: '',
+    taxIdNumber: '',
     socialMedia: '',
     businessCountry: 'Nigeria',
   };
@@ -293,40 +290,44 @@ const ProfileSetting = () => {
                   </div>
                 </div>
               </div>
-              <div className="md:flex gap-2">
-                <div className="w-[80%] md:w-[60%] m-auto">
-                  <div className="py-0">
-                    <label className="font-semibold block md:text-md" htmlFor="state">
-                      State
-                    </label>
-                    <Field
-                      className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                      type="text"
-                      name="state"
-                      readOnly
-                    />
-                    <ErrorMessage className="text-red-500" name="state" component="div" />
+              {userType === 'CORPORATE' && (
+                <div className="md:flex gap-2">
+                  <div className="w-[80%] md:w-[60%] m-auto">
+                    <div className="py-0">
+                      <label className="font-semibold block md:text-md" htmlFor="state">
+                        State
+                      </label>
+                      <Field
+                        className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                        type="text"
+                        name="state"
+                        readOnly
+                      />
+                      <ErrorMessage className="text-red-500" name="state" component="div" />
+                    </div>
+                  </div>
+                  <div className="w-[80%] md:w-[60%] m-auto">
+                    <div className="py-0">
+                      <label
+                        className="font-semibold block md:text-md"
+                        htmlFor="residentialAddress">
+                        Residential Address
+                      </label>
+                      <Field
+                        className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
+                        type="text"
+                        name="residentialAddress"
+                        readOnly
+                      />
+                      <ErrorMessage
+                        className="text-red-500"
+                        name="residentialAddress"
+                        component="div"
+                      />
+                    </div>
                   </div>
                 </div>
-                <div className="w-[80%] md:w-[60%] m-auto">
-                  <div className="py-0">
-                    <label className="font-semibold block md:text-md" htmlFor="residentialAddress">
-                      Residential Address
-                    </label>
-                    <Field
-                      className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                      type="text"
-                      name="residentialAddress"
-                      readOnly
-                    />
-                    <ErrorMessage
-                      className="text-red-500"
-                      name="residentialAddress"
-                      component="div"
-                    />
-                  </div>
-                </div>
-              </div>
+              )}
               {/* business section */}
               {userType === 'CORPORATE' && (
                 <section className="w-[100%] m-auto  mt-5">
@@ -475,16 +476,16 @@ const ProfileSetting = () => {
                       </div>
                     </div>
                   </div>
+                  <div className="w-[80%] md:w-[60%] py-2 bg-secondary rounded-md m-auto mt-2 mb-4">
+                    <div
+                      disabled={isSubmitting}
+                      onClick={handleEdit}
+                      className="text-center w-full  text-primary font-semibold cursor-pointer">
+                      Edit
+                    </div>
+                  </div>
                 </section>
               )}
-              <div className="w-[80%] md:w-[60%] py-2 bg-secondary rounded-md m-auto mt-2 mb-4">
-                <div
-                  disabled={isSubmitting}
-                  onClick={handleEdit}
-                  className="text-center w-full  text-primary font-semibold cursor-pointer">
-                  Edit
-                </div>
-              </div>
             </Form>
           )}
         </Formik>

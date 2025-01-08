@@ -58,7 +58,7 @@
 // }
 // import { useNavigate } from 'react-router-dom';
 // import axios from 'axios';
-//
+
 // const REGISTRATION_LEVELS = {
 //   VALIDATE_OTP: 2,
 //   BVN_VERIFICATION_DOCUMENT_UPLOAD: 3,
@@ -67,10 +67,10 @@
 //   CORPORATE_PROFILE_UPDATE_SET_PIN: 7,
 //   KYC_COMPLETED: 17,
 // };
-//
+
 // export function useAuth() {
 //   const navigate = useNavigate();
-//
+
 //   const checkUserRegistrationLevel = async () => {
 //     try {
 //       const token = localStorage.getItem('authToken');
@@ -78,24 +78,24 @@
 //         navigate('/login');
 //         return;
 //       }
-//
+
 //       if (location.pathname === '/personal/login') {
 //         // navigate('/account/dashboard');
 //         navigate('/personal/dashboard');
 //         return;
 //       }
-//
+
 //       const response = await axios.get(import.meta.env.VITE_REG_LEVEL_ENDPOINT, {
 //         headers: {
 //           Authorization: `Bearer ${token}`,
 //         },
 //       });
-//
+
 //       const registrationLevel = response.data;
 //       const step = REGISTRATION_LEVELS[registrationLevel] || 0;
-//
+
 //       localStorage.setItem('currentStep', step);
-//
+
 //       if (step < 17) {
 //         navigate('/signup');
 //       } else {
@@ -106,13 +106,15 @@
 //       navigate('/login');
 //     }
 //   };
-//
+
 //   return { checkUserRegistrationLevel };
 // }
 
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import apiService from './services/apiService.js';
+import { useDispatch } from 'react-redux';
+import { setStep } from './Redux/BusinessSignUpSlice.jsx';
 
 const REGISTRATION_LEVELS = {
   VALIDATE_OTP: 3,
@@ -125,7 +127,7 @@ const REGISTRATION_LEVELS = {
 
 export function useAuth() {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const checkUserRegistrationLevel = async () => {
     try {
       // Check for auth token
@@ -155,9 +157,27 @@ export function useAuth() {
 
       // Special handling for personal users
       if (isPersonalUser) {
-        // Allow access if registration level is >= 4 (BVN_DETAILS_CONFIRMATION_SAVE_USERNAME)
-        if (step >= REGISTRATION_LEVELS.BVN_DETAILS_CONFIRMATION_SAVE_USERNAME) {
+        if (userData.registrationLevel === 'VALIDATE_OTP') {
+          dispatch(setStep(2));
+          navigate('/signup');
+          return;
+        }
+        if (userData.registrationLevel === 'BVN_VERIFICATION_DOCUMENT_UPLOAD') {
           navigate('/personal/dashboard');
+          return;
+        }
+        if (userData.registrationLevel === 'BVN_DETAILS_CONFIRMATION_SAVE_USERNAME') {
+          navigate('/personal/dashboard');
+          return;
+        }
+
+        if (userData.registrationLevel === 'CORPORATE_PROFILE_UPDATE_SET_PIN') {
+          dispatch(setStep(15));
+          navigate('/signup');
+          return;
+        }
+        if (userData.registrationLevel === 'KYC_COMPLETED') {
+          navigate('/account/dashboard');
           return;
         }
         // If not completed level 4, redirect to signup
@@ -166,12 +186,35 @@ export function useAuth() {
       }
 
       // Corporate user flow remains the same
-      if (step < REGISTRATION_LEVELS.KYC_COMPLETED) {
+      if (userData.registrationLevel === 'VALIDATE_OTP') {
+        dispatch(setStep(2));
         navigate('/signup');
         return;
       }
-
-      navigate('/account/dashboard');
+      if (userData.registrationLevel === 'BVN_VERIFICATION_DOCUMENT_UPLOAD') {
+        dispatch(setStep(3));
+        navigate('/signup');
+        return;
+      }
+      if (userData.registrationLevel === 'BVN_DETAILS_CONFIRMATION_SAVE_USERNAME') {
+        dispatch(setStep(3));
+        navigate('/signup');
+        return;
+      }
+      if (userData.registrationLevel === 'FACIAL_CAPTURE_AND_UPLOAD') {
+        dispatch(setStep(5));
+        navigate('/signup');
+        return;
+      }
+      if (userData.registrationLevel === 'CORPORATE_PROFILE_UPDATE_SET_PIN') {
+        dispatch(setStep(15));
+        navigate('/signup');
+        return;
+      }
+      if (userData.registrationLevel === 'KYC_COMPLETED') {
+        navigate('/account/dashboard');
+        return;
+      }
     } catch (error) {
       console.error('Error in authentication flow:', error);
       navigate('/login');
