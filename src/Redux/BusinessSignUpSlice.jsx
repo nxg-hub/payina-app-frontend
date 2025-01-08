@@ -6,7 +6,6 @@ import {
 
 const initialState = {
   step: 0,
-  //   success: false,
 };
 
 const businessSignUpSlice = createSlice({
@@ -15,8 +14,9 @@ const businessSignUpSlice = createSlice({
   reducers: {
     nextStep(state) {
       state.step = state.step + 1; //  handle next step
-      console.log(state.step);
-      //   state.success = true;
+    },
+    setStep(state, action) {
+      state.step = action.payload;
     },
     resetState(state) {
       state.step = 0;
@@ -25,5 +25,5 @@ const businessSignUpSlice = createSlice({
   extraReducers: (builder) => {},
 });
 
-export const { nextStep, resetState } = businessSignUpSlice.actions;
+export const { nextStep, resetState, setStep } = businessSignUpSlice.actions;
 export default businessSignUpSlice.reducer;

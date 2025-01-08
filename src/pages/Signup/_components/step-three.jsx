@@ -80,7 +80,7 @@ export const StepThree = ({ next, data }) => {
     '-' +
     data.phone?.slice(10);
 
-  console.log(phoneNumber);
+  // console.log(phoneNumber);
   localStorage.setItem('currentStep', 3);
 
   return (

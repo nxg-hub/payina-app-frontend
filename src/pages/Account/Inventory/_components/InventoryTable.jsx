@@ -4,8 +4,10 @@ import React, { useState } from 'react';
 import UpdateInventoryForm from './UpdateInventoryForm';
 import ReactPaginate from 'react-paginate';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const InventoryTable = ({ searchTerm }) => {
+  const navigate = useNavigate();
   const inventoryData = useSelector((state) => state.inventory.inventory);
   const exportToPDF = () => {
     const element = document.getElementById('table-container');
@@ -46,6 +48,10 @@ const InventoryTable = ({ searchTerm }) => {
   const handleUpdate = (id) => {
     setUpdate(true);
     setInventoryId(id);
+  };
+
+  const handleAddInventory = () => {
+    navigate('/account/inventoryAdd');
   };
 
   return (
@@ -128,6 +134,15 @@ const InventoryTable = ({ searchTerm }) => {
           <p className="text-gray-500 text-center mt-4">No items found.</p>
         )}
       </div>
+      {currentItems?.length === 0 && (
+        <div className="w-[30%] md:w-[15%] m-auto bg-red-300 mt-5">
+          <button
+            onClick={handleAddInventory}
+            className="w-full bg-blue-100 font-bold px-4 py-2 rounded-lg  hover:bg-stone-400 border shadow-md">
+            Add Inventory
+          </button>
+        </div>
+      )}
       {/* Export btn */}
       <div className="mt-4">
         <button

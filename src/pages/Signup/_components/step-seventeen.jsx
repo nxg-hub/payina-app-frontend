@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
+import { useDispatch } from 'react-redux';
+import { resetState } from '../../../Redux/BusinessSignUpSlice';
 
 export const StepSeventeen = () => {
   const [userData, setUserData] = useState(null);
@@ -9,6 +11,7 @@ export const StepSeventeen = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -17,7 +20,7 @@ export const StepSeventeen = () => {
         setIsLoading(false);
         return;
       }
-      console.log('data.email:', userEmail);
+      // console.log('data.email:', userEmail);
       try {
         setIsLoading(true); // Start loading
         const response = await fetch(
@@ -48,7 +51,8 @@ export const StepSeventeen = () => {
   }, [userEmail]);
 
   const handleClick = () => {
-    localStorage.removeItem('userEmail');
+    dispatch(resetState());
+
     navigate('/login');
   };
 
@@ -184,7 +188,7 @@ export const StepSeventeen = () => {
             onClick={handleClick}
             padding="15px"
             type="submit"
-            children="Proceed to Sign in"
+            children="Proceed to Sign In"
             className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
           />
         </div>
