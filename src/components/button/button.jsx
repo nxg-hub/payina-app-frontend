@@ -2,16 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const CustomButton = ({
-  width,
-  border,
-  backgroundColor,
-  textColor,
-  borderRadius,
+  width = '',
+  border = '1px solid #00678F',
+  backgroundColor = '#00678F',
+  textColor = '#ffffff',
+  borderRadius = '6px',
   onClick,
   children,
-  padding,
+  padding = '10px 35px',
   className,
-  type
+  type,
+  loading,
 }) => {
   const buttonStyle = {
     width,
@@ -20,12 +21,17 @@ const CustomButton = ({
     color: textColor,
     borderRadius,
     padding,
-    cursor: 'pointer'
+    cursor: 'pointer',
   };
 
   return (
-    <button style={buttonStyle} type={type} onClick={onClick} className={className}>
-      {children}
+    <button
+      disabled={loading}
+      style={buttonStyle}
+      type={type}
+      onClick={onClick}
+      className={className}>
+      {loading ? 'loading...' : children}
     </button>
   );
 };
@@ -38,16 +44,9 @@ CustomButton.propTypes = {
   borderRadius: PropTypes.string,
   onClick: PropTypes.func,
   children: PropTypes.node,
-  padding: PropTypes.string
-};
-
-CustomButton.defaultProps = {
-  border: '1px solid #00678F',
-  backgroundColor: '#00678F',
-  textColor: '#ffffff',
-  borderRadius: '6px',
-  padding: '10px 35px',
-  width: ''
+  padding: PropTypes.string,
+  className: PropTypes.string,
+  type: PropTypes.string,
 };
 
 export default CustomButton;

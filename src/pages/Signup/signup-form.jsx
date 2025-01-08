@@ -19,10 +19,13 @@ import {
   StepTwelve,
   StepTwo,
 } from './_components';
+import { useDispatch, useSelector } from 'react-redux';
+import { nextStep } from '../../Redux/BusinessSignUpSlice';
 
 export default function SignUpForm() {
   const [data, setData] = useState({
     email: '',
+    phone: '',
     bvnData: {},
     ninData: {},
     password: '',
@@ -42,11 +45,14 @@ export default function SignUpForm() {
     businessCategory: '',
     businessType: '',
   });
-  const [currentStep, setCurrentStep] = useState(0);
+  // const [currentStep, setCurrentStep] = useState(0);
+  const currentStep = useSelector((state) => state.businessSignUp.step);
+  const dispatch = useDispatch();
 
   const handleNextStep = (newData) => {
     setData((prevData) => ({ ...prevData, ...newData }));
-    setCurrentStep((prevStep) => prevStep + 1);
+    // setCurrentStep((prevStep) => prevStep + 1);
+    dispatch(nextStep());
   };
 
   const steps = [
@@ -54,25 +60,27 @@ export default function SignUpForm() {
     <StepTwo next={handleNextStep} initialValues={data} />,
     <StepThree next={handleNextStep} data={data} />,
     <StepFour next={handleNextStep} />,
-    <StepFive next={handleNextStep} bvnData={data} ninData= {data} initialValues={data} email={data.email} />,
+    <StepFive
+      next={handleNextStep}
+      bvnData={data}
+      ninData={data}
+      initialValues={data}
+      email={data.email}
+    />,
     <StepSix next={handleNextStep} email={data.email} />,
     <StepSeven next={handleNextStep} text="Your Identity Has been Verified!" />,
     <StepEight next={handleNextStep} />,
     <StepNine next={handleNextStep} email={data.email} />,
-    <StepTen next={handleNextStep} />,
-    <StepEleven next={handleNextStep} data={data} />,
+    <StepTen next={handleNextStep} initialValues={data}/>,
+    <StepEleven next={handleNextStep} initialValues={data} />,
     <StepTwelve next={handleNextStep} email={data.email} />,
-    <StepThirteen next={handleNextStep} email={data.email} initialValues={data} />,
+    <StepThirteen next={handleNextStep} email={data.email} initialValues={data}  passedData />,
     <StepFourteen next={handleNextStep} />,
     <StepFifteen next={handleNextStep} email={data.email} />,
     <StepSixteen next={handleNextStep} email={data.email} />,
     <StepSeven next={handleNextStep} text="You Have Successfully Set Your Pin" />,
-    <StepSeventeen next={handleNextStep} data={data} />,
+    <StepSeventeen next={handleNextStep} email={data.email} />,
   ];
 
-  return (
-    <div className="xl:mb-14 space-y-10 xl:w-fit w-full px-6 mx-auto absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
-      {steps[currentStep]}
-    </div>
-  );
+  return <div className="">{steps[currentStep]}</div>;
 }

@@ -3,11 +3,12 @@ import { useState, useEffect } from 'react';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
 
-export const StepThree = ({ next, data }) => {
+export const StepThree = ({ next, data, phone }) => {
   const [codeAlert, setCodeAlert] = useState('');
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [otpError, setOtpError] = useState('');
   const [canResendCode, setCanResendCode] = useState(false);
+  const [loading, setLoading] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -18,6 +19,7 @@ export const StepThree = ({ next, data }) => {
   }, []);
 
   const handleSubmit = async (values) => {
+    setLoading(true);
     try {
       const response = await fetch(import.meta.env.VITE_VALIDATE_OTP_ENDPOINT, {
         method: 'POST',
@@ -30,11 +32,13 @@ export const StepThree = ({ next, data }) => {
 
       if (response.ok) {
         next(values);
+        setLoading(false);
       } else {
         setOtpError(data.message || 'Invalid OTP');
       }
     } catch (error) {
       setOtpError('An error occurred. Please try again.');
+      setLoading(false);
     }
   };
 
@@ -76,36 +80,48 @@ export const StepThree = ({ next, data }) => {
     '-' +
     data.phone?.slice(10);
 
-  console.log(phoneNumber);
+   console.log(phoneNumber);
+  localStorage.setItem('currentStep', 3);
 
   return (
-    <div>
-      <div className="hidden md:block fixed md:top-[-14.5rem] md:right-[1rem] xl:top-[-12.5rem] xl:right-[-39.5rem]">
-        <img src={images.Group} alt="" />
-      </div>
-      <div className="hidden md:block fixed top-[-3.5rem] right-[8.5rem] -z-10">
-        <img src={images.Vector3} alt="" />
-      </div>
-      <div className="hidden md:block fixed top-[12.5rem] right-[20rem] -z-10">
-        <img src={images.Vector2} alt="" />
-      </div>
-      <div className="hidden md:block fixed top-[14.6rem] right-[24rem] -z-10">
-        <img src={images.Vector1} alt="" />
-      </div>
-      <div className="hidden md:block fixed top-[35rem] right-[6.5rem] -z-10">
-        <img src={images.Vector2} alt="" />
-      </div>
-      <div className="hidden md:block fixed top-[42rem] right-[7.4rem] -z-10">
-        <img src={images.Vector5} alt="" />
-      </div>
-      <div className="hidden md:block fixed top-[40rem] right-[9.4rem] -z-10">
-        <img src={images.Vector4} alt="" />
-      </div>
-      <div className="hidden md:block fixed top-[31rem] right-[11.6rem] -z-10">
-        <img src={images.Vector6} alt="" />
-      </div>
-      <div className="bg-primary flex flex-col justify-center items-start py-4 xl:py-8 px-4 xl:px-20">
-        <div className="text-lightBlue text-start font-bold xl:text-[32px] w-full xl:w-[450px] leading-9 text-xl">
+    <div className="relative bg-black min-h-screen flex items-center justify-center">
+      <img
+        src={images.Vector3}
+        alt="Background Design"
+        className="absolute top-[-5rem] right-[32rem] w-24 h-24"
+      />
+      <img
+        src={images.Vector2}
+        alt="Background Design"
+        className="absolute bottom-[2rem] right-[41rem] w-20 h-20"
+      />
+      <img
+        src={images.Vector1}
+        alt="Background Design"
+        className="absolute bottom-[2rem] right-[43rem] w-20 h-20"
+      />
+      <img
+        src={images.Vector2}
+        alt="Background Design"
+        className="absolute bottom-0 right-[31rem] w-[100px] h-[100px]"
+      />
+      <img
+        src={images.Vector5}
+        alt="Background Design"
+        className="absolute bottom-[0.5rem] right-[31.5rem] w-3 h-3"
+      />
+      <img
+        src={images.Vector4}
+        alt="Background Design"
+        className="absolute bottom-[2rem] right-[32rem] w-15 h-15"
+      />
+      <img
+        src={images.Vector6}
+        alt="Background Design"
+        className="absolute bottom-[1rem] right-[32rem] w-20 h-20"
+      />
+      <div className="relative z-10 flex flex-col justify-center items-center bg-white shadow-md xl:p-8 px-4 rounded-lg mx-auto sm:w-[300px] md:w-[400px] lg:w-[600px]">
+        <div className="text-lightBlue text-start font-bold xl:text-[32px] text-wrap xl:w-[450px] leading-9 text-xl">
           Kindly Confirm Your Phone Number
         </div>
         <span className="font-light mt-5 leading-5 text-sm xl:text-base">
@@ -119,7 +135,7 @@ export const StepThree = ({ next, data }) => {
               <Field
                 name="phone"
                 type="tel"
-                value={formik.values.phone}
+                value={data.phone}
                 maxLength={17}
                 className="w-[60%] font-bold text-center mx-auto bg-transparent border-none h-[3.4rem] outline-none text-base xl:text-xl text-gray rounded-[5px] py-6 pb-0 px-[10px]"
               />
@@ -142,13 +158,29 @@ export const StepThree = ({ next, data }) => {
                   name="otp"
                   id="otp"
                   type="number"
+                  maxLength={6}
+                  pattern="\d{6}"
+                  onInput={(e) => {
+                    const value = e.target.value.slice(0, 6); // Limit to 6 digits
+                    e.target.value = value; // Enforce truncation
+                    formik.setFieldValue('otp', value); // Update Formik value
+                  }}
+                  value={formik.values.otp}
+                  autoFocus
+                />
+
+                {/* <input
+                  className="xl:w-[430px] w-[300px] h-[60px] outline-none border border-[#656666bd] text-start xl:tracking-[61px] tracking-[41px] xl:indent-[1.8rem] indent-[1.4rem] xl:my-10 my-4 xl:mb-0 mt-10 text-sm xl:text-xl"
+                  name="otp"
+                  id="otp"
+                  type="number"
                   temp=""
                   maxLength={6}
                   onInput="validity.valid ? this.temp = value : value = this.temp"
                   onChange={formik.handleChange}
                   value={formik.values.otp}
                   autoFocus
-                />
+                /> */}
                 <div className="flex xl:-mt-12 -mt-8 justify-between w-full px-4">
                   <span className="xl:w-[35px] w-[24px] xl:mt-2 -mt-6 text-center h-[30px] font-bold text-2xl inline-block border-b border-[#E80516]">
                     &nbsp;
@@ -175,10 +207,11 @@ export const StepThree = ({ next, data }) => {
                 Enter Code
               </span>
               <CustomButton
+                loading={loading}
                 padding="15px"
                 type="submit"
                 children="Next"
-                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[87%] w-[90%] mx-auto my-10 !mb-12 xl:my-12 xl:mb-20"
+                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
               />
             </Form>
           )}

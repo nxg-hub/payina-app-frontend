@@ -5,10 +5,9 @@ import { BusinessAddressSchema } from '../schemas/schema';
 import { state_local } from '../../../services/state-local';
 import { useEffect, useState } from 'react';
 
-export const StepEleven = ({ next, HomeAddress }) => {
+export const StepEleven = ({ next, initialValues, business_and_home, passedData }) => {
   const [businessState, setBusinessState] = useState('');
   const [loading, setLoading] = useState(false);
-
   const [localGovernment, setLocalGovernment] = useState([]);
 
   const handleSubmit = (business_address) => {
@@ -28,17 +27,36 @@ export const StepEleven = ({ next, HomeAddress }) => {
     }
   };
 
-  useEffect(() => {
-    if (HomeAddress && HomeAddress.state) {
-      setBusinessState(HomeAddress.state);
-    }
+  
 
+    useEffect(() => {
+      if (initialValues.state) {
+        setBusinessState(initialValues.state);
+      }
     const currentLga = state_local
       .filter((lga) => lga.state === businessState)
       .map((lga) => lga.lgas);
 
-    setLocalGovernment(currentLga[0]);
-  }, [businessState, HomeAddress]);
+
+  setLocalGovernment(currentLga[0]);
+  }, [businessState, initialValues.state]);
+
+  const getInitialValues = () => {
+    if (business_and_home === "yes") {      
+      return {
+        businessHouseNumber: passedData?.businessHouseNumber ||  initialValues.businessHouseNumber,
+        businessStreetName: passedData?.businessStreetName ||  initialValues.businessStreetName,
+        businessState: passedData?.businessState ||  initialValues.businessState ,
+        businessLGA: passedData?.businessLGA ||   initialValues.businessLGA ,
+      };
+    }
+    return {
+      businessHouseNumber: "",
+      businessStreetName: "",
+      businessState: "",
+      businessLGA: "",
+    };
+  };
 
   const selectArrow = `
       select{
@@ -65,39 +83,47 @@ export const StepEleven = ({ next, HomeAddress }) => {
      
       `;
   return (
-    <>
-      <div className="hidden md:block fixed md:top-[-9.5rem] xl:top-[-6.5rem] md:right-[.5rem] xl:right-[-38.5rem]">
-        <img src={images.Group} alt="" />
-      </div>
-      <div className="hidden md:block fixed md:-z-10 md:top-[-1.5rem] xl:top-[-1rem] right-[6.5rem]">
-        <img src={images.Vector3} alt="" />
-      </div>
-      <div className="hidden md:block fixed md:top-[8rem] xl:top-[12.5rem] right-[20rem] -z-10">
-        <img src={images.Vector2} alt="" />
-      </div>
-      <div className="hidden md:block fixed md:top-[10.5rem] xl:top-[14.6rem] right-[24rem] -z-10">
-        <img src={images.Vector1} alt="" />
-      </div>
-      <div className="hidden md:block fixed md:top-[15rem] xl:top-[23rem] right-[6.5rem] -z-10">
-        <img src={images.Vector2} alt="" />
-      </div>
-      <div className="hidden md:block fixed md:top-[22rem] xl:top-[30rem] right-[7.4rem] -z-10">
-        <img src={images.Vector5} alt="" />
-      </div>
-      <div className="hidden md:block fixed md:top-[20rem] xl:top-[27.5rem] right-[9.4rem] -z-10">
-        <img src={images.Vector4} alt="" />
-      </div>
-      <div className="hidden md:block fixed md:top-[11.5rem] xl:top-[19rem] right-[10.6rem] -z-10">
-        <img src={images.Vector6} alt="" />
-      </div>
-      <div className="bg-primary !mt-24 xl:mt-0 flex flex-col justify-center items-start mx-auto">
+    <div className="relative bg-black min-h-screen flex items-center justify-center">
+      <img
+        src={images.Vector3}
+        alt="Background Design"
+        className="absolute top-0 right-[32rem] w-24 h-24"
+      />
+      <img
+        src={images.Vector2}
+        alt="Background Design"
+        className="absolute bottom-[11.5rem] right-[41rem] w-20 h-20"
+      />
+      <img
+        src={images.Vector1}
+        alt="Background Design"
+        className="absolute bottom-[11.5rem] right-[43rem] w-20 h-20"
+      />
+      <img
+        src={images.Vector2}
+        alt="Background Design"
+        className="absolute bottom-[6rem] right-[31rem] w-[100px] h-[100px]"
+      />
+      <img
+        src={images.Vector5}
+        alt="Background Design"
+        className="absolute bottom-[7rem] right-[31.5rem] w-3 h-3"
+      />
+      <img
+        src={images.Vector4}
+        alt="Background Design"
+        className="absolute bottom-[9rem] right-[32rem] w-15 h-15"
+      />
+      <img
+        src={images.Vector6}
+        alt="Background Design"
+        className="absolute bottom-[10rem] right-[32rem] w-20 h-20"
+      />
+      <div className="relative z-10 flex flex-col justify-center items-center bg-white shadow-md xl:p-8 px-4 rounded-lg mx-auto sm:w-[300px] md:w-[400px] lg:w-[500px]">
         <Formik
-          initialValues={{
-            businessHouseNumber: '',
-            businessStreetName: '',
-            businessState: '',
-            businessLGA: '',
-          }}
+         
+          initialValues={getInitialValues()}
+      enableReinitialize
           validationSchema={BusinessAddressSchema}
           onSubmit={handleSubmit}>
           {({ values, handleChange }) => (
@@ -194,7 +220,7 @@ export const StepEleven = ({ next, HomeAddress }) => {
                 padding="15px"
                 type="submit"
                 children={loading ? 'loading...' : 'Next'}
-                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 md:w-[96.5%] xl:w-[85%] mx-auto w-[92%] !mb-12 xl:my-12 xl:mb-20"
+                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
                 disabled={loading}
               />
             </Form>
@@ -202,6 +228,6 @@ export const StepEleven = ({ next, HomeAddress }) => {
         </Formik>
       </div>
       <style>{selectArrow}</style>
-    </>
+    </div>
   );
 };

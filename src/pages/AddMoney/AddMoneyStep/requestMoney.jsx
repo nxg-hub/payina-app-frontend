@@ -21,7 +21,7 @@ const RequestMoney = ({ goBack }) => {
       default:
         return (
           <div className="flex flex-col justify-center items-start ml-[50px] xl:ml-80 xl:pt-28 md:pt-10 mx-auto">
-            <div className="flex flex-row justify-between items-left gap-[45rem]">
+            <div className="flex flex-row justify-between items-left lg:gap-[45rem] gap-[5rem]">
               <div className="text-xl md:text-3xl">Request Money</div>
               <div className="flex flex-row gap-2 cancelAction-img cursor-pointer" onClick={goBack}>
                 <img src={backArrow} alt="cancelAction"></img>

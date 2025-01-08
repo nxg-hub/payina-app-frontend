@@ -4,6 +4,8 @@ import { Formik, Form, Field, ErrorMessage, useFormikContext } from 'formik';
 import * as Yup from 'yup';
 import { FaPlus, FaUser} from 'react-icons/fa'
 import Preview from './Preview';
+import {  useSelector } from 'react-redux';
+
 
 export const InvoiceForm = ({next, lineItems }) => {
   const [email, setEmail] = useState('');
@@ -25,7 +27,8 @@ export const InvoiceForm = ({next, lineItems }) => {
   const [isSendingInvoice, setIsSendingInvoice] = useState(false);
   const [invoiceSent, setInvoiceSent] = useState(false);
    const [total, setTotal] = useState(0);
-  const [invoiceValidity, setInvoiceValidity] = useState('');
+  const clientss = useSelector((state) => state.clients.clients);
+
 
   useEffect(() => {
     const storedEmail = localStorage.getItem('userEmail');
@@ -83,7 +86,13 @@ export const InvoiceForm = ({next, lineItems }) => {
             console.error('Failed to add customer:', response.status, parsedResponse);
             return;
             }
-
+            setSelectedClient({
+              firstName: values.customer.Firstname,
+              lastName: values.customer.Lastname,
+              email: values.customer.email,
+              companyName: values.customer.companyName,
+              phone: values.customer.contact,
+            });
           } catch (error) {
             console.error('Error adding customer:', error);
           } finally {
@@ -272,51 +281,6 @@ setInvoiceId(invoiceId);
         setFieldValue("invoice.total", totalValue);
     };
      
-    const handleGetClients = async (values) => {
-      setIsLoadingClients(true);
-      try {
-        const customerId = await authenticateEmail(email);
-        
-        if (!customerId) {
-          console.error('Failed to fetch customer ID.');
-          return;
-        }
-        const corporateCustomerId = customerId;
-
-        setCorporateCustomerId(customerId)
-
-      const response = await fetch(`${import.meta.env.VITE_GET_CLIENTS_ENDPOINT}${corporateCustomerId}/get-clients`,{
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-      );
-      if (response.ok) {
-        const responseData = await response.json(); 
-  
-        const clientsData = responseData.map(client => ({
-          id: client.id,
-          firstName: client.firstName,
-          lastName: client.lastName,
-          email: client.email,
-          companyName: client.companyName,
-          phone: client.phone,
-        }));
-
-      setClients(clientsData); 
-      setShowClientList(true); 
-      setClientId(null);  
-
-    } else {
-      console.error('Failed to fetch clients:', response.statusText);
-    }
-  } catch (error) {
-    console.error('Error fetching clients:', error);
-  } finally {
-    setIsLoadingClients(false);
-  }
-};
 
   const handleSelectClient = (client) => {
     setSelectedClient(client); 
@@ -329,21 +293,16 @@ const sendInvoice = async () => {
     return;
   }
 
-
-  if (!selectedClient?.email) {
-    console.error('No recipient email available for sending the invoice.');
-    return;
-  }
-
   try {
     setIsSendingInvoice(true);
-    
+    const recipientEmail = selectedClient.email || values.customer.email;
+
       const requestBody = {
         invoiceId: invoiceId,
-        recipientEmail: selectedClient.email,
+        recipientEmail,
       };
     const sendInvoiceResponse = await fetch(
-      `${import.meta.env.VITE_SEND_INVOICE_ENDPOINT}${invoiceId}/send-invoice?recipientEmail=${encodeURIComponent(selectedClient.email)}`,
+      `${import.meta.env.VITE_SEND_INVOICE_ENDPOINT}${invoiceId}/send-invoice?recipientEmail=${encodeURIComponent(requestBody.recipientEmail)}`,
       {
         method: 'POST',
         headers: {
@@ -549,17 +508,17 @@ const handlePreviewClick = (values) => {
   <br></br>
   <button 
     type="button"
-    onClick={() => handleGetClients(values)}  
+    onClick={() => {setShowClientList(true)}}  
     disabled={isLoadingClients}
     className="flex items-center text-[10px] sm:text-[13px] md:text-base border border-secondary text-secondary font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
     <FaUser className='mr-2'/>
     {isLoadingClients ? "Loading... please wait" : "Select Existing Customer"}
     </button>
-  {showClientList && clients.length > 0 && (
+  {showClientList && clientss.length > 0 && (
    <div className="client-list-box border border-gray-300 rounded-lg p-4 max-w-md mx-auto mt-4 bg-white shadow-md">
    <h3 className="font-bold text-lg mb-2">Select a customer:</h3>
    <ul className="space-y-2">
-     {clients.map(client => (
+     {clientss.map(client => (
        <li key={client.id} className="flex justify-between items-center">
          <div>
            <span className="font-medium">{client.firstName} {client.lastName}</span>

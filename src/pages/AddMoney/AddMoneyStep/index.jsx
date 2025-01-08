@@ -25,7 +25,7 @@ const AddMoney = () => {
       default:
         return (
           <div className="flex flex-col justify-center items-start ml-[50px] xl:ml-80 xl:pt-28 md:pt-10 mx-auto">
-            <div className="flex flex-row justify-between items-left gap-[45rem]">
+            <div className="flex flex-row justify-between items-left lg:gap-[45rem] gap-[10rem] mt-3">
               <div className="text-xl md:text-3xl">Add Money</div>
               <Link to="/account/dashboard">
                 <div className="flex flex-row gap-2 cancelAction-img cursor-pointer">
@@ -37,7 +37,7 @@ const AddMoney = () => {
             <div className="text-md md:text-xl font-bold mt-12">How do you want to add money?</div>
             <div
               onClick={() => setSelectedForm('accountDetails')}
-              className="flex flex-row gap-8 justify-center items-start cursor-pointer hover:border-yellow mt-5 px-10 py-2 bg-[#D9D9D9] text-black border border-[#006181] rounded-lg">
+              className="flex flex-row gap-8 justify-center items-start cursor-pointer hover:border-yellow mt-5 lg:px-10 px-2 py-2 bg-[#D9D9D9] text-black border border-[#006181] rounded-lg">
               <div className="border border-yellow rounded-full p-3">
                 <img src={payinaUserImg} alt="payrollSelect" />
               </div>
@@ -47,7 +47,7 @@ const AddMoney = () => {
             </div>
             <div
               onClick={() => setSelectedForm('fundWallet')}
-              className="flex flex-row gap-8 justify-center items-start cursor-pointer hover:border-yellow mt-5 px-20 py-2 bg-[#D9D9D9] text-black border border-[#006181] rounded-lg">
+              className="flex flex-row gap-8 justify-center items-start cursor-pointer hover:border-yellow mt-5 px-10 lg:px-20 py-2 bg-[#D9D9D9] text-black border border-[#006181] rounded-lg">
               <div className="border border-yellow rounded-full p-3">
                 <img src={anotherPersonImg} alt="payrollSelect" />
               </div>
@@ -57,7 +57,7 @@ const AddMoney = () => {
             </div>
             <div
               onClick={() => setSelectedForm('requestMoney')}
-              className="flex flex-row gap-8 justify-center items-start cursor-pointer hover:border-yellow mt-5 px-20 py-2 bg-[#D9D9D9] text-black border border-[#006181] rounded-lg">
+              className="flex flex-row gap-8 justify-center items-start cursor-pointer hover:border-yellow mt-5 lg:px-20 px-10 py-2 bg-[#D9D9D9] text-black border border-[#006181] rounded-lg">
               <div className="border border-yellow rounded-full p-3">
                 <img src={anotherPersonImg} alt="payrollSelect" />
               </div>

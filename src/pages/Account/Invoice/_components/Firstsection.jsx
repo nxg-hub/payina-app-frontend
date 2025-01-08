@@ -1,11 +1,13 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState, useContext} from 'react';
+import React, { useEffect, useState, useContext,} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import plus from './../../../../assets/images/invoiceplus.png';
 import { Link } from 'react-router-dom';
 import { CorporateCustomerContext } from '../contexts/CorporateCustomerContext';
+import { fetchClientSuccess } from '../../../../Redux/GetClientsSlice';
 
 const Firstsection = ({ onClientSelect, setFilteredInvoices, setShowFiltered, clientId, handleSetRecentInvoices }) => {
-  const [clients, setClients] = useState([]);
+  // const [clients, setClients] = useState([]);
   const { corporateCustomerId } = useContext(CorporateCustomerContext);
   const [beginDate, setBeginDate] = useState("");
   const [endDate, setEndDate] = useState ("");
@@ -13,6 +15,9 @@ const Firstsection = ({ onClientSelect, setFilteredInvoices, setShowFiltered, cl
   const [selectedClientId, setSelectedClientId] = useState(""); 
   const [loadingClients, setLoadingClients] = useState(false); 
   const [loadingInvoices, setLoadingInvoices] = useState(false); 
+  const dispatch = useDispatch();
+  const success = useSelector((state) => state.clients.success);
+  const clientss = useSelector((state) => state.clients.clients);
 
   const handleClientClick = (clientId, clientName) => {
     setSelectedClientId(clientId); 
@@ -20,6 +25,9 @@ const Firstsection = ({ onClientSelect, setFilteredInvoices, setShowFiltered, cl
   }
   useEffect(() => {
     const handleGetClients = async () => {
+      if (success){
+        return;
+      }
       setLoadingClients(true);
 
       try {
@@ -42,7 +50,8 @@ const Firstsection = ({ onClientSelect, setFilteredInvoices, setShowFiltered, cl
           phone: client.phone,
           }));
 
-          setClients(clientsData);
+          // setClients(clientsData);
+          dispatch(fetchClientSuccess(clientsData))
         } else {
           console.error('Failed to fetch clients');
         }
@@ -179,8 +188,8 @@ const Firstsection = ({ onClientSelect, setFilteredInvoices, setShowFiltered, cl
     ) : (
       <>
         <option value="">Select Client</option>
-        {clients && clients.length > 0 ? (
-          clients.map((client) => (
+        {clientss && clientss.length > 0 ? (
+          clientss.map((client) => (
             <option key={client.id} value={client.id}>
               {client.firstName} {client.lastName}
             </option>
