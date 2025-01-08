@@ -35,19 +35,18 @@ export function useAuth() {
         }),
       ]);
       // Process registration level
-      const registrationLevel = registrationResponse.data;
-      console.log(registrationLevel, userData);
+      // const registrationLevel = registrationResponse.data;
 
-      const step = REGISTRATION_LEVELS[registrationLevel] || 0;
-      localStorage.setItem('currentStep', step);
+      // const step = REGISTRATION_LEVELS[registrationLevel] || 0;
+      // // localStorage.setItem('currentStep', step);
 
       const isPersonalUser = userData?.userType === 'PERSONAL';
+      const isCorporateUser = userData?.userType === 'CORPORATE';
 
       // Special handling for personal users
       if (isPersonalUser) {
         if (userData.registrationLevel === 'VALIDATE_OTP') {
-          dispatch(setStep(2));
-          navigate('/signup');
+          navigate('/personal/dashboard');
           return;
         }
         if (userData.registrationLevel === 'BVN_VERIFICATION_DOCUMENT_UPLOAD') {
@@ -59,13 +58,12 @@ export function useAuth() {
           return;
         }
 
-        if (userData.registrationLevel === 'CORPORATE_PROFILE_UPDATE_SET_PIN') {
-          dispatch(setStep(15));
-          navigate('/signup');
+        if (userData.registrationLevel === 'SET_TRANSACTION_PIN') {
+          navigate('/personal/dashboard');
           return;
         }
         if (userData.registrationLevel === 'KYC_COMPLETED') {
-          navigate('/account/dashboard');
+          navigate('/personal/dashboard');
           return;
         }
         // If not completed level 4, redirect to signup
@@ -74,34 +72,36 @@ export function useAuth() {
       }
 
       // Corporate user flow remains the same
-      if (userData.registrationLevel === 'VALIDATE_OTP') {
-        dispatch(setStep(2));
-        navigate('/signup');
-        return;
-      }
-      if (userData.registrationLevel === 'BVN_VERIFICATION_DOCUMENT_UPLOAD') {
-        dispatch(setStep(3));
-        navigate('/signup');
-        return;
-      }
-      if (userData.registrationLevel === 'BVN_DETAILS_CONFIRMATION_SAVE_USERNAME') {
-        dispatch(setStep(3));
-        navigate('/signup');
-        return;
-      }
-      if (userData.registrationLevel === 'FACIAL_CAPTURE_AND_UPLOAD') {
-        dispatch(setStep(5));
-        navigate('/signup');
-        return;
-      }
-      if (userData.registrationLevel === 'CORPORATE_PROFILE_UPDATE_SET_PIN') {
-        dispatch(setStep(15));
-        navigate('/signup');
-        return;
-      }
-      if (userData.registrationLevel === 'KYC_COMPLETED') {
-        navigate('/account/dashboard');
-        return;
+      if (isCorporateUser) {
+        if (userData.registrationLevel === 'VALIDATE_OTP') {
+          dispatch(setStep(2));
+          navigate('/signup');
+          return;
+        }
+        if (userData.registrationLevel === 'BVN_VERIFICATION_DOCUMENT_UPLOAD') {
+          dispatch(setStep(3));
+          navigate('/signup');
+          return;
+        }
+        if (userData.registrationLevel === 'BVN_DETAILS_CONFIRMATION_SAVE_USERNAME') {
+          dispatch(setStep(3));
+          navigate('/signup');
+          return;
+        }
+        if (userData.registrationLevel === 'FACIAL_CAPTURE_AND_UPLOAD') {
+          dispatch(setStep(5));
+          navigate('/signup');
+          return;
+        }
+        if (userData.registrationLevel === 'SET_TRANSACTION_PIN') {
+          dispatch(setStep(15));
+          navigate('/signup');
+          return;
+        }
+        if (userData.registrationLevel === 'KYC_COMPLETED') {
+          navigate('/account/dashboard');
+          return;
+        }
       }
     } catch (error) {
       console.error('Error in authentication flow:', error);
