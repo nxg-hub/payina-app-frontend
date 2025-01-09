@@ -1,5 +1,4 @@
-import Logo from './_components/ui/logo';
-import PersonalSignupForm from './personal-signup-form.jsx';
+import Logo from '../_components/ui/logo.jsx';
 import TierTwoSignupForm from './tier-two-signup-form.jsx';
 
 // eslint-disable-next-line react/prop-types

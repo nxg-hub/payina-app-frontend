@@ -5,27 +5,30 @@ import { useState } from 'react';
 
 const StepFiveValidationSchema = Yup.object().shape({
   username: Yup.string().required('Username is required'),
+  firstName: Yup.string().required('First Name is required'),
+  lastName: Yup.string().required('Last Name is required'),
+  gender: Yup.string().required('Gender is required'),
+  dob: Yup.string().required('Date of Birth is required'),
 });
 
 export const StepFive = ({ next, bvnData, email, initialValues }) => {
+  const userEmail = localStorage.getItem('userEmail');
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
-  const userEmail = localStorage.getItem('userEmail');
+
   // Robust data extraction with fallbacks
   const extractBvnData = () => {
     return {
-      gender: bvnData.gender || '',
-      firstName: bvnData.firstName || bvnData.firstname || '',
-      lastName: bvnData.lastName || bvnData.lastname || '',
-      dob: bvnData.dob || '',
+      gender: bvnData?.gender || initialValues?.gender || '',
+      firstName: bvnData?.firstName || bvnData?.firstname || initialValues?.firstname || '',
+      lastName: bvnData?.lastName || bvnData?.lastname || initialValues?.lastname || '',
+      dob: bvnData?.dob || initialValues?.dob || '',
     };
   };
 
   const handleSubmit = async (values) => {
     setLoading(true);
     setApiError('');
-
-    const extractedBvnData = extractBvnData();
 
     try {
       const response = await fetch(import.meta.env.VITE_SAVE_USERNAME_ENDPOINT, {
@@ -35,12 +38,12 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
         },
         body: JSON.stringify({
           payinaUserName: values.username,
-          gender: extractedBvnData.gender,
+          gender: values.gender,
           email: userEmail,
-          firstName: extractedBvnData.firstName,
-          lastName: extractedBvnData.lastName,
-          dob: extractedBvnData.dob,
-          bvn: initialValues.identificationNumber,
+          firstName: values.firstName,
+          lastName: values.lastName,
+          dob: values.dob,
+          bvn: initialValues.identificationNumber || '',
           accountType: 'personal',
         }),
       });
@@ -71,10 +74,14 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
       <Formik
         initialValues={{
           username: '',
+          firstName: extractedData.firstName,
+          lastName: extractedData.lastName,
+          gender: extractedData.gender,
+          dob: extractedData.dob,
         }}
         validationSchema={StepFiveValidationSchema}
         onSubmit={(values) => handleSubmit(values)}>
-        {({ isValid, dirty }) => (
+        {({ isValid, dirty, handleChange, values }) => (
           <Form className="mt-8">
             <div className="my-2">
               <label htmlFor="firstName" className="text-secondary block mb-4 w-full text-sm">
@@ -84,9 +91,14 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 type="text"
                 id="firstName"
                 name="firstName"
-                value={extractedData.firstName}
-                readOnly
-                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none rounded-[5px] py-2 px-[10px]"
+                onChange={handleChange}
+                value={values.firstName}
+                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+              />
+              <ErrorMessage
+                name="firstName"
+                component="div"
+                className="text-[#db3a3a] mt-2 text-sm"
               />
             </div>
 
@@ -98,9 +110,14 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 type="text"
                 id="lastName"
                 name="lastName"
-                value={extractedData.lastName}
-                readOnly
-                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none rounded-[5px] py-2 px-[10px]"
+                onChange={handleChange}
+                value={values.lastName}
+                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+              />
+              <ErrorMessage
+                name="lastName"
+                component="div"
+                className="text-[#db3a3a] mt-2 text-sm"
               />
             </div>
 
@@ -109,13 +126,17 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 Gender
               </label>
               <Field
-                type="text"
+                as="select"
                 id="gender"
                 name="gender"
-                value={extractedData.gender}
-                readOnly
-                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none rounded-[5px] py-2 px-[10px]"
-              />
+                onChange={handleChange}
+                value={values.gender}
+                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]">
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </Field>
+              <ErrorMessage name="gender" component="div" className="text-[#db3a3a] mt-2 text-sm" />
             </div>
 
             <div className="my-2">
@@ -123,13 +144,14 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 Date of Birth
               </label>
               <Field
-                type="text"
+                type="date"
                 id="dob"
                 name="dob"
-                value={extractedData.dob}
-                readOnly
-                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none rounded-[5px] py-2 px-[10px]"
+                onChange={handleChange}
+                value={values.dob}
+                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
               />
+              <ErrorMessage name="dob" component="div" className="text-[#db3a3a] mt-2 text-sm" />
             </div>
 
             <div className="my-4">
@@ -141,7 +163,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 id="username"
                 name="username"
                 placeholder="Enter Your Username"
-                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none  rounded-[5px] py-2 px-[10px]"
+                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
               />
               <ErrorMessage
                 name="username"

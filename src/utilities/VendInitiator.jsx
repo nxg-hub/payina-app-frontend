@@ -46,7 +46,7 @@ const VendInitiator = ({
       const walletData = await response.json();
 
       if (walletData.statusCode !== 'OK' || !walletData.data) {
-        throw new Error('Invalid wallet data structure');
+        throw new Error('Wallet not found, upgrade your account now');
       }
 
       const {
@@ -155,7 +155,12 @@ const VendInitiator = ({
       }
     } catch (err) {
       console.error('Error in vend process:', err);
-      const errorMessage = err.response?.data?.debugMessage || err.message || 'Vend process failed';
+      const errorMessage =
+        err.response?.data?.debugMessage ||
+        err.response?.data?.message ||
+        err.message ||
+        'Vend process failed';
+      // const errorMessage = err.response?.data?.debugMessage || err.message || 'Vend process failed';
       setStatusMessage(errorMessage);
       onError(err);
     } finally {

@@ -14,6 +14,7 @@ import { BsThreeDots } from 'react-icons/bs';
 import Signout from '../../../signout.jsx';
 import { resetCorporate } from '../../../../Redux/CoorperateCustomerSlice.jsx';
 import { resetInventory } from '../../../../Redux/InventorySlice.jsx';
+import { resetState } from '../../../../Redux/BusinessSignUpSlice.jsx';
 
 export const MobileSidebar = () => {
   const location = useLocation();
@@ -35,6 +36,7 @@ export const MobileSidebar = () => {
     dispatch(reSetUserDetails());
     dispatch(resetCorporate());
     dispatch(resetInventory());
+    dispatch(resetState());
     localStorage.clear();
     navigate('/login');
   };
@@ -80,30 +82,28 @@ export const MobileSidebar = () => {
                 src={profilePic}
                 alt="profile image"
                 className="w-24 h-24 !rounded-full "
-                onError={(e) => {
-                  e.target.src = images.Profile;
-                  console.log('Error loading passport image, using fallback');
-                }}
+                // onError={(e) => {
+                //   e.target.src = images.Profile;
+                //   console.log('Error loading passport image, using fallback');
+                // }}
               />
             ) : (
               <img src={profilePic} alt="profile image" className="w-24 h-24" />
             )}
-            <div className="font-semibold text-xl mt-2">
-              {error ? `Error: ${error}` : `Hi, ${userName}`}
-            </div>
+            <div className="font-semibold text-xl mt-2">{`Hi, ${userName}`}</div>
           </div>
           <div className="space-y-[52px] flex flex-col w-full">
             {isPersonalDashboard ? (
               // Personal Dashboard Navigation
               <>
-                <Link
+                {/* <Link
                   to="/personal/home"
                   className={`flex items-center space-x-6 ${
                     currentRoute === '/personal/home' ? '!ml-3 font-bold text-lightBlue' : ''
                   }`}>
                   <AiOutlineHome size={22} />
                   <span className="hover:text-lightBlue ease transition-colors">Home</span>
-                </Link>
+                </Link> */}
                 <Link
                   to="/personal/dashboard"
                   className={`flex items-center space-x-6 ${

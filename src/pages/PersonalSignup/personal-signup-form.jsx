@@ -8,7 +8,7 @@ import {
   StepSeventeen,
   StepSixteen,
   StepThree,
-  StepTwo,
+  StepTwo
 } from './_components';
 import { useDispatch, useSelector } from 'react-redux';
 import { nextStep } from '../../Redux/PersonalSignUpSlice';

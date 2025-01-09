@@ -49,9 +49,11 @@ import PersonalSignup from './pages/PersonalSignup/index.jsx';
 // import Register from './pages/PersonalSignup/Register.jsx';
 import PersonalDashboard from './pages/Account/PersonalDashboard/index.jsx';
 import Onboarding from './pages/Onboarding/Onboarding.jsx';
-import { StepEight } from './pages/PersonalSignup/_components/step-eight.jsx';
-import TierTwo from './pages/PersonalSignup/tier-two.jsx';
+// import { StepEight } from './pages/PersonalSignup/_components/step-eight.jsx';
+import TierTwo from './pages/PersonalSignup/upgrade/tier-two.jsx';
 import More from './pages/More/More.jsx';
+import TierOne from './pages/PersonalSignup/id-verification/tier-one.jsx';
+import { VirtualCards } from './pages/Cards/pages/VirtualCards.jsx';
 
 function App() {
   const location = useLocation();
@@ -85,13 +87,13 @@ function App() {
               element={<Signup data={data} handleNextStep={handleNextStep} />}
             />
             <Route
-              path="/tier-two"
+              path="/upgrade"
               element={
                 <TierTwo data={data} currentStep={currentStep} handleNextStep={handleNextStep} />
               }
             />
             <Route
-              path="/tier-two"
+              path="/upgrade"
               element={<TierTwo data={data} handleNextStep={handleNextStep} />}
             />
             <Route path="/paybills" element={<Paybills />} />
@@ -122,10 +124,10 @@ function App() {
             <Route path="/account/data" element={<UserData />} />
             <Route path="/account/billers" element={<BillPayment />} />
             <Route path="/account/electricity" element={<Electricity />} />
-            <Route path="/card" element={<Card />} />
+            <Route path="/personal/cards" element={<VirtualCards />} />
             <Route path="/personal/login" element={<PersonalLogin />} />
             <Route path="/personal/signup" element={<PersonalSignup />} />
-            {/*<Route path="/personal/tier-two" element={<StepEight />} />*/}
+            <Route path="/verify" element={<TierOne />} />
             <Route path="/ren" element={<Ren />} />
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
