@@ -2,9 +2,11 @@ import { Form, Formik, Field, ErrorMessage } from 'formik';
 import CustomButton from '../../../components/button/button';
 import * as Yup from 'yup';
 import { images } from '../../../constants';
+import useLocalStorage from '../../../hooks/useLocalStorage';
 
 export const StepSixteen = ({ next, email }) => {
   const userEmail = localStorage.getItem('userEmail');
+  const [authToken, setAuthToken] = useLocalStorage('authToken', '');
   const handleSubmit = async (values) => {
     // Merge OTP and Confirm OTP values into strings
     const otpValue = values.otp.join('');
@@ -29,8 +31,9 @@ export const StepSixteen = ({ next, email }) => {
 
         if (response.ok) {
           const result = await response.json();
-          console.log('API Response:', result);
-          console.log('Pin set successfully:', result);
+          const token = result.data;
+          setAuthToken(token);
+          localStorage.setItem('authToken', token);
           next(result);
         } else {
           console.error('Failed to set pin:', response.statusText);

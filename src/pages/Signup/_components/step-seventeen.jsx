@@ -4,12 +4,14 @@ import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
 import { useDispatch } from 'react-redux';
 import { resetState } from '../../../Redux/BusinessSignUpSlice';
+import useLocalStorage from '../../../hooks/useLocalStorage';
 
 export const StepSeventeen = () => {
   const [userData, setUserData] = useState(null);
   const userEmail = localStorage.getItem('userEmail');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [authToken] = useLocalStorage('authToken', '');
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -51,9 +53,12 @@ export const StepSeventeen = () => {
   }, [userEmail]);
 
   const handleClick = () => {
+    if (authToken) {
+      navigate('/account/dashboard');
+    } else {
+      navigate('/login');
+    }
     dispatch(resetState());
-
-    navigate('/login');
   };
 
   if (isLoading) {
@@ -188,7 +193,7 @@ export const StepSeventeen = () => {
             onClick={handleClick}
             padding="15px"
             type="submit"
-            children="Proceed to Sign In"
+            children="Proceed to Dashboard"
             className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
           />
         </div>
