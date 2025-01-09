@@ -59,7 +59,7 @@ export const StepThirteen = ({ next, email, initialValues }) => {
           body: JSON.stringify(requestData),
         }
       );
-      // console.log ('Uploaded Data:', requestData)
+      console.log ('Uploaded Data:', requestData)
 
       if (response.ok) {
         const result = await response.json();

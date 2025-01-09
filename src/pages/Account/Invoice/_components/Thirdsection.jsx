@@ -10,10 +10,6 @@ const Thirdsection = ({ clientId, showFiltered, filteredInvoices }) => {
   const [selectedInvoice, setSelectedInvoice] = useState(null);
 
 
-  // const total = updatedLineItems.reduce((sum, item) => sum + item.total, 0); 
-  // const taxAmount = item.total * 0.075; 
-  // const totalAmountWithTax = item.total + taxAmount; 
-
   useEffect(() => {
     setLoading(true);
   
@@ -35,7 +31,7 @@ const Thirdsection = ({ clientId, showFiltered, filteredInvoices }) => {
             const data = await response.json();
             console.log('Client Invoices Response:', data);
   
-            invoices = Array.isArray(data) ? data : [data]; // Ensure invoices is always an array
+            invoices = Array.isArray(data) ? data : [data]; 
           } else {
             console.error('Error:', response.status, response.statusText);
             return;
@@ -64,7 +60,7 @@ const Thirdsection = ({ clientId, showFiltered, filteredInvoices }) => {
   
         // Set recent invoices if fetching for a corporate customer
         if (!clientId && corporateCustomerId) {
-          setRecentInvoicesLocal(invoices.slice(0, 4));
+          setRecentInvoicesLocal(invoices.slice(-4));
         }
       } catch (error) {
         console.error('Error fetching invoices:', error);
@@ -75,7 +71,7 @@ const Thirdsection = ({ clientId, showFiltered, filteredInvoices }) => {
   
     fetchInvoices();
   }, [clientId, corporateCustomerId]);
-  
+
 
   const formatDate = (dateArray) => {
     if (!Array.isArray(dateArray)) return 'N/A';
@@ -126,7 +122,7 @@ const Thirdsection = ({ clientId, showFiltered, filteredInvoices }) => {
       itemName: item.name,
       quantity: item.quantity,
       amount: item.amount,
-      total: item.amount * item.quantity, // Calculate total
+      total: item.amount * item.quantity * 1.075 // Calculate total with vat
 
     }));
 
@@ -146,8 +142,6 @@ const Thirdsection = ({ clientId, showFiltered, filteredInvoices }) => {
     setSelectedInvoice(newItem);
   };
  
-  
-
                 return (
                   <div className="md:px-[.7rem] pb-4 w-auto md:clear-right ml-5 md:ml-2 xl:ml-[19.5rem] mr-5 md:mr-3 shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px]">
                     <div className="font-bold py-2 text-sm md:text-[18px]">Customer Invoices</div>
@@ -238,7 +232,7 @@ const Thirdsection = ({ clientId, showFiltered, filteredInvoices }) => {
                           <div key={invoice.id} className="grid grid-cols-7 gap-4 w-full sm:w-auto border-b border-[#D9D9D9] py-4">
                             
                             <div className="flex items-center justify-start pl-5">
-                              <p   className="text-[7px] md:text-base font-medium text-blue-400 underline hover:text-blue-800 hover:underline-offset-2 cursor-pointer"
+                              <p   className="text-[7px] md:text-base font-medium text-blue-400  hover:text-blue-800 hover:underline-offset-2 cursor-pointer"
 
                               onClick={() => handleClickedInvoice(invoice)}> 
                              {`${invoice.corporateCustomerClient?.firstName || ''} ${invoice.corporateCustomerClient?.lastName || ''}`.trim() || 'No customer'} </p>

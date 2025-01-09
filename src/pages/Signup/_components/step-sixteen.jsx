@@ -2,8 +2,12 @@ import { Form, Formik, Field, ErrorMessage } from 'formik';
 import CustomButton from '../../../components/button/button';
 import * as Yup from 'yup';
 import { images } from '../../../constants';
+import { React, useState } from 'react';
+
 
 export const StepSixteen = ({ next, email }) => {
+  const [loading, setLoading] = useState(false);
+
   const userEmail = localStorage.getItem('userEmail');
   const handleSubmit = async (values) => {
     // Merge OTP and Confirm OTP values into strings
@@ -17,6 +21,7 @@ export const StepSixteen = ({ next, email }) => {
         verifyPin: confirmOtpValue,
         email: userEmail, // Pass the email from previous steps
       };
+      setLoading(true);
 
       try {
         const response = await fetch(import.meta.env.VITE_TRANSACTION_PIN_ENDPOINT, {
@@ -37,10 +42,13 @@ export const StepSixteen = ({ next, email }) => {
         }
       } catch (error) {
         console.error('Error setting pin:', error);
-      }
+      } finally {
+        setLoading(false);
+    }
+
     } else {
       console.log('Transaction Pins do not match.');
-    }
+    } 
   };
 
   const validationSchema = Yup.object().shape({
@@ -210,7 +218,7 @@ export const StepSixteen = ({ next, email }) => {
               <CustomButton
                 padding="15px"
                 type="submit"
-                children="Next"
+                children={loading ? 'Loading...' : 'Next'}
                 className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
                 disabled={isSubmitting}
               />

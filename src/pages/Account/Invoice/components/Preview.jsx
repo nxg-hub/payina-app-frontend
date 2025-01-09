@@ -39,18 +39,7 @@ const Preview = ({ className = '', updatedLineItems = [], corporateCustomerId = 
     }
   };
 
-  const parseXML = (xmlString) => {
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlString, 'text/xml');
-
-    return {
-      businessName: xmlDoc.querySelector('businessName')?.textContent || '',
-      businessHouseNumber: xmlDoc.querySelector('businessHouseNumber')?.textContent || '',
-      businessStreetName: xmlDoc.querySelector('businessStreetName')?.textContent || '',
-      businessState: xmlDoc.querySelector('businessState')?.textContent || '',
-      businessLGA: xmlDoc.querySelector('businessLGA')?.textContent || '',
-    };
-  };
+ 
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -68,8 +57,18 @@ const Preview = ({ className = '', updatedLineItems = [], corporateCustomerId = 
         const response = await fetch(`${import.meta.env.VITE_VIEW_PROFILE_ENDPOINT}${customerId}`);
 
         if (response.ok) {
-          const xmlString = await response.text();
-          const parsedData = parseXML(xmlString);
+
+          const data = await response.json ();
+           
+          const parsedData = {
+            businessName: data.businessName || "",
+            businessHouseNumber: data.businessHouseNumber || "",
+            businessStreetName: data.businessStreetName || "",
+            businessState: data.businessState || "",
+            businessLGA: data.businessLGA || "",
+          }
+
+        
 
           setProfileData(parsedData);
         } else {
@@ -122,46 +121,35 @@ const Preview = ({ className = '', updatedLineItems = [], corporateCustomerId = 
           </div>
         </div>
       </div>
-      <section className="mt-8 w-full text-left text-black">
-        <table className="w-full table-auto border-collapse border border-black">
-          <thead>
-            <tr>
-              <th className="text-left p-2 border border-black" style={{ width: '50%' }}>
-                Items
-              </th>
-              <th className="text-left p-2 border border-black" style={{ width: '30%' }}>
-                Quantity
-              </th>
-              <th className="text-left p-2 border border-black" style={{ width: '30%' }}>
-                Amount
-              </th>
-              <th className="text-left p-2 border border-black" style={{ width: '30%' }}>
-                VAT
-              </th>
-              <th className="text-left p-2 border border-black" style={{ width: '30%' }}>
-                Total
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {updatedLineItems.map((item, index) => (
-              <tr key={index}>
-                <td className="p-2 border-r border-black">{item.itemName || item.name}</td>
-                <td className="p-2 border-r border-black">{item.quantity}</td>
-                <td className="p-2 border-r border-black">{item.amount}</td>
-                <td className="p-2 border-r border-black">0.075 </td>
-                <td className="p-2">{item.total}</td>
-              </tr>
-            ))}
-            <tr className="font-bold border border-black">
-              <td colSpan="4" className="p-2 border-black">
-                Total Amount:
-              </td>
-              <td className="p-2">{totalAmountWithTax}</td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
+      
+<section className="mt-8 w-full text-left text-black">
+  <table className="w-full table-auto border-collapse border border-black">
+    <thead>
+      <tr>
+        <th className="text-left p-2 border border-black" style={{ width: '50%' }}>Items</th>
+        <th className="text-left p-2 border border-black" style={{ width: '30%' }}>Quantity</th>
+        <th className="text-left p-2 border border-black" style={{ width: '30%' }}>Amount</th>
+        <th className="text-left p-2 border border-black" style={{ width: '30%' }}>VAT</th>
+        <th className="text-left p-2 border border-black" style={{ width: '30%' }}>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+    {updatedLineItems.map((item, index) => (
+  <tr key={index}>
+    <td className="p-2 border-r border-black">{item.itemName||item.name}</td>
+    <td className="p-2 border-r border-black">{item.quantity}</td>
+    <td className="p-2 border-r border-black">{item.amount}</td>
+    <td className="p-2 border-r border-black">0.075 </td>
+    <td className="p-2">{item.total * 1.075}</td>
+  </tr>
+))}
+          <tr className="font-bold border border-black">
+          <td colSpan="4" className="p-2 border-black">Total Amount:</td>
+          <td className="p-2">{totalAmountWithTax}</td>
+          </tr>
+                </tbody>
+  </table>
+</section>
     </div>
   );
 };

@@ -8,9 +8,12 @@ import CustomButton from '../../../components/button/button';
 export const StepTwo = ({ next, initialValues }) => {
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
-  // const [userType, setUserType] = useState('corporate')
+  const [loading, setLoading] = useState(false);
+
 
   const handleSubmit = async (values) => {
+     setLoading(true);
+
     try {
       const payload = {
         phoneNumber: phone,
@@ -37,13 +40,16 @@ export const StepTwo = ({ next, initialValues }) => {
         console.error('Error message:', errorMessage);
         const parsedMessage = parseXML(errorMessage); // Parse the XML error message
         setMessage(
-          `Registration failed: ${parsedMessage || response.statusText || 'Unknown error'}`
+          'Customer already exist, please log in to continue your sign up process'
         );
       }
     } catch (error) {
       setMessage('An error occurred');
       console.error('An error occurred:', error);
     }
+    finally {
+            setLoading(false);
+         }
   };
 
   const parseXML = (xml) => {
@@ -171,8 +177,8 @@ export const StepTwo = ({ next, initialValues }) => {
               <CustomButton
                 padding="15px"
                 type="submit"
-                children="Next"
-                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
+               children={loading ? 'Loading...' : 'Next'}
+className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
               />
             </Form>
           )}

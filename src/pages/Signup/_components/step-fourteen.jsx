@@ -1,8 +1,12 @@
-import React from 'react';
+// import React from 'react';
 import { Form, Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
+import { useState, React } from 'react';
+
+
+
 
 // Validation schema using Yup
 const StepFourteenValidationSchema = Yup.object().shape({
@@ -13,9 +17,15 @@ const StepFourteenValidationSchema = Yup.object().shape({
 });
 
 export const StepFourteen = ({ next }) => {
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = (values) => {
+    setLoading(true);
+
     next(values);
   };
+   
+
 
   // Generate options for the number of signatories
   const generateSignatoriesOptions = () => {
@@ -103,8 +113,8 @@ export const StepFourteen = ({ next }) => {
               <CustomButton
                 padding="15px"
                 type="submit"
-                children="Next"
-                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
+                children={loading ? 'Loading...' : 'Next'}
+className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
               />
             </Form>
           )}

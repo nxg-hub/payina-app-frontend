@@ -25,6 +25,7 @@ import { nextStep } from '../../Redux/BusinessSignUpSlice';
 export default function SignUpForm() {
   const [data, setData] = useState({
     email: '',
+    phone: '',
     bvnData: {},
     ninData: {},
     password: '',
@@ -70,10 +71,10 @@ export default function SignUpForm() {
     <StepSeven next={handleNextStep} text="Your Identity Has been Verified!" />,
     <StepEight next={handleNextStep} />,
     <StepNine next={handleNextStep} email={data.email} />,
-    <StepTen next={handleNextStep} />,
-    <StepEleven next={handleNextStep} data={data} />,
+    <StepTen next={handleNextStep} initialValues={data}/>,
+    <StepEleven next={handleNextStep} initialValues={data} />,
     <StepTwelve next={handleNextStep} email={data.email} />,
-    <StepThirteen next={handleNextStep} email={data.email} initialValues={data} />,
+    <StepThirteen next={handleNextStep} email={data.email} initialValues={data}  passedData />,
     <StepFourteen next={handleNextStep} />,
     <StepFifteen next={handleNextStep} email={data.email} />,
     <StepSixteen next={handleNextStep} email={data.email} />,
