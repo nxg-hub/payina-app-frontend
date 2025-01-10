@@ -43,7 +43,6 @@
 //
 // export default ActionButtons;
 
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Button from '../../button/button';
@@ -54,7 +53,7 @@ const ActionButtons = () => {
   const route = location.pathname;
 
   // Determine the login/signup routes based on current path
-  const loginRoute = route === '/' ? '/personal/login' : '/login';
+  const loginRoute = '/login';
   // const signupRoute = route === '/' ? '/personal/signup' : '/signup';
 
   return (
@@ -93,5 +92,3 @@ const ActionButtons = () => {
 };
 
 export default ActionButtons;
-
-

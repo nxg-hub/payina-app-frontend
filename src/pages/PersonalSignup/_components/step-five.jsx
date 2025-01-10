@@ -12,6 +12,7 @@ const StepFiveValidationSchema = Yup.object().shape({
 });
 
 export const StepFive = ({ next, bvnData, email, initialValues }) => {
+  const userEmail = localStorage.getItem('userEmail');
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -38,7 +39,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
         body: JSON.stringify({
           payinaUserName: values.username,
           gender: values.gender,
-          email: email,
+          email: userEmail,
           firstName: values.firstName,
           lastName: values.lastName,
           dob: values.dob,

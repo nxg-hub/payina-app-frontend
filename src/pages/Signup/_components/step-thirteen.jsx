@@ -25,7 +25,7 @@ export const StepThirteen = ({ next, email, initialValues }) => {
   const userEmail = localStorage.getItem('userEmail');
   const handleSubmit = async (values) => {
     const customerId = await authenticateEmail(userEmail); // Ensure email is passed correctly
-    console.log('Authenticated User ID:', customerId);
+    // console.log('Authenticated User ID:', customerId);
 
     // Combine previous data with the current step's data
     const requestData = {
@@ -59,7 +59,7 @@ export const StepThirteen = ({ next, email, initialValues }) => {
           body: JSON.stringify(requestData),
         }
       );
-      // console.log ('Uploaded Data:', requestData)
+      console.log ('Uploaded Data:', requestData)
 
       if (response.ok) {
         const result = await response.json();

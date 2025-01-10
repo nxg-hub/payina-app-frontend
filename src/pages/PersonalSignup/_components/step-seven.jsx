@@ -1,15 +1,19 @@
 import { Form, Formik } from 'formik';
 import CustomButton from '../../../components/button/button';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { resetState } from '../../../Redux/PersonalSignUpSlice';
 
 export const StepSeven = ({ next, text }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = (values) => {
     if (location.pathname.includes('/personal/signup')) {
       navigate('/personal/dashboard');
     }
     next(values);
+    dispatch(resetState());
   };
   localStorage.setItem('currentStep', 7);
 

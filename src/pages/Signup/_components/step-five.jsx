@@ -24,7 +24,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
         body: JSON.stringify({
           payinaUserName: values.username,
           gender: bvnData.gender || ninData.gender,
-          email: userEmail,
+          email: email,
           firstName: bvnData.firstname || ninData.firstname,
           lastName: bvnData.lastaame || ninData.lastname,
           dob: bvnData.dob || ninData.dob,

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { LuX, LuMoveRight } from 'react-icons/lu';
@@ -92,7 +91,7 @@ const Navbar = () => {
                 children="Sign Up"
               />
             </Link>
-            <Link to={route === '/' ? '/personal/login' : '/login'}>
+            <Link to={'/login'}>
               <Button
                 backgroundColor="transparent"
                 textColor={'#fff'}

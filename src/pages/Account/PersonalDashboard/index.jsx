@@ -35,6 +35,7 @@ const PersonalDashboard = () => {
         });
         const data = await response.json();
         setLoading(false);
+        // console.log(data);
         //storing the user details in the userSlice using the redux store
         dispatch(fetchDataSuccess(data));
       } catch (error) {
@@ -49,12 +50,20 @@ const PersonalDashboard = () => {
   }, []);
   return (
     <div>
-      <Navbar />
-      <Sidebar />
-      <AccountCard />
-      <BalanceCard />
-      <QuickAction />
-      <TransactionHistory />
+      {loading ? (
+        <h2 className="text-center mt-10 font-bold">Loading...</h2>
+      ) : !loading && error ? (
+        <h2>Something went wrong, check internet connection</h2>
+      ) : (
+        <>
+          <Navbar />
+          <Sidebar />
+          <AccountCard />
+          <BalanceCard />
+          <QuickAction />
+          <TransactionHistory />
+        </>
+      )}
     </div>
   );
 };

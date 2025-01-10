@@ -5,10 +5,9 @@ import { BusinessAddressSchema } from '../schemas/schema';
 import { state_local } from '../../../services/state-local';
 import { useEffect, useState } from 'react';
 
-export const StepEleven = ({ next, HomeAddress }) => {
+export const StepEleven = ({ next, initialValues, business_and_home, passedData }) => {
   const [businessState, setBusinessState] = useState('');
   const [loading, setLoading] = useState(false);
-
   const [localGovernment, setLocalGovernment] = useState([]);
 
   const handleSubmit = (business_address) => {
@@ -28,17 +27,36 @@ export const StepEleven = ({ next, HomeAddress }) => {
     }
   };
 
-  useEffect(() => {
-    if (HomeAddress && HomeAddress.state) {
-      setBusinessState(HomeAddress.state);
-    }
+  
 
+    useEffect(() => {
+      if (initialValues.state) {
+        setBusinessState(initialValues.state);
+      }
     const currentLga = state_local
       .filter((lga) => lga.state === businessState)
       .map((lga) => lga.lgas);
 
-    setLocalGovernment(currentLga[0]);
-  }, [businessState, HomeAddress]);
+
+  setLocalGovernment(currentLga[0]);
+  }, [businessState, initialValues.state]);
+
+  const getInitialValues = () => {
+    if (business_and_home === "yes") {      
+      return {
+        businessHouseNumber: passedData?.businessHouseNumber ||  initialValues.businessHouseNumber,
+        businessStreetName: passedData?.businessStreetName ||  initialValues.businessStreetName,
+        businessState: passedData?.businessState ||  initialValues.businessState ,
+        businessLGA: passedData?.businessLGA ||   initialValues.businessLGA ,
+      };
+    }
+    return {
+      businessHouseNumber: "",
+      businessStreetName: "",
+      businessState: "",
+      businessLGA: "",
+    };
+  };
 
   const selectArrow = `
       select{
@@ -103,12 +121,9 @@ export const StepEleven = ({ next, HomeAddress }) => {
       />
       <div className="relative z-10 flex flex-col justify-center items-center bg-white shadow-md xl:p-8 px-4 rounded-lg mx-auto sm:w-[300px] md:w-[400px] lg:w-[500px]">
         <Formik
-          initialValues={{
-            businessHouseNumber: '',
-            businessStreetName: '',
-            businessState: '',
-            businessLGA: '',
-          }}
+         
+          initialValues={getInitialValues()}
+      enableReinitialize
           validationSchema={BusinessAddressSchema}
           onSubmit={handleSubmit}>
           {({ values, handleChange }) => (

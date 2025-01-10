@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
 
-export const StepThree = ({ next, data }) => {
+export const StepThree = ({ next, data, phone }) => {
   const [codeAlert, setCodeAlert] = useState('');
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [otpError, setOtpError] = useState('');
@@ -80,7 +80,7 @@ export const StepThree = ({ next, data }) => {
     '-' +
     data.phone?.slice(10);
 
-  console.log(phoneNumber);
+
   localStorage.setItem('currentStep', 3);
 
   return (
@@ -135,7 +135,7 @@ export const StepThree = ({ next, data }) => {
               <Field
                 name="phone"
                 type="tel"
-                value={formik.values.phone}
+                value={data.phone}
                 maxLength={17}
                 className="w-[60%] font-bold text-center mx-auto bg-transparent border-none h-[3.4rem] outline-none text-base xl:text-xl text-gray rounded-[5px] py-6 pb-0 px-[10px]"
               />
