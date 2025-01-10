@@ -353,7 +353,7 @@ const ActionButtons = () => {
     <div className="flex items-center md:justify-between md:space-x-6 sm:px-10">
       <div className="flex space-x-16 justify-center items-center">
         {/* Customer care link */}
-        <Link to={'/'} className="md:flex items-center hidden">
+        <Link to={'/contact-us'} className="md:flex items-center hidden">
           <div className="hover:scale-95">
             <img src={images.Headphone} alt="customer_care" />
           </div>
@@ -377,7 +377,7 @@ const ActionButtons = () => {
         </div>
 
         {/* Settings link */}
-        <Link to={'/'}>
+        <Link to={'/account/settings'}>
           <div className="hover:scale-95">
             <img src={images.Settings} alt="settings" />
           </div>

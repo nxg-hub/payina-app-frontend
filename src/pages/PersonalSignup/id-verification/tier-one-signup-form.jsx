@@ -32,8 +32,7 @@ export default function TierOneSignupForm() {
 
   const steps = [
     <StepFour next={handleNextStep} />,
-    <StepSeventeen next={handleNextStep} data={data} />,
-    // <StepFive next={handleNextStep} bvnData={data} ninData= {data} initialValues={data} email={data.email} />,
+    <StepSeventeen next={handleNextStep} data={data} />,,
   ];
 
   return (
