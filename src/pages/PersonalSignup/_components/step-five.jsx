@@ -8,7 +8,7 @@ const StepFiveValidationSchema = Yup.object().shape({
   firstName: Yup.string().required('First Name is required'),
   lastName: Yup.string().required('Last Name is required'),
   gender: Yup.string().required('Gender is required'),
-  dob: Yup.string().required('Date of Birth is required')
+  dob: Yup.string().required('Date of Birth is required'),
 });
 
 export const StepFive = ({ next, bvnData, email, initialValues }) => {
@@ -33,7 +33,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
       const response = await fetch(import.meta.env.VITE_SAVE_USERNAME_ENDPOINT, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           payinaUserName: values.username,
@@ -43,8 +43,8 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
           lastName: values.lastName,
           dob: values.dob,
           bvn: initialValues.identificationNumber || '',
-          accountType: 'personal'
-        })
+          accountType: 'personal',
+        }),
       });
 
       const data = await response.json();
@@ -76,7 +76,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
           firstName: extractedData.firstName,
           lastName: extractedData.lastName,
           gender: extractedData.gender,
-          dob: extractedData.dob
+          dob: extractedData.dob,
         }}
         validationSchema={StepFiveValidationSchema}
         onSubmit={(values) => handleSubmit(values)}>
@@ -130,17 +130,12 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 name="gender"
                 onChange={handleChange}
                 value={values.gender}
-                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
-              >
+                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]">
                 <option value="">Select Gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
               </Field>
-              <ErrorMessage
-                name="gender"
-                component="div"
-                className="text-[#db3a3a] mt-2 text-sm"
-              />
+              <ErrorMessage name="gender" component="div" className="text-[#db3a3a] mt-2 text-sm" />
             </div>
 
             <div className="my-2">
@@ -155,11 +150,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 value={values.dob}
                 className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
               />
-              <ErrorMessage
-                name="dob"
-                component="div"
-                className="text-[#db3a3a] mt-2 text-sm"
-              />
+              <ErrorMessage name="dob" component="div" className="text-[#db3a3a] mt-2 text-sm" />
             </div>
 
             <div className="my-4">

@@ -6,30 +6,30 @@ import { Sidebar } from '../Account/_components/sidebar/sidebar.jsx';
 
 const More = () => {
   const menuItems = [
-    {
-      icon: images.Invoice,
-      text: 'Bank Statement',
-      link: '/bank-statement'
-    },
+    // {
+    //   icon: images.Invoice,
+    //   text: 'Bank Statement',
+    //   link: '/bank-statement'
+    // },
     {
       icon: images.Invoice,
       text: 'Account Limits',
       link: '/account-limits'
     },
-    {
-      icon: images.Recurr,
-      text: 'Recurring Payments',
-      link: '/recurring-payments'
-    },
-    {
-      icon: images.IdentityVerification,
-      text: 'Identity Verification',
-      link: '/verify-identity'
-    },
+    // {
+    //   icon: images.Recurr,
+    //   text: 'Recurring Payments',
+    //   link: '/recurring-payments'
+    // },
+    // {
+    //   icon: images.IdentityVerification,
+    //   text: 'Identity Verification',
+    //   link: '/verify-identity'
+    // },
     {
       icon: images.ContactUs,
       text: 'Contact Us',
-      link: '/contact'
+      link: '/contact-us'
     },
     {
       icon: images.TermsAndConditions,
@@ -39,7 +39,7 @@ const More = () => {
     {
       icon: images.SwitchAccount,
       text: 'Switch Account',
-      link: '/switch-account'
+      link: '/account/switch'
     }
   ];
 
@@ -77,10 +77,10 @@ const More = () => {
               </Link>
             ))}
 
-            <button
-              className="w-full mt-4 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-600 transition-colors flex items-center justify-center space-x-2">
-              <span>Log Out</span>
-            </button>
+            {/*<button*/}
+            {/*  className="w-full mt-4 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-600 transition-colors flex items-center justify-center space-x-2">*/}
+            {/*  <span>Log Out</span>*/}
+            {/*</button>*/}
           </div>
         </div>
       </div>
