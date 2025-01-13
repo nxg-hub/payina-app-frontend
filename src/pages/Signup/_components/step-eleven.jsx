@@ -35,11 +35,12 @@ export const StepEleven = ({ next, initialValues, business_and_home, passedData 
     }
   };
 
+  const sortedStates = state_local.sort((a, b) => a.state.localeCompare(b.state));
   useEffect(() => {
     if (initialValues.state) {
       setBusinessState(initialValues.state);
     }
-    const currentLga = state_local
+    const currentLga = sortedStates
       .filter((lga) => lga.state === businessState)
       .map((lga) => lga.lgas);
 
@@ -189,7 +190,7 @@ export const StepEleven = ({ next, initialValues, business_and_home, passedData 
                     <option value="" disabled>
                       Select State
                     </option>
-                    {state_local.map(({ state }) => (
+                    {sortedStates.map(({ state }) => (
                       <option
                         key={state}
                         value={state}

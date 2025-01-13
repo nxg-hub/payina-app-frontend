@@ -19,6 +19,7 @@ const PasswordSetting = () => {
 
   const handleSubmit = async (values, actions) => {
     const { resetForm } = actions;
+    console.log(import.meta.env.VITE_INAPP_PASSWORD_UPDATE);
     setUploadStatus('');
     if (values.newPassword !== values.confirmPassword) {
       setUploadStatus('Passwords must be the same!');

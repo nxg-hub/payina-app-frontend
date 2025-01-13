@@ -21,6 +21,7 @@ const incomeRangeOptions = [
   '500,001 - 1,000,000',
   '1,000,001 - 10,000,000',
   '10,000,001 - 50,000,000',
+  '50,000,000 - Above',
 ];
 
 export const StepThirteen = ({ next, email, initialValues }) => {
@@ -191,7 +192,7 @@ export const StepThirteen = ({ next, email, initialValues }) => {
         alt="Background Design"
         className="absolute bottom-[10rem] right-[32rem] w-20 h-20"
       />
-      <div className="relative z-10 flex flex-col justify-center items-center bg-white shadow-md xl:p-8 px-4 rounded-lg mx-auto sm:w-[300px] md:w-[400px] lg:w-[500px]">
+      <div className="relative z-10 flex flex-col justify-center items-center bg-white shadow-md xl:p-8 px-4 rounded-lg mx-auto sm:w-[300px] md:w-[400px] lg:w-[600px]">
         <Formik
           initialValues={{
             businessDescription: '',
