@@ -10,7 +10,8 @@ export const StepEight = ({ next }) => {
   const [countries, setCountries] = useState([]);
   const [currentState, setCurrentState] = useState('');
   const [localGovernment, setLocalGovernment] = useState([]);
-
+  // const homeAddress = localStorage.getItem('HomeAddress');
+  // const parsedHomeAdress = JSON.parse(homeAddress);
   const handleSubmit = (address_details) => {
     const HomeAddress = {
       houseNumber: address_details.houseNumber,
@@ -18,6 +19,7 @@ export const StepEight = ({ next }) => {
       state: address_details.state,
       lga: address_details.lga,
     };
+    localStorage.setItem('HomeAddress', JSON.stringify(HomeAddress));
 
     try {
       next(HomeAddress, 11);
@@ -36,6 +38,7 @@ export const StepEight = ({ next }) => {
   useEffect(() => {
     const dataFetch = async () => {
       const data = await (await fetch(url, options)).json();
+      // console.log(data);
       setCountries(data);
     };
 
@@ -150,7 +153,8 @@ export const StepEight = ({ next }) => {
                     <option value="" disabled>
                       Select Country
                     </option>
-                    {Array.isArray(countries) &&
+                    <option>Nigeria</option>
+                    {/* {Array.isArray(countries) &&
                       countries.map(({ value, key }) => (
                         <option
                           key={key}
@@ -158,7 +162,7 @@ export const StepEight = ({ next }) => {
                           className="!bg-secondary text-primary font-medium">
                           {value}
                         </option>
-                      ))}
+                      ))} */}
                   </Field>
                   <ErrorMessage name="country" component="span" className="text-[#db3a3a]" />
                 </div>

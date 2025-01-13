@@ -3,6 +3,8 @@ import * as Yup from 'yup';
 import CustomButton from '../../../components/button/button';
 import { useState } from 'react';
 import { images } from '../../../constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { previousStep } from '../../../Redux/BusinessSignUpSlice';
 
 const StepFiveValidationSchema = Yup.object().shape({
   username: Yup.string().required('Username is required'),
@@ -11,6 +13,11 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
   const userEmail = localStorage.getItem('userEmail');
+  const dispatch = useDispatch();
+
+  const handlePrevious = () => {
+    dispatch(previousStep());
+  };
   const handleSubmit = async (values) => {
     setLoading(true);
     setApiError('');
@@ -24,7 +31,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
         body: JSON.stringify({
           payinaUserName: values.username,
           gender: bvnData.gender || ninData.gender,
-          email: email,
+          email: userEmail,
           firstName: bvnData.firstname || ninData.firstname,
           lastName: bvnData.lastaame || ninData.lastname,
           dob: bvnData.dob || ninData.dob,
@@ -39,7 +46,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
       if (response.ok) {
         next(values);
       } else {
-        setApiError(data.message || 'Failed to save username. Please try again.');
+        setApiError(data.debugMessage || 'Failed to save username. Please try again.');
       }
     } catch (error) {
       setApiError('An error occurred. Please try again.');
@@ -173,16 +180,23 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
               </div>
 
               {apiError && <div className="text-red-500 mb-4">{apiError}</div>}
-
-              <CustomButton
-                padding="15px"
-                type="submit"
-                children={loading ? 'Saving...' : 'Next'}
-                className={`hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8 ${
-                  !(isValid && dirty) ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-                disabled={!(isValid && dirty) || loading}
-              />
+              <div className="flex gap-2">
+                <button
+                  disabled={!(isValid && dirty) || loading}
+                  onClick={handlePrevious}
+                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8">
+                  back
+                </button>
+                <CustomButton
+                  padding="15px"
+                  type="submit"
+                  children={loading ? 'Saving...' : 'Next'}
+                  className={`hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8 ${
+                    !(isValid && dirty) ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                  disabled={!(isValid && dirty) || loading}
+                />
+              </div>
             </Form>
           )}
         </Formik>

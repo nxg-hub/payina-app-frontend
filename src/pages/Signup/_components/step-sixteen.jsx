@@ -3,12 +3,14 @@ import CustomButton from '../../../components/button/button';
 import * as Yup from 'yup';
 import { images } from '../../../constants';
 import { React, useState } from 'react';
-
+import useLocalStorage from '../../../hooks/useLocalStorage';
 
 export const StepSixteen = ({ next, email }) => {
+  const decodeJWT = (token) => JSON.parse(atob(token.split('.')[1]));
+  const [authToken, setAuthToken] = useLocalStorage('authToken', '');
   const [loading, setLoading] = useState(false);
-
   const userEmail = localStorage.getItem('userEmail');
+  const [userDetails, setuserDetails] = useLocalStorage('userDetails', '');
   const handleSubmit = async (values) => {
     // Merge OTP and Confirm OTP values into strings
     const otpValue = values.otp.join('');
@@ -34,8 +36,12 @@ export const StepSixteen = ({ next, email }) => {
 
         if (response.ok) {
           const result = await response.json();
-          console.log('API Response:', result);
-          console.log('Pin set successfully:', result);
+          const token = result.data;
+          setAuthToken(token);
+          localStorage.setItem('authToken', token);
+
+          const decodedString = decodeJWT(token);
+          setuserDetails(decodedString);
           next(result);
         } else {
           console.error('Failed to set pin:', response.statusText);
@@ -44,11 +50,10 @@ export const StepSixteen = ({ next, email }) => {
         console.error('Error setting pin:', error);
       } finally {
         setLoading(false);
-    }
-
+      }
     } else {
       console.log('Transaction Pins do not match.');
-    } 
+    }
   };
 
   const validationSchema = Yup.object().shape({

@@ -34,6 +34,7 @@ export const StepFour = ({ next }) => {
         verify: import.meta.env.VITE_BVN_VERIFY_NEW_PROFILE_ENDPOINT,
       },
     };
+    setApiError('');
     try {
       // Call Search Profile Endpoint
       const searchResponse = await fetch(endpoints[idType].search, {

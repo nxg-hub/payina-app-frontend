@@ -2,10 +2,13 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { resetState } from '../../../Redux/BusinessSignUpSlice';
+import useLocalStorage from '../../../hooks/useLocalStorage';
 
 export const StepSeventeen = () => {
+  // const authToken = useSelector((state) => state.businessSignUp.token);
+  const [newAuthToken] = useLocalStorage('authToken', '');
   const [userData, setUserData] = useState(null);
   const userEmail = localStorage.getItem('userEmail');
   const [isLoading, setIsLoading] = useState(true);
@@ -51,13 +54,19 @@ export const StepSeventeen = () => {
   }, [userEmail]);
 
   const handleClick = () => {
+    if (newAuthToken) {
+      navigate('/account/dashboard');
+    } else {
+      navigate('/login');
+    }
     dispatch(resetState());
-
-    navigate('/login');
+    localStorage.removeItem('HomeAddress');
+    localStorage.removeItem('businessData');
+    localStorage.removeItem('BusinessAddress');
   };
 
   if (isLoading) {
-    return <div className="text-center py-8">Loading...</div>;
+    return <div className="text-center py-8 text-white font-bold">Loading...</div>;
   }
 
   if (error) {
@@ -188,7 +197,7 @@ export const StepSeventeen = () => {
             onClick={handleClick}
             padding="15px"
             type="submit"
-            children="Proceed to Log in"
+            children="Proceed to Sign in"
             className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
           />
         </div>

@@ -3,25 +3,32 @@ import CustomButton from '../../../components/button/button';
 import { BusinessDetailsSchema } from '../schemas/schema';
 import { images } from '../../../constants';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { previousStep, setAddress } from '../../../Redux/BusinessSignUpSlice';
 
 export const StepTen = ({ next, initialValues }) => {
   const [business_is_registered, setBusinessRegister] = useState('');
   const [loading, setLoading] = useState(false);
   const [business_and_home, setBusinessAddress] = useState('');
   const [passedData, setPassedData] = useState({}); // Shared state for passedData
+  const dispatch = useDispatch();
 
+  const handlePrevious = () => {
+    dispatch(previousStep());
+  };
+  const homeAddress = localStorage.getItem('HomeAddress');
+  const parsedHomeAdress = JSON.parse(homeAddress);
   const handleSecondCheck = (value) => {
+    dispatch(setAddress(value)); //storing the value [yes or no] if house and bsiness address are same in redux store
     setBusinessAddress(value);
-  
     if (value === 'yes') {
       const data = {
-        businessHouseNumber: initialValues.houseNumber || '',
-        businessStreetName: initialValues.street || '',
-        businessState: initialValues.state || '',
-        businessLGA: initialValues.lga || '',
+        businessHouseNumber: parsedHomeAdress.houseNumber || '',
+        businessStreetName: parsedHomeAdress.street || '',
+        businessState: parsedHomeAdress.state || '',
+        businessLGA: parsedHomeAdress.lga || '',
       };
-      setPassedData(data); 
-      
+      setPassedData(data);
 
       // console.log('Pre-populated business address:', data);
     }
@@ -30,9 +37,9 @@ export const StepTen = ({ next, initialValues }) => {
   const handleSubmit = async (business_details) => {
     setLoading(true);
     const businessCategory =
-    business_details.businessCategory === 'Other'
-      ? business_details.Other
-      : business_details.businessCategory;
+      business_details.businessCategory === 'Other'
+        ? business_details.Other
+        : business_details.businessCategory;
 
     const businessData = {
       businessName: business_details.businessName,
@@ -48,18 +55,17 @@ export const StepTen = ({ next, initialValues }) => {
         next(passedData, 11);
       }
       // console.log('Submitting business data:', businessData);
-
+      localStorage.setItem('businessData', JSON.stringify(businessData));
       next(businessData, 13); // Passes the data and directs to step 13
     } catch (error) {
       console.error('Error submitting business data:', error);
-    }finally {
+    } finally {
       setLoading(false); // Stop loading spinner or animation
     }
   };
   const handleCheck = (value) => {
     setBusinessRegister(value);
   };
-  
 
   const selectArrow = `
       select{
@@ -107,7 +113,7 @@ export const StepTen = ({ next, initialValues }) => {
   `;
 
   return (
-     <div className="relative bg-black min-h-screen flex items-center justify-center">
+    <div className="relative bg-black min-h-screen flex items-center justify-center">
       <img
         src={images.Vector3}
         alt="Background Design"
@@ -155,7 +161,7 @@ export const StepTen = ({ next, initialValues }) => {
             business_registered: [],
             business_address: [{}],
           }}
-          // validationSchema={BusinessDetailsSchema}
+          validationSchema={BusinessDetailsSchema}
           onSubmit={handleSubmit}>
           {(formik) => (
             <Form className="xl:w-[600px] w-full space-y-4">
@@ -188,8 +194,7 @@ export const StepTen = ({ next, initialValues }) => {
                     <label
                       htmlFor="businessCategory"
                       className="text-xs md:text-sm font-normal text-[#1A1D1F] opacity-75">
-                      {' '}
-                      Business Category{' '}
+                      Business Category
                     </label>
                     <Field
                       as="select"
@@ -241,30 +246,29 @@ export const StepTen = ({ next, initialValues }) => {
                     />
                   </div>
                   {formik.values.businessCategory === 'Other' && (
-  <div className="my-2">
-    <label htmlFor="Other" className="text-secondary block mb-2 w-full text-sm">
-      Specify Other Business Category
-    </label>
-    <Field
-      type="text"
-      id="Other"
-      name="Other"
-      placeholder="Enter Your Business Category"
-      className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
-    />
-    <ErrorMessage
-      name="Other"
-      component="div"
-      className="text-[#db3a3a] mt-2 text-sm"
-    />
-  </div>
-)}
+                    <div className="my-2">
+                      <label htmlFor="Other" className="text-secondary block mb-2 w-full text-sm">
+                        Specify Other Business Category
+                      </label>
+                      <Field
+                        type="text"
+                        id="Other"
+                        name="Other"
+                        placeholder="Enter Your Business Category"
+                        className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+                      />
+                      <ErrorMessage
+                        name="Other"
+                        component="div"
+                        className="text-[#db3a3a] mt-2 text-sm"
+                      />
+                    </div>
+                  )}
                   <div className="w-full flex flex-col space-y-2 ">
                     <label
                       htmlFor="businessType"
                       className="text-xs md:text-sm font-normal text-[#1A1D1F] opacity-75">
-                      {' '}
-                      Business Type{' '}
+                      Business Type
                     </label>
                     <Field
                       as="select"
@@ -394,8 +398,8 @@ export const StepTen = ({ next, initialValues }) => {
                       <div className="flex justify-center gap-6 md:gap-12 items-center w-full mt-1 md:mt-4">
                         <label className="checkbox block relative mb-5 cursor-pointer text-xl">
                           <input
-      name="business_and_home"
-      onChange={(e) => handleSecondCheck(e.target.value)}
+                            name="business_and_home"
+                            onChange={(e) => handleSecondCheck(e.target.value)}
                             checked={business_and_home === 'yes'}
                             value="yes"
                             className="absolute opacity-0 cursor-pointer h-0 w-0"
@@ -409,8 +413,8 @@ export const StepTen = ({ next, initialValues }) => {
                         <div className="w-1 h-8 bg-lightBlue mx-8" />
                         <label className="checkbox block relative mb-5 cursor-pointer text-xl">
                           <input
-      name="business_and_home"
-      onChange={(e) => handleSecondCheck(e.target.value)}
+                            name="business_and_home"
+                            onChange={(e) => handleSecondCheck(e.target.value)}
                             checked={business_and_home === 'no'}
                             value="no"
                             className="absolute opacity-0 cursor-pointer h-0 w-0"
@@ -422,21 +426,28 @@ export const StepTen = ({ next, initialValues }) => {
                           No
                         </span>
                         <ErrorMessage
-      name="business_and_home"
-      component="span"
+                          name="business_and_home"
+                          component="span"
                           className="text-[#db3a3a] text-sm"
                         />
                       </div>
                     </div>
                   </div>
                 </div>
-                <CustomButton
-                  padding="10px 15px"
-                  type="submit"
-                  children={loading ? 'loading...' : 'Next'}
-                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
-                  disabled={loading}
-                />
+                <div className="flex gap-2">
+                  <button
+                    onClick={handlePrevious}
+                    className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8">
+                    back
+                  </button>
+                  <CustomButton
+                    padding="10px 15px"
+                    type="submit"
+                    children={loading ? 'loading...' : 'Next'}
+                    className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
+                    disabled={loading}
+                  />
+                </div>
               </div>
             </Form>
           )}

@@ -6,7 +6,7 @@ export const SignUpSchema = Yup.object().shape({
   confirmPassword: Yup.string()
     .min(8, 'Must be 8 characters or more')
     .oneOf([Yup.ref('password')], 'Passwords must match')
-    .required('Password is required')
+    .required('Password is required'),
 });
 
 export const BusinessDetailsSchema = Yup.object().shape({
@@ -14,9 +14,9 @@ export const BusinessDetailsSchema = Yup.object().shape({
   business_registered: Yup.array().required('Please select an option'),
   business_address: Yup.array().required('Please select an option'),
   businessCategory: Yup.string().required('Please select a business category'),
-  businesstype: Yup.string().required('Please select a business type'),
+  businessType: Yup.string().required('Please select a business type'),
   businessRegNumber: Yup.string(),
-  tin_No: Yup.string()
+  tin_No: Yup.string(),
 });
 
 export const HomeAddressSchema = Yup.object().shape({
@@ -26,7 +26,7 @@ export const HomeAddressSchema = Yup.object().shape({
   street: Yup.string().required('Please enter your street name'),
   state: Yup.string().required('Select your state'),
   // country: Yup.string().required('Select your country'),
-  lga: Yup.string().required('Select your local government')
+  lga: Yup.string().required('Select your local government'),
 });
 
 export const BusinessAddressSchema = Yup.object().shape({
@@ -35,13 +35,13 @@ export const BusinessAddressSchema = Yup.object().shape({
     .max(3, 'Please enter a valid business address number'),
   businessStreetName: Yup.string().required('Please enter your business street name'),
   businessLGA: Yup.string().required('Select your local government'),
-  businessState: Yup.string().required('Please enter your business state')
+  businessState: Yup.string().required('Please enter your business state'),
 });
 
 export const ProofOfResidence = Yup.object().shape({
-  document_type: Yup.string().required('Please select document type')
+  document_type: Yup.string().required('Please select document type'),
 });
 
 export const BusinessAddressVerification = Yup.object().shape({
-  business_confirm_document: Yup.string().required('Please select document type')
+  business_confirm_document: Yup.string().required('Please select document type'),
 });

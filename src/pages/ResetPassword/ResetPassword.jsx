@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { Link, useNavigate } from 'react-router-dom';
+import logo from '../../assets/images/logo.png';
 import axios from 'axios';
-import useLocalStorage from '../../../../hooks/useLocalStorage';
+import { useSelector } from 'react-redux';
 
 // Validation schema for the password channge form
 const validationSchema = Yup.object().shape({
-  oldPassword: Yup.string().required('required'),
   newPassword: Yup.string().required('required'),
   confirmPassword: Yup.string().required('required'),
 });
-
-const PasswordSetting = () => {
+const ResetPassword = () => {
+  const token = useSelector((state) => state.forgotPassword.passwordToken);
   const [loading, setLoading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState('');
   const [success, setSuccess] = useState(false);
-  const [newAuthToken] = useLocalStorage('authToken', '');
 
   const handleSubmit = async (values, actions) => {
     const { resetForm } = actions;
@@ -26,56 +26,40 @@ const PasswordSetting = () => {
     }
     setLoading(true);
     try {
-      const response = await axios.post(
-        import.meta.env.VITE_INAPP_PASSWORD_UPDATE,
-        {
-          oldPassword: values.oldPassword,
-          newPassword: values.newPassword,
-          confirmPassword: values.confirmPassword,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${newAuthToken}`,
-          },
-        }
-      );
+      const response = await axios.post(import.meta.env.VITE_RESET_PASSWORD, {
+        resetToken: token,
+        newPassword: values.newPassword,
+        confirmPassword: values.confirmPassword,
+      });
       if (response.status === 200) {
-        setUploadStatus('Password reset successful!');
+        setUploadStatus('Password successfully updated');
         setSuccess(true);
       }
     } catch (err) {
-      setUploadStatus(err?.response?.data ? err.response.data : `Error:Something went wrong`);
+      setUploadStatus(`Error:Something went wrong`);
       console.log(err);
     } finally {
       setLoading(false);
     }
-
     resetForm();
   };
   return (
-    <div className="h-[100vh]">
+    <div className="h-[100vh] bg-black  overflow-x-hidden ">
+      <div className=" ">
+        <img className="m-auto mt-11" src={logo} alt="" />
+      </div>
+      <h1 className="text-4xl text-center text-white font-bold mt-11">Reset Password </h1>
+
       <Formik
-        initialValues={{ oldPassword: '', newPassword: '', confirmPassword: '' }}
+        initialValues={{ newPassword: '', confirmPassword: '' }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}>
         {({ isSubmitting }) => (
           <Form className="py-5 w-[80%] md:w-[60%] m-auto bg-primary border-2 border-[#a0a0a0] shadow-2xl rounded-xl mt-[100px] mb-[50px]">
             <div className="w-[80%] md:w-[60%] m-auto">
-              <div className="py-5 relative ">
-                <label className="font-bold block md:text-md" htmlFor="oldPassword">
-                  Old Password
-                </label>
-                <Field
-                  className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                  type="text"
-                  name="oldPassword"
-                />
-                <ErrorMessage className="text-red-500" name="oldPassword" component="div" />
-              </div>
-              <div className="py-5 relative">
-                <label className="font-bold block md:text-md" htmlFor="newPassword">
-                  New Password
+              <div className="py-11 relative">
+                <label className="font-bold block md:text-md text-center" htmlFor="newPassword">
+                  Enter New Password
                 </label>
                 <Field
                   className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
@@ -84,9 +68,11 @@ const PasswordSetting = () => {
                 />
                 <ErrorMessage className="text-red-500" name="newPassword" component="div" />
               </div>
-              <div className="py-5 relative">
-                <label className="font-bold block md:text-md" htmlFor="confirmPassword">
-                  confirmPassword
+            </div>
+            <div className="w-[80%] md:w-[60%] m-auto">
+              <div className="py-11 relative">
+                <label className="font-bold block md:text-md text-center" htmlFor="confirmPassword">
+                  Confirm Password
                 </label>
                 <Field
                   className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
@@ -108,9 +94,12 @@ const PasswordSetting = () => {
                 }`}
                 type="submit"
                 disabled={isSubmitting}>
-                {loading ? 'Loading...' : 'Reset'}
+                {loading ? 'Loading...' : 'Submit'}
               </button>
             </div>
+            <Link className="ml-24 font-bold underline text-blue-600" to="/login">
+              Back to login
+            </Link>
           </Form>
         )}
       </Formik>
@@ -118,4 +107,4 @@ const PasswordSetting = () => {
   );
 };
 
-export default PasswordSetting;
+export default ResetPassword;

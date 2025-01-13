@@ -14,6 +14,8 @@ import { RiFileSettingsLine, RiBillLine } from 'react-icons/ri';
 import { BsThreeDots } from 'react-icons/bs';
 import { resetCorporate } from '../../../../Redux/CoorperateCustomerSlice.jsx';
 import { resetInventory } from '../../../../Redux/InventorySlice.jsx';
+import { resetState, resetToken } from '../../../../Redux/BusinessSignUpSlice.jsx';
+import { clearState } from '../../../../Redux/ForgotPasswordSlice.jsx';
 
 export const MobileSidebar = () => {
   const location = useLocation();
@@ -39,6 +41,9 @@ export const MobileSidebar = () => {
     dispatch(reSetUserDetails());
     dispatch(resetCorporate());
     dispatch(resetInventory());
+    dispatch(resetState());
+    dispatch(resetToken());
+    dispatch(clearState());
     localStorage.clear();
     navigate('/login');
   };
@@ -148,7 +153,9 @@ export const MobileSidebar = () => {
               </Link>
               <Link to="/account/inventoryAdd" className="flex">
                 <RiFileSettingsLine size={22} />
-                <span className="hover:text-lightBlue ease transition-colors text-nowrap ">Add</span>
+                <span className="hover:text-lightBlue ease transition-colors text-nowrap ">
+                  Add
+                </span>
               </Link>
             </div>
           </>
@@ -171,9 +178,7 @@ export const MobileSidebar = () => {
             ) : (
               <img src={images.Profile} alt="profile image" className="w-24 h-24 rounded-full" />
             )}
-            <div className="font-semibold text-xl mt-2">
-              {`Hi, ${userName}`}
-            </div>
+            <div className="font-semibold text-xl mt-2">{`Hi, ${userName}`}</div>
             {(!bvn || bvn === '') && (
               <Link
                 to="/verify"

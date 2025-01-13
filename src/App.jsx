@@ -54,6 +54,9 @@ import TierTwo from './pages/PersonalSignup/upgrade/tier-two.jsx';
 import More from './pages/More/More.jsx';
 import TierOne from './pages/PersonalSignup/id-verification/tier-one.jsx';
 import { VirtualCards } from './pages/Cards/pages/VirtualCards.jsx';
+import ForgotPassword from './pages/forgotPassword/ForgotPassword.jsx';
+import PasswordOtpValidate from './pages/ValidatePasswordOtp/PasswordOtpValidate.jsx';
+import ResetPassword from './pages/ResetPassword/ResetPassword.jsx';
 import SwitchAccount from './pages/More/SwitchAccount.jsx';
 import AccountLimits from './pages/More/Limits.jsx';
 import Terms from './pages/More/Terms.jsx';
@@ -140,6 +143,9 @@ function App() {
             <Route path="/account-limits" element={<AccountLimits />} />
             <Route path="/support" element={<Support />} />
             <Route path="/thanks" element={<Thanks />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/validate-otp" element={<PasswordOtpValidate />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/data" element={<Data />} />
             <Route path="/plans/review" element={<Planb />} />
             <Route path="/bills" element={<Betone />} />
