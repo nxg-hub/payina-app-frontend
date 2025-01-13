@@ -27,11 +27,11 @@ export const Navbar = () => {
   const TIER_REQUIREMENTS = {
     'Tier 1': {
       nextTier: 'Tier 2 (Advanced)',
-      documents: ['BVN', 'NIN',],
+      documents: ['Facials', 'Proof of Address',],
     },
     'Tier 2': {
       nextTier: 'Tier 3 (Premium)',
-      documents: ['Facials', 'Proof of Address', 'Government ID', 'Utility Bill'],
+      documents: ['Government ID', 'Utility Bill'],
     },
   };
 

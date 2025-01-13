@@ -57,6 +57,9 @@ import { VirtualCards } from './pages/Cards/pages/VirtualCards.jsx';
 import ForgotPassword from './pages/forgotPassword/ForgotPassword.jsx';
 import PasswordOtpValidate from './pages/ValidatePasswordOtp/PasswordOtpValidate.jsx';
 import ResetPassword from './pages/ResetPassword/ResetPassword.jsx';
+import SwitchAccount from './pages/More/SwitchAccount.jsx';
+import AccountLimits from './pages/More/Limits.jsx';
+import Terms from './pages/More/Terms.jsx';
 
 function App() {
   const location = useLocation();
@@ -116,6 +119,7 @@ function App() {
             <Route path="/account/inventory" element={<Inventory />} />
             <Route path="/account/inventoryAdd" element={<AddInventory />} />
             <Route path="/account/more" element={<More />} />
+            <Route path="/account/switch" element={<SwitchAccount />} />
             <Route path="/account/settings" element={<Settings />} />
             <Route path="/account/airtime" element={<UserAirtime />} />
             <Route path="/airtime" element={<Airtime />} />
@@ -134,7 +138,9 @@ function App() {
             <Route path="/ren" element={<Ren />} />
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/terms" element={<Terms />} />
             <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/account-limits" element={<AccountLimits />} />
             <Route path="/support" element={<Support />} />
             <Route path="/thanks" element={<Thanks />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
