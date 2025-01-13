@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import useLocalStorage from '../../../../hooks/useLocalStorage';
 import { useDispatch, useSelector } from 'react-redux';
 import { storeUpdatedInventory } from '../../../../Redux/InventorySlice';
+import { useNavigate } from 'react-router-dom';
 
 // Validation schema for the  form
 const InventorySchema = Yup.object().shape({
@@ -19,6 +20,7 @@ const AddInventoryForm = () => {
   const [uploadStatus, setUploadStatus] = useState('');
   const [success, setSuccess] = useState(false);
   const [newAuthToken] = useLocalStorage('authToken', '');
+  const navigate = useNavigate();
   //getting the customerId state from the store
   const id = useSelector((state) => state.user.user.customerId);
 
@@ -76,6 +78,9 @@ const AddInventoryForm = () => {
     } finally {
       setLoading(false);
     }
+  };
+  const viewInventory = () => {
+    navigate('/account/inventory');
   };
   return (
     <div className="">
@@ -143,9 +148,18 @@ const AddInventoryForm = () => {
               </div>
             </div>
             {uploadStatus && (
-              <p className={`mt-4 ${success ? 'text-green-500' : 'text-red-500'} text-center`}>
-                {uploadStatus}
-              </p>
+              <>
+                <p className={`mt-4 ${success ? 'text-green-500' : 'text-red-500'} text-center`}>
+                  {uploadStatus}
+                </p>
+                <div className="w-[50%] md:w-[35%] m-auto bg-red-300 mt-5">
+                  <button
+                    onClick={viewInventory}
+                    className="w-full bg-blue-100 font-bold px-4 py-2 rounded-lg  hover:bg-stone-400 border shadow-md">
+                    View Inventory
+                  </button>
+                </div>
+              </>
             )}
             <div className="w-[80%] md:w-[60%] py-2 bg-secondary rounded-md m-auto mt-2 mb-4">
               <button

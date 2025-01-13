@@ -1,8 +1,11 @@
-import React from 'react';
+// import React from 'react';
 import { Form, Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
+import { useState, React } from 'react';
+import { useDispatch } from 'react-redux';
+import { previousStep } from '../../../Redux/BusinessSignUpSlice';
 
 // Validation schema using Yup
 const StepFourteenValidationSchema = Yup.object().shape({
@@ -13,7 +16,15 @@ const StepFourteenValidationSchema = Yup.object().shape({
 });
 
 export const StepFourteen = ({ next }) => {
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  const handlePrevious = () => {
+    dispatch(previousStep());
+  };
   const handleSubmit = (values) => {
+    setLoading(true);
+
     next(values);
   };
 
@@ -99,13 +110,19 @@ export const StepFourteen = ({ next }) => {
                   className="text-[#db3a3a] mt-2"
                 />
               </div>
-
-              <CustomButton
-                padding="15px"
-                type="submit"
-                children="Next"
-                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
-              />
+              <div className="flex gap-2">
+                <button
+                  onClick={handlePrevious}
+                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8">
+                  back
+                </button>
+                <CustomButton
+                  padding="15px"
+                  type="submit"
+                  children={loading ? 'Loading...' : 'Next'}
+                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
+                />
+              </div>
             </Form>
           )}
         </Formik>

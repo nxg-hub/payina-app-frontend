@@ -2,11 +2,15 @@ import { Form, Formik, Field, ErrorMessage } from 'formik';
 import CustomButton from '../../../components/button/button';
 import * as Yup from 'yup';
 import { images } from '../../../constants';
+import { React, useState } from 'react';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 
 export const StepSixteen = ({ next, email }) => {
-  const userEmail = localStorage.getItem('userEmail');
+  const decodeJWT = (token) => JSON.parse(atob(token.split('.')[1]));
   const [authToken, setAuthToken] = useLocalStorage('authToken', '');
+  const [loading, setLoading] = useState(false);
+  const userEmail = localStorage.getItem('userEmail');
+  const [userDetails, setuserDetails] = useLocalStorage('userDetails', '');
   const handleSubmit = async (values) => {
     // Merge OTP and Confirm OTP values into strings
     const otpValue = values.otp.join('');
@@ -19,6 +23,7 @@ export const StepSixteen = ({ next, email }) => {
         verifyPin: confirmOtpValue,
         email: userEmail, // Pass the email from previous steps
       };
+      setLoading(true);
 
       try {
         const response = await fetch(import.meta.env.VITE_TRANSACTION_PIN_ENDPOINT, {
@@ -34,12 +39,17 @@ export const StepSixteen = ({ next, email }) => {
           const token = result.data;
           setAuthToken(token);
           localStorage.setItem('authToken', token);
+
+          const decodedString = decodeJWT(token);
+          setuserDetails(decodedString);
           next(result);
         } else {
           console.error('Failed to set pin:', response.statusText);
         }
       } catch (error) {
         console.error('Error setting pin:', error);
+      } finally {
+        setLoading(false);
       }
     } else {
       console.log('Transaction Pins do not match.');
@@ -213,7 +223,7 @@ export const StepSixteen = ({ next, email }) => {
               <CustomButton
                 padding="15px"
                 type="submit"
-                children="Next"
+                children={loading ? 'Loading...' : 'Next'}
                 className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
                 disabled={isSubmitting}
               />

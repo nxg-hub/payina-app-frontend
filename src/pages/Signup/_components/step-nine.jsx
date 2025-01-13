@@ -4,6 +4,8 @@ import { images } from '../../../constants';
 import { useState } from 'react';
 import { MdOutlineFileUpload } from 'react-icons/md';
 import { ProofOfResidence } from '../schemas/schema';
+import { useDispatch } from 'react-redux';
+import { previousStep } from '../../../Redux/BusinessSignUpSlice';
 
 const uploadDocument = async (documentFile, email) => {
   try {
@@ -20,7 +22,7 @@ const uploadDocument = async (documentFile, email) => {
 
     try {
       const jsonData = JSON.parse(data);
-      console.log('Document uploaded successfully:', jsonData);
+      // console.log('Document uploaded successfully:', jsonData);
     } catch (jsonError) {
       console.error('Failed to parse JSON:', jsonError);
       throw new Error('Invalid JSON response');
@@ -36,6 +38,11 @@ export const StepNine = ({ next, email }) => {
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState('');
   const userEmail = localStorage.getItem('userEmail');
+  const dispatch = useDispatch();
+
+  const handlePrevious = () => {
+    dispatch(previousStep());
+  };
   const handleSubmit = async (values) => {
     setLoading(true);
     setApiError('');
@@ -161,13 +168,21 @@ export const StepNine = ({ next, email }) => {
                   </div>
                 </div>
                 {apiError && <div className="text-red-500">{apiError}</div>}
-                <CustomButton
-                  padding="15px"
-                  type="submit"
-                  children={loading ? 'Uploading...' : 'Next'}
-                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
-                  disabled={isSubmitting || loading}
-                />
+                <div className="flex gap-2">
+                  <button
+                    disabled={isSubmitting || loading}
+                    onClick={handlePrevious}
+                    className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8">
+                    back
+                  </button>
+                  <CustomButton
+                    padding="15px"
+                    type="submit"
+                    children={loading ? 'Uploading...' : 'Next'}
+                    className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
+                    disabled={isSubmitting || loading}
+                  />
+                </div>
               </div>
             </Form>
           )}

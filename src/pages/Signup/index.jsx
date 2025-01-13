@@ -12,6 +12,7 @@ const Signup = ({ data, currentStep, handleNextStep }) => {
           <img src={images.Group} alt="" />
         </div>
       </div>
+
       <SignUpForm data={data} currentStep={currentStep} handleNextStep={handleNextStep} />
     </div>
   );

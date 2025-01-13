@@ -16,6 +16,8 @@ import { BsThreeDots } from 'react-icons/bs';
 import { resetCorporate } from '../../../../Redux/CoorperateCustomerSlice.jsx';
 import { resetInventory } from '../../../../Redux/InventorySlice.jsx';
 import { AiOutlineAppstore } from 'react-icons/ai';
+import { resetState, resetToken } from '../../../../Redux/BusinessSignUpSlice.jsx';
+import { clearState } from '../../../../Redux/ForgotPasswordSlice.jsx';
 
 export const Sidebar = () => {
   const location = useLocation();
@@ -48,6 +50,9 @@ export const Sidebar = () => {
     dispatch(reSetUserDetails());
     dispatch(resetCorporate());
     dispatch(resetInventory());
+    dispatch(resetToken());
+    dispatch(resetState());
+    dispatch(clearState());
     localStorage.clear();
     navigate('/login');
   };

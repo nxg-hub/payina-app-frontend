@@ -2,19 +2,22 @@ import { Field, Form, Formik } from 'formik';
 import { useState, useEffect } from 'react';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
+import axios from 'axios';
 
-export const StepThree = ({ next, data }) => {
+export const StepThree = ({ next, data, phone }) => {
   const [codeAlert, setCodeAlert] = useState('');
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [otpError, setOtpError] = useState('');
   const [canResendCode, setCanResendCode] = useState(false);
   const [loading, setLoading] = useState('');
+  const [otpLoading, setOtpLoading] = useState(false);
+  const userEmail = localStorage.getItem('userEmail');
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setCanResendCode(true);
-    }, 30000); // 30 seconds
-
+    }, 60000);
+    // 30 seconds
     return () => clearTimeout(timer);
   }, []);
 
@@ -41,12 +44,32 @@ export const StepThree = ({ next, data }) => {
       setLoading(false);
     }
   };
-
-  const handleCode = (e) => {
+  const handleCode = async (e) => {
     e.preventDefault();
-    setIsAlertVisible(true);
-    setCodeAlert('Code has been successfully sent');
-    setCanResendCode(false); // Reset the resend code state
+    const phone = data.phone.replace(/^\+234/, '0');
+
+    setOtpLoading(true);
+    try {
+      const response = await axios.post(import.meta.env.VITE_SEND_TOKEN, {
+        phone: phone,
+        email: userEmail,
+      });
+      if (response.status === 200) {
+        setIsAlertVisible(true);
+        setCodeAlert('Code has been successfully sent');
+        setCanResendCode(false); // Reset the resend code state
+        setOtpLoading(false);
+      }
+    } catch (err) {
+      setOtpLoading(`Error:Something went wrong`);
+      console.log(err);
+    } finally {
+      setOtpLoading(false);
+    }
+
+    // setIsAlertVisible(true);
+    // setCodeAlert('Code has been successfully sent');
+    // setCanResendCode(false); // Reset the resend code state
 
     // Restart the timer for the resend code
     const timer = setTimeout(() => {
@@ -80,7 +103,6 @@ export const StepThree = ({ next, data }) => {
     '-' +
     data.phone?.slice(10);
 
-  // console.log(phoneNumber);
   localStorage.setItem('currentStep', 3);
 
   return (
@@ -135,20 +157,20 @@ export const StepThree = ({ next, data }) => {
               <Field
                 name="phone"
                 type="tel"
-                value={formik.values.phone}
+                value={data.phone}
                 maxLength={17}
                 className="w-[60%] font-bold text-center mx-auto bg-transparent border-none h-[3.4rem] outline-none text-base xl:text-xl text-gray rounded-[5px] py-6 pb-0 px-[10px]"
               />
               <hr className="border-none bg-[#e80516] h-[1px] w-[180px] mt-2 xl:mx-auto" />
               {canResendCode ? (
                 <CustomButton
-                  children="Resend Code"
+                  children={otpLoading ? 'sending otp...' : 'Resend Code'}
                   onClick={(e) => handleCode(e)}
                   className="text-sm font-bold mt-10 !py-[1px] !px-[9px] !border-none !rounded-[10px] !bg-[#E80516]"
                 />
               ) : (
                 <span className="text-sm text-gray-500 mt-10">
-                  You can resend the code in 30 seconds.
+                  You can resend the code in 60 seconds.
                 </span>
               )}
               <span className="text-sm text-[#33b444] mt-4">{isAlertVisible && codeAlert}</span>

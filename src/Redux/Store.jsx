@@ -8,6 +8,8 @@ import businessSignUpReducer from './BusinessSignUpSlice';
 import corporateCustomerReducer from './CoorperateCustomerSlice';
 import inventoryReducer from './InventorySlice';
 import inventoryByIdReducer from './InventoryByIdSlice';
+import clientsReducer from './GetClientsSlice';
+import forgotPasswordReducer from './ForgotPasswordSlice';
 
 // Configuration for redux-persist
 const persistConfig = {
@@ -18,6 +20,8 @@ const persistConfig = {
     'personalSignUp',
     'businessSignUp',
     'coporateCustomerProfile',
+    'clients',
+    'forgotPassword',
     // 'inventory'
   ], // Add reducers you want to persist here
 };
@@ -30,6 +34,8 @@ const rootReducer = combineReducers({
   coporateCustomerProfile: corporateCustomerReducer,
   inventory: inventoryReducer,
   inventoryById: inventoryByIdReducer,
+  clients: clientsReducer,
+  forgotPassword: forgotPasswordReducer,
 });
 
 // Create persisted reducer

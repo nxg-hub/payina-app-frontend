@@ -92,8 +92,6 @@
 //   );
 // };
 
-
-
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from './_components/logo';
@@ -124,7 +122,7 @@ export const Navbar = () => {
   const TIER_REQUIREMENTS = {
     'Tier 1': {
       nextTier: 'Tier 2 (Advanced)',
-      documents: ['BVN', 'NIN',],
+      documents: ['BVN', 'NIN'],
     },
     'Tier 2': {
       nextTier: 'Tier 3 (Premium)',
@@ -177,21 +175,16 @@ export const Navbar = () => {
     const requirements = TIER_REQUIREMENTS[currentTierBase];
 
     if (!requirements) {
-      return (
-        <span className="text-sm font-medium text-green-600">
-          {userTier} (Maximum Level)
-        </span>
-      );
+      return <span className="text-sm font-medium text-green-600">{userTier} (Maximum Level)</span>;
     }
 
     return (
-      <div className="relative">
+      <div className="relative z-50">
         <div className="flex items-center space-x-2">
           <span className="text-sm font-medium">{userTier}</span>
           <button
             onClick={() => setShowTierAlert(true)}
-            className="px-3 py-1 text-xs bg-blue-50 hover:bg-blue-100 text-black rounded-md border border-blue-200"
-          >
+            className="px-3 py-1 text-xs bg-blue-50 hover:bg-blue-100 text-black rounded-md border border-blue-200">
             Upgrade Available
           </button>
         </div>
@@ -199,13 +192,10 @@ export const Navbar = () => {
         {showTierAlert && (
           <div className="absolute z-50 mt-2 w-72 right-0 bg-white rounded-lg shadow-lg border p-4">
             <div className="flex justify-between items-start">
-              <h3 className="text-lg font-semibold">
-                Upgrade to {requirements.nextTier}
-              </h3>
+              <h3 className="text-lg font-semibold">Upgrade to {requirements.nextTier}</h3>
               <button
                 onClick={() => setShowTierAlert(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
+                className="text-gray-400 hover:text-gray-600">
                 ×
               </button>
             </div>
@@ -213,13 +203,14 @@ export const Navbar = () => {
               <p className="mb-2 text-sm">Required documents:</p>
               <ul className="list-disc pl-4 space-y-1">
                 {requirements.documents.map((doc, index) => (
-                  <li key={index} className="text-sm text-gray-600">{doc}</li>
+                  <li key={index} className="text-sm text-gray-600">
+                    {doc}
+                  </li>
                 ))}
               </ul>
               <button
                 onClick={handleUpgradeClick}
-                className="w-full mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm font-medium"
-              >
+                className="w-full mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm font-medium">
                 Upload Documents
               </button>
             </div>
@@ -241,7 +232,7 @@ export const Navbar = () => {
   `;
 
   return (
-    <div className="flex items-center justify-between pr-10 h-20 bg-[#CCDFE6] xl:fixed w-full text-primary">
+    <div className="flex z-50 items-center justify-between pr-10 h-20 bg-[#CCDFE6] xl:fixed w-full text-primary">
       <div className="px-6 xl:px-4 flex space-x-16 gap-20 items-center">
         <div className="w-40">
           <Logo />

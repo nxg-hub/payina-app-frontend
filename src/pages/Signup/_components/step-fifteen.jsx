@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useState } from 'react';
 import { Form, Formik, Field, ErrorMessage, FieldArray } from 'formik';
 import * as Yup from 'yup';
 import CustomButton from '../../../components/button/button';
@@ -21,8 +21,12 @@ const StepFifteenValidationSchema = Yup.object().shape({
 });
 
 export const StepFifteen = ({ next, email }) => {
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = async (values) => {
     const userEmail = localStorage.getItem('userEmail');
+    setLoading(true);
+
     try {
       // Fetch customerId using the provided email
       const customerId = await authenticateEmail(userEmail);
@@ -34,7 +38,6 @@ export const StepFifteen = ({ next, email }) => {
 
       // Set corporateCustomerId to the fetched customerId
       const corporateCustomerId = customerId;
-      // console.log('Corporate Customer ID:', corporateCustomerId);
 
       const requestBody = {
         corporateCustomerId: corporateCustomerId,
@@ -205,12 +208,12 @@ export const StepFifteen = ({ next, email }) => {
                           </div>
 
                           <div className="flex justify-between mt-4 space-x-2">
-                            <button
+                            {/* <button
                               type="button"
                               className="px-2 py-1  !text-lightBlue xl:text-[15px] !border-none !bg-yellow rounded text-sm font-extrabold duration-300 "
                               onClick={() => remove(index)}>
                               Remove Signatory
-                            </button>
+                            </button> */}
                             <button
                               type="button"
                               className="px-2 py-1  !text-lightBlue xl:text-[15px] !border-none !bg-yellow rounded text-sm font-extrabold duration-300 "
@@ -226,8 +229,8 @@ export const StepFifteen = ({ next, email }) => {
               <CustomButton
                 padding="15px"
                 type="submit"
-                children="Next"
-                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
+                  children={loading ? 'Loading...' : 'Next'}
+className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
               />
             </Form>
           )}

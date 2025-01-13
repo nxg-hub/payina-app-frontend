@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
+  const authToken = useSelector((state) => state.businessSignUp.token);
   const [newAuthToken] = useLocalStorage('authToken', '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
