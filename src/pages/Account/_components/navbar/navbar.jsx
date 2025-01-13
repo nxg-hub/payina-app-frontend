@@ -1,4 +1,4 @@
-// import { useContext, useEffect, useState } from 'react';
+// import {  useEffect, useState } from 'react';
 //
 // import Logo from './_components/logo';
 // import ActionButtons from './_components/action-buttons';
@@ -12,7 +12,7 @@
 // export const Navbar = () => {
 //   // const [userDetails, setUserDetails] = useState();
 //   const [toggleMenu, setToggleMenu] = useState(false);
-//   // const { data } = useContext(UserContext);
+//   // const { data } = UserContext);
 //   const [customerUserName, setCustomerUserName] = useState('User');
 //   const [userImage, setUserImage] = useState('');
 //   const [newAuthToken] = useLocalStorage('authToken', '');
@@ -92,7 +92,7 @@
 //   );
 // };
 
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from './_components/logo';
 import ActionButtons from './_components/action-buttons';
