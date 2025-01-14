@@ -24,6 +24,7 @@ const ResetPassword = () => {
       setUploadStatus('Passwords must be the same!');
       return;
     }
+    console.log(import.meta.env.VITE_RESET_PASSWORD);
     setLoading(true);
     try {
       const response = await axios.post(import.meta.env.VITE_RESET_PASSWORD, {

@@ -27,9 +27,9 @@ export const StepEight = ({ next }) => {
       console.error('Error submitting add. data:', error);
     }
   };
-
+  const sortedStates = state_local.sort((a, b) => a.state.localeCompare(b.state));
   useEffect(() => {
-    const currentLga = state_local
+    const currentLga = sortedStates
       .filter((lga) => lga.state === currentState)
       .map((lga) => lga.lgas);
     setLocalGovernment(currentLga[0]);
@@ -183,7 +183,7 @@ export const StepEight = ({ next }) => {
                       Select State
                     </option>
                     {countries.length !== 0 &&
-                      state_local.map(({ state }) => (
+                      sortedStates.map(({ state }) => (
                         <option
                           key={state}
                           value={state}
