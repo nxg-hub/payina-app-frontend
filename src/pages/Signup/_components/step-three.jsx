@@ -12,14 +12,29 @@ export const StepThree = ({ next, data, phone }) => {
   const [loading, setLoading] = useState('');
   const [otpLoading, setOtpLoading] = useState(false);
   const userEmail = localStorage.getItem('userEmail');
+  const [timeLeft, setTimeLeft] = useState(60);
 
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setCanResendCode(true);
+  //   }, 60000);
+  //   // 60 seconds
+  //   return () => clearTimeout(timer);
+  // }, []);
   useEffect(() => {
-    const timer = setTimeout(() => {
+    if (timeLeft === 0) {
       setCanResendCode(true);
-    }, 60000);
-    // 30 seconds
-    return () => clearTimeout(timer);
-  }, []);
+    }
+    // Only run if there is time left
+    if (timeLeft > 0) {
+      const timer = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - 1);
+      }, 1000); // Update every second
+
+      // Cleanup interval on component unmount or when `timeLeft` changes
+      return () => clearInterval(timer);
+    }
+  }, [timeLeft]); // Run
 
   const handleSubmit = async (values) => {
     setLoading(true);
@@ -59,6 +74,7 @@ export const StepThree = ({ next, data, phone }) => {
         setCodeAlert('Code has been successfully sent');
         setCanResendCode(false); // Reset the resend code state
         setOtpLoading(false);
+        setTimeLeft(60);
       }
     } catch (err) {
       setOtpLoading(`Error:Something went wrong`);
@@ -74,7 +90,7 @@ export const StepThree = ({ next, data, phone }) => {
     // Restart the timer for the resend code
     const timer = setTimeout(() => {
       setCanResendCode(true);
-    }, 30000);
+    }, 60000);
 
     setTimeout(() => {
       setIsAlertVisible(false);
@@ -170,7 +186,7 @@ export const StepThree = ({ next, data, phone }) => {
                 />
               ) : (
                 <span className="text-sm text-gray-500 mt-10">
-                  You can resend the code in 60 seconds.
+                  You can resend the code in <strong>{timeLeft}</strong> seconds.
                 </span>
               )}
               <span className="text-sm text-[#33b444] mt-4">{isAlertVisible && codeAlert}</span>

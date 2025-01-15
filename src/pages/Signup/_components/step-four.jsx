@@ -53,6 +53,7 @@ export const StepFour = ({ next }) => {
       });
 
       const searchResult = await searchResponse.json();
+
       if (searchResponse.ok && searchResult.data) {
         const { firstname, lastname, gender, dob } = searchResult?.data?.identity || {};
         next({
@@ -74,6 +75,7 @@ export const StepFour = ({ next }) => {
         });
 
         const verifyResult = await verifyResponse.json();
+
         if (verifyResponse.ok && verifyResult.data) {
           const { firstname, lastname, gender, dob } = searchResult?.data?.identity || {};
           next({
@@ -94,7 +96,6 @@ export const StepFour = ({ next }) => {
 
           // Access the message
           const message = parsedResponse.message;
-
           setApiError(message || 'Verification failed. Please try again.');
         }
       }

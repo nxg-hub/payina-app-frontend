@@ -36,7 +36,7 @@ const LoginForm = () => {
       email: values.email,
       password: values.password,
     };
-
+    setErrorMessage('');
     try {
       const response = await fetch(import.meta.env.VITE_LOGIN_USER_ENDPOINT, {
         method: 'POST',

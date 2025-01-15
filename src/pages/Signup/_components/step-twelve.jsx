@@ -33,8 +33,9 @@ const uploadDocument = async (documentFile, email) => {
     throw error;
   }
 };
-const uploadLogo = async (logoFile, email) => {
+const uploadLogo = async (logoFile) => {
   const userEmail = localStorage.getItem('userEmail');
+
   try {
     const formData = new FormData();
     formData.append('document', logoFile);
@@ -200,6 +201,7 @@ export const StepTwelve = ({ next, email }) => {
                     <input
                       id="logo"
                       name="logo"
+                      accept="image/png, image/jpeg, image/jpg, image/gif, image/webp"
                       type="file"
                       onChange={(e) => {
                         setBusinessLogoDetails(e.currentTarget.files[0]);

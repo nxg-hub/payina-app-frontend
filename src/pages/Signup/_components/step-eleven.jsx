@@ -37,6 +37,7 @@ export const StepEleven = ({ next, initialValues, business_and_home, passedData 
 
   const sortedStates = state_local.sort((a, b) => a.state.localeCompare(b.state));
   useEffect(() => {
+    setLocalGovernment([]);
     if (initialValues.state) {
       setBusinessState(initialValues.state);
     }
