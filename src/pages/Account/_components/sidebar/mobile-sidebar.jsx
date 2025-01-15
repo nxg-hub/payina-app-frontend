@@ -16,6 +16,7 @@ import { resetCorporate } from '../../../../Redux/CoorperateCustomerSlice.jsx';
 import { resetInventory } from '../../../../Redux/InventorySlice.jsx';
 import { resetState, resetToken } from '../../../../Redux/BusinessSignUpSlice.jsx';
 import { clearState } from '../../../../Redux/ForgotPasswordSlice.jsx';
+import { reSetClientsDetails } from '../../../../Redux/GetClientsSlice.jsx';
 
 export const MobileSidebar = () => {
   const location = useLocation();
@@ -44,6 +45,7 @@ export const MobileSidebar = () => {
     dispatch(resetState());
     dispatch(resetToken());
     dispatch(clearState());
+    dispatch(reSetClientsDetails());
     localStorage.clear();
     navigate('/login');
   };

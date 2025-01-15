@@ -19,7 +19,6 @@ const PasswordSetting = () => {
 
   const handleSubmit = async (values, actions) => {
     const { resetForm } = actions;
-    console.log(import.meta.env.VITE_INAPP_PASSWORD_UPDATE);
     setUploadStatus('');
     if (values.newPassword !== values.confirmPassword) {
       setUploadStatus('Passwords must be the same!');
@@ -44,6 +43,7 @@ const PasswordSetting = () => {
       if (response.status === 200) {
         setUploadStatus('Password reset successful!');
         setSuccess(true);
+        resetForm();
       }
     } catch (err) {
       setUploadStatus(err?.response?.data ? err.response.data : `Error:Something went wrong`);
@@ -51,8 +51,6 @@ const PasswordSetting = () => {
     } finally {
       setLoading(false);
     }
-
-    resetForm();
   };
   return (
     <div className="h-[100vh]">

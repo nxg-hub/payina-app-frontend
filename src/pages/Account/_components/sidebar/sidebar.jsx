@@ -237,6 +237,7 @@ import { resetInventory } from '../../../../Redux/InventorySlice.jsx';
 import { AiOutlineAppstore } from 'react-icons/ai';
 import { resetState, resetToken } from '../../../../Redux/BusinessSignUpSlice.jsx';
 import { clearState } from '../../../../Redux/ForgotPasswordSlice.jsx';
+import { reSetClientsDetails } from '../../../../Redux/GetClientsSlice.jsx';
 
 export const Sidebar = () => {
   const location = useLocation();
@@ -258,8 +259,8 @@ export const Sidebar = () => {
       try {
         const response = await fetch(import.meta.env.VITE_GET_USER, {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}` // Assuming token is stored in localStorage
-          }
+            Authorization: `Bearer ${localStorage.getItem('token')}`, // Assuming token is stored in localStorage
+          },
         });
 
         if (!response.ok) {
@@ -291,6 +292,7 @@ export const Sidebar = () => {
     dispatch(resetToken());
     dispatch(resetState());
     dispatch(clearState());
+    dispatch(reSetClientsDetails());
     localStorage.clear();
     navigate('/login');
   };
@@ -399,7 +401,9 @@ export const Sidebar = () => {
               </Link>
               <Link to="/account/inventoryAdd" className="flex">
                 <RiFileSettingsLine size={22} />
-                <span className="hover:text-lightBlue ease transition-colors text-nowrap ">Add</span>
+                <span className="hover:text-lightBlue ease transition-colors text-nowrap ">
+                  Add
+                </span>
               </Link>
             </div>
           </>
@@ -428,9 +432,7 @@ export const Sidebar = () => {
             ) : (
               <img src={images.Profile} alt="profile image" className="w-24 h-24 rounded-full" />
             )}
-            <div className="font-semibold text-xl mt-2">
-              {`Hi, ${userName}`}
-            </div>
+            <div className="font-semibold text-xl mt-2">{`Hi, ${userName}`}</div>
             {!loading && userData && (!userData.bvn || userData.bvn === '') && (
               <Link
                 to="/verify"
