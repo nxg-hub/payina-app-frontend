@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useLocalStorage from '../../../../hooks/useLocalStorage.js';
-import SuccessMessage from './step5';
-import DeclineMessage from './step6';
+import SuccessMessage from '../step5';
+import DeclineMessage from '../step6';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import ReactLoading from 'react-loading';
@@ -124,7 +124,9 @@ const EnterPin = ({ data }) => {
         setShowDecline(true);
       }
     } catch (error) {
-      setErrorMessage(error.response?.response || 'Transaction process failed. Please try again.');
+      setErrorMessage(
+        error.response?.data?.debugMessage || 'Transaction process failed. Please try again.'
+      );
       console.error('Error Status:', error.response?.status);
       console.error('Error Data:', error.response?.data);
       setShowDecline(true);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import SuccessMessage from './step5';
-import DeclineMessage from './step6';
+import SuccessMessage from '../step5.jsx';
+import DeclineMessage from '../step6.jsx';
 import useLocalStorage from '../../../../hooks/useLocalStorage.js';
 import PropTypes from 'prop-types';
 import ReactLoading from 'react-loading';
@@ -156,7 +156,7 @@ const EnterPin = ({ data }) => {
             setShowSuccess(true);
           } else {
             console.log('Transaction Declined: Transaction could not be completed.', responseData);
-            setErrorMessage(responseData.response || 'Transaction failed.');
+            setErrorMessage(responseData.debugMessage || 'Transaction failed.');
             setShowDecline(true);
           }
         } else {
