@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useLocalStorage from '../../../../hooks/useLocalStorage.js';
-import SuccessMessage from './step5';
-import DeclineMessage from './step6.jsx';
+import SuccessMessage from '../step5';
+import DeclineMessage from '../step6.jsx';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import ReactLoading from 'react-loading';
@@ -185,6 +185,11 @@ const EnterPin = ({ data }) => {
         description: data.purpose,
       };
 
+      // console.log('Headers:', {
+      //   Authorization: `Bearer ${newAuthToken}`,
+      //   apiKey: import.meta.env.VITE_API_KEY,
+      // });
+
       console.log('Transaction payload:', transactionPayload);
 
       const transactionResponse = await axios.post(
@@ -213,7 +218,9 @@ const EnterPin = ({ data }) => {
         console.log('Transaction Declined: Transaction could not be completed.');
       }
     } catch (error) {
-      setErrorMessage(error.response?.response || 'Transaction process failed. Please try again.');
+      setErrorMessage(
+        error.response?.data?.debugMessage || 'Transaction process failed. Please try again.'
+      );
       console.error('Error Status:', error.response?.status);
       console.error('Error Data:', error.response?.data);
       setShowDecline(true);

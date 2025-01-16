@@ -4,15 +4,15 @@ import { AmountSchema } from './schemas/schemas.js';
 
 const currencies = [
   { code: 'NGN', name: 'Naira (NGN)' },
-  { code: 'GHS', name: 'Ghanaian Cedi (GHS)' },
-  { code: 'KES', name: 'Kenyan Shilling (KES)' },
-  { code: 'UGX', name: 'Ugandan Shilling (UGX)' },
-  { code: 'ZAR', name: 'South African Rand (ZAR)' },
-  { code: 'TZS', name: 'Tanzanian Shilling (TZS)' },
-  { code: 'RWF', name: 'Rwandan Franc (RWF)' },
-  { code: 'ETB', name: 'Ethiopian Birr (ETB)' },
-  { code: 'XOF', name: 'West African CFA Franc (XOF)' },
-  { code: 'XAF', name: 'Central African CFA Franc (XAF)' },
+  // { code: 'GHS', name: 'Ghanaian Cedi (GHS)' },
+  // { code: 'KES', name: 'Kenyan Shilling (KES)' },
+  // { code: 'UGX', name: 'Ugandan Shilling (UGX)' },
+  // { code: 'ZAR', name: 'South African Rand (ZAR)' },
+  // { code: 'TZS', name: 'Tanzanian Shilling (TZS)' },
+  // { code: 'RWF', name: 'Rwandan Franc (RWF)' },
+  // { code: 'ETB', name: 'Ethiopian Birr (ETB)' },
+  // { code: 'XOF', name: 'West African CFA Franc (XOF)' },
+  // { code: 'XAF', name: 'Central African CFA Franc (XAF)' },
 ];
 
 const AmountDetails = ({ nextStep }) => {
