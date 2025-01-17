@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/images/logo.png';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import { BsEye, BsEyeSlash } from 'react-icons/bs';
 
 // Validation schema for the password channge form
 const validationSchema = Yup.object().shape({
@@ -16,6 +17,11 @@ const ResetPassword = () => {
   const [loading, setLoading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState('');
   const [success, setSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleSubmit = async (values, actions) => {
     const { resetForm } = actions;
@@ -62,11 +68,16 @@ const ResetPassword = () => {
                   Enter New Password
                 </label>
                 <Field
+                  type={showPassword ? 'text' : 'password'}
                   className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                  type="text"
                   name="newPassword"
                 />
                 <ErrorMessage className="text-red-500" name="newPassword" component="div" />
+                {showPassword ? (
+                  <BsEye onClick={handleShowPassword} className="absolute top-10 right-1" />
+                ) : (
+                  <BsEyeSlash onClick={handleShowPassword} className="absolute top-10 right-1" />
+                )}
               </div>
             </div>
             <div className="w-[80%] md:w-[60%] m-auto">
@@ -76,7 +87,7 @@ const ResetPassword = () => {
                 </label>
                 <Field
                   className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                  type="text"
+                  type={showPassword ? 'text' : 'password'}
                   name="confirmPassword"
                 />
                 <ErrorMessage className="text-red-500" name="confirmPassword" component="div" />
