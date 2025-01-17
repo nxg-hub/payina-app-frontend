@@ -117,6 +117,9 @@ const EnterPin = ({ data }) => {
           console.log('Transaction Success: Transaction completed successfully.');
         } else {
           setShowDecline(true);
+          setErrorMessage(
+            transactionResponse.data?.response || 'Transaction process failed. Please try again.'
+          );
           console.log('Transaction Declined: Transaction could not be completed.');
         }
       } else {
