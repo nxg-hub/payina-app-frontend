@@ -101,7 +101,7 @@ const RecipientDetails = ({ nextStep }) => {
   };
 
   return (
-    <div className="flex flex-col items-left justify-center gap-4 form mt-5">
+    <div className="flex flex-col items-left justify-center gap-4 form mt-5 lg:ml-0 ml-3">
       <span className="text-md md:text-xl font-medium mt-5">Recipient Details</span>
       <Formik
         initialValues={{
@@ -121,7 +121,7 @@ const RecipientDetails = ({ nextStep }) => {
                 type="text"
                 name="accountNumber"
                 placeholder="Enter Recipient Account Number"
-                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                className="lg:w-[700px] w-[300px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                 onChange={(e) => {
                   const value = e.target.value;
                   setAccountNumber(value);
@@ -146,7 +146,7 @@ const RecipientDetails = ({ nextStep }) => {
                   setSelectedCountry(e.target.value);
                   setFieldValue('country', e.target.value);
                 }}
-                className="xl:w-[700px] w-[400px]  border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm">
+                className="lg:w-[700px] w-[300px]  border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm">
                 <option value="" label="Select a country" />
                 <option value="NG" label="Nigeria" />
                 {/* <option value="GH" label="Ghana" />
@@ -174,7 +174,7 @@ const RecipientDetails = ({ nextStep }) => {
                       )
                     );
                   }}
-                  className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                  className="lg:w-[700px] w-[300px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                 />
                 {!isBankSelected && filteredBanks.length > 0 && (
                   <div className="absolute z-10 w-full bg-white border rounded-md shadow-md max-h-40 overflow-y-auto">
@@ -205,7 +205,7 @@ const RecipientDetails = ({ nextStep }) => {
                 Confirm Receiver's Name
               </label>
               <div
-                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                className="lg:w-[700px] w-[300px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                 readOnly>
                 {isVerifying
                   ? 'Verifying...'
@@ -226,11 +226,11 @@ const RecipientDetails = ({ nextStep }) => {
                     : ''}
               </span>
             </div>
-            <div className="flex justify-end">
+            <div className="flex lg:justify-end">
               <button
                 type="submit"
                 disabled={isVerifying || !confirmationMessage.toLowerCase().includes('confirmed')}
-                className="rounded-[5px] text-xs md:text-base py-2 border border-lightBlue bg-lightBlue w-[250px] xl:mr-0 mr-5 xl:w-[300px] text-primary">
+                className="rounded-[5px] text-xs md:text-base py-2 border border-lightBlue bg-lightBlue w-[250px] xl:mr-0 mr-5 lg:w-[300px] text-primary">
                 Next
               </button>
             </div>
