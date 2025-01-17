@@ -101,7 +101,7 @@ const RecipientDetails = ({ nextStep }) => {
   };
 
   return (
-    <div className="flex flex-col items-left justify-left gap-4 form mt-5">
+    <div className="flex flex-col items-left justify-left gap-4 form mt-5 lg:ml-0 ml-2">
       <span className="text-md md:text-xl font-medium mt-5">Recipient Details</span>
       <Formik
         initialValues={{
@@ -119,7 +119,7 @@ const RecipientDetails = ({ nextStep }) => {
                 name="payinaTag"
                 type="text"
                 placeholder="Enter Recipient Payina Tag or Account Number"
-                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                className="lg:w-[700px] w-[300px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                 onChange={(e) => {
                   const payinaTag = e.target.value;
                   setFieldValue('payinaTag', payinaTag);
@@ -140,7 +140,7 @@ const RecipientDetails = ({ nextStep }) => {
                 name="confirmPayinaTag"
                 type=""
                 placeholder=""
-                className="xl:w-[700px] w-[400px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm text"
+                className="lg:w-[700px] w-[300px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm text"
                 readOnly>
                 {isVerifying
                   ? 'Verifying...'
@@ -157,10 +157,10 @@ const RecipientDetails = ({ nextStep }) => {
                     : ''}
               </span>
             </div>
-            <div className="flex justify-end">
+            <div className="flex lg:justify-end">
               <button
                 type="submit"
-                className="rounded-[5px] text-xs md:text-base py-2 border border-lightBlue bg-lightBlue w-[250px] xl:mr-0 mr-5 xl:w-[300px] text-primary">
+                className="rounded-[5px] text-xs md:text-base py-2 border border-lightBlue bg-lightBlue w-[250px] lg:mr-0 mr-5 lg:w-[300px] text-primary">
                 Next
               </button>
             </div>
