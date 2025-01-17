@@ -156,7 +156,9 @@ const EnterPin = ({ data }) => {
             setShowSuccess(true);
           } else {
             console.log('Transaction Declined: Transaction could not be completed.', responseData);
-            setErrorMessage(responseData.debugMessage || 'Transaction failed.');
+            setErrorMessage(
+              responseData.debugMessage || responseData.response || 'Transaction failed.'
+            );
             setShowDecline(true);
           }
         } else {
