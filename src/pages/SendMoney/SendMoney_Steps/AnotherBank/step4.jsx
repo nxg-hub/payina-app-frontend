@@ -207,8 +207,8 @@ const EnterPin = ({ data }) => {
       console.log('Transaction Response Data:', transactionResponse.data);
 
       const isSuccess =
-        transactionResponse.data?.statusCode === 'OK' &&
-        transactionResponse.data?.response?.toLowerCase() === 'transfer sucessful';
+        transactionResponse.data?.httpStatusCode === 'OK' &&
+        transactionResponse.data?.response?.toLowerCase().includes('transfer successful');
 
       if (isSuccess) {
         setShowSuccess(true);
@@ -219,7 +219,9 @@ const EnterPin = ({ data }) => {
       }
     } catch (error) {
       setErrorMessage(
-        error.response?.data?.debugMessage || 'Transaction process failed. Please try again.'
+        error.response?.data?.debugMessage ||
+          error.response?.data?.response ||
+          'Transaction process failed. Please try again.'
       );
       console.error('Error Status:', error.response?.status);
       console.error('Error Data:', error.response?.data);
