@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useLocalStorage from '../../../../hooks/useLocalStorage.js';
-import SuccessMessage from './step5';
-import DeclineMessage from './step6';
+import SuccessMessage from '../step5';
+import DeclineMessage from '../step6';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import ReactLoading from 'react-loading';
@@ -109,14 +109,17 @@ const EnterPin = ({ data }) => {
         console.log('Transaction Response Data:', transactionResponse.data);
 
         const isSuccess =
-          transactionResponse.data?.statusCode === 'OK' &&
-          transactionResponse.data?.response?.toLowerCase() === 'transfer sucessful';
+          transactionResponse.data?.httpStatusCode === 'OK' &&
+          transactionResponse.data?.response?.toLowerCase().includes('transfer successful');
 
         if (isSuccess) {
           setShowSuccess(true);
           console.log('Transaction Success: Transaction completed successfully.');
         } else {
           setShowDecline(true);
+          setErrorMessage(
+            transactionResponse.data?.response || 'Transaction process failed. Please try again.'
+          );
           console.log('Transaction Declined: Transaction could not be completed.');
         }
       } else {
@@ -124,7 +127,11 @@ const EnterPin = ({ data }) => {
         setShowDecline(true);
       }
     } catch (error) {
-      setErrorMessage(error.response?.response || 'Transaction process failed. Please try again.');
+      setErrorMessage(
+        error.response?.data?.debugMessage ||
+          error.response?.data?.response ||
+          'Transaction process failed. Please try again.'
+      );
       console.error('Error Status:', error.response?.status);
       console.error('Error Data:', error.response?.data);
       setShowDecline(true);
@@ -138,7 +145,7 @@ const EnterPin = ({ data }) => {
   // if (showDecline) return <DeclineMessage />;
 
   return (
-    <div className="transaction-pin flex flex-col justify-center items-center bg-[#D2D2D285] rounded-md md:p-[2rem] sm:p-[2rem] xl:py-[3rem] xl:px-[5rem] mt-[5rem] gap-8 mx-auto">
+    <div className="transaction-pin flex flex-col justify-center items-center bg-[#D2D2D285] rounded-md px-[2rem] py-[2rem] lg:py-[3rem] lg:px-[5rem] mt-[5rem] gap-8 mx-auto">
       {loading ? (
         <div className="flex flex-col items-center">
           <ReactLoading type="spin" color="#00678F" height={50} width={50} />
