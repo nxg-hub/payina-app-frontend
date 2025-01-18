@@ -2,12 +2,20 @@ import { Field, Form, Formik } from 'formik';
 import { useState, useEffect } from 'react';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
+import { useDispatch } from 'react-redux';
+import { previousStep } from '../../../Redux/PersonalSignUpSlice';
 
 export const StepThree = ({ next, data }) => {
   const [codeAlert, setCodeAlert] = useState('');
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [otpError, setOtpError] = useState('');
   const [canResendCode, setCanResendCode] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  const handlePrevious = () => {
+    dispatch(previousStep());
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -67,16 +75,15 @@ export const StepThree = ({ next, data }) => {
       -moz-appearance: textfield;
     }`;
 
+  const phone = localStorage.getItem('phoneNumber ');
   let phoneNumber =
-    data.phone?.slice(0, 4) +
+    phone?.slice(0, 4) +
     '-' +
-    data.phone?.slice(4, 7) +
+    phone?.slice(4, 7) +
     '-' +
-    data.phone?.slice(7, 10) +
+    phone?.slice(7, 10) +
     '-' +
-    data.phone?.slice(10);
-
-  console.log(phoneNumber);
+    phone?.slice(10);
 
   return (
     <div>
@@ -174,12 +181,20 @@ export const StepThree = ({ next, data }) => {
               <span className="font-bold text-center mt-10 leading-4 text-sm tracking-[0.28px] text-[#006181]">
                 Enter Code
               </span>
-              <CustomButton
-                padding="15px"
-                type="submit"
-                children="Next"
-                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[87%] w-[90%] mx-auto my-10 !mb-12 xl:my-12 xl:mb-20"
-              />
+              <div className=" flex gap-2">
+                <button
+                  disabled={loading}
+                  onClick={handlePrevious}
+                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[87%] w-[90%] mx-auto my-10 !mb-12 xl:my-12 xl:mb-20 px-3">
+                  back
+                </button>
+                <CustomButton
+                  padding="15px"
+                  type="submit"
+                  children="Next"
+                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[87%] w-[90%] mx-auto my-10 !mb-12 xl:my-12 xl:mb-20"
+                />
+              </div>
             </Form>
           )}
         </Formik>

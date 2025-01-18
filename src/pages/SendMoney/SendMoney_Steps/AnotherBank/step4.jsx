@@ -154,7 +154,7 @@ const EnterPin = ({ data }) => {
       );
       console.log('Full PIN Validation Response:', pinResponse);
 
-      if (pinResponse.data === 'Transaction PIN is valid.') {
+      if (pinResponse.status === 200) {
         console.log('PIN validated successfully. Starting another bank transfer...');
         setShowModal(true);
       } else {

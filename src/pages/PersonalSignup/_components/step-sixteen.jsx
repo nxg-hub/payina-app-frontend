@@ -27,7 +27,7 @@ export const StepSixteen = ({ next, email }) => {
 
         if (response.ok) {
           const result = await response.json();
-          console.log('Pin set successfully:', result);
+          localStorage.removeItem('phoneNumber');
           next(result);
         } else {
           console.error('Failed to set pin:', response.statusText);
@@ -62,7 +62,7 @@ export const StepSixteen = ({ next, email }) => {
         initialValues={{ otp: ['', '', '', ''], confirmOtp: ['', '', '', ''] }}
         validationSchema={validationSchema}
         onSubmit={(values) => handleSubmit(values)}>
-        {({ isSubmitting }) => (
+        {({ isSubmitting, values, setFieldValue }) => (
           <Form className="space-y-4">
             <div className="flex flex-col">
               <label htmlFor="otp" className="font-semibold pt-8">
@@ -75,7 +75,25 @@ export const StepSixteen = ({ next, email }) => {
                     type="password"
                     name={`otp[${index}]`}
                     maxLength="1"
+                    value={values.otp[index]}
                     className="form-input w-12 mr-2 p-[10px] outline-none text-center border border-secondary rounded-full "
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (/^\d$/.test(value)) {
+                        setFieldValue(`otp[${index}]`, value);
+                        if (value && e.target.nextElementSibling) {
+                          e.target.nextElementSibling.focus();
+                        }
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Backspace') {
+                        setFieldValue(`otp[${index}]`, '');
+                        if (e.target.previousElementSibling) {
+                          e.target.previousElementSibling.focus();
+                        }
+                      }
+                    }}
                   />
                 ))}
               </div>
@@ -93,6 +111,23 @@ export const StepSixteen = ({ next, email }) => {
                     name={`confirmOtp[${index}]`}
                     maxLength="1"
                     className="form-input w-12 mr-2 p-[10px] outline-none text-center border border-secondary rounded-full "
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (/^\d$/.test(value)) {
+                        setFieldValue(`confirmOtp[${index}]`, value);
+                        if (value && e.target.nextElementSibling) {
+                          e.target.nextElementSibling.focus();
+                        }
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Backspace') {
+                        setFieldValue(`confirmOtp[${index}]`, '');
+                        if (e.target.previousElementSibling) {
+                          e.target.previousElementSibling.focus();
+                        }
+                      }
+                    }}
                   />
                 ))}
               </div>

@@ -4,12 +4,23 @@ import { Form, Formik } from 'formik';
 import { PhoneInput, defaultCountries, parseCountry } from 'react-international-phone';
 import 'react-international-phone/style.css';
 import CustomButton from '../../../components/button/button';
+import { useDispatch } from 'react-redux';
+import { previousStep } from '../../../Redux/PersonalSignUpSlice';
 
 export const StepTwo = ({ next, initialValues }) => {
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  const handlePrevious = () => {
+    dispatch(previousStep());
+  };
 
   const handleSubmit = async (values) => {
+    localStorage.setItem('phoneNumber ', phone);
+    setLoading(true);
+    setMessage('');
     try {
       const payload = {
         phoneNumber: phone,
@@ -42,6 +53,8 @@ export const StepTwo = ({ next, initialValues }) => {
     } catch (error) {
       setMessage('An error occurred');
       console.error('An error occurred:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -140,12 +153,21 @@ export const StepTwo = ({ next, initialValues }) => {
             {message && (
               <div className="text-center text-[#db3a3a] flex justify-center mt-4">{message}</div>
             )}
-            <CustomButton
-              padding="15px"
-              type="submit"
-              children="Next"
-              className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[87%] w-[90%] mx-auto my-10 !mb-12 xl:my-12 xl:mb-20"
-            />
+            <div className=" flex gap-2">
+              <button
+                disabled={loading}
+                onClick={handlePrevious}
+                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-12">
+                back
+              </button>
+
+              <CustomButton
+                padding="15px"
+                type="submit"
+                children={loading ? 'Loading...' : 'Next'}
+                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[87%] w-[90%] mx-auto my-10 !mb-12 xl:my-12 xl:mb-20"
+              />
+            </div>
           </Form>
         )}
       </Formik>

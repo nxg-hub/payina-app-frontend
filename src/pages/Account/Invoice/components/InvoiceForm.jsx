@@ -27,6 +27,7 @@ export const InvoiceForm = ({ next, lineItems }) => {
   const [isSendingInvoice, setIsSendingInvoice] = useState(false);
   const [invoiceSent, setInvoiceSent] = useState(false);
   const [total, setTotal] = useState(0);
+  const [emptyInput, setEmptyInput] = useState(false);
   const clientss = useSelector((state) => state.clients.clients);
   const dispatch = useDispatch();
 
@@ -213,13 +214,13 @@ export const InvoiceForm = ({ next, lineItems }) => {
       values.invoice.quantity === '' ||
       values.invoice.amount === '' ||
       values.invoice.itemDescription === '' ||
-      values.invoice.invoiceValidity === ''
-      // values.invoice.lineItems[0].name === '' ||
-      // values.invoice.lineItems[0].quantity === '' ||
-      // values.invoice.lineItems[0].amount === '' ||
-      // values.invoice.lineItems[0].vat === '' ||
-      // values.invoice.lineItems[0].total === ''
+      values.invoice.invoiceValidity === '' ||
+      (!values.invoice.quantity && values.invoice.lineItems[0].quantity === '') ||
+      (!values.invoice.amount && values.invoice.lineItems[0].amount === '') ||
+      (!values.invoice.total && values.invoice.lineItems[0].total === '')
     ) {
+      setEmptyInput(true);
+      setTimeout(() => setEmptyInput(false), 10000);
       return;
     }
     setIsCreatingInvoice(true);
@@ -355,12 +356,10 @@ export const InvoiceForm = ({ next, lineItems }) => {
       values.invoice.quantity === '' ||
       values.invoice.amount === '' ||
       values.invoice.itemDescription === '' ||
-      values.invoice.invoiceValidity === ''
-      // values.invoice.lineItems[0].name === '' ||
-      // values.invoice.lineItems[0].quantity === '' ||
-      // values.invoice.lineItems[0].amount === '' ||
-      // values.invoice.lineItems[0].vat === '' ||
-      // values.invoice.lineItems[0].total === ''
+      values.invoice.invoiceValidity === '' ||
+      (!values.invoice.quantity && values.invoice.lineItems[0].quantity === '') ||
+      (!values.invoice.amount && values.invoice.lineItems[0].amount === '') ||
+      (!values.invoice.total && values.invoice.lineItems[0].total === '')
     ) {
       return;
     }
@@ -914,6 +913,11 @@ export const InvoiceForm = ({ next, lineItems }) => {
                       )}
                     </div>
                   </div>
+                  {emptyInput && (
+                    <div className="text-center mb-2 text-red-500">
+                      All input fields must be filled!
+                    </div>
+                  )}
                   <div className="flex justify-center">
                     <div className="pb-6">
                       <button
@@ -964,7 +968,6 @@ export const InvoiceForm = ({ next, lineItems }) => {
                         {showPreview ? 'Close Preview' : 'Preview'}
                       </button>
                     </div>
-
                     {showPreview && (
                       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                         <div className="w-full max-w-[664px] h-auto max-h-[90vh] overflow-y-auto p-4 bg-white rounded shadow-lg z-60">

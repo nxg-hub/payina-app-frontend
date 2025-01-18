@@ -83,7 +83,7 @@ const AccountCard = () => {
         {userDetails?.accountName}
         <span className="text-lightBlue">&nbsp;Dashboard</span>
       </div>
-      <div className="w-auto p-4 py-6 mt-6 h-fit xl:h-[134px] md:h-fit mx-auto text-start md:text-center bg-[#EDEDED] rounded-[10px] shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px]">
+      <div className="w-auto p-4 py-6 mt-6 h-fit xl:h-[160px] md:h-fit mx-auto text-start md:text-center bg-[#EDEDED]  rounded-[10px] shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px]">
         <span className="text-center text-lightBlue font-semibold text-base md:text-2xl mb-4">
           Account Details
         </span>
@@ -92,7 +92,7 @@ const AccountCard = () => {
             <div className="flex items-center">
               <span className="text-lightBlue text-sm md:text-base">
                 Account No: <span className="text-black">{userDetails?.accountNumber}</span>{' '}
-              </span>{' '}
+              </span>
               <PiCopySimple
                 onClick={handleCopyClick}
                 className={`ml-auto hover:cursor-pointer ${showCopy ? 'hidden' : 'block'}`}
@@ -116,6 +116,10 @@ const AccountCard = () => {
             <div className="text-sm md:text-base">
               <span className="text-lightBlue ">Name of Account Owner:</span>{' '}
               {userDetails?.firstName}
+            </div>
+            <div className="w-full !ml-0 text-sm md:text-base">
+              <span className="text-lightBlue ">Bank Name:</span>&nbsp;
+              <span className="capitalize ">{userDetails?.bankName}</span>
             </div>
             <div className="!ml-0 text-sm md:text-base">
               <span className="text-lightBlue ">Account Active:</span>

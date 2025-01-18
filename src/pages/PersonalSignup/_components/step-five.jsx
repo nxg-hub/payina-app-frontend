@@ -2,6 +2,8 @@ import { Form, Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import CustomButton from '../../../components/button/button';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { previousStep } from '../../../Redux/PersonalSignUpSlice';
 
 const StepFiveValidationSchema = Yup.object().shape({
   username: Yup.string().required('Username is required'),
@@ -15,6 +17,11 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
   const userEmail = localStorage.getItem('userEmail');
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  const handlePrevious = () => {
+    dispatch(previousStep());
+  };
 
   // Robust data extraction with fallbacks
   const extractBvnData = () => {
@@ -53,7 +60,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
       if (response.ok) {
         next(values);
       } else {
-        setApiError(data.message || 'Failed to save username. Please try again.');
+        setApiError(data.debugMessage || 'Failed to save username. Please try again.');
       }
     } catch (error) {
       setApiError('An error occurred. Please try again.');
@@ -93,7 +100,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 name="firstName"
                 onChange={handleChange}
                 value={values.firstName}
-                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none rounded-[5px] py-2 px-[10px]"
               />
               <ErrorMessage
                 name="firstName"
@@ -112,7 +119,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 name="lastName"
                 onChange={handleChange}
                 value={values.lastName}
-                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none rounded-[5px] py-2 px-[10px]"
               />
               <ErrorMessage
                 name="lastName"
@@ -131,7 +138,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 name="gender"
                 onChange={handleChange}
                 value={values.gender}
-                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]">
+                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none  rounded-[5px] py-2 px-[10px]">
                 <option value="">Select Gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -149,7 +156,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 name="dob"
                 onChange={handleChange}
                 value={values.dob}
-                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none  rounded-[5px] py-2 px-[10px]"
               />
               <ErrorMessage name="dob" component="div" className="text-[#db3a3a] mt-2 text-sm" />
             </div>
@@ -163,7 +170,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 id="username"
                 name="username"
                 placeholder="Enter Your Username"
-                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+                className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none  rounded-[5px] py-2 px-[10px]"
               />
               <ErrorMessage
                 name="username"
@@ -173,16 +180,23 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
             </div>
 
             {apiError && <div className="text-red-500 mb-4">{apiError}</div>}
-
-            <CustomButton
-              padding="15px"
-              type="submit"
-              children={loading ? 'Saving...' : 'Next'}
-              className={`hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6 ${
-                !(isValid && dirty) ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
-              disabled={!(isValid && dirty) || loading}
-            />
+            <div className=" flex gap-2">
+              <button
+                disabled={loading}
+                onClick={handlePrevious}
+                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6">
+                back
+              </button>
+              <CustomButton
+                padding="15px"
+                type="submit"
+                children={loading ? 'Saving...' : 'Next'}
+                className={`hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6 ${
+                  !(isValid && dirty) ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+                disabled={!(isValid && dirty) || loading}
+              />
+            </div>
           </Form>
         )}
       </Formik>
