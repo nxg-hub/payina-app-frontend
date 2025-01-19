@@ -42,53 +42,58 @@ const ForgotPassword = () => {
     resetForm();
   };
   return (
-    <div className="h-[100vh] bg-black  overflow-x-hidden ">
+    <div className="min-h-screen bg-black">
       <div className=" ">
-        <img className="m-auto mt-11" src={logo} alt="" />
+        <img className="m-auto pt-5" src={logo} alt="" />
       </div>
-      <h1 className="text-4xl text-center text-white font-bold mt-11">Forgot Password </h1>
 
-      <Formik
-        initialValues={{ email: '' }}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}>
-        {({ isSubmitting }) => (
-          <Form className="py-5 w-[80%] md:w-[60%] m-auto bg-primary border-2 border-[#a0a0a0] shadow-2xl rounded-xl mt-[100px] mb-[50px]">
-            <div className="w-[80%] md:w-[60%] m-auto">
-              <div className="py-11 relative">
-                <label className="font-bold block md:text-md text-center" htmlFor="email">
-                  Enter the email address associated to your account and we will send you an OTP to
-                  reset your password.
+      <div className="flex flex-col justify-center items-center bg-white shadow-md lg:px-8 lg:py-2 px-4 rounded-lg mt-8 mx-auto w-[300px] lg:w-[600px]">
+        <h1 className="text-4xl text-center text-lightBlue font-bold mt-11">Forgot Password </h1>
+        <span className="font-light mt-5 leading-5 text-sm xl:text-base">
+          Enter the email address associated to your account
+        </span>
+        <Formik
+          initialValues={{ email: '' }}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}>
+          {({ isSubmitting }) => (
+            <Form className="w-full justify-center flex items-center flex-col">
+              <div className="w-[80%] md:w-[60%] m-auto py-11">
+                <label
+                  className="font-bold block md:text-md text-base text-lightBlue"
+                  htmlFor="email">
+                  Email Address
                 </label>
                 <Field
                   className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                   type="text"
                   name="email"
+                  Placeholder="Enter youe email address"
                 />
                 <ErrorMessage className="text-red-500" name="email" component="div" />
                 {uploadStatus && (
-                  <p className={`mt-4 ${success ? 'text-green-500' : 'text-red-500'}`}>
+                  <p className={`mt-4 ${success ? 'text-lightBlue' : 'text-red-500'}`}>
                     {uploadStatus}
                   </p>
                 )}
               </div>
-            </div>
-            <div className="w-[80%] md:w-[60%] py-2 bg-secondary rounded-md m-auto mt-2 mb-4">
-              <button
-                className={`bg-secondary w-full text-white font-bold px-4 py-2 rounded-md transition ${
-                  loading ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-                type="submit"
-                disabled={isSubmitting}>
-                {loading ? 'Loading...' : 'Submit'}
-              </button>
-            </div>
-            <Link className="ml-24 font-bold underline text-blue-600" to="/login">
-              Back to login
-            </Link>
-          </Form>
-        )}
-      </Formik>
+              <div className="w-[80%] md:w-[60%] py-2 bg-yellow rounded-md m-auto mt-2 mb-4">
+                <button
+                  className={`bg-yellow w-full text-lightBlue text-xl font-bold px-4 py-2 rounded-md transition ${
+                    loading ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                  type="submit"
+                  disabled={isSubmitting}>
+                  {loading ? 'Loading...' : 'Submit'}
+                </button>
+              </div>
+              <Link className="font-bold underline text-lightBlue text-lg" to="/login">
+                Back to login
+              </Link>
+            </Form>
+          )}
+        </Formik>
+      </div>
     </div>
   );
 };
