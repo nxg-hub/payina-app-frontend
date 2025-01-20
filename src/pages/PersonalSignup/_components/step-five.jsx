@@ -5,28 +5,26 @@ import { useState } from 'react';
 
 const StepFiveValidationSchema = Yup.object().shape({
   username: Yup.string().required('Username is required'),
-  firstName: Yup.string().required('First Name is required'),
-  lastName: Yup.string().required('Last Name is required'),
-  gender: Yup.string().required('Gender is required'),
-  dob: Yup.string().required('Date of Birth is required'),
 });
 
-export const StepFive = ({ next, bvnData, email, initialValues }) => {
+export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
   const userEmail = localStorage.getItem('userEmail');
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
 
   // Robust data extraction with fallbacks
-  const extractBvnData = () => {
+  const extractData = () => {
+  
     return {
-      gender: bvnData?.gender || initialValues?.gender || '',
-      firstName: bvnData?.firstName || bvnData?.firstname || initialValues?.firstname || '',
-      lastName: bvnData?.lastName || bvnData?.lastname || initialValues?.lastname || '',
-      dob: bvnData?.dob || initialValues?.dob || '',
+      gender: bvnData?.gender || ninData?.gender || initialValues?.gender,
+      firstName:  ninData?.firstname || bvnData?.firstname || initialValues?.firstname,
+      lastName: bvnData?.lastname || ninData?.lastname || initialValues?.lastname,
+      dob: bvnData?.dob || ninData?.dob || initialValues?.dob,
     };
   };
 
   const handleSubmit = async (values) => {
+
     setLoading(true);
     setApiError('');
 
@@ -38,12 +36,12 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
         },
         body: JSON.stringify({
           payinaUserName: values.username,
-          gender: values.gender,
+          gender: values.gender || bvnData.gender || ninData.gender,
           email: userEmail,
-          firstName: values.firstName,
-          lastName: values.lastName,
-          dob: values.dob,
-          bvn: initialValues.identificationNumber || '',
+          firstName: values.firstName || bvnData.firstname || ninData.firstname,
+          lastName: values.lastName || bvnData.lastname || ninData.lastname,
+          dob: values.dob || bvnData.dob || ninData.dob,
+          bvn: initialValues.identificationNumber ,
           accountType: 'personal',
         }),
       });
@@ -64,7 +62,8 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
 
   localStorage.setItem('currentStep', 5);
 
-  const extractedData = extractBvnData();
+  const extractedData = extractData();
+
 
   return (
     <div className="p-2 xl:p-[74px] bg-primary">
@@ -92,7 +91,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 id="firstName"
                 name="firstName"
                 onChange={handleChange}
-                value={values.firstName}
+                value={bvnData.firstname || ninData.firstname || values.firstName}
                 className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
               />
               <ErrorMessage
@@ -111,7 +110,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 id="lastName"
                 name="lastName"
                 onChange={handleChange}
-                value={values.lastName}
+                value={bvnData.lastname || ninData.lastname || values.lastName}
                 className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
               />
               <ErrorMessage
@@ -130,7 +129,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 id="gender"
                 name="gender"
                 onChange={handleChange}
-                value={values.gender}
+                value={bvnData.gender || ninData.gender || values.gender}
                 className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]">
                 <option value="">Select Gender</option>
                 <option value="Male">Male</option>
@@ -148,7 +147,7 @@ export const StepFive = ({ next, bvnData, email, initialValues }) => {
                 id="dob"
                 name="dob"
                 onChange={handleChange}
-                value={values.dob}
+                value={bvnData.dob || ninData.dob || values.dob}
                 className="text-gray w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
               />
               <ErrorMessage name="dob" component="div" className="text-[#db3a3a] mt-2 text-sm" />

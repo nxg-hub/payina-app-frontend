@@ -8,8 +8,12 @@ import CustomButton from '../../../components/button/button';
 export const StepTwo = ({ next, initialValues }) => {
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+
 
   const handleSubmit = async (values) => {
+    setLoading(true);
+
     try {
       const payload = {
         phoneNumber: phone,
@@ -26,23 +30,24 @@ export const StepTwo = ({ next, initialValues }) => {
         },
         body: JSON.stringify(payload),
       });
+      const data = await response.json();
 
       if (response.ok && response.headers.get('Content-Type')?.includes('application/json')) {
-        const data = await response.json();
+        // const data = await response.json();
         setMessage('Registration successful');
         next({ ...initialValues, phone: phone });
       } else {
-        const errorMessage = await response.text(); // Capture the XML error message
-        console.error('Error message:', errorMessage);
-        const parsedMessage = parseXML(errorMessage); // Parse the XML error message
-        setMessage(
-          `Registration failed: ${parsedMessage || response.statusText || 'Unknown error'}`
-        );
+        data.debugMessage === 'Customer Already Exist'
+          ? setMessage(`${data.debugMessage}. Please Login To Continue Your Sign Up Process`)
+          : setMessage(data.debugMessage);
       }
     } catch (error) {
       setMessage('An error occurred');
       console.error('An error occurred:', error);
     }
+    finally {
+      setLoading(false);
+   }
   };
 
   const parseXML = (xml) => {
@@ -143,7 +148,8 @@ export const StepTwo = ({ next, initialValues }) => {
             <CustomButton
               padding="15px"
               type="submit"
-              children="Next"
+              children={loading ? 'Loading...' : 'Next'}
+
               className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[87%] w-[90%] mx-auto my-10 !mb-12 xl:my-12 xl:mb-20"
             />
           </Form>

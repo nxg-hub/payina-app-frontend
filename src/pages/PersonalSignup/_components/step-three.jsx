@@ -2,22 +2,36 @@ import { Field, Form, Formik } from 'formik';
 import { useState, useEffect } from 'react';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
+import axios from 'axios';
 
-export const StepThree = ({ next, data }) => {
+export const StepThree = ({ next, data, phone }) => {
   const [codeAlert, setCodeAlert] = useState('');
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [otpError, setOtpError] = useState('');
   const [canResendCode, setCanResendCode] = useState(false);
+  const [loading, setLoading] = useState('');
+  const [otpLoading, setOtpLoading] = useState(false);
+  const userEmail = localStorage.getItem('userEmail');
+  const [timeLeft, setTimeLeft] = useState(60);
 
+ 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    if (timeLeft === 0) {
       setCanResendCode(true);
-    }, 30000); // 30 seconds
+    }
+    // Only run if there is time left
+    if (timeLeft > 0) {
+      const timer = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - 1);
+      }, 1000); // Update every second
 
-    return () => clearTimeout(timer);
-  }, []);
+      // Cleanup interval on component unmount or when `timeLeft` changes
+      return () => clearInterval(timer);
+    }
+  }, [timeLeft]); // Run
 
   const handleSubmit = async (values) => {
+    setLoading(true);
     try {
       const response = await fetch(import.meta.env.VITE_VALIDATE_OTP_ENDPOINT, {
         method: 'POST',
@@ -28,26 +42,48 @@ export const StepThree = ({ next, data }) => {
       });
       const data = await response.json();
 
-      if (response.ok) {
+      if (response.ok && data.status !== "BAD_REQUEST" ) {
+        
         next(values);
+      } else if  (data.status === "BAD_REQUEST") {
+        setOtpError('Invalid verification code. Please try again');
       } else {
-        setOtpError(data.message || 'Invalid OTP');
-      }
+      setOtpError (data.message || 'invalid OTP');
+    }
     } catch (error) {
       setOtpError('An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
-
-  const handleCode = (e) => {
+  const handleCode = async (e) => {
     e.preventDefault();
-    setIsAlertVisible(true);
-    setCodeAlert('Code has been successfully sent');
-    setCanResendCode(false); // Reset the resend code state
+    const phone = data.phone.replace(/^\+234/, '0');
 
-    // Restart the timer for the resend code
+    setOtpLoading(true);
+    try {
+      const response = await axios.post(import.meta.env.VITE_SEND_TOKEN, {
+        phone: phone,
+        email: userEmail,
+      });
+      if (response.status === 200) {
+        setIsAlertVisible(true);
+        setCodeAlert('Code has been successfully sent');
+        setCanResendCode(false); // Reset the resend code state
+        setOtpLoading(false);
+        setTimeLeft(60);
+      }
+    } catch (err) {
+      setOtpLoading(`Error:Something went wrong`);
+      console.log(err);
+    } finally {
+      setOtpLoading(false);
+    }
+
+    
     const timer = setTimeout(() => {
       setCanResendCode(true);
-    }, 30000);
+    }, 60000);
 
     setTimeout(() => {
       setIsAlertVisible(false);
@@ -76,36 +112,47 @@ export const StepThree = ({ next, data }) => {
     '-' +
     data.phone?.slice(10);
 
-  console.log(phoneNumber);
+  localStorage.setItem('currentStep', 3);
 
   return (
-    <div>
-      <div className="hidden md:block fixed md:top-[-14.5rem] md:right-[1rem] xl:top-[-12.5rem] xl:right-[-39.5rem]">
-        <img src={images.Group} alt="" />
-      </div>
-      <div className="hidden md:block fixed top-[-3.5rem] right-[8.5rem] -z-10">
-        <img src={images.Vector3} alt="" />
-      </div>
-      <div className="hidden md:block fixed top-[12.5rem] right-[20rem] -z-10">
-        <img src={images.Vector2} alt="" />
-      </div>
-      <div className="hidden md:block fixed top-[14.6rem] right-[24rem] -z-10">
-        <img src={images.Vector1} alt="" />
-      </div>
-      <div className="hidden md:block fixed top-[35rem] right-[6.5rem] -z-10">
-        <img src={images.Vector2} alt="" />
-      </div>
-      <div className="hidden md:block fixed top-[42rem] right-[7.4rem] -z-10">
-        <img src={images.Vector5} alt="" />
-      </div>
-      <div className="hidden md:block fixed top-[40rem] right-[9.4rem] -z-10">
-        <img src={images.Vector4} alt="" />
-      </div>
-      <div className="hidden md:block fixed top-[31rem] right-[11.6rem] -z-10">
-        <img src={images.Vector6} alt="" />
-      </div>
-      <div className="bg-primary flex flex-col justify-center items-start py-4 xl:py-8 px-4 xl:px-20">
-        <div className="text-lightBlue text-start font-bold xl:text-[32px] w-full xl:w-[450px] leading-9 text-xl">
+    <div className="relative bg-black min-h-screen flex items-center justify-center">
+      <img
+        src={images.Vector3}
+        alt="Background Design"
+        className="absolute top-[-5rem] right-[32rem] w-24 h-24"
+      />
+      <img
+        src={images.Vector2}
+        alt="Background Design"
+        className="absolute bottom-[2rem] right-[41rem] w-20 h-20"
+      />
+      <img
+        src={images.Vector1}
+        alt="Background Design"
+        className="absolute bottom-[2rem] right-[43rem] w-20 h-20"
+      />
+      <img
+        src={images.Vector2}
+        alt="Background Design"
+        className="absolute bottom-0 right-[31rem] w-[100px] h-[100px]"
+      />
+      <img
+        src={images.Vector5}
+        alt="Background Design"
+        className="absolute bottom-[0.5rem] right-[31.5rem] w-3 h-3"
+      />
+      <img
+        src={images.Vector4}
+        alt="Background Design"
+        className="absolute bottom-[2rem] right-[32rem] w-15 h-15"
+      />
+      <img
+        src={images.Vector6}
+        alt="Background Design"
+        className="absolute bottom-[1rem] right-[32rem] w-20 h-20"
+      />
+      <div className="relative z-10 flex flex-col justify-center items-center bg-white shadow-md xl:p-8 px-4 rounded-lg mx-auto sm:w-[300px] md:w-[400px] lg:w-[600px]">
+        <div className="text-lightBlue text-start font-bold xl:text-[32px] text-wrap xl:w-[450px] leading-9 text-xl">
           Kindly Confirm Your Phone Number
         </div>
         <span className="font-light mt-5 leading-5 text-sm xl:text-base">
@@ -119,20 +166,20 @@ export const StepThree = ({ next, data }) => {
               <Field
                 name="phone"
                 type="tel"
-                value={formik.values.phone}
+                value={data.phone}
                 maxLength={17}
                 className="w-[60%] font-bold text-center mx-auto bg-transparent border-none h-[3.4rem] outline-none text-base xl:text-xl text-gray rounded-[5px] py-6 pb-0 px-[10px]"
               />
               <hr className="border-none bg-[#e80516] h-[1px] w-[180px] mt-2 xl:mx-auto" />
               {canResendCode ? (
                 <CustomButton
-                  children="Resend Code"
+                  children={otpLoading ? 'sending otp...' : 'Resend Code'}
                   onClick={(e) => handleCode(e)}
                   className="text-sm font-bold mt-10 !py-[1px] !px-[9px] !border-none !rounded-[10px] !bg-[#E80516]"
                 />
               ) : (
                 <span className="text-sm text-gray-500 mt-10">
-                  You can resend the code in 30 seconds.
+                  You can resend the code in <strong>{timeLeft}</strong> seconds.
                 </span>
               )}
               <span className="text-sm text-[#33b444] mt-4">{isAlertVisible && codeAlert}</span>
@@ -142,10 +189,13 @@ export const StepThree = ({ next, data }) => {
                   name="otp"
                   id="otp"
                   type="number"
-                  temp=""
                   maxLength={6}
-                  onInput="validity.valid ? this.temp = value : value = this.temp"
-                  onChange={formik.handleChange}
+                  pattern="\d{6}"
+                  onInput={(e) => {
+                    const value = e.target.value.slice(0, 6); // Limit to 6 digits
+                    e.target.value = value; // Enforce truncation
+                    formik.setFieldValue('otp', value); // Update Formik value
+                  }}
                   value={formik.values.otp}
                   autoFocus
                 />
@@ -175,10 +225,11 @@ export const StepThree = ({ next, data }) => {
                 Enter Code
               </span>
               <CustomButton
+                loading={loading}
                 padding="15px"
                 type="submit"
                 children="Next"
-                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[87%] w-[90%] mx-auto my-10 !mb-12 xl:my-12 xl:mb-20"
+                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
               />
             </Form>
           )}
