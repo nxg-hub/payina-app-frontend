@@ -26,7 +26,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
           gender: bvnData.gender || ninData.gender,
           email: email,
           firstName: bvnData.firstname || ninData.firstname,
-          lastName: bvnData.lastaame || ninData.lastname,
+          lastName: bvnData.lastname || ninData.lastname,
           dob: bvnData.dob || ninData.dob,
           bvn: initialValues.identificationNumber,
           accountType: 'corporate',

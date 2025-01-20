@@ -7,6 +7,8 @@ import { React, useState } from 'react';
 
 export const StepSixteen = ({ next, email }) => {
   const [loading, setLoading] = useState(false);
+  const [pinError, setPinError] = useState('');
+
 
   const userEmail = localStorage.getItem('userEmail');
   const handleSubmit = async (values) => {
@@ -32,23 +34,23 @@ export const StepSixteen = ({ next, email }) => {
           body: JSON.stringify(requestData),
         });
 
-        if (response.ok) {
-          const result = await response.json();
-          console.log('API Response:', result);
-          console.log('Pin set successfully:', result);
+        const result = await response.json();
+
+        if (response.ok && result.status !== "BAD_REQUEST" ) {
+          console.log('Pin set successfully:');
           next(result);
-        } else {
-          console.error('Failed to set pin:', response.statusText);
+        } else if  (result.status === "BAD_REQUEST") {
+          setPinError('Failed to set pin');
         }
       } catch (error) {
         console.error('Error setting pin:', error);
-      } finally {
+      }finally {
         setLoading(false);
     }
-
     } else {
-      console.log('Transaction Pins do not match.');
+      setPinError('An error occurred. Please try again.');
     } 
+
   };
 
   const validationSchema = Yup.object().shape({
@@ -215,6 +217,8 @@ export const StepSixteen = ({ next, email }) => {
                 </div>
                 <ErrorMessage name="confirmOtp" component="div" className="text-[#db3a3a]" />
               </div>
+              {pinError && <span className="text-red-500 mt-4">{pinError}</span>}
+
               <CustomButton
                 padding="15px"
                 type="submit"

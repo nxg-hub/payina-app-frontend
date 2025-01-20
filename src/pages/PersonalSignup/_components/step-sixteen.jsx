@@ -1,9 +1,19 @@
 import { Form, Formik, Field, ErrorMessage } from 'formik';
 import CustomButton from '../../../components/button/button';
 import * as Yup from 'yup';
+import { useState } from 'react';
+
+
+
 
 export const StepSixteen = ({ next, email }) => {
+  const [loading, setLoading] = useState('');
+  const [pinError, setPinError] = useState('');
+
+
   const handleSubmit = async (values) => {
+    setLoading(true);
+
     // Merge OTP and Confirm OTP values into strings
     const otpValue = values.otp.join('');
     const confirmOtpValue = values.confirmOtp.join('');
@@ -17,29 +27,34 @@ export const StepSixteen = ({ next, email }) => {
       };
 
       try {
-        const response = await fetch(import.meta.env.VITE_PERSONAL_TRANSACTION_PIN_ENDPOINT, {
+        const response = await fetch(import.meta.env.VITE_PERSONAL_ACCOUNT_SET_PIN, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(requestData),
         });
+        const result = await response.json();
 
-        if (response.ok) {
-          const result = await response.json();
-          console.log('Pin set successfully:', result);
+        if (response.ok && result.status !== "BAD_REQUEST" ) {
+          console.log('Pin set successfully:');
           next(result);
-        } else {
-          console.error('Failed to set pin:', response.statusText);
+        } else if  (result.status === "BAD_REQUEST") {
+          setPinError('Failed to set pin');
         }
       } catch (error) {
         console.error('Error setting pin:', error);
-      }
-    } else {
-      console.log('Transaction Pins do not match.');
+      }finally {
+        setLoading(false);
     }
+    } else {
+      setPinError('An error occurred. Please try again.');
+    } 
+
   };
 
+ 
+  
   const validationSchema = Yup.object().shape({
     otp: Yup.array()
       .of(Yup.string().matches(/^\d$/, 'Transaction Pin digit must be a single digit'))
@@ -98,10 +113,12 @@ export const StepSixteen = ({ next, email }) => {
               </div>
               <ErrorMessage name="confirmOtp" component="div" className="text-[#db3a3a]" />
             </div>
+            {pinError && <span className="text-red-500 mt-4">{pinError}</span>}
+
             <CustomButton
               padding="15px"
               type="submit"
-              children="Next"
+              children={loading ? 'Loading...' : 'Next'}
               className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6"
               disabled={isSubmitting}
             />
