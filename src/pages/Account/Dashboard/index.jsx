@@ -7,12 +7,15 @@ import TransactionHistory from './_components/transaction-history/transaction-hi
 import { useEffect, useState } from 'react';
 import { fetchDataSuccess } from '../../../Redux/UserSlice';
 import useLocalStorage from '../../../hooks/useLocalStorage';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
+  const authToken = useSelector((state) => state.businessSignUp.token);
   const [newAuthToken] = useLocalStorage('authToken', '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const navigate = useNavigate();
   //getting the success state from the store
   const success = useSelector((state) => state.user.success);
   useEffect(() => {
@@ -21,6 +24,7 @@ const Dashboard = () => {
         return; //endpoint wont be called if its already successful
       }
       if (!newAuthToken) {
+        navigate('/login');
         console.error('No auth token available');
         throw new Error('Authentication token is required');
       }

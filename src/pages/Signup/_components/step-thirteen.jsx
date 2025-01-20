@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { previousStep } from '../../../Redux/BusinessSignUpSlice';
 
 // Validation schema using Yup
 const validationSchema = Yup.object().shape({
@@ -19,35 +21,75 @@ const incomeRangeOptions = [
   '500,001 - 1,000,000',
   '1,000,001 - 10,000,000',
   '10,000,001 - 50,000,000',
+  '50,000,000 - Above',
 ];
 
 export const StepThirteen = ({ next, email, initialValues }) => {
   const userEmail = localStorage.getItem('userEmail');
+  const [loading, setLoading] = useState(false);
+  const sameAddress = useSelector((state) => state.businessSignUp.sameAddress);
+
+  const dispatch = useDispatch();
+
+  const handlePrevious = () => {
+    dispatch(previousStep());
+  };
+  //retrieving form data from local storage
+  const homeAddress = localStorage.getItem('HomeAddress');
+  const businessData = localStorage.getItem('businessData');
+  const businessAddress = localStorage.getItem('BusinessAddress');
+  const parsedHomeAdress = JSON.parse(homeAddress);
+  const parsedBusinessData = JSON.parse(businessData);
+  const parsedBusinessAddress = JSON.parse(businessAddress);
+
+  // console.log(loading);
   const handleSubmit = async (values) => {
     const customerId = await authenticateEmail(userEmail); // Ensure email is passed correctly
     // console.log('Authenticated User ID:', customerId);
 
     // Combine previous data with the current step's data
-    const requestData = {
-      houseNumber: initialValues.houseNumber,
-      street: initialValues.street,
-      state: initialValues.state,
-      lga: initialValues.lga,
-      businessHouseNumber: initialValues.businessHouseNumber,
-      businessStreetName: initialValues.businessStreetName,
-      businessState: initialValues.businessState,
-      businessLGA: initialValues.businessLGA,
-      businessName: initialValues.businessName,
-      tin_No: initialValues.tin_No,
-      businessRegNumber: initialValues.businessRegNumber,
-      businessCategory: initialValues.businessCategory,
-      businessType: initialValues.businessType,
-      businessDescription: values.businessDescription,
-      staffNumber: values.numberOfStaff,
-      annualIncome: values.annualIncomeRange,
-      customerId: values.customerId,
-    };
-
+    const requestData =
+      sameAddress === 'yes' //send this data if home and business adress are same
+        ? {
+            houseNumber: parsedHomeAdress.houseNumber,
+            street: parsedHomeAdress.street,
+            state: parsedHomeAdress.state,
+            lga: parsedHomeAdress.lga,
+            businessHouseNumber: parsedHomeAdress.houseNumber,
+            businessStreetName: parsedHomeAdress.street,
+            businessState: parsedHomeAdress.state,
+            businessLGA: parsedHomeAdress.lga,
+            businessName: parsedBusinessData.businessName,
+            tin_No: parsedBusinessData.tin_No,
+            businessRegNumber: parsedBusinessData.businessRegNumber,
+            businessCategory: parsedBusinessData.businessCategory,
+            businessType: parsedBusinessData.businessType,
+            businessDescription: values.businessDescription,
+            staffNumber: values.numberOfStaff,
+            annualIncome: values.annualIncomeRange,
+            customerId: values.customerId,
+          }
+        : //send this data if home and business address are different
+          {
+            houseNumber: parsedHomeAdress.houseNumber,
+            street: parsedHomeAdress.street,
+            state: parsedHomeAdress.state,
+            lga: parsedHomeAdress.lga,
+            businessHouseNumber: parsedBusinessAddress.businessHouseNumber,
+            businessStreetName: parsedBusinessAddress.businessStreetName,
+            businessState: parsedBusinessAddress.businessState,
+            businessLGA: parsedBusinessAddress.businessLGA,
+            businessName: parsedBusinessData.businessName,
+            tin_No: parsedBusinessData.tin_No,
+            businessRegNumber: parsedBusinessData.businessRegNumber,
+            businessCategory: parsedBusinessData.businessCategory,
+            businessType: parsedBusinessData.businessType,
+            businessDescription: values.businessDescription,
+            staffNumber: values.numberOfStaff,
+            annualIncome: values.annualIncomeRange,
+            customerId: values.customerId,
+          };
+    setLoading(true);
     try {
       const response = await fetch(
         `${import.meta.env.VITE_CREATE_PROFILE_ENDPOINT}?customerId=${encodeURIComponent(customerId)}`,
@@ -59,21 +101,25 @@ export const StepThirteen = ({ next, email, initialValues }) => {
           body: JSON.stringify(requestData),
         }
       );
-      console.log ('Uploaded Data:', requestData)
+      // console.log ('Uploaded Data:', requestData)
 
       if (response.ok) {
         const result = await response.json();
-        console.log('Profile created successfully:', result);
+        // console.log('Profile created successfully:', result);
         next(requestData);
+        setLoading(false);
       } else {
         console.error('Failed to create profile:', response.statusText);
       }
     } catch (error) {
       console.error('Error creating profile:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const authenticateEmail = async (email) => {
+    setLoading(true);
     try {
       const response = await fetch(
         `${import.meta.env.VITE_GET_USER_BY_EMAIL_ENDPOINT}?email=${encodeURIComponent(email)}`,
@@ -89,6 +135,7 @@ export const StepThirteen = ({ next, email, initialValues }) => {
 
       if (response.ok) {
         const data = await response.json();
+        setLoading(false);
         // console.log('Full Response:', data);
 
         // Extract the customerId from the response
@@ -103,6 +150,8 @@ export const StepThirteen = ({ next, email, initialValues }) => {
     } catch (error) {
       console.error('Error:', error);
       throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -143,7 +192,7 @@ export const StepThirteen = ({ next, email, initialValues }) => {
         alt="Background Design"
         className="absolute bottom-[10rem] right-[32rem] w-20 h-20"
       />
-      <div className="relative z-10 flex flex-col justify-center items-center bg-white shadow-md xl:p-8 px-4 rounded-lg mx-auto sm:w-[300px] md:w-[400px] lg:w-[500px]">
+      <div className="relative z-10 flex flex-col justify-center items-center bg-white shadow-md xl:p-8 px-4 rounded-lg mx-auto sm:w-[300px] md:w-[400px] lg:w-[600px]">
         <Formik
           initialValues={{
             businessDescription: '',
@@ -228,13 +277,20 @@ export const StepThirteen = ({ next, email, initialValues }) => {
                   />
                 </div>
               </div>
-
-              <CustomButton
-                padding="15px"
-                type="submit"
-                children="Next"
-                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
-              />
+              <div className="flex gap-2">
+                <button
+                  disabled={loading}
+                  onClick={handlePrevious}
+                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8">
+                  back
+                </button>
+                <CustomButton
+                  padding="15px"
+                  type="submit"
+                  children={loading ? 'Loading...' : 'Next'}
+                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
+                />
+              </div>
             </Form>
           )}
         </Formik>

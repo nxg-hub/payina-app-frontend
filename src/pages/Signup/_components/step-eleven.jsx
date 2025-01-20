@@ -4,11 +4,18 @@ import { images } from '../../../constants';
 import { BusinessAddressSchema } from '../schemas/schema';
 import { state_local } from '../../../services/state-local';
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { previousStep } from '../../../Redux/BusinessSignUpSlice';
 
 export const StepEleven = ({ next, initialValues, business_and_home, passedData }) => {
   const [businessState, setBusinessState] = useState('');
   const [loading, setLoading] = useState(false);
   const [localGovernment, setLocalGovernment] = useState([]);
+  const dispatch = useDispatch();
+
+  const handlePrevious = () => {
+    dispatch(previousStep());
+  };
 
   const handleSubmit = (business_address) => {
     setLoading(true);
@@ -18,6 +25,7 @@ export const StepEleven = ({ next, initialValues, business_and_home, passedData 
       businessState: business_address.businessState,
       businessLGA: business_address.businessLGA,
     };
+    localStorage.setItem('BusinessAddress', JSON.stringify(BusinessAddress));
     try {
       // console.log('Submitting business add.:', BusinessAddress);
 
@@ -27,34 +35,33 @@ export const StepEleven = ({ next, initialValues, business_and_home, passedData 
     }
   };
 
-  
-
-    useEffect(() => {
-      if (initialValues.state) {
-        setBusinessState(initialValues.state);
-      }
-    const currentLga = state_local
+  const sortedStates = state_local.sort((a, b) => a.state.localeCompare(b.state));
+  useEffect(() => {
+    setLocalGovernment([]);
+    if (initialValues.state) {
+      setBusinessState(initialValues.state);
+    }
+    const currentLga = sortedStates
       .filter((lga) => lga.state === businessState)
       .map((lga) => lga.lgas);
 
-
-  setLocalGovernment(currentLga[0]);
+    setLocalGovernment(currentLga[0]);
   }, [businessState, initialValues.state]);
 
   const getInitialValues = () => {
-    if (business_and_home === "yes") {      
+    if (business_and_home === 'yes') {
       return {
-        businessHouseNumber: passedData?.businessHouseNumber ||  initialValues.businessHouseNumber,
-        businessStreetName: passedData?.businessStreetName ||  initialValues.businessStreetName,
-        businessState: passedData?.businessState ||  initialValues.businessState ,
-        businessLGA: passedData?.businessLGA ||   initialValues.businessLGA ,
+        businessHouseNumber: passedData?.businessHouseNumber || initialValues.businessHouseNumber,
+        businessStreetName: passedData?.businessStreetName || initialValues.businessStreetName,
+        businessState: passedData?.businessState || initialValues.businessState,
+        businessLGA: passedData?.businessLGA || initialValues.businessLGA,
       };
     }
     return {
-      businessHouseNumber: "",
-      businessStreetName: "",
-      businessState: "",
-      businessLGA: "",
+      businessHouseNumber: '',
+      businessStreetName: '',
+      businessState: '',
+      businessLGA: '',
     };
   };
 
@@ -121,9 +128,8 @@ export const StepEleven = ({ next, initialValues, business_and_home, passedData 
       />
       <div className="relative z-10 flex flex-col justify-center items-center bg-white shadow-md xl:p-8 px-4 rounded-lg mx-auto sm:w-[300px] md:w-[400px] lg:w-[500px]">
         <Formik
-         
           initialValues={getInitialValues()}
-      enableReinitialize
+          enableReinitialize
           validationSchema={BusinessAddressSchema}
           onSubmit={handleSubmit}>
           {({ values, handleChange }) => (
@@ -185,7 +191,7 @@ export const StepEleven = ({ next, initialValues, business_and_home, passedData 
                     <option value="" disabled>
                       Select State
                     </option>
-                    {state_local.map(({ state }) => (
+                    {sortedStates.map(({ state }) => (
                       <option
                         key={state}
                         value={state}
@@ -216,13 +222,20 @@ export const StepEleven = ({ next, initialValues, business_and_home, passedData 
                   <ErrorMessage name="businessLGA" component="span" className="text-[#db3a3a]" />
                 </div>
               </div>
-              <CustomButton
-                padding="15px"
-                type="submit"
-                children={loading ? 'loading...' : 'Next'}
-                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
-                disabled={loading}
-              />
+              <div className="flex gap-2">
+                <button
+                  onClick={handlePrevious}
+                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8">
+                  back
+                </button>
+                <CustomButton
+                  padding="15px"
+                  type="submit"
+                  children={loading ? 'loading...' : 'Next'}
+                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
+                  disabled={loading}
+                />
+              </div>
             </Form>
           )}
         </Formik>

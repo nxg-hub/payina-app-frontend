@@ -4,16 +4,21 @@ import { Form, Formik } from 'formik';
 import { PhoneInput, defaultCountries, parseCountry } from 'react-international-phone';
 import 'react-international-phone/style.css';
 import CustomButton from '../../../components/button/button';
+import { useDispatch, useSelector } from 'react-redux';
+import { previousStep } from '../../../Redux/BusinessSignUpSlice';
 
 export const StepTwo = ({ next, initialValues }) => {
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
-
+  const handlePrevious = () => {
+    dispatch(previousStep());
+  };
   const handleSubmit = async (values) => {
-     setLoading(true);
-
+    setLoading(true);
+    setMessage('');
     try {
       const payload = {
         phoneNumber: phone,
@@ -30,26 +35,22 @@ export const StepTwo = ({ next, initialValues }) => {
         },
         body: JSON.stringify(payload),
       });
-
+      const data = await response.json();
+      // console.log(data);
       if (response.ok && response.headers.get('Content-Type')?.includes('application/json')) {
-        const data = await response.json();
         setMessage('Registration successful');
         next({ ...initialValues, phone: phone });
       } else {
-        const errorMessage = await response.text(); // Capture the XML error message
-        console.error('Error message:', errorMessage);
-        const parsedMessage = parseXML(errorMessage); // Parse the XML error message
-        setMessage(
-          'Customer already exist, please log in to continue your sign up process'
-        );
+        data.debugMessage === 'Customer Already Exist'
+          ? setMessage(`${data.debugMessage}. Please Login To Continue Your Sign Up Process`)
+          : setMessage(data.debugMessage);
       }
     } catch (error) {
       setMessage('An error occurred');
       console.error('An error occurred:', error);
+    } finally {
+      setLoading(false);
     }
-    finally {
-            setLoading(false);
-         }
   };
 
   const parseXML = (xml) => {
@@ -174,12 +175,20 @@ export const StepTwo = ({ next, initialValues }) => {
               {message && (
                 <div className="text-center text-[#db3a3a] flex justify-center mt-4">{message}</div>
               )}
-              <CustomButton
-                padding="15px"
-                type="submit"
-               children={loading ? 'Loading...' : 'Next'}
-className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
-              />
+              <div className=" flex gap-2">
+                <button
+                  disabled={loading}
+                  onClick={handlePrevious}
+                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8">
+                  back
+                </button>
+                <CustomButton
+                  padding="15px"
+                  type="submit"
+                  children={loading ? 'Loading...' : 'Next'}
+                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
+                />
+              </div>
             </Form>
           )}
         </Formik>

@@ -4,6 +4,8 @@ import { images } from '../../../constants';
 import { useState } from 'react';
 import { MdOutlineFileUpload } from 'react-icons/md';
 import { BusinessAddressVerification } from '../schemas/schema';
+import { useDispatch } from 'react-redux';
+import { previousStep } from '../../../Redux/BusinessSignUpSlice';
 
 const uploadDocument = async (documentFile, email) => {
   const userEmail = localStorage.getItem('userEmail');
@@ -20,7 +22,7 @@ const uploadDocument = async (documentFile, email) => {
 
     try {
       const jsonData = JSON.parse(data);
-      console.log('Document uploaded successfully:', jsonData);
+      // console.log('Document uploaded successfully:', jsonData);
       return jsonData;
     } catch (jsonError) {
       console.error('Failed to parse JSON:', jsonError);
@@ -31,8 +33,9 @@ const uploadDocument = async (documentFile, email) => {
     throw error;
   }
 };
-const uploadLogo = async (logoFile, email) => {
+const uploadLogo = async (logoFile) => {
   const userEmail = localStorage.getItem('userEmail');
+
   try {
     const formData = new FormData();
     formData.append('document', logoFile);
@@ -59,6 +62,11 @@ export const StepTwelve = ({ next, email }) => {
   const [businessLogoDetails, setBusinessLogoDetails] = useState('');
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState('');
+  const dispatch = useDispatch();
+
+  const handlePrevious = () => {
+    dispatch(previousStep());
+  };
 
   const handleSubmit = async (values) => {
     setLoading(true);
@@ -138,7 +146,7 @@ export const StepTwelve = ({ next, email }) => {
         alt="Background Design"
         className="absolute bottom-[10rem] right-[32rem] w-20 h-20"
       />
-     <div className="relative z-10 flex flex-col justify-center items-center bg-white shadow-md xl:p-8 px-4 rounded-lg mx-auto sm:w-[300px] md:w-[400px] lg:w-[600px]">
+      <div className="relative z-10 flex flex-col justify-center items-center bg-white shadow-md xl:p-8 px-4 rounded-lg mx-auto sm:w-[300px] md:w-[400px] lg:w-[600px]">
         <Formik
           initialValues={{ business_confirm_document: '', logo: null }}
           onSubmit={handleSubmit}
@@ -193,6 +201,7 @@ export const StepTwelve = ({ next, email }) => {
                     <input
                       id="logo"
                       name="logo"
+                      accept="image/png, image/jpeg, image/jpg, image/gif, image/webp"
                       type="file"
                       onChange={(e) => {
                         setBusinessLogoDetails(e.currentTarget.files[0]);
@@ -208,13 +217,21 @@ export const StepTwelve = ({ next, email }) => {
                     <span className="text-lightBlue">{businessLogoDetails?.name}</span>
                   </div>
                 </div>
-                <CustomButton
-                  padding="15px"
-                  type="submit"
-                  children={loading ? 'Uploading...' : 'Next'}
-                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
-                  disabled={loading}
-                />
+                <div className="flex gap-2">
+                  <button
+                    disabled={loading}
+                    onClick={handlePrevious}
+                    className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8">
+                    back
+                  </button>
+                  <CustomButton
+                    padding="15px"
+                    type="submit"
+                    children={loading ? 'Uploading...' : 'Next'}
+                    className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
+                    disabled={loading}
+                  />
+                </div>
               </div>
               {apiError && <div className="text-red-500 text-center">{apiError}</div>}
             </Form>

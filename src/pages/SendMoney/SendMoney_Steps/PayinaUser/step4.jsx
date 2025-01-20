@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import SuccessMessage from './step5';
-import DeclineMessage from './step6';
+import SuccessMessage from '../step5.jsx';
+import DeclineMessage from '../step6.jsx';
 import useLocalStorage from '../../../../hooks/useLocalStorage.js';
 import PropTypes from 'prop-types';
 import ReactLoading from 'react-loading';
@@ -31,7 +31,7 @@ const EnterPin = ({ data }) => {
         });
         console.log('User data fetched successfully:', userResponse.data);
         setUserEmail(userResponse.data.email);
-        setSenderName(`${userResponse.data.firstName} ${userResponse.data.lastName}`);
+        setSenderName(userResponse.data.accountName);
         setSourceId(userResponse.data.walletId);
       } catch (error) {
         console.error('Error fetching user data:', error.response?.data || error.message);
@@ -55,7 +55,7 @@ const EnterPin = ({ data }) => {
         });
         console.log('Destination data fetched successfully:', payinaResponse.data);
         setDestinationId(payinaResponse.data.walletId);
-        setReceiverName(`${payinaResponse.data.firstName} ${payinaResponse.data.lastName}`);
+        setReceiverName(payinaResponse.data.accountName);
         setReceiverEmailAddress(payinaResponse.data.email);
       } catch (error) {
         console.error('Error fetching destination ID:', error.response?.data || error.message);
@@ -156,7 +156,9 @@ const EnterPin = ({ data }) => {
             setShowSuccess(true);
           } else {
             console.log('Transaction Declined: Transaction could not be completed.', responseData);
-            setErrorMessage(responseData.response || 'Transaction failed.');
+            setErrorMessage(
+              responseData.debugMessage || responseData.response || 'Transaction failed.'
+            );
             setShowDecline(true);
           }
         } else {
@@ -194,7 +196,7 @@ const EnterPin = ({ data }) => {
   // if (showDecline) return <DeclineMessage />;
 
   return (
-    <div className="transaction-pin flex flex-col justify-center items-center bg-[#D2D2D285] rounded-md md:p-[2rem] sm:p-[2rem] xl:py-[3rem] xl:px-[5rem] mt-[5rem] gap-8 mx-auto">
+    <div className="transaction-pin flex flex-col justify-center items-center bg-[#D2D2D285] rounded-md p-[2rem] lg:py-[3rem] lg:px-[5rem] mt-[5rem] gap-8 mx-auto">
       {loading ? (
         <div className="flex flex-col items-center">
           <ReactLoading type="spin" color="#00678F" height={50} width={50} />

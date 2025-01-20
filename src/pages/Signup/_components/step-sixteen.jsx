@@ -3,14 +3,15 @@ import CustomButton from '../../../components/button/button';
 import * as Yup from 'yup';
 import { images } from '../../../constants';
 import { React, useState } from 'react';
-
+import useLocalStorage from '../../../hooks/useLocalStorage';
 
 export const StepSixteen = ({ next, email }) => {
+  const decodeJWT = (token) => JSON.parse(atob(token.split('.')[1]));
+  const [authToken, setAuthToken] = useLocalStorage('authToken', '');
   const [loading, setLoading] = useState(false);
   const [pinError, setPinError] = useState('');
-
-
   const userEmail = localStorage.getItem('userEmail');
+  const [userDetails, setuserDetails] = useLocalStorage('userDetails', '');
   const handleSubmit = async (values) => {
     // Merge OTP and Confirm OTP values into strings
     const otpValue = values.otp.join('');
@@ -34,10 +35,17 @@ export const StepSixteen = ({ next, email }) => {
           body: JSON.stringify(requestData),
         });
 
+
         const result = await response.json();
 
         if (response.ok && result.status !== "BAD_REQUEST" ) {
-          console.log('Pin set successfully:');
+        
+          const token = result.data;
+          setAuthToken(token);
+          localStorage.setItem('authToken', token);
+
+          const decodedString = decodeJWT(token);
+          setuserDetails(decodedString);
           next(result);
         } else if  (result.status === "BAD_REQUEST") {
           setPinError('Failed to set pin');
@@ -50,7 +58,7 @@ export const StepSixteen = ({ next, email }) => {
     } else {
       setPinError('An error occurred. Please try again.');
     } 
-
+    
   };
 
   const validationSchema = Yup.object().shape({

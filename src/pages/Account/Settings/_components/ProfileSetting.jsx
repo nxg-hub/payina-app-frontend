@@ -166,6 +166,7 @@ const ProfileSetting = () => {
                 id="passportUrl"
                 name="passportUrl"
                 type="file"
+                accept="image/*"
                 onChange={(event) => {
                   handleFileChange(event);
                 }}

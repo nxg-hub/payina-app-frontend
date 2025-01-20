@@ -2,7 +2,7 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import CustomButton from '../../../components/button/button';
 // import { images } from '../../../constants';
 import { SignUpSchema } from '../schemas/schema';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
 import { useState } from 'react';
 
@@ -110,6 +110,13 @@ export const StepOne = ({ next }) => {
             </Form>
           )}
         </Formik>
+
+        <h2 className="text-center m-auto mb-[10px]">
+          Already have an account?
+          <Link to="/login" className="underline text-blue-600 px-2">
+            Log in
+          </Link>
+        </h2>
       </div>
     </div>
   );

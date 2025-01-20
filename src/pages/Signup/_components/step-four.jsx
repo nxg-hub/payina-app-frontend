@@ -22,6 +22,12 @@ export const StepFour = ({ next }) => {
   const handleIDVerification = async (values) => {
     const idType = values.idType; // Example: 'NIN' or 'BVN'
     const identificationNumber = values.identificationNumber; // Example: NIN or BVN entered by the user
+    setApiError('');
+    if (identificationNumber.length !== 11) {
+      setApiError('Identification number must be 11 digits!');
+      return;
+    }
+
     setLoading(true);
 
     const endpoints = {
@@ -34,6 +40,7 @@ export const StepFour = ({ next }) => {
         verify: import.meta.env.VITE_BVN_VERIFY_NEW_PROFILE_ENDPOINT,
       },
     };
+    setApiError('');
     try {
       // Call Search Profile Endpoint
       const searchResponse = await fetch(endpoints[idType].search, {
@@ -46,6 +53,7 @@ export const StepFour = ({ next }) => {
       });
 
       const searchResult = await searchResponse.json();
+
       if (searchResponse.ok && searchResult.data) {
         const { firstname, lastname, gender, dob } = searchResult?.data?.identity || {};
         next({
@@ -67,6 +75,7 @@ export const StepFour = ({ next }) => {
         });
 
         const verifyResult = await verifyResponse.json();
+
         if (verifyResponse.ok && verifyResult.data) {
           const { firstname, lastname, gender, dob } = searchResult?.data?.identity || {};
           next({
@@ -78,11 +87,21 @@ export const StepFour = ({ next }) => {
           });
         } else {
           // Handle errors from Verify New Profile
-          setApiError(verifyResult.message || 'Verification failed. Please try again.');
+          // Extract the JSON part of the response
+          const response = searchResult.message;
+          const jsonPart = response.match(/{.*}/)[0]; // Match and extract the JSON string
+
+          // Parse the JSON part to a JavaScript object
+          const parsedResponse = JSON.parse(jsonPart);
+
+          // Access the message
+          const message = parsedResponse.message;
+          setApiError(message || 'Verification failed. Please try again.');
         }
       }
     } catch (error) {
       // Handle network or unexpected errors
+      console.log(error);
       setApiError('An error occurred. Please try again.');
     } finally {
       setLoading(false);

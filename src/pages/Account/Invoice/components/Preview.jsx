@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 const Preview = ({ className = '', updatedLineItems = [], corporateCustomerId = '', email }) => {
   const { invoiceNumber, dateOfIssue, due_date } =
     updatedLineItems[updatedLineItems.length - 1] || {};
+  // console.log(updatedLineItems);
   const totalAmount = updatedLineItems.reduce((sum, item) => sum + item.total, 0);
   const taxAmount = totalAmount * 0.075;
   const totalAmountWithTax = totalAmount + taxAmount;
@@ -39,8 +40,6 @@ const Preview = ({ className = '', updatedLineItems = [], corporateCustomerId = 
     }
   };
 
- 
-
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -57,18 +56,15 @@ const Preview = ({ className = '', updatedLineItems = [], corporateCustomerId = 
         const response = await fetch(`${import.meta.env.VITE_VIEW_PROFILE_ENDPOINT}${customerId}`);
 
         if (response.ok) {
+          const data = await response.json();
 
-          const data = await response.json ();
-           
           const parsedData = {
-            businessName: data.businessName || "",
-            businessHouseNumber: data.businessHouseNumber || "",
-            businessStreetName: data.businessStreetName || "",
-            businessState: data.businessState || "",
-            businessLGA: data.businessLGA || "",
-          }
-
-        
+            businessName: data.businessName || '',
+            businessHouseNumber: data.businessHouseNumber || '',
+            businessStreetName: data.businessStreetName || '',
+            businessState: data.businessState || '',
+            businessLGA: data.businessLGA || '',
+          };
 
           setProfileData(parsedData);
         } else {
@@ -121,35 +117,47 @@ const Preview = ({ className = '', updatedLineItems = [], corporateCustomerId = 
           </div>
         </div>
       </div>
-      
-<section className="mt-8 w-full text-left text-black">
-  <table className="w-full table-auto border-collapse border border-black">
-    <thead>
-      <tr>
-        <th className="text-left p-2 border border-black" style={{ width: '50%' }}>Items</th>
-        <th className="text-left p-2 border border-black" style={{ width: '30%' }}>Quantity</th>
-        <th className="text-left p-2 border border-black" style={{ width: '30%' }}>Amount</th>
-        <th className="text-left p-2 border border-black" style={{ width: '30%' }}>VAT</th>
-        <th className="text-left p-2 border border-black" style={{ width: '30%' }}>Total</th>
-      </tr>
-    </thead>
-    <tbody>
-    {updatedLineItems.map((item, index) => (
-  <tr key={index}>
-    <td className="p-2 border-r border-black">{item.itemName||item.name}</td>
-    <td className="p-2 border-r border-black">{item.quantity}</td>
-    <td className="p-2 border-r border-black">{item.amount}</td>
-    <td className="p-2 border-r border-black">0.075 </td>
-    <td className="p-2">{item.total * 1.075}</td>
-  </tr>
-))}
-          <tr className="font-bold border border-black">
-          <td colSpan="4" className="p-2 border-black">Total Amount:</td>
-          <td className="p-2">{totalAmountWithTax}</td>
-          </tr>
-                </tbody>
-  </table>
-</section>
+
+      <section className="mt-8 w-full text-left text-black">
+        <table className="w-full table-auto border-collapse border border-black">
+          <thead>
+            <tr>
+              <th className="text-left p-2 border border-black" style={{ width: '50%' }}>
+                Items
+              </th>
+              <th className="text-left p-2 border border-black" style={{ width: '30%' }}>
+                Quantity
+              </th>
+              <th className="text-left p-2 border border-black" style={{ width: '30%' }}>
+                Amount
+              </th>
+              <th className="text-left p-2 border border-black" style={{ width: '30%' }}>
+                VAT
+              </th>
+              <th className="text-left p-2 border border-black" style={{ width: '30%' }}>
+                Total
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {updatedLineItems.map((item, index) => (
+              <tr key={index}>
+                <td className="p-2 border-r border-black">{item.itemName || item.name}</td>
+                <td className="p-2 border-r border-black">{item.quantity}</td>
+                <td className="p-2 border-r border-black">{item.amount}</td>
+                <td className="p-2 border-r border-black">0.075 </td>
+                <td className="p-2">{item.total * 1.075}</td>
+              </tr>
+            ))}
+            <tr className="font-bold border border-black">
+              <td colSpan="4" className="p-2 border-black">
+                Total Amount:
+              </td>
+              <td className="p-2">{totalAmountWithTax}</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
     </div>
   );
 };

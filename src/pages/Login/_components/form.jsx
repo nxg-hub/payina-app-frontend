@@ -5,8 +5,10 @@ import { images } from '../../../constants';
 import { useState } from 'react';
 import { useAuth } from '../../../useAuth';
 import useLocalStorage from '../../../hooks/useLocalStorage';
-// import { useNavigate } from 'react-router-dom';
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
+// import { useDispatch } from 'react-redux';
+// import { setToken } from '../../../Redux/BusinessSignUpSlice';
+import { Link } from 'react-router-dom';
 
 const parseXML = (xml) => {
   const parser = new DOMParser();
@@ -22,7 +24,7 @@ const LoginForm = () => {
   const [authToken, setAuthToken] = useLocalStorage('authToken', '');
   const [userDetails, setuserDetails] = useLocalStorage('userDetails', '');
   const [showPassword, setShowPassword] = useState(false);
-  // const navigate = useNavigate();
+  // const dispatch = useDispatch();
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -34,7 +36,7 @@ const LoginForm = () => {
       email: values.email,
       password: values.password,
     };
-
+    setErrorMessage('');
     try {
       const response = await fetch(import.meta.env.VITE_LOGIN_USER_ENDPOINT, {
         method: 'POST',
@@ -44,12 +46,14 @@ const LoginForm = () => {
         body: JSON.stringify(requestData),
       });
 
+      const result = await response.json();
+
       if (response.ok) {
-        const result = await response.json();
         const token = result?.data;
 
         if (token) {
           setAuthToken(token);
+          // dispatch(setToken(token));
           const decodedString = decodeJWT(token);
           setuserDetails(decodedString);
           localStorage.setItem('authToken', token);
@@ -59,8 +63,8 @@ const LoginForm = () => {
           setErrorMessage('Login failed: Invalid token structure');
         }
       } else {
-        const errorText = await response.text();
-        const message = parseXML(errorText);
+        const message = result.message;
+
         setErrorMessage(`Failed to log in: ${message}`);
       }
     } catch (error) {
@@ -118,6 +122,12 @@ const LoginForm = () => {
                     <BsEyeSlash onClick={handleShowPassword} className="absolute top-10 right-1" />
                   )}
                 </div>
+                <div>
+                  <Link to="/forgot-password">
+                    <a className="text-lightBlue underline font-semibold pt-11">Forgot password?</a>
+                  </Link>
+                </div>
+
                 {errorMessage && <div className="text-[#db3a3a]">{errorMessage}</div>}
                 <CustomButton
                   padding="15px"
@@ -127,6 +137,12 @@ const LoginForm = () => {
                   {isLoading ? 'Logging in...' : 'Log in'}
                 </CustomButton>
               </div>
+              <p className="text-center">
+                Don't have an account?
+                <Link to="/account/onboarding" className="px-2">
+                  <a className="text-blue-600 underline">Sign Up</a>
+                </Link>
+              </p>
             </Form>
           )}
         </Formik>
