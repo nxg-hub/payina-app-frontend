@@ -163,7 +163,7 @@ const AirtimeReview = () => {
         throw new Error('Selected plan or plan price is missing');
       }
 
-      const amountInKobo = Math.round(selectedPlan.planPrice * 100);
+      const amountInKobo = Math.round(selectedPlan.planPrice);
 
       // Call the fund wallet API
       const fundWalletResponse = await apiService.fundWallet({

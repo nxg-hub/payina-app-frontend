@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Navbar, Sidebar } from '../_components';
 import { useForm } from '../../../context/formContext';
@@ -37,18 +37,6 @@ const UserData = () => {
     loading: plansLoading,
   } = useDataPlans(formValues.selectedNetwork);
 
-  const { currentPlan, packageSlug } = useMemo(() => {
-    if (!Array.isArray(plans) || plans.length === 0) {
-      return { currentPlan: null, packageSlug: '' };
-    }
-
-    const firstPlan = plans[0];
-    return {
-      currentPlan: firstPlan,
-      packageSlug: firstPlan.slug || '',
-    };
-  }, [plans]);
-
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -81,10 +69,10 @@ const UserData = () => {
   }, [authToken]);
 
   useEffect(() => {
-    if (packageSlug) {
-      updateFormValues({ packageSlug });
+    if (selectedPlan?.slug) {
+      updateFormValues({ packageSlug: selectedPlan.slug });
     }
-  }, [packageSlug]);
+  }, [selectedPlan]);
 
   const handlePlanSelect = async (event) => {
     const plan = plans.find((p) => p.slug === event.target.value);
@@ -117,7 +105,7 @@ const UserData = () => {
     if (!formValues.phoneNumber) newErrors.phoneNumber = 'Phone number is required';
     if (!formValues.selectedNetwork) newErrors.selectedNetwork = 'Network selection is required';
     if (!selectedPlan) newErrors.selectedPlan = 'Please select a data plan';
-    if (!packageSlug) newErrors.packageSlug = 'Network plan not available';
+    if (!selectedPlan?.slug) newErrors.packageSlug = 'Network plan not available';
     if (!userDetails.sub) newErrors.email = 'Email is required';
 
     if (Object.keys(newErrors).length > 0) {
@@ -139,10 +127,6 @@ const UserData = () => {
     setModalTitle('Transaction Successful');
     setModalMessage('Successfully processed the vend request');
     setShowModal(true);
-
-    // setTimeout(() => {
-    //   window.location.reload();
-    // }, 2000);
   };
 
   const handleError = (err) => {
@@ -200,12 +184,6 @@ const UserData = () => {
               <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="space-y-4">
-                    {/*<NetworkSelection*/}
-                    {/*  selectedNetwork={formValues.selectedNetwork}*/}
-                    {/*  onNetworkChange={(network) => updateFormValues({ selectedNetwork: network })}*/}
-                    {/*  error={errors.selectedNetwork}*/}
-                    {/*/>*/}
-
                     <NetworkSelection
                       selectedNetwork={formValues.selectedNetwork}
                       onNetworkChange={(network) => updateFormValues({ selectedNetwork: network })}
@@ -263,17 +241,16 @@ const UserData = () => {
                   </div>
 
                   <VendInitiator
-                    selectedPlan={currentPlan}
+                    selectedPlan={selectedPlan}
                     formValues={{
                       ...formValues,
                       email: userDetails.sub,
-                      packageSlug,
                       phoneNumber: formValues.phoneNumber,
                       selectedNetwork: formValues.selectedNetwork,
                     }}
                     amount={selectedPlan?.amount}
                     phoneNumber={formValues.phoneNumber}
-                    packageSlug={packageSlug}
+                    packageSlug={selectedPlan?.slug}
                     onVendInitiated={handleVendInitiated}
                     onError={handleError}
                     isProcessing={isProcessingVend}

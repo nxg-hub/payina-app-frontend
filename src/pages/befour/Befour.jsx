@@ -216,7 +216,7 @@ const Befour = () => {
       }
 
       const amountWithCharges = Math.round(Number(amount) + 100);
-      const amountInKobo = Math.round(amountWithCharges * 100);
+      const amountInKobo = Math.round(amountWithCharges);
 
       const initializePaymentResponse = await apiService.initializePayment(
         selectedBiller.id,

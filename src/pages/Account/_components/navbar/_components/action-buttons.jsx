@@ -12,36 +12,36 @@ const ActionButtons = () => {
   const [messages, setMessages] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const notificationRef = useRef(null);
-
-  useEffect(() => {
-    console.log('Initializing WebSocket connection...');
-
-    const handleNewNotification = (data) => {
-      console.log('Notification received from backend:', data); // Log notification from backend
-      setNotificationCount((prevCount) => prevCount + 1); // Increment the notification count
-      setMessages((prevMessages) => [...prevMessages, data]); // Add new notification to the list
-    };
-
-    const closeWebSocket = connectWebSocket((data) => {
-      console.log('WebSocket message received:', data); // Log the raw message
-      handleNewNotification(data); // Pass the message to the notification handler
-    });
-
-    const handleClickOutside = (event) => {
-      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
-        console.log('Clicked outside notification modal. Closing modal.');
-        setIsModalOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      console.log('Cleaning up WebSocket connection and event listeners...');
-      closeWebSocket();
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+  //
+  // useEffect(() => {
+  //   console.log('Initializing WebSocket connection...');
+  //
+  //   const handleNewNotification = (data) => {
+  //     console.log('Notification received from backend:', data); // Log notification from backend
+  //     setNotificationCount((prevCount) => prevCount + 1); // Increment the notification count
+  //     setMessages((prevMessages) => [...prevMessages, data]); // Add new notification to the list
+  //   };
+  //
+  //   const closeWebSocket = connectWebSocket((data) => {
+  //     console.log('WebSocket message received:', data); // Log the raw message
+  //     handleNewNotification(data); // Pass the message to the notification handler
+  //   });
+  //
+  //   const handleClickOutside = (event) => {
+  //     if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+  //       console.log('Clicked outside notification modal. Closing modal.');
+  //       setIsModalOpen(false);
+  //     }
+  //   };
+  //
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //
+  //   return () => {
+  //     console.log('Cleaning up WebSocket connection and event listeners...');
+  //     closeWebSocket();
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //   };
+  // }, []);
 
   const handleNotificationClick = () => {
     console.log('Notification button clicked. Current modal state:', isModalOpen);

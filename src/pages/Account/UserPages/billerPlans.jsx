@@ -14,11 +14,14 @@ import VendInitiatorBills from '../../../utilities/VendInitiatorBills.jsx';
 const BillerPlans = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { email, selectedBettingService, phoneNumber } = location.state?.formValues || {};
+  const { email, selectedBettingService,
+    // phoneNumber
+  } = location.state?.formValues || {};
 
   const [billerOptions, setBillerOptions] = useState([]);
   const [selectedBiller, setSelectedBiller] = useState(null);
   const [amount, setAmount] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [customerReference, setCustomerReference] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -374,6 +377,19 @@ const BillerPlans = () => {
                         // readOnly={selectedPlan !== null}
                       />
                     </div>
+                    {/*phone*/}
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+                      <input
+                        id="amount"
+                        type="text"
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
+                        className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter phone number"
+                        // readOnly={selectedPlan !== null}
+                      />
+                    </div>
 
                     {/* Verification Status */}
                     {verificationResult && (
@@ -414,20 +430,21 @@ const BillerPlans = () => {
                       </div>
                     )}
 
-                    <WalletBalanceChecker
-                      ref={walletCheckerRef}
-                      amount={amount}
-                      onInsufficientFunds={(balance, requiredAmount) => {
-                        setModalStatus('error');
-                        setModalTitle('Insufficient Funds');
-                        setModalMessage('Wallet balance too low. Fund your wallet to proceed.');
-                        setModalDetails(
-                          `Wallet Balance: ₦${balance.toFixed(2)}, Required Amount: ₦${requiredAmount}`
-                        );
-                        setShowModal(true);
-                      }}
-                      onSufficientFunds={() => {}}
-                    />
+                    {/*<WalletBalanceChecker*/}
+                    {/*  ref={walletCheckerRef}*/}
+                    {/*  amount={amount}*/}
+                    {/*  onInsufficientFunds={(balance, requiredAmount) => {*/}
+                    {/*    setModalStatus('error');*/}
+                    {/*    setModalTitle('Insufficient Funds');*/}
+                    {/*    setModalMessage('Wallet balance too low. Fund your wallet to proceed.');*/}
+                    {/*    setModalDetails(*/}
+                    {/*      `Wallet Balance: ₦${balance.toFixed(2)}, Required Amount: ₦${requiredAmount}`*/}
+                    {/*    );*/}
+                    {/*    setShowModal(true);*/}
+                    {/*  }}*/}
+                    {/*  onSufficientFunds={() => {*/}
+                    {/*  }}*/}
+                    {/*/>*/}
                   </div>
 
                   <VendInitiatorBills
@@ -438,7 +455,7 @@ const BillerPlans = () => {
                       packageSlug: selectedPlanSlug,
                       phoneNumber,
                       selectedBiller,
-                      customerId: customerReference, // Set accountNumber in formValues to use customerReference
+                      customerId: customerReference // Set accountNumber in formValues to use customerReference
                     }}
                     amount={amount}
                     packageSlug={selectedPlanSlug}
