@@ -10,43 +10,26 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
   const [newAuthToken] = useLocalStorage('authToken', '');
   const [userData, setUserData] = useState(null);
   const [walletData, setWalletData] = useState(null);
-  const [paymentReference, setPaymentReference] = useState(null);
-  const [paymentCompleted, setPaymentCompleted] = useState(false);
 
   const API_KEY = import.meta.env.VITE_API_KEY;
 
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = import.meta.env.VITE_SCRIPT;
-    script.async = true;
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
-  useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        const userResponse = await fetch(import.meta.env.VITE_GET_USER, {
-          method: 'GET',
+        // Fetch user data
+        const userResponse = await axios.get(import.meta.env.VITE_GET_USER, {
           headers: {
-            accept: '*/*',
+            Accept: '*/*',
             apiKey: API_KEY,
             Authorization: `Bearer ${newAuthToken}`,
             'Content-Type': 'application/json',
           },
         });
 
-        if (!userResponse.ok) {
-          throw new Error('Failed to fetch user data');
-        }
+        setUserData(userResponse.data);
 
-        const userDataResponse = await userResponse.json();
-        setUserData(userDataResponse);
-
-        const walletResponse = await fetch(import.meta.env.VITE_GET_WALLET_ENDPOINT, {
+        // Fetch wallet data
+        const walletResponse = await axios.get(import.meta.env.VITE_GET_WALLET_ENDPOINT, {
           headers: {
             Authorization: `Bearer ${newAuthToken}`,
             'Content-Type': 'application/json',
@@ -54,12 +37,7 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
           },
         });
 
-        if (!walletResponse.ok) {
-          throw new Error('Failed to fetch wallet balance');
-        }
-
-        const walletDataResponse = await walletResponse.json();
-        setWalletData(walletDataResponse);
+        setWalletData(walletResponse.data);
       } catch (error) {
         console.error('Error fetching initial data:', error);
         onError(error);
@@ -67,78 +45,14 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
     };
 
     fetchInitialData();
-  }, []);
-
-  const handlePaymentCompletion = async (reference, initializeData) => {
-    if (!paymentCompleted) {
-      setStatusMessage('Payment completed successfully');
-      setPaymentCompleted(true);
-      onFundingInitiated(reference, { status: 'success' });
-      setIsProcessing(false);
-
-      navigate(-1);
-    }
-  };
-
-  const handlePaystackPayment = (initializeData) => {
-    if (!window.PaystackPop) {
-      console.error('Paystack script not loaded');
-      setStatusMessage('Payment system not available');
-      setIsProcessing(false);
-      return;
-    }
-
-    setPaymentReference(initializeData.reference);
-    setPaymentCompleted(false);
-
-    const config = {
-      key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
-      email: userData?.email || formValues.email,
-      amount: Number(amount) * 100,
-      ref: initializeData.reference,
-      access_code: initializeData.access_code,
-      onClose: () => {
-        if (!paymentCompleted) {
-          axios
-            .get(import.meta.env.VITE_VERIFY_PAYMENT, {
-              headers: {
-                Authorization: `Bearer ${newAuthToken}`,
-                'Content-Type': 'application/json',
-                apiKey: API_KEY,
-              },
-            })
-            .then((response) => {
-              if (response.data.status === 'success' && response.data.data.status === 'success') {
-                handlePaymentCompletion(initializeData.reference, initializeData);
-              } else {
-                setStatusMessage('Payment was not completed');
-                setIsProcessing(false);
-              }
-            })
-            .catch((error) => {
-              console.error('Error verifying payment:', error);
-              setStatusMessage('Error verifying payment status');
-              setIsProcessing(false);
-            });
-        }
-      },
-      callback: (response) => {
-        if (response.status === 'success') {
-          handlePaymentCompletion(response.reference, initializeData);
-        }
-      },
-    };
-
-    const handler = window.PaystackPop.setup(config);
-    handler.openIframe();
-  };
+  }, [API_KEY, newAuthToken, onError]);
 
   const handleProceedToFund = async () => {
     setIsProcessing(true);
     setStatusMessage('Initializing payment...');
 
     try {
-      const initializePaymentResponse = await axios.post(
+      const response = await axios.post(
         import.meta.env.VITE_FUND_WALLET_API,
         {
           email: userData?.email || formValues.email,
@@ -155,18 +69,36 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
         }
       );
 
-      if (initializePaymentResponse.data.status === true && initializePaymentResponse.data.data) {
-        handlePaystackPayment(initializePaymentResponse.data.data);
+      if (response.data.success && response.data.checkoutLink) {
+        setStatusMessage('Redirecting to payment...');
+        onFundingInitiated(response.data.orderReference, { status: 'success' });
+
+        // Automatically redirect to the payment checkout page
+        window.location.href = response.data.checkoutLink;
       } else {
-        throw new Error(initializePaymentResponse.data.message || 'Payment initialization failed');
+        throw new Error(response.data.message || 'Payment initialization failed');
       }
-    } catch (err) {
-      console.error('Error in payment initialization:', err);
+    } catch (error) {
+      console.error('Error in payment initialization:', error);
       setStatusMessage('Payment initialization failed');
-      onError(err);
+      onError(error);
+      // Redirect back to the previous page on failure
+      setTimeout(() => {
+        navigate(-1);
+      }, 3000);
+    } finally {
       setIsProcessing(false);
     }
   };
+
+  useEffect(() => {
+    if (statusMessage.includes('Redirecting to payment...')) {
+      // Redirect back to the previous page after a short delay if payment succeeds
+      setTimeout(() => {
+        navigate(-1);
+      }, 3000);
+    }
+  }, [statusMessage, navigate]);
 
   return (
     <div className="flex flex-col space-y-4">
@@ -174,7 +106,8 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
       <button
         onClick={handleProceedToFund}
         disabled={isProcessing}
-        className="w-full bg-lightBlue text-white py-2 px-4 rounded disabled:opacity-50">
+        className="w-full bg-lightBlue text-white py-2 px-4 rounded disabled:opacity-50"
+      >
         {isProcessing ? 'Processing...' : 'Proceed to Fund'}
       </button>
     </div>

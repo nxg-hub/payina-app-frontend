@@ -170,7 +170,7 @@ const Planb = () => {
         throw new Error('Selected plan or plan price is missing');
       }
 
-      const amountInKobo = Math.round(selectedPlan.planPrice * 100);
+      const amountInKobo = Math.round(selectedPlan.planPrice);
 
       const initializePaymentResponse = await apiService.initializePayment(
         selectedPlan.id,

@@ -44,10 +44,10 @@ const VendInitiator = ({
       }
 
       const walletData = await response.json();
-
-      if (walletData.statusCode !== 'OK' || !walletData.data) {
-        throw new Error('Wallet not found, upgrade your account now');
-      }
+      //
+      // if (walletData.statusCode !== 'OK' || !walletData.data) {
+      //   throw new Error('Wallet not found, upgrade your account now');
+      // }
 
       const {
         businessId,
@@ -124,7 +124,7 @@ const VendInitiator = ({
       }
 
       const vendData = {
-        customerId: userData?.customerId || '',
+        customerId: phoneNumber || '',
         packageSlug: packageSlug,
         channel: 'web',
         amount: amount,
@@ -147,11 +147,22 @@ const VendInitiator = ({
       });
 
       if (vendValueResponse.data.status === 'success') {
+        const responseData = vendValueResponse.data.responseData || {};
+        let customerMessage = responseData.customerMessage || '';
+
+        // Remove "C'Gate" from the customer message
+        customerMessage = customerMessage.replace(" C'Gate", '');
+
         onVendInitiated(vendValueResponse.data);
-        setStatusMessage('Transaction completed successfully');
+        setStatusMessage(customerMessage || 'Transaction completed successfully');
       } else {
-        const errorMessage = vendValueResponse.data.debugMessage || 'Vend value failed';
-        throw new Error(errorMessage);
+        const responseData = vendValueResponse.data.responseData || {};
+        const errorNarration =
+          responseData.narration || responseData.errorNarration || 'Unknown error occurred';
+        const debugMessage =
+          vendValueResponse.data.debugMessage || `Vend value failed: ${errorNarration}`;
+
+        throw new Error(debugMessage);
       }
     } catch (err) {
       console.error('Error in vend process:', err);
@@ -179,8 +190,8 @@ const VendInitiator = ({
             statusMessage.includes('failed') ||
             statusMessage.includes('error') ||
             statusMessage.includes('insufficient')
-              ? 'text-red-600'
-              : 'text-gray-600'
+              ? 'text-green-600'
+              : 'text-red-600'
           }`}>
           {statusMessage}
         </div>

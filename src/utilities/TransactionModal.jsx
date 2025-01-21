@@ -34,43 +34,45 @@ const TransactionModal = ({
     register: {
       label: 'Register',
       onClick: onRegister,
-      className: buttonStyles.register || 'bg-blue-500 hover:bg-gray-600',
+      className: buttonStyles.register || 'bg-[#006181] hover:opacity-90',
     },
     login: {
       label: 'Login',
       onClick: onLogin,
-      className: buttonStyles.login || 'bg-blue-500 hover:bg-gray-600',
+      className: buttonStyles.login || 'bg-[#006181] hover:opacity-90',
     },
     cancel: {
       label: 'Cancel',
       onClick: onClose,
-      className: buttonStyles.cancel || 'bg-blue-500 hover:bg-gray-600',
+      className: buttonStyles.cancel || 'bg-[#006181] hover:opacity-90',
     },
     back: {
       label: 'Back',
-      onClick: () => navigate(-1),
-      className: buttonStyles.back || 'bg-blue-500 hover:bg-gray-600',
+      onClick: onClose,
+      // onClick: () => navigate(-1),
+      className: buttonStyles.back || 'bg-[#006181] hover:opacity-90',
     },
     fundWallet: {
       label: 'Fund Wallet',
       onClick: onFundWallet,
-      className: buttonStyles.fundWallet || 'bg-blue-500 hover:bg-gray-600',
+      className: buttonStyles.fundWallet || 'bg-[#006181] hover:opacity-90',
     },
     pullReceipt: {
       label: 'Pull Receipt',
       onClick: () => onPullReceipt(reference),
-      className: buttonStyles.pullReceipt || 'bg-blue-500 hover:bg-gray-600',
+      className: buttonStyles.pullReceipt || 'bg-[#006181] hover:opacity-90',
     },
   };
 
   const renderButtons = () => {
     const allButtons = [
       ...buttons,
+      ...(message.includes('Insufficient Funds') ? ['fundWallet'] : []), // Automatically add Fund Wallet button if the message contains "Insufficient Funds"
       ...customButtons.map((btn) => ({
         key: btn.key,
         label: btn.label,
         onClick: btn.onClick,
-        className: btn.className || 'bg-blue-500 hover:bg-gray-600',
+        className: btn.className || 'bg-[#006181] hover:opacity-90',
       })),
     ];
 
