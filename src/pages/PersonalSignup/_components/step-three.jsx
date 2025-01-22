@@ -4,7 +4,7 @@ import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
 import axios from 'axios';
 
-export const StepThree = ({ next, data, phone }) => {
+export const StepThree = ({ next, data }) => {
   const [codeAlert, setCodeAlert] = useState('');
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [otpError, setOtpError] = useState('');
@@ -13,8 +13,8 @@ export const StepThree = ({ next, data, phone }) => {
   const [otpLoading, setOtpLoading] = useState(false);
   const userEmail = localStorage.getItem('userEmail');
   const [timeLeft, setTimeLeft] = useState(60);
+  const phone = localStorage.getItem('phoneNumber ');
 
- 
   useEffect(() => {
     if (timeLeft === 0) {
       setCanResendCode(true);
@@ -42,14 +42,13 @@ export const StepThree = ({ next, data, phone }) => {
       });
       const data = await response.json();
 
-      if (response.ok && data.status !== "BAD_REQUEST" ) {
-        
+      if (response.ok && data.status !== 'BAD_REQUEST') {
         next(values);
-      } else if  (data.status === "BAD_REQUEST") {
+      } else if (data.status === 'BAD_REQUEST') {
         setOtpError('Invalid verification code. Please try again');
       } else {
-      setOtpError (data.message || 'invalid OTP');
-    }
+        setOtpError(data.message || 'invalid OTP');
+      }
     } catch (error) {
       setOtpError('An error occurred. Please try again.');
     } finally {
@@ -80,7 +79,6 @@ export const StepThree = ({ next, data, phone }) => {
       setOtpLoading(false);
     }
 
-    
     const timer = setTimeout(() => {
       setCanResendCode(true);
     }, 60000);
@@ -104,15 +102,13 @@ export const StepThree = ({ next, data, phone }) => {
     }`;
 
   let phoneNumber =
-    data.phone?.slice(0, 4) +
+    phone?.slice(0, 4) +
     '-' +
-    data.phone?.slice(4, 7) +
+    phone?.slice(4, 7) +
     '-' +
-    data.phone?.slice(7, 10) +
+    phone?.slice(7, 10) +
     '-' +
-    data.phone?.slice(10);
-
-  localStorage.setItem('currentStep', 3);
+    phone?.slice(10);
 
   return (
     <div className="relative bg-black min-h-screen flex items-center justify-center">
@@ -224,12 +220,13 @@ export const StepThree = ({ next, data, phone }) => {
               <span className="font-bold text-center mt-10 leading-4 text-sm tracking-[0.28px] text-[#006181]">
                 Enter Code
               </span>
+
               <CustomButton
                 loading={loading}
                 padding="15px"
                 type="submit"
-                children="Next"
-                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
+                children={loading ? 'loading' : 'Next'}
+                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[87%] w-[90%] mx-auto my-10 !mb-12 xl:my-12 xl:mb-20"
               />
             </Form>
           )}

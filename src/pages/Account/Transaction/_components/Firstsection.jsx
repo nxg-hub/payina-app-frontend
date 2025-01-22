@@ -5,10 +5,12 @@ import Credits from './Credits';
 import Debits from './Debits';
 import redrectangle from './../../../../assets/images/redrectangle.png';
 import greenrectangle from './../../../../assets/images/greenrectangle.png';
+import { useSelector } from 'react-redux';
 
 const Firstsection = () => {
   const [showCredit, setShowCredit] = useState(true);
   const [showDebit, setShowDebit] = useState(false);
+  const currentBalance = useSelector((state) => state.wallet.wallet);
 
   const toggleCredit = () => {
     setShowCredit(true);
@@ -38,14 +40,13 @@ const Firstsection = () => {
                 <p>Current Balance</p>
 
                 <div className=" ">
-                  {' '}
-                  <span className="text-[9px] sm:text-[12px] md:text-[18px] font-bold ">
-                    NGN{' '}
-                  </span>{' '}
+                  <span className="text-[9px] sm:text-[12px] md:text-[18px] font-bold ">NGN</span>
                   <span className="text-[14px] sm:text-[18px]  md:text-[32px] font-bold">
                     {walletBalance}
-                  </span>{' '}
-                  <span className="text-[9px] sm:text-[12px]  md:text-[18px] font-bold">00</span>
+                  </span>
+                  <span className="text-[9px] sm:text-[12px]  md:text-[18px] font-bold">
+                    {currentBalance.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+                  </span>
                 </div>
               </div>
             </div>
@@ -236,8 +237,6 @@ export default Firstsection;
 // };
 //
 // export default Firstsection;
-
-
 
 // TransactionHistory.jsx
 // import React, { useState, useEffect } from 'react';

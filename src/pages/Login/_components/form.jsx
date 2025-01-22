@@ -139,7 +139,7 @@ const LoginForm = () => {
               </div>
               <p className="text-center">
                 Don't have an account?
-                <Link to="/account/onboarding" className="px-2">
+                <Link to="/onboarding/email_verification" className="px-2">
                   <a className="text-blue-600 underline">Sign Up</a>
                 </Link>
               </p>

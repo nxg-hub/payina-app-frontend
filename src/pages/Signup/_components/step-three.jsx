@@ -4,7 +4,7 @@ import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
 import axios from 'axios';
 
-export const StepThree = ({ next, data, phone }) => {
+export const StepThree = ({ next, data }) => {
   const [codeAlert, setCodeAlert] = useState('');
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [otpError, setOtpError] = useState('');
@@ -38,6 +38,7 @@ export const StepThree = ({ next, data, phone }) => {
 
   const handleSubmit = async (values) => {
     setLoading(true);
+    setOtpError('');
     try {
       const response = await fetch(import.meta.env.VITE_VALIDATE_OTP_ENDPOINT, {
         method: 'POST',
@@ -48,14 +49,19 @@ export const StepThree = ({ next, data, phone }) => {
       });
       const data = await response.json();
 
-      if (response.ok) {
+      if (data.status === 'ACCEPTED') {
         next(values);
         setLoading(false);
+      } else if (data.status === 'BAD_REQUEST') {
+        setOtpError(data.debugMessage || 'Invalid OTP');
+        return;
       } else {
-        setOtpError(data.message || 'Invalid OTP');
+        setOtpError(data.debugMessage || 'Invalid OTP');
       }
     } catch (error) {
       setOtpError('An error occurred. Please try again.');
+      setLoading(false);
+    } finally {
       setLoading(false);
     }
   };
@@ -109,15 +115,15 @@ export const StepThree = ({ next, data, phone }) => {
     input[type=number] {
       -moz-appearance: textfield;
     }`;
-
+  const phone = localStorage.getItem('phoneNumber ');
   let phoneNumber =
-    data.phone?.slice(0, 4) +
+    phone?.slice(0, 4) +
     '-' +
-    data.phone?.slice(4, 7) +
+    phone?.slice(4, 7) +
     '-' +
-    data.phone?.slice(7, 10) +
+    phone?.slice(7, 10) +
     '-' +
-    data.phone?.slice(10);
+    phone?.slice(10);
 
   localStorage.setItem('currentStep', 3);
 
@@ -173,7 +179,7 @@ export const StepThree = ({ next, data, phone }) => {
               <Field
                 name="phone"
                 type="tel"
-                value={data.phone}
+                value={formik.values.phone}
                 maxLength={17}
                 className="w-[60%] font-bold text-center mx-auto bg-transparent border-none h-[3.4rem] outline-none text-base xl:text-xl text-gray rounded-[5px] py-6 pb-0 px-[10px]"
               />

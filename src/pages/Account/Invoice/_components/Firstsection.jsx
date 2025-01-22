@@ -1,76 +1,94 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState, useContext,} from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import plus from './../../../../assets/images/invoiceplus.png';
 import { Link } from 'react-router-dom';
 import { CorporateCustomerContext } from '../contexts/CorporateCustomerContext';
-import { fetchClientSuccess } from '../../../../Redux/GetClientsSlice';
+import { fetchClientSuccess, setFilterLoader } from '../../../../Redux/GetClientsSlice';
 
-const Firstsection = ({ onClientSelect, setFilteredInvoices, setShowFiltered, clientId, handleSetRecentInvoices }) => {
+const Firstsection = ({
+  onClientSelect,
+  setFilteredInvoices,
+  setShowFiltered,
+  clientId,
+  handleSetRecentInvoices,
+}) => {
   // const [clients, setClients] = useState([]);
   const { corporateCustomerId } = useContext(CorporateCustomerContext);
-  const [beginDate, setBeginDate] = useState("");
-  const [endDate, setEndDate] = useState ("");
-  const [status, setStatus] = useState ("");
-  const [selectedClientId, setSelectedClientId] = useState(""); 
-  const [loadingClients, setLoadingClients] = useState(false); 
-  const [loadingInvoices, setLoadingInvoices] = useState(false); 
+  const [beginDate, setBeginDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [status, setStatus] = useState('');
+  const [selectedClientId, setSelectedClientId] = useState('');
+  const [loadingClients, setLoadingClients] = useState(false);
+  const [loadingInvoices, setLoadingInvoices] = useState(false);
+  const [select, setSelect] = useState(false);
   const dispatch = useDispatch();
   const success = useSelector((state) => state.clients.success);
   const clientss = useSelector((state) => state.clients.clients);
+  const [search, setSearch] = useState('');
+
+  const handleSearchChange = (e) => setSearch(e.target.value);
+  // Filter clients based on the search term
+  const filteredClients = clientss?.filter(
+    (client) =>
+      client.firstName.toLowerCase().includes(search.toLowerCase()) ||
+      client.lastName.toLowerCase().includes(search.toLowerCase())
+  );
 
   const handleClientClick = (clientId, clientName) => {
-    setSelectedClientId(clientId); 
+    setSelectedClientId(clientId);
     onClientSelect(clientId, clientName);
-  }
+    setSelect(true);
+  };
   useEffect(() => {
     const handleGetClients = async () => {
-      if (success){
+      if (success) {
         return;
       }
       setLoadingClients(true);
 
       try {
-        const response = await fetch(`${import.meta.env.VITE_GET_CLIENTS_ENDPOINT}${corporateCustomerId}/get-clients`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await fetch(
+          `${import.meta.env.VITE_GET_CLIENTS_ENDPOINT}${corporateCustomerId}/get-clients`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
 
         if (response.ok) {
           const responseData = await response.json();
 
-          const clientsData = responseData.map(client => ({
+          const clientsData = responseData.map((client) => ({
             id: client.id,
             firstName: client.firstName,
             lastName: client.lastName,
             email: client.email,
-          companyName: client.companyName,
-          phone: client.phone,
+            companyName: client.companyName,
+            phone: client.phone,
           }));
 
           // setClients(clientsData);
-          dispatch(fetchClientSuccess(clientsData))
+          dispatch(fetchClientSuccess(clientsData));
         } else {
           console.error('Failed to fetch clients');
         }
       } catch (error) {
         console.error('Error fetching clients:', error);
-      }finally {
-        setLoadingClients(false);  
+      } finally {
+        setLoadingClients(false);
       }
     };
 
     handleGetClients();
   }, [corporateCustomerId]);
 
- 
-    
   useEffect(() => {
     const fetchFilteredInvoices = async () => {
       if (!selectedClientId) {
-        console.error("Client ID is not selected");
+        console.error('Client ID is not selected');
         useEffect(() => {
           if (selectedClientId && (beginDate || endDate || status)) {
             fetchFilteredInvoices();
@@ -79,38 +97,38 @@ const Firstsection = ({ onClientSelect, setFilteredInvoices, setShowFiltered, cl
 
         return;
       }
-      const formattedBeginDate = beginDate ? `${beginDate}T00:00:00` : "";
-      const formattedEndDate = endDate ? `${endDate}T23:59:59` : "";
+      const formattedBeginDate = beginDate ? `${beginDate}T00:00:00` : '';
+      const formattedEndDate = endDate ? `${endDate}T23:59:59` : '';
       setLoadingInvoices(true);
-
+      dispatch(setFilterLoader(true));
       try {
         const response = await fetch(
           `${import.meta.env.VITE_FILTER_INVOICES_ENDPOINT}?corporateCustomerClientId=${selectedClientId}&startDateStr=${formattedBeginDate}&endDateStr=${formattedEndDate}&status=${status}`,
           {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
           }
         );
 
         if (!response.ok) {
-          throw new Error("Failed to fetch invoices");
+          throw new Error('Failed to fetch invoices');
         }
 
         const data = await response.json();
         setFilteredInvoices(data);
         setShowFiltered(true);
+        dispatch(setFilterLoader(false));
         // console.log("Filtered Invoices:", data);
       } catch (error) {
-        console.error("Error filtering invoices:", error);
+        console.error('Error filtering invoices:', error);
       } finally {
         setLoadingInvoices(false);
+        dispatch(setFilterLoader(false));
       }
     };
 
     fetchFilteredInvoices();
-  }, [selectedClientId, beginDate, endDate, status]); 
-
-
+  }, [selectedClientId, beginDate, endDate, status]);
 
   return (
     <>
@@ -135,13 +153,13 @@ const Firstsection = ({ onClientSelect, setFilteredInvoices, setShowFiltered, cl
               <div className="">
                 <p className="pb-2 text-[10px] sm:text-[13px] md:text-base font-bold">Begin Date</p>
                 <input
-                   type="date"
-                   id="beginDate"
-                   name="beginDate"
-                   className="text-[9px] md:text-base w-[90%] md:w-full bg-[#82B5C6] h-[30px] sm:text-[13px] md:h-[48px] p-2 rounded-md"
-                   value={beginDate}
-                   onChange={(e) => setBeginDate(e.target.value)}
-                 />
+                  type="date"
+                  id="beginDate"
+                  name="beginDate"
+                  className="text-[9px] md:text-base w-[90%] md:w-full bg-[#82B5C6] h-[30px] sm:text-[13px] md:h-[48px] p-2 rounded-md"
+                  value={beginDate}
+                  onChange={(e) => setBeginDate(e.target.value)}
+                />
               </div>
               <div className=" ">
                 <p className="pb-2 text-[10px] sm:text-[13px] md:text-base  font-bold">End Date</p>
@@ -161,7 +179,6 @@ const Firstsection = ({ onClientSelect, setFilteredInvoices, setShowFiltered, cl
                   name="status"
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
-
                   className=" h-[30px] md:h-[48px] rounded-md p-2 w-full md:w-full text-[9px] sm:text-[13px] md:text-base bg-[#BADD56]
 ">
                   <option value="">Select </option>
@@ -170,38 +187,57 @@ const Firstsection = ({ onClientSelect, setFilteredInvoices, setShowFiltered, cl
                 </select>
               </div>
               <div className="">
-  <p className="pb-2 text-[10px] sm:text-[13px] md:text-base font-bold">Clients</p>
-  <select
-    onChange={(e) => {
-      const selectedOption = e.target.options[e.target.selectedIndex];
-      const clientId = selectedOption.value;
-      const clientName = selectedOption.text;
-      handleClientClick(clientId, clientName);
-    }}
-    className="h-[30px] md:h-[48px] p-2 text-[9px] sm:text-[13px] md:text-base rounded-md w-[100%] md:w-full bg-[#A3F5FB]"
-    disabled={loadingClients}  
-  >
-    {loadingClients ? (
-      <option value="" disabled>
-        Loading clients...
-      </option>
-    ) : (
-      <>
-        <option value="">Select Client</option>
-        {clientss && clientss.length > 0 ? (
-          clientss.map((client) => (
-            <option key={client.id} value={client.id}>
-              {client.firstName} {client.lastName}
-            </option>
-          ))
-        ) : (
-          <option value="" disabled>
-            No clients available
-          </option>
-        )}
-      </>
-    )}
-   </select>
+                <p className="pb-2 text-[10px] sm:text-[13px] md:text-base font-bold">Clients</p>
+                <div
+                  // onClick={(e) => {
+                  //   const selectedOption = e.target.options[e.target.selectedIndex];
+                  //   const clientId = selectedOption.value;
+                  //   const clientName = selectedOption.text;
+                  //   handleClientClick(clientId, clientName);
+                  // }}
+                  className="p-2 text-[9px] sm:text-[13px] md:text-base rounded-md w-[100%] md:w-full  bg-[#A3F5FB]"
+                  disabled={loadingClients}>
+                  <input
+                    type="text"
+                    id="search"
+                    value={search}
+                    onChange={handleSearchChange}
+                    placeholder="Search..."
+                    className="w-full static border px-6 border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                  <div className="h-[150px] overflow-y-scroll ">
+                    {loadingClients ? (
+                      <option value="" disabled>
+                        Loading clients...
+                      </option>
+                    ) : (
+                      <>
+                        <option value="">Select Client</option>
+
+                        {clientss && clientss.length > 0 ? (
+                          filteredClients.map((client) => (
+                            <option
+                              onClick={() => {
+                                handleClientClick(
+                                  client.id,
+                                  `${client.firstName} ${client.lastName}`
+                                );
+                              }}
+                              className={`${selectedClientId === client.id ? 'bg-slate-300' : ' cursor-pointer'}`}
+                              key={client.id}
+                              value={client.id}>
+                              {client.firstName} {client.lastName}
+                            </option>
+                          ))
+                        ) : (
+                          <option value="" disabled>
+                            No clients available
+                          </option>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

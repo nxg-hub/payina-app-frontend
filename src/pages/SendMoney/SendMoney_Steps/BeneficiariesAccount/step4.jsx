@@ -15,9 +15,11 @@ const EnterPin = ({ data }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [newAuthToken] = useLocalStorage('authToken', '');
   const [loading, setLoading] = useState(false);
+  const [userLoader, setUserLoading] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
+      setUserLoading(true);
       try {
         const userResponse = await axios.get(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
           headers: {
@@ -25,11 +27,14 @@ const EnterPin = ({ data }) => {
             Authorization: `Bearer ${newAuthToken}`,
           },
         });
-        console.log('User data fetched successfully:', userResponse.data);
+        // console.log('User data fetched successfully:', userResponse.data);
+        setUserLoading(false);
         setUserEmail(userResponse.data.email);
         setWalletId(userResponse.data.walletId);
       } catch (error) {
         console.error('Error fetching user data:', error.response?.data || error.message);
+      } finally {
+        setUserLoading(false);
       }
     };
     fetchUserData();
@@ -78,10 +83,10 @@ const EnterPin = ({ data }) => {
         }
       );
 
-      console.log('Full PIN Validation Response:', pinResponse);
+      // console.log('Full PIN Validation Response:', pinResponse);
 
       if (pinResponse.data === 'Transaction PIN is valid.') {
-        console.log('PIN validated successfully. Starting another bank transfer...');
+        // console.log('PIN validated successfully. Starting another bank transfer...');
 
         const transactionPayload = {
           amount: data.amount,
@@ -91,8 +96,10 @@ const EnterPin = ({ data }) => {
           customerEmail: userEmail,
           walletId: walletId,
           description: data.purpose,
+          currency: data.currency,
+          trxPin: pinString,
         };
-        console.log('Transaction payload:', transactionPayload);
+        // console.log('Transaction payload:', transactionPayload);
 
         const transactionResponse = await axios.post(
           import.meta.env.VITE_API_OTHER_BANK_SEND_MONEY_ENDPOINT,
@@ -106,7 +113,7 @@ const EnterPin = ({ data }) => {
           }
         );
 
-        console.log('Transaction Response Data:', transactionResponse.data);
+        // console.log('Transaction Response Data:', transactionResponse.data);
 
         const isSuccess =
           transactionResponse.data?.httpStatusCode === 'OK' &&
@@ -150,6 +157,11 @@ const EnterPin = ({ data }) => {
         <div className="flex flex-col items-center">
           <ReactLoading type="spin" color="#00678F" height={50} width={50} />
           <span className="mt-4 text-lightBlue">Transaction processing...</span>
+        </div>
+      ) : userLoader ? (
+        <div className="flex flex-col items-center">
+          <ReactLoading type="spin" color="#00678F" height={50} width={50} />
+          {/* <span className="mt-4 text-ligthBlue">Transaction processing...</span> */}
         </div>
       ) : (
         <>

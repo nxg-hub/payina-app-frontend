@@ -23,6 +23,7 @@ export const StepEight = ({ next }) => {
 
     try {
       next(HomeAddress, 11);
+      setLocalGovernment([]);
     } catch (error) {
       console.error('Error submitting add. data:', error);
     }

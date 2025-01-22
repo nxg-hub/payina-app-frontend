@@ -10,6 +10,7 @@ import inventoryReducer from './InventorySlice';
 import inventoryByIdReducer from './InventoryByIdSlice';
 import clientsReducer from './GetClientsSlice';
 import forgotPasswordReducer from './ForgotPasswordSlice';
+import walletReducer from './WalletSlice';
 
 // Configuration for redux-persist
 const persistConfig = {
@@ -22,6 +23,7 @@ const persistConfig = {
     'coporateCustomerProfile',
     'clients',
     'forgotPassword',
+    'wallet',
     // 'inventory'
   ], // Add reducers you want to persist here
 };
@@ -36,6 +38,7 @@ const rootReducer = combineReducers({
   inventoryById: inventoryByIdReducer,
   clients: clientsReducer,
   forgotPassword: forgotPasswordReducer,
+  wallet: walletReducer,
 });
 
 // Create persisted reducer

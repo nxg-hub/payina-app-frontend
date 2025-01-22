@@ -238,6 +238,7 @@ import { AiOutlineAppstore } from 'react-icons/ai';
 import { resetState, resetToken } from '../../../../Redux/BusinessSignUpSlice.jsx';
 import { clearState } from '../../../../Redux/ForgotPasswordSlice.jsx';
 import { reSetClientsDetails } from '../../../../Redux/GetClientsSlice.jsx';
+import { reSetWalletDetails } from '../../../../Redux/WalletSlice.jsx';
 
 export const Sidebar = () => {
   const location = useLocation();
@@ -293,6 +294,7 @@ export const Sidebar = () => {
     dispatch(resetState());
     dispatch(clearState());
     dispatch(reSetClientsDetails());
+    dispatch(reSetWalletDetails());
     localStorage.clear();
     navigate('/login');
   };
