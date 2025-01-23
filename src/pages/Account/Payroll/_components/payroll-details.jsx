@@ -1,10 +1,15 @@
-import React from 'react';
+import React , { useState  } from 'react';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import { LuPlus } from 'react-icons/lu';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { PayrollSchema } from '../../schemas/schemas';
 
 const PayrollDetails = ({ onSave }) => {
+  const [showMessage, setShowMessage] = useState(false); // State for showing the message
+
+  
+
+
   return (
     <div className="flex flex-col justify-center items-start w-auto xl:ml-80 xl:pt-28 md:pt-10 mx-auto h-full">
       <span className="text-xl md:text-3xl font-bold px-6 py-2 md:py-0">Payroll</span>
@@ -26,8 +31,11 @@ const PayrollDetails = ({ onSave }) => {
             onSubmit={(values, actions) => {
               console.log('Form Submitted:', values);
               onSave(values);
+              setShowMessage(true); // Show the message on submit
+              setTimeout(() => setShowMessage(false), 5000); // Hide the message after 3 seconds
               actions.setSubmitting(false);
             }}>
+              
             {({ values, setFieldValue, resetForm }) => (
               <Form>
                 <div className="flex flex-col  w-full py-4 space-y-4">
@@ -149,14 +157,20 @@ const PayrollDetails = ({ onSave }) => {
                     type="button"
                     className="flex gap-2 center rounded-[5px] text-xs md:text-base py-2 border border-lightBlue text-lightBlue w-[300px]"
                     onClick={() => resetForm()}>
-                    <LuPlus size={20} color="#006181" />
-                    Add role
+                    {/* <LuPlus size={20} color="#006181" /> */}
+                    Clear form
                   </button>
                   <button
                     type="submit"
                     className="rounded-[5px] text-xs md:text-base  py-2 border border-lightBlue bg-lightBlue w-[300px] text-primary">
                     Save
                   </button>
+                  {showMessage && (
+                      <div className="item-added-box border border-blue-100 bg-blue-100 rounded-lg p-4 mt-4 text-blue-700 max-w-md mx-auto shadow-md">
+                        <p className="mt-2 text-blue-500 font-bold">Payroll details saved successfully!</p>
+                      </div>
+                    )}
+                  
                 </div>
               </Form>
             )}
