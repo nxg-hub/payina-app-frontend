@@ -59,6 +59,7 @@ const AccountCard = () => {
           setAccountDetails({
             accountNumber: result.accountNumber || '',
             accountName: result.accountName || '',
+            bankName: result.bankName || '',
             ownerName: result.customerUserName || '',
             accountStatus: result.accountStatus === 'true' ? 'active' : 'inactive',
           });
@@ -82,12 +83,12 @@ const AccountCard = () => {
   // if (error) return <p>{error}</p>;
 
   return (
-    <div className="px-4 py-4 mx-auto w-auto ml-0 xl:ml-[19rem] xl:pt-28 clear-none xl:clear-right">
+    <div className="px-4 py-10 mx-auto w-auto ml-0 xl:ml-[19rem] xl:pt-28 clear-none xl:clear-right">
       <div className="block capitalize text-center md:text-[24px] xl:text-[32px] text-[20px] font-semibold">
         {userDetails?.accountName}
         <span className="text-lightBlue">&nbsp;Dashboard</span>
       </div>
-      <div className="w-auto p-4 py-6 mt-6 h-fit xl:h-[134px] md:h-fit mx-auto text-start md:text-center bg-[#EDEDED] rounded-[10px] shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px]">
+      <div className="w-auto p-4 py-6 mt-6 h-fit xl:h-[180px] md:h-fit mx-auto text-start md:text-center bg-[#EDEDED] rounded-[10px] shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px]">
         <span className="text-center text-lightBlue font-semibold text-base md:text-2xl mb-4">
           Account Details
         </span>
@@ -119,6 +120,10 @@ const AccountCard = () => {
             <div className="text-sm md:text-base">
               <span className="text-lightBlue">Name of Account Owner:</span>{' '}
               {accountDetails?.ownerName}
+            </div>
+            <div className="w-full !ml-0 text-md md:text-left">
+              <span className="text-lightBlue">Bank Name:</span>&nbsp;
+              <span className="capitalize">{userDetails?.bankName}</span>
             </div>
             <div className="!ml-0 text-sm md:text-base">
               <span className="text-lightBlue">Account Active:</span>

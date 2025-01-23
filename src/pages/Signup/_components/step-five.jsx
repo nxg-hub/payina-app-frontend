@@ -115,7 +115,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
                   name="firstname"
                   value={bvnData.firstname || ninData.firstname}
                   readOnly
-                  className=" w-full h-[3.4rem] border border-[#9ca3af] outline-none text-start text-gray rounded-[5px] py-2 px-[10px]"
+                  className=" w-full lg:w-[500px] h-[3.4rem] border border-[#9ca3af] outline-none text-start text-gray rounded-[5px] py-2 px-[10px]"
                 />
               </div>
 
@@ -129,7 +129,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
                   name="lastname"
                   value={bvnData.lastName || ninData.lastname}
                   readOnly
-                  className="w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+                  className=" w-full lg:w-[500px] h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
                 />
               </div>
 
@@ -143,7 +143,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
                   name="gender"
                   value={bvnData.gender || ninData.gender}
                   readOnly
-                  className=" w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+                  className="w-full lg:w-[500px] h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
                 />
               </div>
 
@@ -157,7 +157,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
                   name="dob"
                   value={bvnData.dob || ninData.dob}
                   readOnly
-                  className="w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+                  className="w-full lg:w-[500px] h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
                 />
               </div>
 
@@ -170,7 +170,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
                   id="username"
                   name="username"
                   placeholder="Enter Your Username"
-                  className="w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+                  className="w-full lg:w-[500px] h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
                 />
                 <ErrorMessage
                   name="username"
