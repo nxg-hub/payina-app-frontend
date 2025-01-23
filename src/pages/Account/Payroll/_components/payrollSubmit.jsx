@@ -63,9 +63,9 @@ const PayrollSubmit = ({ onSuccess }) => {
       }
 
       const responseBody = await response.json();
-      console.log('Response Status:', response.status);
-      console.log('Response Body:', responseBody);
-      console.log('Customer ID:', customerId);
+      // console.log('Response Status:', response.status);
+      // console.log('Response Body:', responseBody);
+      // console.log('Customer ID:', customerId);
 
       if (responseBody) {
         console.log('Employee ID:', responseBody.id);
@@ -107,7 +107,7 @@ const PayrollSubmit = ({ onSuccess }) => {
       }
 
       const result = await response.json();
-      alert('Payroll details saved successfully');
+      // alert('Payroll details saved successfully');
       onSuccess();
       console.log('Payroll details saved successfully');
     } catch (error) {

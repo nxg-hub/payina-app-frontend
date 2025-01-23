@@ -140,7 +140,12 @@ const PayrollView = ({ onBackClick, onSetupClick }) => {
                   <div className="text-sm font-bold">
                     Employment Date:{' '}
                     <span className="font-medium">
-                      {employee.employmentDetails?.employmentDate}
+                    {new Date(employee.employmentDetails?.employmentDate).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })}
+                      {/* {employee.employmentDetails?.employmentDate} */}
                     </span>
                   </div>
                   <div className="text-sm font-bold">
@@ -159,10 +164,10 @@ const PayrollView = ({ onBackClick, onSetupClick }) => {
         )}
 
         {isModalOpen && selectedEmployee && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-6 rounded shadow-lg">
-              <h2 className="text-xl font-bold">Employee Details</h2>
-              <div className="flex flex-col gap-2 mt-4">
+         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 overflow-y-auto p-4">
+         <div className="bg-white p-11 rounded shadow-lg w-[500px] max-h-[90%] overflow-y-auto">
+                     <h2 className="text-xl font-bold">Employee Details</h2>
+                     <div className="flex flex-col gap-2 mt-4">
                 <h1 className="text-xl font-bold text-lightBlue">Job Role Details</h1>
                 <div className="text-sm font-bold">
                   Employee Name:{' '}
@@ -173,10 +178,14 @@ const PayrollView = ({ onBackClick, onSetupClick }) => {
                   <span className="font-medium">{selectedEmployee.employeeRole}</span>
                 </div>
                 <div className="text-sm font-bold">
-                  Employment Date:{' '}
-                  <span className="font-medium">
-                    {selectedEmployee.employmentDetails?.employmentDate}
-                  </span>
+                Employment Date:{' '}
+  <span className="font-medium">
+    {new Date(selectedEmployee.employmentDetails?.employmentDate).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })}
+  </span>
                 </div>
                 <div className="text-sm font-bold">
                   Employee Id:{' '}
@@ -228,11 +237,11 @@ const PayrollView = ({ onBackClick, onSetupClick }) => {
                       <div key={index}>
                         <div className="text-sm font-bold">
                           Allowance Package Name:{' '}
-                          <span className="font-medium">{allowance.allowancePackageName}</span>
+                          <span className="font-medium">{allowance.allowancePackageName || 'none'}</span>
                         </div>
                         <div className="text-sm font-bold">
                           Allowance Pay:{' '}
-                          <span className="font-medium">{allowance.allowancePay}</span>
+                          <span className="font-medium">{allowance.allowancePay || 'No allowance pay'}</span>
                         </div>
                       </div>
                     ))}
