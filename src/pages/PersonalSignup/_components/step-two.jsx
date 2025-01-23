@@ -91,32 +91,45 @@ export const StepTwo = ({ next, initialValues }) => {
     }  
   `;
   return (
-    <div className="p-2 xl:p-10 bg-primary">
-      <div className="hidden md:block fixed md:top-[-24.5rem] xl:top-[-21.5rem] md:right-[-0.1rem] xl:right-[-39.5rem]">
-        <img src={images.Group} alt="" />
-      </div>
-      <div className="hidden md:block fixed md:-z-10 md:top-[-4.5rem] xl:top-[-14.5rem] right-[6.5rem]">
-        <img src={images.Vector3} alt="" />
-      </div>
-      <div className="hidden md:block fixed md:top-[8rem] xl:top-[12.5rem] right-[20rem] -z-10">
-        <img src={images.Vector2} alt="" />
-      </div>
-      <div className="hidden md:block fixed md:top-[10.5rem] xl:top-[14.6rem] right-[24rem] -z-10">
-        <img src={images.Vector1} alt="" />
-      </div>
-      <div className="hidden md:block fixed md:top-[15rem] xl:top-[23rem] right-[6.5rem] -z-10">
-        <img src={images.Vector2} alt="" />
-      </div>
-      <div className="hidden md:block fixed md:top-[22rem] xl:top-[30rem] right-[7.4rem] -z-10">
-        <img src={images.Vector5} alt="" />
-      </div>
-      <div className="hidden md:block fixed md:top-[20rem] xl:top-[27.5rem] right-[9.4rem] -z-10">
-        <img src={images.Vector4} alt="" />
-      </div>
-      <div className="hidden md:block fixed md:top-[11.5rem] xl:top-[19rem] right-[10.6rem] -z-10">
-        <img src={images.Vector6} alt="" />
-      </div>
-      <Formik
+    <div className="relative bg-black min-h-screen flex items-center justify-center">
+      <img
+        src={images.Vector3}
+        alt="Background Design"
+        className="absolute top-0 lg:right-[32rem] right-[0rem] w-24 h-24"
+      />
+      <img
+        src={images.Vector2}
+        alt="Background Design"
+        className="absolute lg:bottom-[8rem] bottom-[0rem] left-[0rem] lg:left-[30rem] w-20 h-20"
+      />
+      <img
+        src={images.Vector1}
+        alt="Background Design"
+        className="absolute lg:top-[27rem] top-[0rem] left-[0rem] lg:left-[28rem] w-20 h-20"
+      />
+      <img
+        src={images.Vector2}
+        alt="Background Design"
+        className="absolute lg:top-[31rem] top-[0rem] left-[0rem] lg:left-[50rem] w-[100px] h-[100px]"
+      />
+      <img
+        src={images.Vector5}
+        alt="Background Design"
+        className="absolute lg:top-[35rem] top-[0rem] left-[0rem] lg:left-[55rem] w-3 h-3"
+      />
+      <img
+        src={images.Vector4}
+        alt="Background Design"
+        className="absolute lg:top-[33.5rem] top-[0rem] left-[0rem] lg:left-[51rem] w-15 h-15"
+      />
+      <img
+        src={images.Vector6}
+        alt="Background Design"
+        className="absolute lg:top-[27rem] top-[0rem] left-[0rem] lg:left-[51rem] w-20 h-20"
+      /> 
+            <div className="relative z-10 flex flex-col justify-center items-center bg-white shadow-md xl:p-8 px-4 rounded-lg mx-auto sm:w-[300px] md:w-[400px] lg:w-[600px]">
+
+          <Formik
         initialValues={{ phoneNumber: '' }}
         onSubmit={(values, { setSubmitting }) => {
           handleSubmit(values);
@@ -171,5 +184,7 @@ export const StepTwo = ({ next, initialValues }) => {
       </Formik>
       <style>{countryButton}</style>
     </div>
+        </div>
+
   );
 };
