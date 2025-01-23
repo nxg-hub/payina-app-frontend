@@ -60,8 +60,9 @@ const Firstsection = ({
 
         if (response.ok) {
           const responseData = await response.json();
+          console.log(responseData);
 
-          const clientsData = responseData.map((client) => ({
+          const clientsData = responseData?.content?.map((client) => ({
             id: client.id,
             firstName: client.firstName,
             lastName: client.lastName,
@@ -186,7 +187,7 @@ const Firstsection = ({
                   <option value="UNPAID">Unpaid</option>
                 </select>
               </div>
-              <div className="">
+              <div className=" w-[120%]">
                 <p className="pb-2 text-[10px] sm:text-[13px] md:text-base font-bold">Clients</p>
                 <div
                   // onClick={(e) => {
@@ -203,7 +204,7 @@ const Firstsection = ({
                     value={search}
                     onChange={handleSearchChange}
                     placeholder="Search..."
-                    className="w-full static border px-6 border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full h-5 md:h-11 static border px-6 border-gray-300 rounded-lg p-2 text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
                   <div className="h-[150px] overflow-y-scroll ">
                     {loadingClients ? (
