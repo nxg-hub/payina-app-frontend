@@ -18,9 +18,11 @@ const EnterPin = ({ data }) => {
   const [showModal, setShowModal] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [userLoader, setUserLoading] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
+      setUserLoading(true);
       try {
         const userResponse = await axios.get(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
           headers: {
@@ -28,12 +30,15 @@ const EnterPin = ({ data }) => {
             Authorization: `Bearer ${newAuthToken}`,
           },
         });
-        console.log('User data fetched successfully:', userResponse.data);
+        // console.log('User data fetched successfully:', userResponse.data);
+        setUserLoading(false);
         setUserEmail(userResponse.data.email);
         setWalletId(userResponse.data.walletId);
         setCustomerId(userResponse.data.customerId);
       } catch (error) {
         console.error('Error fetching user data:', error.response?.data || error.message);
+      } finally {
+        setUserLoading(false);
       }
     };
     fetchUserData();
@@ -98,7 +103,7 @@ const EnterPin = ({ data }) => {
 
       if (response.status === 200) {
         setSaveMessage('Beneficiary saved successfully.');
-        console.log('Beneficiary saved successfully:', response.data);
+        // console.log('Beneficiary saved successfully:', response.data);
       } else {
         setSaveMessage('Failed to save beneficiary. Please try again.');
         setErrorMessage('Failed to save beneficiary. Please try again.');
@@ -152,9 +157,9 @@ const EnterPin = ({ data }) => {
           },
         }
       );
-      console.log('Full PIN Validation Response:', pinResponse);
+      // console.log('Full PIN Validation Response:', pinResponse);
 
-      if (pinResponse.data === 'Transaction PIN is valid.') {
+      if (pinResponse.status === 200) {
         console.log('PIN validated successfully. Starting another bank transfer...');
         setShowModal(true);
       } else {
@@ -169,6 +174,7 @@ const EnterPin = ({ data }) => {
   };
 
   const handleConfirmSave = async (save) => {
+    const pinString = pin.join('');
     setShowModal(false);
     if (save) {
       await saveToBeneficiaries();
@@ -183,6 +189,8 @@ const EnterPin = ({ data }) => {
         customerEmail: userEmail,
         walletId: walletId,
         description: data.purpose,
+        currency: data.currency,
+        trxPin: pinString,
       };
 
       // console.log('Headers:', {
@@ -190,7 +198,7 @@ const EnterPin = ({ data }) => {
       //   apiKey: import.meta.env.VITE_API_KEY,
       // });
 
-      console.log('Transaction payload:', transactionPayload);
+      // console.log('Transaction payload:', transactionPayload);
 
       const transactionResponse = await axios.post(
         import.meta.env.VITE_API_OTHER_BANK_SEND_MONEY_ENDPOINT,
@@ -204,12 +212,11 @@ const EnterPin = ({ data }) => {
         }
       );
 
-      console.log('Transaction Response Data:', transactionResponse.data);
+      // console.log('Transaction Response Data:', transactionResponse.data);
 
       const isSuccess =
         transactionResponse.data?.httpStatusCode === 'OK' &&
         transactionResponse.data?.response?.toLowerCase().includes('transfer successful');
-
       if (isSuccess) {
         setShowSuccess(true);
         console.log('Transaction Success: Transaction completed successfully.');
@@ -244,6 +251,11 @@ const EnterPin = ({ data }) => {
         <div className="flex flex-col items-center">
           <ReactLoading type="spin" color="#00678F" height={50} width={50} />
           <span className="mt-4 text-lightBlue">Transaction processing...</span>
+        </div>
+      ) : userLoader ? (
+        <div className="flex flex-col items-center">
+          <ReactLoading type="spin" color="#00678F" height={50} width={50} />
+          {/* <span className="mt-4 text-ligthBlue">Transaction processing...</span> */}
         </div>
       ) : (
         <>

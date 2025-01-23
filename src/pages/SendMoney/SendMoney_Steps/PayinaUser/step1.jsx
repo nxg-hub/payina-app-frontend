@@ -40,7 +40,7 @@ const RecipientDetails = ({ nextStep }) => {
     try {
       const endpoint = import.meta.env.VITE_GET_ACCOUNT_NUMBER_ENDPOINT;
       const response = await axios.get(`${endpoint}?accountNumber=${accountNumber}`);
-      console.log('API account number response:', response.data);
+      // console.log('API account number response:', response.data);
 
       const isValid = response.data && response.data.customerId != null;
       return {

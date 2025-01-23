@@ -72,7 +72,7 @@ const ActionButtons = () => {
             backgroundColor="#00678f"
           />
         </Link>
-        <Link to={'/account/onboarding'}>
+        <Link to={'/onboarding/email_verification'}>
           <Button
             children="Sign Up"
             className="hover:bg-lightBlue hover:scale-95 font-extrabold duration-300 center gap-2"

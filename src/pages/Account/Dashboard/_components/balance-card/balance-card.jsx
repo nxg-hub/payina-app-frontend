@@ -2,14 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { GrFormViewHide } from 'react-icons/gr';
 import { images } from '../../../../../constants';
 import useLocalStorage from '../../../../../hooks/useLocalStorage.js';
+import { set } from 'date-fns';
+import { useDispatch, useSelector } from 'react-redux';
+import { setWalletBalance } from '../../../../../Redux/WalletSlice.jsx';
 
 const BalanceCard = () => {
   const [balance, setBalance] = useState(0);
   const [hideIcon, setHideIcon] = useState(false);
   const [newAuthToken] = useLocalStorage('authToken', '');
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const currentBalance = useSelector((state) => state.wallet.wallet);
 
   useEffect(() => {
     const fetchBalance = async () => {
+      setLoading(true);
       try {
         if (!newAuthToken) {
           console.error('No authentication token found');
@@ -31,15 +38,21 @@ const BalanceCard = () => {
         }
 
         const data = await response.json();
-        // console.log('Fetched balance:', data.data.balance.amount);
-        setBalance(data.data.balance.amount);
+        const balance = data.data.balance.amount;
+        if (balance !== currentBalance) {
+          dispatch(setWalletBalance(balance));
+        }
+        setLoading(false);
+        setBalance(balance);
       } catch (error) {
         console.error('Error fetching balance:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchBalance();
-  }, [newAuthToken]); // Dependency array includes newAuthToken to refetch if it changes
+  }, [newAuthToken, currentBalance]); // Dependency array includes newAuthToken to refetch if it changes
 
   const handleIconClick = () => {
     setHideIcon(!hideIcon);
@@ -75,8 +88,10 @@ const BalanceCard = () => {
             </div>
             {hideIcon && (
               <div className="md:text-[32px] text-2xl font-bold">
-                <span className="uppercase text-sm md:text-[23.282px] ">NGN</span>{' '}
-                {balance.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+                <span className="uppercase text-sm md:text-[23.282px] ">NGN</span>
+                {loading
+                  ? '....'
+                  : currentBalance.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
               </div>
             )}
           </div>

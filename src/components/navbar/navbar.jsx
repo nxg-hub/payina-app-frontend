@@ -85,7 +85,7 @@ const Navbar = () => {
             </li>
           </ul>
           <div className="flex space-x-10 absolute bottom-0 my-8">
-            <Link to={route === '/' ? '/account/onboarding' : '/personal/login'}>
+            <Link to={'/onboarding/email_verification'}>
               <Button
                 className="hover:bg-lightBlue hover:scale-95 font-extrabold duration-300 center"
                 children="Sign Up"

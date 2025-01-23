@@ -3,13 +3,9 @@ import CustomButton from '../../../components/button/button';
 import * as Yup from 'yup';
 import { useState } from 'react';
 
-
-
-
 export const StepSixteen = ({ next, email }) => {
   const [loading, setLoading] = useState('');
   const [pinError, setPinError] = useState('');
-
 
   const handleSubmit = async (values) => {
     setLoading(true);
@@ -36,25 +32,23 @@ export const StepSixteen = ({ next, email }) => {
         });
         const result = await response.json();
 
-        if (response.ok && result.status !== "BAD_REQUEST" ) {
+        if (response.ok && result.status !== 'BAD_REQUEST') {
           console.log('Pin set successfully:');
+          localStorage.removeItem('phoneNumber');
           next(result);
-        } else if  (result.status === "BAD_REQUEST") {
+        } else if (result.status === 'BAD_REQUEST') {
           setPinError('Failed to set pin');
         }
       } catch (error) {
         console.error('Error setting pin:', error);
-      }finally {
+      } finally {
         setLoading(false);
-    }
+      }
     } else {
       setPinError('An error occurred. Please try again.');
-    } 
-
+    }
   };
 
- 
-  
   const validationSchema = Yup.object().shape({
     otp: Yup.array()
       .of(Yup.string().matches(/^\d$/, 'Transaction Pin digit must be a single digit'))
@@ -77,7 +71,7 @@ export const StepSixteen = ({ next, email }) => {
         initialValues={{ otp: ['', '', '', ''], confirmOtp: ['', '', '', ''] }}
         validationSchema={validationSchema}
         onSubmit={(values) => handleSubmit(values)}>
-        {({ isSubmitting }) => (
+        {({ isSubmitting, values, setFieldValue }) => (
           <Form className="space-y-4">
             <div className="flex flex-col">
               <label htmlFor="otp" className="font-semibold pt-8">
@@ -90,7 +84,25 @@ export const StepSixteen = ({ next, email }) => {
                     type="password"
                     name={`otp[${index}]`}
                     maxLength="1"
+                    value={values.otp[index]}
                     className="form-input w-12 mr-2 p-[10px] outline-none text-center border border-secondary rounded-full "
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (/^\d$/.test(value)) {
+                        setFieldValue(`otp[${index}]`, value);
+                        if (value && e.target.nextElementSibling) {
+                          e.target.nextElementSibling.focus();
+                        }
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Backspace') {
+                        setFieldValue(`otp[${index}]`, '');
+                        if (e.target.previousElementSibling) {
+                          e.target.previousElementSibling.focus();
+                        }
+                      }
+                    }}
                   />
                 ))}
               </div>
@@ -108,6 +120,23 @@ export const StepSixteen = ({ next, email }) => {
                     name={`confirmOtp[${index}]`}
                     maxLength="1"
                     className="form-input w-12 mr-2 p-[10px] outline-none text-center border border-secondary rounded-full "
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (/^\d$/.test(value)) {
+                        setFieldValue(`confirmOtp[${index}]`, value);
+                        if (value && e.target.nextElementSibling) {
+                          e.target.nextElementSibling.focus();
+                        }
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Backspace') {
+                        setFieldValue(`confirmOtp[${index}]`, '');
+                        if (e.target.previousElementSibling) {
+                          e.target.previousElementSibling.focus();
+                        }
+                      }
+                    }}
                   />
                 ))}
               </div>

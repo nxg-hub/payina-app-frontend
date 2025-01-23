@@ -60,6 +60,7 @@ import ResetPassword from './pages/ResetPassword/ResetPassword.jsx';
 import SwitchAccount from './pages/More/SwitchAccount.jsx';
 import AccountLimits from './pages/More/Limits.jsx';
 import Terms from './pages/More/Terms.jsx';
+import EmailVerification from './pages/Onboarding/EmailVerification.jsx';
 
 function App() {
   const location = useLocation();
@@ -112,6 +113,7 @@ function App() {
             <Route path="/account/dashboard" element={<Dashboard />} />
             <Route path="/personal/dashboard" element={<PersonalDashboard />} />
             <Route path="/account/onboarding" element={<Onboarding />} />
+            <Route path="/onboarding/email_verification" element={<EmailVerification />} />
             <Route path="/account/invoice" element={<Invoice />} />
             <Route path="invoice/createinvoice" element={<Createinvoice />} />
             <Route path="/account/payroll" element={<Payroll />} />

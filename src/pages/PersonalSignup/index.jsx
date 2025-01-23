@@ -31,4 +31,3 @@ const Signup = ({ data, currentStep, handleNextStep }) => {
 };
 
 export default Signup;
-

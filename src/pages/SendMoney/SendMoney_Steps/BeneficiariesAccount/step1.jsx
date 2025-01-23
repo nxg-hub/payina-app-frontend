@@ -8,9 +8,11 @@ const RecipientDetails = ({ nextStep }) => {
   const [beneficiaries, setBeneficiaries] = useState([]);
   const [customerId, setCustomerId] = useState('');
   const [newAuthToken] = useLocalStorage('authToken', '');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
+      setLoading(true);
       try {
         const userResponse = await axios.get(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
           headers: {
@@ -18,12 +20,15 @@ const RecipientDetails = ({ nextStep }) => {
             Authorization: `Bearer ${newAuthToken}`,
           },
         });
-        console.log('User data fetched successfully:', userResponse.data);
+        // console.log('User data fetched successfully:', userResponse.data);
         const fetchedCustomerId = userResponse.data.customerId;
         setCustomerId(fetchedCustomerId);
-        console.log('Set customerId:', fetchedCustomerId);
+        setLoading(false);
+        // console.log('Set customerId:', fetchedCustomerId);
       } catch (error) {
         console.error('Error fetching user data:', error.response?.data || error.message);
+      } finally {
+        setLoading(false);
       }
     };
     fetchUserData();
@@ -37,18 +42,21 @@ const RecipientDetails = ({ nextStep }) => {
         '{customerId}',
         customerId
       );
-      console.log('Fetching beneficiaries from endpoint:', endpoint);
-
+      // console.log('Fetching beneficiaries from endpoint:', endpoint);
+      setLoading(true);
       try {
         const response = await axios.get(endpoint, {
           headers: {
             Authorization: `Bearer ${newAuthToken}`,
           },
         });
-        console.log('Beneficiaries fetched successfully:', response.data);
+        // console.log('Beneficiaries fetched successfully:', response.data);
         setBeneficiaries(response.data || []);
+        setLoading(false);
       } catch (error) {
         console.error('Failed to fetch beneficiaries', error.response?.data || error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -71,7 +79,7 @@ const RecipientDetails = ({ nextStep }) => {
 
           if (selectedBeneficiary) {
             const { id, accountNumber, bankCode, bankName } = selectedBeneficiary;
-            console.log('Selected Beneficiary:', selectedBeneficiary);
+            // console.log('Selected Beneficiary:', selectedBeneficiary);
             nextStep({ selectedBeneficiaryName, accountNumber, bankCode, bankName, id });
           }
         }}>
@@ -85,7 +93,10 @@ const RecipientDetails = ({ nextStep }) => {
                 as="select"
                 name="beneficiaryName"
                 className="lg:w-[700px] w-[300px]  border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm">
-                <option value="" label="Select a beneficiary" />
+                <option
+                  value=""
+                  label={loading ? 'Loading Beneficiary...' : 'Select a beneficiary'}
+                />
                 {beneficiaries
                   .filter((beneficiary) => beneficiary && beneficiary.name)
                   .map((beneficiary) => (

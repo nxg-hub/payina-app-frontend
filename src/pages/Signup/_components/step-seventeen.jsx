@@ -63,6 +63,7 @@ export const StepSeventeen = () => {
     localStorage.removeItem('HomeAddress');
     localStorage.removeItem('businessData');
     localStorage.removeItem('BusinessAddress');
+    localStorage.removeItem('phoneNumber');
   };
 
   if (isLoading) {

@@ -17,6 +17,7 @@ export const StepTwo = ({ next, initialValues }) => {
     dispatch(previousStep());
   };
   const handleSubmit = async (values) => {
+    localStorage.setItem('phoneNumber ', phone);
     setLoading(true);
     setMessage('');
     try {

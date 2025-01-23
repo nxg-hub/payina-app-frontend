@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { CorporateCustomerContext } from '../contexts/CorporateCustomerContext';
+import { useSelector } from 'react-redux';
 
 const Thirdsection = ({ clientId, clientName, showFiltered, filteredInvoices }) => {
   const [invoices, setInvoices] = useState([]);
@@ -8,6 +9,7 @@ const Thirdsection = ({ clientId, clientName, showFiltered, filteredInvoices }) 
   const [recentInvoices, setRecentInvoicesLocal] = useState([]);
   const [isMarkingAsPaid, setIsMarkingAsPaid] = useState(null);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
+  const loader = useSelector((state) => state.clients.filterLoader);
 
   useEffect(() => {
     setLoading(true);
@@ -149,7 +151,7 @@ const Thirdsection = ({ clientId, clientName, showFiltered, filteredInvoices }) 
     <div className="md:px-[.7rem] pb-4 w-auto md:clear-right ml-5 md:ml-2 xl:ml-[19.5rem] mr-5 md:mr-3 shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px]">
       <div className="font-bold py-2 text-sm md:text-[18px]">Customer Invoices</div>
 
-      {loading ? (
+      {loading || loader ? (
         <div className="flex justify-center items-center py-4">
           <p className="text-gray-500 text-sm md:text-base">Loading invoices...</p>
         </div>
@@ -239,7 +241,7 @@ const Thirdsection = ({ clientId, clientName, showFiltered, filteredInvoices }) 
               {`${clientName === 'Select Client' || clientName === 'Recent Invoices' ? ' Add and select a client to view invoice' : 'No Invoice for the selected client'}`}
             </div>
           ) : (
-            displayedInvoices.map((invoice) => (
+            displayedInvoices[0]?.content.map((invoice) => (
               <div
                 key={invoice.id}
                 className="grid grid-cols-7 gap-4 w-full sm:w-auto border-b border-[#D9D9D9] py-4">

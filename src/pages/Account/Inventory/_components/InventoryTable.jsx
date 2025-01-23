@@ -128,7 +128,9 @@ const InventoryTable = ({ searchTerm }) => {
             </tbody>
           </table>
         </div>
-
+        <div className="m-auto text-center md:hidden">
+          Scroll to the right to view all inventory information
+        </div>
         {/* No items found message */}
         {filteredItems?.length === 0 && (
           <p className="text-gray-500 text-center mt-4">No items found.</p>
