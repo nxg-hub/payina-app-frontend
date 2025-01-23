@@ -25,11 +25,9 @@ const EmailVerification = ({}) => {
   const verifyEmail = useCallback(async (email) => {
     setLoading(true);
     setError('');
-
+    const encodedEmail = encodeURIComponent(email);
     try {
-      const response = await axios.get(
-        import.meta.env.VITE_CHECK_EMAIL_REGISTRATION.replace('{email}', email)
-      );
+      const response = await axios.get(`${import.meta.env.VITE_EMAIL_CHECK}?email=${encodedEmail}`);
       //check if email exists in db
       const isRegistered = response.data.exists;
       //if email exists call get user by email endpoint
@@ -62,7 +60,10 @@ const EmailVerification = ({}) => {
               navigate('/signup');
               return;
             }
-            if (regLevel === 'CORPORATE_PROFILE_UPDATE_SET_PIN') {
+            if (
+              regLevel === 'CORPORATE_PROFILE_UPDATE_SET_PIN' ||
+              regLevel === 'SET_TRANSACTION_PIN'
+            ) {
               dispatch(setStep(15));
               navigate('/signup');
               return;
@@ -95,7 +96,10 @@ const EmailVerification = ({}) => {
               navigate('/personal/signUp');
               return;
             }
-            if (regLevel === 'SET_TRANSACTION_PIN') {
+            if (
+              regLevel === 'SET_TRANSACTION_PIN' ||
+              regLevel === 'CORPORATE_PROFILE_UPDATE_SET_PIN'
+            ) {
               dispatch(setPersonalStep(15));
               navigate('/personal/signUp');
               return;
@@ -128,7 +132,7 @@ const EmailVerification = ({}) => {
       <div className="hidden md:block absolute md:top-[-13.6rem] md:right-[1rem] xl:top-[-12.5rem] xl:right-[-38.5rem]">
         <img src={images.Group} alt="" />
       </div>
-      <div className="bg-primary w-[80%] flex flex-col justify-center items-start mx-auto mt-20">
+      <div className="bg-primary w-[80%] md:w-[60%] flex flex-col justify-center items-start mx-auto mt-20">
         <Formik
           initialValues={{ email: '' }}
           validationSchema={verificationSchema}
