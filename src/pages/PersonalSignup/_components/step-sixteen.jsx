@@ -27,7 +27,7 @@ export const StepSixteen = ({ next, email }) => {
       };
 
       try {
-        const response = await fetch(import.meta.env.VITE_PERSONAL_ACCOUNT_SET_PIN, {
+        const response = await fetch(import.meta.env.VITE_PERSONAL_TRANSACTION_PIN_ENDPOINT, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

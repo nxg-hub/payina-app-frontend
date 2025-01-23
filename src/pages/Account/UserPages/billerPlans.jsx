@@ -10,6 +10,8 @@ import VendInitiator from '../../../utilities/VendInitiator';
 import TransactionModal from '../../../utilities/TransactionModal';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import VendInitiatorBills from '../../../utilities/VendInitiatorBills.jsx';
+import successImage from '../../../assets/images/Group-successful.png';
+import errorImage from '../../../assets/images/Group 10275-decline.png';
 
 const BillerPlans = () => {
   const location = useLocation();
@@ -484,6 +486,8 @@ const BillerPlans = () => {
         title={modalTitle}
         message={modalMessage}
         details={modalDetails}
+        successIcon={successImage}
+        errorIcon={errorImage}
         onBack={() => setShowModal(false)}
         onProceed={handleFundWallet}
         proceedText="Fund Wallet"
