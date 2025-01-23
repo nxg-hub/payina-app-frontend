@@ -19,9 +19,11 @@ const EnterPin = ({ data }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [newAuthToken] = useLocalStorage('authToken', '');
   const [loading, setLoading] = useState(false);
+  const [userLoader, setUserLoading] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
+      setUserLoading(true);
       try {
         const userResponse = await axios.get(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
           headers: {
@@ -29,12 +31,15 @@ const EnterPin = ({ data }) => {
             Authorization: `Bearer ${newAuthToken}`,
           },
         });
-        console.log('User data fetched successfully:', userResponse.data);
+        // console.log('User data fetched successfully:', userResponse.data);
         setUserEmail(userResponse.data.email);
         setSenderName(userResponse.data.accountName);
         setSourceId(userResponse.data.walletId);
+        setUserLoading(false);
       } catch (error) {
         console.error('Error fetching user data:', error.response?.data || error.message);
+      } finally {
+        setUserLoading(false);
       }
     };
 
@@ -53,7 +58,7 @@ const EnterPin = ({ data }) => {
             Authorization: `Bearer ${newAuthToken}`,
           },
         });
-        console.log('Destination data fetched successfully:', payinaResponse.data);
+        // console.log('Destination data fetched successfully:', payinaResponse.data);
         setDestinationId(payinaResponse.data.walletId);
         setReceiverName(payinaResponse.data.accountName);
         setReceiverEmailAddress(payinaResponse.data.email);
@@ -118,7 +123,7 @@ const EnterPin = ({ data }) => {
         }
       );
 
-      console.log('Full PIN Validation Response:', pinResponse);
+      // console.log('Full PIN Validation Response:', pinResponse);
 
       if (pinResponse.data === 'Transaction PIN is valid.') {
         console.log('PIN validated successfully. Starting in-house transfer...');
@@ -132,9 +137,10 @@ const EnterPin = ({ data }) => {
           senderEmailAddress: userEmail,
           receiverEmailAddress: receiverEmailAddress,
           description: data.purpose,
+          trxPin: pinString,
         };
 
-        console.log('Transaction payload:', transactionPayload);
+        // console.log('Transaction payload:', transactionPayload);
 
         const transactionResponse = await axios.post(
           import.meta.env.VITE_IN_HOUSE_TRANSFER_ENDPOINT,
@@ -148,11 +154,11 @@ const EnterPin = ({ data }) => {
           }
         );
 
-        console.log('Full Transaction Response:', transactionResponse);
+        // console.log('Full Transaction Response:', transactionResponse);
         if (transactionResponse.status === 200) {
           const responseData = transactionResponse.data;
           if (responseData.response === 'Transfer was successful') {
-            console.log('Transaction Success: Transaction completed successfully.');
+            // console.log('Transaction Success: Transaction completed successfully.');
             setShowSuccess(true);
           } else {
             console.log('Transaction Declined: Transaction could not be completed.', responseData);
@@ -201,6 +207,11 @@ const EnterPin = ({ data }) => {
         <div className="flex flex-col items-center">
           <ReactLoading type="spin" color="#00678F" height={50} width={50} />
           <span className="mt-4 text-ligthBlue">Transaction processing...</span>
+        </div>
+      ) : userLoader ? (
+        <div className="flex flex-col items-center">
+          <ReactLoading type="spin" color="#00678F" height={50} width={50} />
+          {/* <span className="mt-4 text-ligthBlue">Transaction processing...</span> */}
         </div>
       ) : (
         <>

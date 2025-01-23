@@ -6,7 +6,7 @@ module.exports = {
     extend: {
       container: {
         center: true,
-        padding: '20px'
+        padding: '20px',
       },
       colors: {
         primary: '#FFFFFF',
@@ -16,28 +16,29 @@ module.exports = {
         yellow: '#FFCB05',
         lightBlue: '#006181',
         neutral: '#004359',
-        customGray: '#D9D9D9'
+        customGray: '#D9D9D9',
       },
       keyframes: {
         slideBottom: {
           '0%': { transform: 'translateY(-25%)', transform: 'translateY(-25%)' },
-          '100%': { transform: 'translate(0)' }
-        }
+          '100%': { transform: 'translate(0)' },
+        },
       },
       animation: {
-        slideBottom: 'slideBottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both'
+        slideBottom: 'slideBottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both',
       },
       keyframes: {
         slideLeft: {
           '0%': { transform: 'translateX(-25%)', transform: 'translateX(-25%)' },
-          '100%': { transform: 'translate(0)' }
-        }
+          '100%': { transform: 'translate(0)' },
+        },
       },
       animation: {
-        slideLeft: 'slideLeft 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both'
+        slideLeft: 'slideLeft 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both',
       },
-      extend: {}
+
+      extend: {},
     },
-    plugins: []
-  }
+    plugins: [],
+  },
 };

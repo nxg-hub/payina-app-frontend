@@ -2,8 +2,6 @@ import { Field, Form, Formik } from 'formik';
 import { useState, useEffect } from 'react';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
-import { useDispatch } from 'react-redux';
-import { previousStep } from '../../../Redux/PersonalSignUpSlice';
 
 export const StepThree = ({ next, data }) => {
   const [codeAlert, setCodeAlert] = useState('');
@@ -11,11 +9,6 @@ export const StepThree = ({ next, data }) => {
   const [otpError, setOtpError] = useState('');
   const [canResendCode, setCanResendCode] = useState(false);
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
-
-  const handlePrevious = () => {
-    dispatch(previousStep());
-  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -26,6 +19,7 @@ export const StepThree = ({ next, data }) => {
   }, []);
 
   const handleSubmit = async (values) => {
+    setLoading(true);
     try {
       const response = await fetch(import.meta.env.VITE_VALIDATE_OTP_ENDPOINT, {
         method: 'POST',
@@ -38,11 +32,14 @@ export const StepThree = ({ next, data }) => {
 
       if (response.ok) {
         next(values);
+        setLoading(false);
       } else {
         setOtpError(data.message || 'Invalid OTP');
       }
     } catch (error) {
       setOtpError('An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -181,20 +178,13 @@ export const StepThree = ({ next, data }) => {
               <span className="font-bold text-center mt-10 leading-4 text-sm tracking-[0.28px] text-[#006181]">
                 Enter Code
               </span>
-              <div className=" flex gap-2">
-                <button
-                  disabled={loading}
-                  onClick={handlePrevious}
-                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[87%] w-[90%] mx-auto my-10 !mb-12 xl:my-12 xl:mb-20 px-3">
-                  back
-                </button>
-                <CustomButton
-                  padding="15px"
-                  type="submit"
-                  children="Next"
-                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[87%] w-[90%] mx-auto my-10 !mb-12 xl:my-12 xl:mb-20"
-                />
-              </div>
+
+              <CustomButton
+                padding="15px"
+                type="submit"
+                children={loading ? 'loading' : 'Next'}
+                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[87%] w-[90%] mx-auto my-10 !mb-12 xl:my-12 xl:mb-20"
+              />
             </Form>
           )}
         </Formik>

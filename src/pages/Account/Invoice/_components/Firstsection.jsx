@@ -21,13 +21,24 @@ const Firstsection = ({
   const [selectedClientId, setSelectedClientId] = useState('');
   const [loadingClients, setLoadingClients] = useState(false);
   const [loadingInvoices, setLoadingInvoices] = useState(false);
+  const [select, setSelect] = useState(false);
   const dispatch = useDispatch();
   const success = useSelector((state) => state.clients.success);
   const clientss = useSelector((state) => state.clients.clients);
+  const [search, setSearch] = useState('');
+
+  const handleSearchChange = (e) => setSearch(e.target.value);
+  // Filter clients based on the search term
+  const filteredClients = clientss?.filter(
+    (client) =>
+      client.firstName.toLowerCase().includes(search.toLowerCase()) ||
+      client.lastName.toLowerCase().includes(search.toLowerCase())
+  );
 
   const handleClientClick = (clientId, clientName) => {
     setSelectedClientId(clientId);
     onClientSelect(clientId, clientName);
+    setSelect(true);
   };
   useEffect(() => {
     const handleGetClients = async () => {
@@ -177,36 +188,56 @@ const Firstsection = ({
               </div>
               <div className="">
                 <p className="pb-2 text-[10px] sm:text-[13px] md:text-base font-bold">Clients</p>
-                <select
-                  onChange={(e) => {
-                    const selectedOption = e.target.options[e.target.selectedIndex];
-                    const clientId = selectedOption.value;
-                    const clientName = selectedOption.text;
-                    handleClientClick(clientId, clientName);
-                  }}
-                  className="h-[30px] md:h-[48px] p-2 text-[9px] sm:text-[13px] md:text-base rounded-md w-[100%] md:w-full bg-[#A3F5FB]"
+                <div
+                  // onClick={(e) => {
+                  //   const selectedOption = e.target.options[e.target.selectedIndex];
+                  //   const clientId = selectedOption.value;
+                  //   const clientName = selectedOption.text;
+                  //   handleClientClick(clientId, clientName);
+                  // }}
+                  className="p-2 text-[9px] sm:text-[13px] md:text-base rounded-md w-[100%] md:w-full  bg-[#A3F5FB]"
                   disabled={loadingClients}>
-                  {loadingClients ? (
-                    <option value="" disabled>
-                      Loading clients...
-                    </option>
-                  ) : (
-                    <>
-                      <option value="">Select Client</option>
-                      {clientss && clientss.length > 0 ? (
-                        clientss.map((client) => (
-                          <option key={client.id} value={client.id}>
-                            {client.firstName} {client.lastName}
+                  <input
+                    type="text"
+                    id="search"
+                    value={search}
+                    onChange={handleSearchChange}
+                    placeholder="Search..."
+                    className="w-full static border px-6 border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                  <div className="h-[150px] overflow-y-scroll ">
+                    {loadingClients ? (
+                      <option value="" disabled>
+                        Loading clients...
+                      </option>
+                    ) : (
+                      <>
+                        <option value="">Select Client</option>
+
+                        {clientss && clientss.length > 0 ? (
+                          filteredClients.map((client) => (
+                            <option
+                              onClick={() => {
+                                handleClientClick(
+                                  client.id,
+                                  `${client.firstName} ${client.lastName}`
+                                );
+                              }}
+                              className={`${selectedClientId === client.id ? 'bg-slate-300' : ' cursor-pointer'}`}
+                              key={client.id}
+                              value={client.id}>
+                              {client.firstName} {client.lastName}
+                            </option>
+                          ))
+                        ) : (
+                          <option value="" disabled>
+                            No clients available
                           </option>
-                        ))
-                      ) : (
-                        <option value="" disabled>
-                          No clients available
-                        </option>
-                      )}
-                    </>
-                  )}
-                </select>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

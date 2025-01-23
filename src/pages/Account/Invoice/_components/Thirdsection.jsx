@@ -241,7 +241,7 @@ const Thirdsection = ({ clientId, clientName, showFiltered, filteredInvoices }) 
               {`${clientName === 'Select Client' || clientName === 'Recent Invoices' ? ' Add and select a client to view invoice' : 'No Invoice for the selected client'}`}
             </div>
           ) : (
-            displayedInvoices.map((invoice) => (
+            displayedInvoices[0]?.content.map((invoice) => (
               <div
                 key={invoice.id}
                 className="grid grid-cols-7 gap-4 w-full sm:w-auto border-b border-[#D9D9D9] py-4">

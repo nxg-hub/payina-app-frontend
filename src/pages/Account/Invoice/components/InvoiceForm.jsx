@@ -11,7 +11,7 @@ export const InvoiceForm = ({ next, lineItems }) => {
   const [email, setEmail] = useState('');
   const [customerAdded, setCustomerAdded] = useState(false);
   const [clientId, setClientId] = useState(null);
-  const [clients, setClients] = useState([]);
+  const [msg, setMsg] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
   const [showClientList, setShowClientList] = useState(false);
   const [isLoadingClients, setIsLoadingClients] = useState(false);
@@ -28,9 +28,18 @@ export const InvoiceForm = ({ next, lineItems }) => {
   const [invoiceSent, setInvoiceSent] = useState(false);
   const [total, setTotal] = useState(0);
   const [emptyInput, setEmptyInput] = useState(false);
+  const [vat, setVat] = useState('');
   const clientss = useSelector((state) => state.clients.clients);
   const dispatch = useDispatch();
+  const [search, setSearch] = useState('');
 
+  const handleSearchChange = (e) => setSearch(e.target.value);
+  // Filter clients based on the search term
+  const filteredClients = clientss?.filter(
+    (client) =>
+      client.firstName.toLowerCase().includes(search.toLowerCase()) ||
+      client.lastName.toLowerCase().includes(search.toLowerCase())
+  );
   useEffect(() => {
     const storedEmail = localStorage.getItem('userEmail');
     if (storedEmail) {
@@ -113,11 +122,16 @@ export const InvoiceForm = ({ next, lineItems }) => {
           dispatch(fetchClientSuccess(clientsData));
           setCustomerAdded(true);
           setClientId(parsedResponse.id);
+          setMsg('Customer Added Successfully');
         }
 
         setTimeout(() => setCustomerAdded(false), 10000);
       } else {
-        console.error('Failed to add customer:', response.status, parsedResponse);
+        console.error('Failed to add customer:', parsedResponse);
+        setMsg(parsedResponse.message);
+        // console.log(parsed);
+        setCustomerAdded(true);
+        setTimeout(() => setCustomerAdded(false), 10000);
         return;
       }
       setSelectedClient({
@@ -173,7 +187,7 @@ export const InvoiceForm = ({ next, lineItems }) => {
         quantity: values.invoice.quantity,
         amount: values.invoice.amount,
         invoiceValidity: values.invoice.invoiceValidity,
-        tax: 0.075,
+        vat: values.invoice.vat,
         total: values.invoice.amount * values.invoice.quantity,
         description: values.invoice.itemDescription,
       };
@@ -204,20 +218,20 @@ export const InvoiceForm = ({ next, lineItems }) => {
   useEffect(() => {
     const storedItems = JSON.parse(localStorage.getItem('lineItems')) || [];
   }, []);
-
   const handleCreateInvoice = async (values) => {
+    // console.log(values);
     if (
       values.invoice.invoiceNumber === '' ||
       values.invoice.dateOfIssue === '' ||
       values.invoice.due_date === '' ||
-      values.invoice.name === '' ||
-      values.invoice.quantity === '' ||
-      values.invoice.amount === '' ||
+      // values.invoice.name === '' ||
+      // values.invoice.quantity === '' ||
+      // values.invoice.amount === '' ||
       values.invoice.itemDescription === '' ||
-      values.invoice.invoiceValidity === '' ||
-      (!values.invoice.quantity && values.invoice.lineItems[0].quantity === '') ||
-      (!values.invoice.amount && values.invoice.lineItems[0].amount === '') ||
-      (!values.invoice.total && values.invoice.lineItems[0].total === '')
+      values.invoice.invoiceValidity === ''
+      // (!values.invoice.quantity && values.invoice.lineItems[0].quantity === '') ||
+      // (!values.invoice.amount && values.invoice.lineItems[0].amount === '') ||
+      // (!values.invoice.total && values.invoice.lineItems[0].total === '')
     ) {
       setEmptyInput(true);
       setTimeout(() => setEmptyInput(false), 10000);
@@ -244,27 +258,47 @@ export const InvoiceForm = ({ next, lineItems }) => {
             name: values.invoice.name,
             amount: parseFloat(values.invoice.amount),
             quantity: parseInt(values.invoice.quantity, 10),
+            vat: values?.invoice?.vat,
+            total: values.invoice.amount * values.invoice.quantity,
           },
         ];
       }
+      const itemsWithTotalVAT = storedLineItems.map((item) => {
+        const vatAmount = (item.vat / 100) * item.total; // Calculate VAT
+        const totalIncludingVAT = item.total + vatAmount; // Add VAT to total
+        return {
+          ...item,
+          totalIncludingVAT,
+          vatAmount, // Add a new property for the total including VAT
+        };
+      });
+      const totalAmountVat = itemsWithTotalVAT.reduce(
+        (sum, item) => sum + item.totalIncludingVAT,
+        0
+      );
+      const totalVat = itemsWithTotalVAT.reduce((sum, item) => sum + item.vatAmount, 0);
 
       const invoiceRequestBody = {
         invoiceNumber: values.invoice.invoiceNumber,
         description: values.invoice.itemDescription,
         dateOfIssue: values.invoice.dateOfIssue,
         due_date: values.invoice.due_date,
+        /*
         totalAmount: calculateTotalAmount(storedLineItems),
+         */
+        totalAmount: totalAmountVat,
         invoiceValidity: values.invoice.invoiceValidity,
         lineItems: storedLineItems, // Use the populated or fallback lineItems array
 
         tax: [
           {
             name: 'VAT',
-            amount: calculateTaxAmount(storedLineItems),
+            amount: totalVat,
           },
         ],
       };
-
+      // console.log(invoiceRequestBody);
+      /*
       function calculateTotalAmount(lineItems) {
         const lineItemTotal = lineItems.reduce((total, item) => {
           const itemTotal = item.amount * item.quantity;
@@ -285,17 +319,16 @@ export const InvoiceForm = ({ next, lineItems }) => {
           return total;
         }, 0);
 
-        const taxAmount = lineItemTotal * 0.075; // 7.5% tax
+        const taxAmount = lineItemTotal * (values.invoice.vat / 100); // 7.5% tax
 
         return taxAmount;
       }
-
+       */
       const token = localStorage.getItem('authToken');
       if (!token) {
         console.error('Authorization token is missing');
         return;
       }
-
       const invoiceResponse = await fetch(
         `${import.meta.env.VITE_CREATE_INVOICE_ENDPOINT}${clientId}/create-invoice`,
         {
@@ -333,15 +366,14 @@ export const InvoiceForm = ({ next, lineItems }) => {
   };
 
   const handleCalculateTotal = (values, setFieldValue) => {
-    // console.log("Calculating total with values:", values);
-    const { amount = 0, quantity = 0 } = values.invoice;
+    // console.log('Calculating total with values:', values);
+    const { amount = 0, quantity = 0, vat } = values.invoice;
     const subtotal = amount * quantity;
-    const totalValue = subtotal + subtotal * 0.075;
+    const totalValue = subtotal + (subtotal * vat) / 100;
 
     setTotal(totalValue);
     setFieldValue('invoice.total', totalValue);
   };
-
   const handleSelectClient = (client) => {
     setSelectedClient(client);
     setClientId(client.id);
@@ -352,14 +384,11 @@ export const InvoiceForm = ({ next, lineItems }) => {
       values.invoice.invoiceNumber === '' ||
       values.invoice.dateOfIssue === '' ||
       values.invoice.due_date === '' ||
-      values.invoice.name === '' ||
-      values.invoice.quantity === '' ||
-      values.invoice.amount === '' ||
+      // values.invoice.name === '' ||
+      // values.invoice.quantity === '' ||
+      // values.invoice.amount === '' ||
       values.invoice.itemDescription === '' ||
-      values.invoice.invoiceValidity === '' ||
-      (!values.invoice.quantity && values.invoice.lineItems[0].quantity === '') ||
-      (!values.invoice.amount && values.invoice.lineItems[0].amount === '') ||
-      (!values.invoice.total && values.invoice.lineItems[0].total === '')
+      values.invoice.invoiceValidity === ''
     ) {
       return;
     }
@@ -421,11 +450,11 @@ export const InvoiceForm = ({ next, lineItems }) => {
             dateOfIssue: values.invoice.dateOfIssue,
             due_date: values.invoice.due_date,
             total: values.invoice.amount * values.invoice.quantity,
+            vat: values?.invoice?.vat,
           }
         : null;
-
     // Merge stored items and unadded items
-    const updatedLineItems = unaddedItem ? [...storedItems, unaddedItem] : storedItems;
+    const updatedLineItems = unaddedItem ? [unaddedItem] : storedItems;
 
     setUpdatedLineItems(updatedLineItems);
 
@@ -479,6 +508,7 @@ export const InvoiceForm = ({ next, lineItems }) => {
                   },
                 ],
                 invoiceValidity: '',
+                vat: '',
 
                 itemDescription: '',
                 tax: [
@@ -505,14 +535,14 @@ export const InvoiceForm = ({ next, lineItems }) => {
                 name: Yup.string().required('Required'),
                 quantity: Yup.number().required('Required'),
                 amount: Yup.number().required('Required'),
-                vat: Yup.number().required('Required'),
+                // vat: Yup.number().required('Required'),
                 total: Yup.number().required('Required'),
                 itemDescription: Yup.string().required('Required'),
-                lineItems: Yup.object().shape({
-                  name: Yup.number().required('Required'),
-                  quantity: Yup.number().required('Required'),
-                  amount: Yup.number().required('Required'),
-                }),
+                // lineItems: Yup.object().shape({
+                //   name: Yup.number().required('Required'),
+                //   quantity: Yup.number().required('Required'),
+                //   amount: Yup.number().required('Required'),
+                // }),
               }),
             })}
             onSubmit={(values) => {}}>
@@ -630,7 +660,7 @@ export const InvoiceForm = ({ next, lineItems }) => {
                     </button>
                     {customerAdded && (
                       <div className="item-added-box border border-blue-100 bg-blue-100 rounded-lg p-4 mt-4 text-blue-700 max-w-md mx-auto shadow-md">
-                        <p className="mt-2 text-blue-500 font-bold">Customer added successfully!</p>
+                        <p className="mt-2 text-blue-500 font-bold">{msg}!</p>
                       </div>
                     )}
                     <br></br>
@@ -645,10 +675,19 @@ export const InvoiceForm = ({ next, lineItems }) => {
                       {isLoadingClients ? 'Loading... please wait' : 'Select Existing Customer'}
                     </button>
                     {showClientList && clientss.length > 0 && (
-                      <div className="client-list-box border border-gray-300 rounded-lg p-4 max-w-md mx-auto mt-4 bg-white shadow-md">
+                      <div className="client-list-box border border-gray-300 rounded-lg p-4 max-w-md mx-auto h-[300px] overflow-y-scroll mt-4 bg-white shadow-md">
+                        <input
+                          type="text"
+                          id="search"
+                          value={search}
+                          onChange={handleSearchChange}
+                          placeholder="Search..."
+                          className="w-full static border px-6 border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+
                         <h3 className="font-bold text-lg mb-2">Select a customer:</h3>
                         <ul className="space-y-2">
-                          {clientss.map((client) => (
+                          {filteredClients.map((client) => (
                             <li key={client.id} className="flex justify-between items-center">
                               <div>
                                 <span className="font-medium">
@@ -802,7 +841,7 @@ export const InvoiceForm = ({ next, lineItems }) => {
                         type="number"
                         name="invoice.amount"
                         onChange={(e) => {
-                          const amount = parseFloat(e.target.value) || 0;
+                          const amount = parseFloat(e.target.value);
                           setFieldValue('invoice.amount', amount); // Update Formik state
                           handleCalculateTotal(
                             { ...values, invoice: { ...values.invoice, amount } },
@@ -821,19 +860,25 @@ export const InvoiceForm = ({ next, lineItems }) => {
                       <label
                         htmlFor="invoice.tax[0].amount"
                         className="block text-[10px] sm:text-[13px] md:text-base font-bold mb-2">
-                        VAT (7.5%)
+                        VAT (%)
                       </label>
                       <div className="relative">
                         <Field
                           type="number"
-                          name="invoice"
+                          name="invoice.vat"
                           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          value="0.075" // Set the VAT rate to 0.075
-                          readOnly
+                          onChange={(e) => {
+                            const vat = parseFloat(e.target.value);
+                            setFieldValue('invoice.vat', vat) || 0; // Update Formik state
+                            handleCalculateTotal(
+                              { ...values, invoice: { ...values.invoice, vat } },
+                              setFieldValue
+                            );
+                          }}
                         />
                       </div>
                       <ErrorMessage
-                        name="invoice.tax[0].amount"
+                        name="invoice.vat"
                         component="div"
                         className="text-[#db3a3a] text-[10px] sm:text-[13px] md:text-base mt-1"
                       />
@@ -927,7 +972,14 @@ export const InvoiceForm = ({ next, lineItems }) => {
                         Cancel
                       </button>
                     </div>
-
+                    <div className="pb-6">
+                      <button
+                        type="button"
+                        onClick={() => handlePreviewClick(values)}
+                        className="bg-secondary text-primary text-[10px] sm:text-[13px] md:text-base font-bold py-2 px-4 mr-2 border border-secondary rounded focus:outline-none focus:shadow-outline">
+                        {showPreview ? 'Close Preview' : 'Preview'}
+                      </button>
+                    </div>
                     <div className="pb-6">
                       <button
                         type="submit"
@@ -944,6 +996,7 @@ export const InvoiceForm = ({ next, lineItems }) => {
                         </div>
                       )}
                     </div>
+
                     <div className="pb-6">
                       <button
                         type="submit"
@@ -960,14 +1013,6 @@ export const InvoiceForm = ({ next, lineItems }) => {
                       )}
                     </div>
 
-                    <div className="pb-6">
-                      <button
-                        type="button"
-                        onClick={() => handlePreviewClick(values)}
-                        className="bg-secondary text-primary text-[10px] sm:text-[13px] md:text-base font-bold py-2 px-4 border border-secondary rounded focus:outline-none focus:shadow-outline">
-                        {showPreview ? 'Close Preview' : 'Preview'}
-                      </button>
-                    </div>
                     {showPreview && (
                       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                         <div className="w-full max-w-[664px] h-auto max-h-[90vh] overflow-y-auto p-4 bg-white rounded shadow-lg z-60">

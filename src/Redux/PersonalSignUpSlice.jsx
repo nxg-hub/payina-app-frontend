@@ -19,6 +19,9 @@ const personalSignUpSlice = createSlice({
     previousStep(state) {
       state.step = state.step - 1; //  handle previous step
     },
+    setPersonalStep(state, action) {
+      state.step = action.payload;
+    },
     resetState(state) {
       state.step = 0;
     },
@@ -26,5 +29,5 @@ const personalSignUpSlice = createSlice({
   extraReducers: (builder) => {},
 });
 
-export const { nextStep, resetState, previousStep } = personalSignUpSlice.actions;
+export const { nextStep, resetState, previousStep, setPersonalStep } = personalSignUpSlice.actions;
 export default personalSignUpSlice.reducer;

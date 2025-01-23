@@ -4,17 +4,20 @@ import { images } from '../../../constants';
 import { BusinessAddressSchema } from '../schemas/schema';
 import { state_local } from '../../../services/state-local';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { previousStep } from '../../../Redux/BusinessSignUpSlice';
 
 export const StepEleven = ({ next, initialValues, business_and_home, passedData }) => {
   const [businessState, setBusinessState] = useState('');
   const [loading, setLoading] = useState(false);
   const [localGovernment, setLocalGovernment] = useState([]);
+  const step = useSelector((state) => state.businessSignUp.step);
+
   const dispatch = useDispatch();
 
   const handlePrevious = () => {
     dispatch(previousStep());
+    sessionStorage.removeItem('hasReloaded');
   };
 
   const handleSubmit = (business_address) => {
@@ -28,7 +31,7 @@ export const StepEleven = ({ next, initialValues, business_and_home, passedData 
     localStorage.setItem('BusinessAddress', JSON.stringify(BusinessAddress));
     try {
       // console.log('Submitting business add.:', BusinessAddress);
-
+      sessionStorage.removeItem('hasReloaded');
       next(BusinessAddress, 13);
     } catch (error) {
       console.error('Error submitting business data:', error);
@@ -36,6 +39,7 @@ export const StepEleven = ({ next, initialValues, business_and_home, passedData 
   };
 
   const sortedStates = state_local.sort((a, b) => a.state.localeCompare(b.state));
+
   useEffect(() => {
     setLocalGovernment([]);
     if (initialValues.state) {
@@ -47,6 +51,16 @@ export const StepEleven = ({ next, initialValues, business_and_home, passedData 
 
     setLocalGovernment(currentLga[0]);
   }, [businessState, initialValues.state]);
+  useEffect(() => {
+    const hasReloaded = sessionStorage.getItem('hasReloaded');
+
+    if (step === 10) {
+      if (!hasReloaded) {
+        sessionStorage.setItem('hasReloaded', 'true');
+        window.location.reload();
+      }
+    }
+  }, []);
 
   const getInitialValues = () => {
     if (business_and_home === 'yes') {
