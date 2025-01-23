@@ -394,14 +394,16 @@ export const Sidebar = () => {
             <div
               className={`${
                 toggle ? 'h-[50px] overflow-visible' : 'h-0 overflow-hidden'
-              } transition-all duration-300 flex-col space-y-3 !mt-[15px] `}>
-              <Link to="/account/inventory" className="flex">
+              } transition-all duration-300 flex-col space-y-3 !mt-[15px] ml -auto`}>
+
+                  <Link to="/account/inventory" className="flex items-center space-x-7">
+
                 <RiFileSettingsLine size={22} />
                 <span className="hover:text-lightBlue ease transition-colors text-nowrap ">
                   View/Update
                 </span>
               </Link>
-              <Link to="/account/inventoryAdd" className="flex">
+              <Link to="/account/inventoryAdd" className="flex  items-center space-x-7">
                 <RiFileSettingsLine size={22} />
                 <span className="hover:text-lightBlue ease transition-colors text-nowrap ">
                   Add

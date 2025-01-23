@@ -11,8 +11,14 @@ export const StepFour = ({ next }) => {
   const handleIDVerification = async (values) => {
     const idType = values.idType;
     const identificationNumber = values.identificationNumber;
-    setLoading(true);
     setApiError('');
+    if (identificationNumber.length !== 11) {
+      setApiError('Identification number must be 11 digits!');
+      return;
+    }
+
+    setLoading(true);
+
     setFallbackMode(false);
 
     const endpoints = {
@@ -25,6 +31,7 @@ export const StepFour = ({ next }) => {
         verify: import.meta.env.VITE_BVN_VERIFY_NEW_PROFILE_ENDPOINT,
       },
     };
+    setApiError('');
 
     try {
       // Call Search Profile Endpoint

@@ -9,6 +9,7 @@ const VendInitiator = ({
   formValues,
   packageSlug,
   amount,
+  phoneNumber,
   onVendInitiated,
   onError,
   accountNumber,
@@ -44,10 +45,6 @@ const VendInitiator = ({
       }
 
       const walletData = await response.json();
-
-      if (walletData.statusCode !== 'OK' || !walletData.data) {
-        throw new Error('Wallet not found, upgrade your account now');
-      }
 
       const {
         businessId,
@@ -128,7 +125,7 @@ const VendInitiator = ({
         channel: 'web',
         amount: amount,
         customerName: userData ? `${userData.firstName} ${userData.lastName}` : '',
-        phoneNumber: formValues.phoneNumber,
+        phoneNumber: phoneNumber,
         accountNumber: userData?.accountNumber || accountNumber,
         email: userData?.email || formValues.email,
         merchantId: walletDetailsRef.current.businessId,
@@ -146,18 +143,39 @@ const VendInitiator = ({
       });
 
       if (vendValueResponse.data.status === 'success') {
+        const responseData = vendValueResponse.data.responseData || {};
+        let customerMessage = responseData.customerMessage || '';
+
+        // Remove "C'Gate" from the customer message
+        customerMessage = customerMessage.replace(" C'Gate", '');
+
         onVendInitiated(vendValueResponse.data);
-        setStatusMessage('Transaction completed successfully');
+        setStatusMessage(customerMessage || 'Transaction completed successfully');
       } else {
+        // if (vendValueResponse.data.status === 'success') {
+        //   onVendInitiated(vendValueResponse.data);
+        //   setStatusMessage('Transaction completed successfully');
+        // } else {
         // Handle the error case with debug message
-        const errorMessage = vendValueResponse.data.debugMessage || 'Vend value failed';
-        throw new Error(errorMessage);
+        // const errorMessage = vendValueResponse.data.debugMessage || 'Vend value failed';
+        // throw new Error(errorMessage);
+        const responseData = vendValueResponse.data.responseData || {};
+        const errorNarration =
+          responseData.narration || responseData.errorNarration || 'Unknown error occurred';
+        const debugMessage =
+          vendValueResponse.data.debugMessage || `Vend value failed: ${errorNarration}`;
+
+        throw new Error(debugMessage);
       }
     } catch (err) {
       console.error('Error in vend process:', err);
-      // const errorMessage = err.message || 'Vend process failed';
-      const errorMessage = 'Vend process failed';
-      // const errorMessage = err.response?.data?.debugMessage || err.message || 'Vend process failed';
+
+      // Extract the debug message if available
+      const errorMessage =
+        err.response?.data?.debugMessage ||
+        err.message ||
+        'Vend process failed';
+
       setStatusMessage(errorMessage);
       onError(err);
     } finally {
@@ -176,8 +194,8 @@ const VendInitiator = ({
             statusMessage.includes('failed') ||
             statusMessage.includes('error') ||
             statusMessage.includes('insufficient')
-              ? 'text-red-600'
-              : 'text-gray-600'
+              ? 'text-green-600'
+              : 'text-red-600'
           }`}>
           {statusMessage}
         </div>

@@ -61,13 +61,13 @@ const InventoryTable = ({ searchTerm }) => {
           <table className="min-w-full border border-[#77777766] bg-white text-sm">
             <thead className="bg-[#ddd] text-gray-700 ">
               <tr>
-                <th className="border-b border-[#77777766] px-4 py-2">S/N</th>
-                <th className="border-b border-[#77777766] px-4 py-2">Product Name</th>
-                <th className="border-b border-[#77777766] px-4 py-2">Price per Product(1 Qty)N</th>
-                <th className="border-b border-[#77777766] px-4 py-2">Total Quantity Stocked </th>
-                <th className="border-b border-[#77777766] px-4 py-2">Total Quantity Sold </th>
-                <th className="border-b border-[#77777766] px-4 py-2">Stock Left</th>
-                <th className="border-b border-[#77777766] px-4 py-2">
+                <th className="border-b border-[#77777766] px-5 py-2">S/N</th>
+                <th className="border-b border-[#77777766] px-5 py-2">Product Name</th>
+                <th className="border-b border-[#77777766] px-5 py-2">Price per Product(1 Qty)N</th>
+                <th className="border-b border-[#77777766] px-5 py-2">Total Quantity Stocked </th>
+                <th className="border-b border-[#77777766] px-5 py-2">Total Quantity Sold </th>
+                <th className="border-b border-[#77777766] px-5 py-2">Stock Left</th>
+                <th className="border-b border-[#77777766] px-5 py-2">
                   Total Sales per product (N)
                 </th>
                 <th className="border-b border-[#77777766] px-4 py-2">Actions</th>
@@ -81,17 +81,17 @@ const InventoryTable = ({ searchTerm }) => {
                     <td className="border-b border-[#77777766] px-4 py-2 capitalize">
                       {data.productName}
                     </td>
-                    <td className="border-b border-[#77777766] px-4 py-2">
+                    <td className="border-b border-[#77777766] px-9 py-2">
                       {data.pricePerProduct}
                     </td>
-                    <td className="border-b border-[#77777766] px-4 py-2">
+                    <td className="border-b border-[#77777766] px-12 py-4">
                       {data.totalQuantityStocked}
                     </td>
-                    <td className="border-b border-[#77777766] px-4 py-2">
+                    <td className="border-b border-[#77777766] px-14 py-4">
                       {data.totalQuantitySold}
                     </td>
-                    <td className="border-b border-[#77777766] px-4 py-2">{data.stockLeft}</td>
-                    <td className="border-b border-[#77777766] px-4 py-2 flex gap-5 justify-around">
+                    <td className="border-b border-[#77777766] px-9 py-2">{data.stockLeft}</td>
+                    <td className="border-b border-[#77777766] px-9 py-2 flex gap-5 justify-around">
                       {data.totalSalesPerProduct}
                     </td>
                     <td>

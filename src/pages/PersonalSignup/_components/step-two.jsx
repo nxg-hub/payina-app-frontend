@@ -37,18 +37,16 @@ export const StepTwo = ({ next, initialValues }) => {
         },
         body: JSON.stringify(payload),
       });
+      const data = await response.json();
 
       if (response.ok && response.headers.get('Content-Type')?.includes('application/json')) {
-        const data = await response.json();
+        // const data = await response.json();
         setMessage('Registration successful');
         next({ ...initialValues, phone: phone });
       } else {
-        const errorMessage = await response.text(); // Capture the XML error message
-        console.error('Error message:', errorMessage);
-        const parsedMessage = parseXML(errorMessage); // Parse the XML error message
-        setMessage(
-          `Registration failed: ${parsedMessage || response.statusText || 'Unknown error'}`
-        );
+        data.debugMessage === 'Customer Already Exist'
+          ? setMessage(`${data.debugMessage}. Please Login To Continue Your Sign Up Process`)
+          : setMessage(data.debugMessage);
       }
     } catch (error) {
       setMessage('An error occurred');
