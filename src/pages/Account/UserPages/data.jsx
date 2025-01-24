@@ -11,6 +11,8 @@ import { useAuth } from '../../../context/useAuth';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import Loader from '../../../assets/LoadingSpinner';
 import CustomButton from '../../../components/button/button.jsx';
+import successImage from '../../../assets/images/Group-successful.png';
+import errorImage from '../../../assets/images/Group 10275-decline.png';
 
 const UserData = () => {
   const { formValues, updateFormValues } = useForm();
@@ -279,6 +281,8 @@ const UserData = () => {
             : ['Request failed, please try again.']
         }
         status={modalStatus}
+        successIcon={successImage}
+        errorIcon={errorImage}
         details={modalDetails}
         buttons={modalStatus === 'error' ? ['fundWallet', 'back'] : ['back']}
         onFundWallet={handleFundWallet}

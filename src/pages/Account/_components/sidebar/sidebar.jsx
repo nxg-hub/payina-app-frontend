@@ -395,9 +395,7 @@ export const Sidebar = () => {
               className={`${
                 toggle ? 'h-[50px] overflow-visible' : 'h-0 overflow-hidden'
               } transition-all duration-300 flex-col space-y-3 !mt-[15px] ml -auto`}>
-
-                  <Link to="/account/inventory" className="flex items-center space-x-7">
-
+              <Link to="/account/inventory" className="flex items-center space-x-7">
                 <RiFileSettingsLine size={22} />
                 <span className="hover:text-lightBlue ease transition-colors text-nowrap ">
                   View/Update

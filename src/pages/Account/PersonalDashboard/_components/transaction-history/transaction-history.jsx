@@ -789,7 +789,6 @@
 // }
 
 
-
 import React, { useState, useEffect } from 'react';
 import { MoreHorizontal } from 'lucide-react';
 import useLocalStorage from '../../../../../hooks/useLocalStorage';
@@ -887,7 +886,7 @@ export default function TransactionTable() {
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   useEffect(() => {
     if (authToken) {
@@ -937,11 +936,11 @@ export default function TransactionTable() {
   };
 
   const filteredTransactions = transactions.filter((transaction) =>
-    Object.entries(filters).every(([key, value]) =>
-      String(transaction[key]).toLowerCase().includes(String(value).toLowerCase())
-    )
-  );
-
+    Object.entries(filters).every(([key, value]) => {
+      if (!value) return true;
+      return String(transaction[key]).toLowerCase().includes(String(value).toLowerCase());
+    })
+  );  
 
   const paginatedTransactions = filteredTransactions.slice((page - 1) * pageSize, page * pageSize);
 
@@ -955,6 +954,11 @@ export default function TransactionTable() {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
+  const clearAllFilters = () => {
+    setFilters({});
+    setPage(1);
+  };  
+
   return (
     <div className="md:px-[.7rem] pb-4 w-auto md:clear-right ml-5 md:ml-2 xl:ml-[19.5rem] mr-5 md:mr-3">
       <div className="w-full">
@@ -966,7 +970,9 @@ export default function TransactionTable() {
               setShowFilterMenu={setShowFilterMenu}
               filters={filters}
               filterOptions={filterOptions}
-              handleFilter={handleFilter}
+              handleFilterChange={handleFilter}
+              transactions={transactions}
+              clearAllFilters={clearAllFilters}
               closeOtherMenus={() => {
                 setShowExportMenu(false);
                 setShowMoreMenu(false);
