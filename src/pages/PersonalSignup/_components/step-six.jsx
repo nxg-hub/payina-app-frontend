@@ -51,6 +51,10 @@ export const StepSix = ({ next, email }) => {
       setLoading(false);
     }
   };
+
+  const handleNext = () => {
+    next ();
+  };
   localStorage.setItem('currentStep', 6);
 
   return (
@@ -123,14 +127,23 @@ export const StepSix = ({ next, email }) => {
               </div>
 
               {apiError && <div className="text-red-500 mb-4">{apiError}</div>}
-
-              <CustomButton
+ <div className="flex gap-2">
+ <CustomButton
                 padding="15px"
                 type="submit"
                 children={loading ? 'Uploading...' : 'Upload'}
                 className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
                 disabled={isSubmitting || loading}
               />
+                <button
+                  onClick={handleNext}
+                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8">
+                  Upload later? <br/>
+                   Next
+                </button>
+                
+              </div> 
+            
             </Form>
           )}
         </Formik>
