@@ -50,7 +50,7 @@ export default function PersonalSignupForm() {
       email={data.email}
     />,
     <StepSix next={handleNextStep} email={data.email} />,
-    <StepEight next={handleNextStep} text="Your Identity Has been Verified!" />,
+    // <StepEight next={handleNextStep} text="Your Identity Has been Verified!" />,
     <StepSixteen next={handleNextStep} email={data.email} />,
     <StepSeven next={handleNextStep} text="You Have Successfully Set Your Pin" />,
     <StepSeventeen next={handleNextStep} data={data} />,
