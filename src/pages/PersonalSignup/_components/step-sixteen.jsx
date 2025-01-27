@@ -79,11 +79,11 @@ export const StepSixteen = ({ next, email }) => {
         alt="Background Design"
         className="absolute bottom-[3rem] right-[43rem] w-20 h-20"
       />
-      <img
+      {/* <img
         src={images.Vector2}
         alt="Background Design"
         className="absolute bottom-[0.3rem] right-[31rem] w-[100px] h-[100px]"
-      />
+      /> */}
       <img
         src={images.Vector5}
         alt="Background Design"
