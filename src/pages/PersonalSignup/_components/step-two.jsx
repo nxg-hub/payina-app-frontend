@@ -169,7 +169,7 @@ export const StepTwo = ({ next, initialValues }) => {
                 disabled={loading}
                 onClick={handlePrevious}
                 className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-12">
-                back
+                Back
               </button>
 
               <CustomButton

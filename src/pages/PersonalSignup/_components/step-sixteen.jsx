@@ -3,10 +3,18 @@ import CustomButton from '../../../components/button/button';
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { images } from '../../../constants';
+import useLocalStorage from '../../../hooks/useLocalStorage';
+
 
 export const StepSixteen = ({ next, email }) => {
+  const decodeJWT = (token) => JSON.parse(atob(token.split('.')[1]));
+
   const [loading, setLoading] = useState('');
   const [pinError, setPinError] = useState('');
+  const [authToken, setAuthToken] = useLocalStorage('authToken', '');
+  const [userDetails, setuserDetails] = useLocalStorage('userDetails', '');
+
+
 
   const handleSubmit = async (values) => {
     setLoading(true);
@@ -24,7 +32,7 @@ export const StepSixteen = ({ next, email }) => {
       };
 
       try {
-        const response = await fetch('https://payina-be-6f08cdfb4414.herokuapp.com/api/v1/auth/set-pin', {
+        const response = await fetch(import.meta.env.VITE_SET_PIN_ENDPOINT, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -35,6 +43,14 @@ export const StepSixteen = ({ next, email }) => {
 
         if (response.ok && result.status !== 'BAD_REQUEST') {
           console.log('Pin set successfully:');
+        
+            const token = result.data;
+            setAuthToken(token);
+            localStorage.setItem('authToken', token);
+  
+            const decodedString = decodeJWT(token);
+            setuserDetails(decodedString);
+            next(result);
           localStorage.removeItem('phoneNumber');
           next(result);
         } else if (result.status === 'BAD_REQUEST') {
@@ -79,11 +95,11 @@ export const StepSixteen = ({ next, email }) => {
         alt="Background Design"
         className="absolute bottom-[3rem] right-[43rem] w-20 h-20"
       />
-      {/* <img
+      <img
         src={images.Vector2}
         alt="Background Design"
         className="absolute bottom-[0.3rem] right-[31rem] w-[100px] h-[100px]"
-      /> */}
+      />
       <img
         src={images.Vector5}
         alt="Background Design"
