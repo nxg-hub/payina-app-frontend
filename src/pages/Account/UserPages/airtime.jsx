@@ -12,6 +12,8 @@ import useLocalStorage from '../../../hooks/useLocalStorage';
 import Loader from '../../../assets/LoadingSpinner.jsx';
 import { FaNairaSign } from 'react-icons/fa6';
 import CustomButton from '../../../components/button/button.jsx';
+import successImage from '../../../assets/images/Group-successful.png';
+import errorImage from '../../../assets/images/Group 10275-decline.png';
 
 const UserAirtime = () => {
   const { formValues, updateFormValues } = useForm();
@@ -120,9 +122,7 @@ const UserAirtime = () => {
       setModalStatus('error');
       setModalTitle('Insufficient Funds');
       setModalMessage('Wallet balance too low. Fund your wallet to proceed.');
-      setModalDetails(
-        `Wallet Balance: ₦${balance.toFixed(2)}, Required Amount: ₦${amount}`
-      );
+      setModalDetails(`Wallet Balance: ₦${balance.toFixed(2)}, Required Amount: ₦${amount}`);
       setShowModal(true);
     } else {
       setIsProcessingVend(true);
@@ -247,8 +247,7 @@ const UserAirtime = () => {
                   onError={handleError}
                   isProcessing={isProcessingVend}
                   setIsProcessing={setIsProcessingVend}
-                  walletBalance={walletBalance}
-                >
+                  walletBalance={walletBalance}>
                   <CustomButton
                     type="submit"
                     className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
@@ -268,7 +267,13 @@ const UserAirtime = () => {
         message={modalMessage}
         status={modalStatus}
         details={modalDetails}
-        buttons={walletBalance !== null && Number(amount) > walletBalance ? ['fundWallet', 'back'] : ['back']}
+        successIcon={successImage}
+        errorIcon={errorImage}
+        buttons={
+          walletBalance !== null && Number(amount) > walletBalance
+            ? ['fundWallet', 'back']
+            : ['back']
+        }
         onFundWallet={handleFundWallet}
         successButtonText="Fund Wallet"
       />

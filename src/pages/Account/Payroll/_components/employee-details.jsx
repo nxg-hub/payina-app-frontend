@@ -268,8 +268,8 @@ const EmployeeDetails = ({ onSave }) => {
                       setDropdownOpen(false);
                       resetForm();
                     }}>
-                    <LuPlus size={20} color="#006181" />
-                    Add Employee
+                    {/* <LuPlus size={20} color="#006181" /> */}
+                    Clear form
                   </button>
                   <button
                     type="submit"

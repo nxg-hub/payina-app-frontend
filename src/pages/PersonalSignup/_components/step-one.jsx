@@ -23,9 +23,9 @@ export const StepOne = ({ next }) => {
       <div className="text-center mb-2 mt-20 xl:mt-0 text-primary font-extrabold xl:text-5xl text-2xl">
         Sign up to Payina
       </div>
-      <div className="hidden md:block absolute md:top-[-13.6rem] md:right-[1rem] xl:top-[-12.5rem] xl:right-[-38.5rem]">
+      {/* <div className="hidden md:block absolute md:top-[-13.6rem] md:right-[1rem] xl:top-[-12.5rem] xl:right-[-38.5rem]">
         <img src={images.Group} alt="" />
-      </div>
+      </div> */}
       <div className="bg-primary flex flex-col justify-center items-start sm:w-[300px] md:w-[400px] xl:w-[600px]">
         <Formik
           initialValues={{ email: savedEmail, password: '', confirmPassword: '' }}

@@ -162,7 +162,7 @@ export const StepFifteen = ({ next, email }) => {
                             <Field
                               name={`signatories.${index}.name`}
                               placeholder="Enter name"
-                              className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[10px] py-2 px-[10px]"
+                              className="w-full lg:w-[350px] h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[10px] py-2 px-[10px]"
                             />
                             <ErrorMessage
                               name={`signatories.${index}.name`}
@@ -180,7 +180,7 @@ export const StepFifteen = ({ next, email }) => {
                             <Field
                               name={`signatories.${index}.emailAddress`}
                               placeholder="Enter email address"
-                              className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[10px] py-2 px-[10px]"
+                              className="w-full lg:w-[350px] h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[10px] py-2 px-[10px]"
                             />
                             <ErrorMessage
                               name={`signatories.${index}.emailAddress`}
@@ -198,7 +198,7 @@ export const StepFifteen = ({ next, email }) => {
                             <Field
                               name={`signatories.${index}.phoneNumber`}
                               placeholder="Enter phone number"
-                              className="w-full h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[10px] py-2 px-[10px]"
+                              className="w-full lg:w-[350px]  h-[3.4rem] border border-[#9ca3af] outline-none font-bold text-base text-gray rounded-[10px] py-2 px-[10px]"
                             />
                             <ErrorMessage
                               name={`signatories.${index}.phoneNumber`}

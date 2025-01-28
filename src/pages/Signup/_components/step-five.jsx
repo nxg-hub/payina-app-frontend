@@ -173,7 +173,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
                   id="username"
                   name="username"
                   placeholder="Enter Your Username"
-                  className="w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+                  className="w-full lg:w-[500px] h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
                 />
                 <ErrorMessage
                   name="username"
