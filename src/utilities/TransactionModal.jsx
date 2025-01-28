@@ -1,25 +1,23 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const TransactionModal = ({
-  isOpen,
-  onClose,
-  status = 'success',
-  title,
-  message,
-  reference,
-  buttons = ['back'],
-  onRegister,
-  onLogin,
-  onFundWallet,
-  onPullReceipt,
-  successIcon,
-  errorIcon,
-  buttonStyles = {},
-  customButtons = [],
-}) => {
-  const navigate = useNavigate();
-
+                            isOpen,
+                            onClose,
+                            status = 'success',
+                            title,
+                            message,
+                            details,
+                            reference,
+                            buttons = ['back'],
+                            onRegister,
+                            onLogin,
+                            onFundWallet,
+                            onPullReceipt,
+                            successIcon,
+                            errorIcon,
+                            buttonStyles = {},
+                            customButtons = [],
+                          }) => {
   if (!isOpen) return null;
 
   const isSuccess = status === 'success';
@@ -28,6 +26,10 @@ const TransactionModal = ({
     if (e.target === e.currentTarget) {
       onClose();
     }
+  };
+
+  const handleBack = () => {
+    window.location.reload();
   };
 
   const buttonConfigs = {
@@ -48,8 +50,7 @@ const TransactionModal = ({
     },
     back: {
       label: 'Back',
-      onClick: onClose,
-      // onClick: () => navigate(-1),
+      onClick: handleBack,
       className: buttonStyles.back || 'bg-[#006181] hover:opacity-90',
     },
     fundWallet: {
@@ -67,7 +68,8 @@ const TransactionModal = ({
   const renderButtons = () => {
     const allButtons = [
       ...buttons,
-      ...(message.includes('Insufficient Funds') ? ['fundWallet'] : []), // Automatically add Fund Wallet button if the message contains "Insufficient Funds"
+        ...(message.includes('Insufficient Funds') ? ['fundWallet'] : []), // Automatically add Fund Wallet button if the message contains "Insufficient Funds"
+      // ...(message?.toLowerCase().includes('insufficient funds') ? ['fundWallet'] : []),
       ...customButtons.map((btn) => ({
         key: btn.key,
         label: btn.label,
@@ -78,14 +80,14 @@ const TransactionModal = ({
 
     return allButtons.map((button) => {
       const buttonConfig = typeof button === 'string' ? buttonConfigs[button] : button;
-
       if (!buttonConfig) return null;
 
       return (
         <button
           key={buttonConfig.key || buttonConfig.label}
           onClick={buttonConfig.onClick}
-          className={`${buttonConfig.className} text-white px-4 py-2 rounded transition duration-300 ease-in-out`}>
+          className={`${buttonConfig.className} text-white px-4 py-2 rounded transition duration-300 ease-in-out`}
+        >
           {buttonConfig.label}
         </button>
       );
@@ -95,12 +97,14 @@ const TransactionModal = ({
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-      onClick={handleOverlayClick}>
+      onClick={handleOverlayClick}
+    >
       <div
         className={`bg-white p-8 rounded-lg max-w-md w-full text-center text-black ${
           isSuccess ? 'border-green-500' : 'border-red-500'
         } border-4`}
-        onClick={(e) => e.stopPropagation()}>
+        onClick={(e) => e.stopPropagation()}
+      >
         <img
           src={isSuccess ? successIcon : errorIcon}
           alt={isSuccess ? 'Success' : 'Error'}
@@ -111,7 +115,8 @@ const TransactionModal = ({
           {title || (isSuccess ? 'Transaction Successful' : 'Transaction Failed')}
         </h2>
 
-        <p className="mb-2 text-black">{message}</p>
+        <p className="mb-2 text-gray-700">{message}</p>
+        {details && <p className="mb-2 text-sm text-gray-600">{details}</p>}
         {reference && <p className="mb-2 text-sm text-gray-600">Reference: {reference}</p>}
 
         <div className="mt-6 flex justify-center space-x-4">{renderButtons()}</div>

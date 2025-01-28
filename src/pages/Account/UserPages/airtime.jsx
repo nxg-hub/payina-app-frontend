@@ -62,7 +62,7 @@ const UserAirtime = () => {
   //           apiKey: apiKey,
   //         },
   //       });
-
+  //
   //       if (!response.ok) {
   //         throw new Error(`HTTP error! status: ${response.status}`);
   //       }
@@ -218,16 +218,16 @@ const UserAirtime = () => {
                     {errors.amount && <p className="mt-2 text-sm text-red-600">{errors.amount}</p>}
                   </div>
 
-                  <WalletBalanceChecker
-                    ref={walletCheckerRef}
-                    amount={amount}
-                    onInsufficientFunds={(balance, requiredAmount) => {
-                      setWalletBalance(balance);
-                    }}
-                    onSufficientFunds={(balance) => {
-                      setWalletBalance(balance);
-                    }}
-                  />
+                  {/*<WalletBalanceChecker*/}
+                  {/*  ref={walletCheckerRef}*/}
+                  {/*  amount={amount}*/}
+                  {/*  onInsufficientFunds={(balance, requiredAmount) => {*/}
+                  {/*    setWalletBalance(balance);*/}
+                  {/*  }}*/}
+                  {/*  onSufficientFunds={(balance) => {*/}
+                  {/*    setWalletBalance(balance);*/}
+                  {/*  }}*/}
+                  {/*/>*/}
                 </div>
 
                 <VendInitiator

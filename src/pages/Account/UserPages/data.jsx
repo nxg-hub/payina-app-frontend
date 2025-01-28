@@ -223,23 +223,23 @@ const UserData = () => {
                       )}
                     </div>
 
-                    <WalletBalanceChecker
-                      ref={walletCheckerRef}
-                      amount={selectedPlan?.amount}
-                      onInsufficientFunds={(balance, requiredAmount) => {
-                        setModalStatus('error');
-                        setModalTitle('Insufficient Funds');
-                        setModalMessage('Insufficient funds on merchant wallet');
-                        setModalDetails(
-                          `Wallet Balance: ₦${balance.toFixed(2)}, Required Amount: ₦${requiredAmount}`
-                        );
-                        setShowModal(true);
-                        setSubmitDisabled(true);
-                      }}
-                      onSufficientFunds={() => {
-                        setSubmitDisabled(false);
-                      }}
-                    />
+                    {/*<WalletBalanceChecker*/}
+                    {/*  ref={walletCheckerRef}*/}
+                    {/*  amount={selectedPlan?.amount}*/}
+                    {/*  onInsufficientFunds={(balance, requiredAmount) => {*/}
+                    {/*    setModalStatus('error');*/}
+                    {/*    setModalTitle('Insufficient Funds');*/}
+                    {/*    setModalMessage('Insufficient funds on merchant wallet');*/}
+                    {/*    setModalDetails(*/}
+                    {/*      `Wallet Balance: ₦${balance.toFixed(2)}, Required Amount: ₦${requiredAmount}`*/}
+                    {/*    );*/}
+                    {/*    setShowModal(true);*/}
+                    {/*    setSubmitDisabled(true);*/}
+                    {/*  }}*/}
+                    {/*  onSufficientFunds={() => {*/}
+                    {/*    setSubmitDisabled(false);*/}
+                    {/*  }}*/}
+                    {/*/>*/}
                   </div>
 
                   <VendInitiator
