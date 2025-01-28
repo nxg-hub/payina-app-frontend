@@ -3,26 +3,33 @@ import * as Yup from 'yup';
 import CustomButton from '../../../components/button/button';
 import { useState } from 'react';
 import { images } from '../../../constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { setManualEntry } from '../../../Redux/BusinessSignUpSlice';
 
-// const StepFourValidationSchema = Yup.object().shape({
-//   idType: Yup.string().required('ID Type is required').oneOf(['BVN', 'NIN'], 'Invalid ID Type'),
-//   identificationNumber: Yup.string()
-//     .required('ID Number is required')
-//     .when('idType', {
-//       is: 'BVN',
-//       then: Yup.string().length(11, 'BVN must be 11 digits'),
-//       otherwise: Yup.string().length(10, 'NIN must be 10 digits'),
-//     }),
-// });
+const StepFourValidationSchema = Yup.object().shape({
+  idType: Yup.string().required('ID Type is required').oneOf(['BVN', 'NIN'], 'Invalid ID Type'),
+  identificationNumber: Yup.string().required('ID Number is required'),
+  // .when('idType', {
+  //   is: 'BVN',
+  //   then: Yup.string().length(11, 'BVN must be 11 digits'),
+  // otherwise: Yup.string().length(10, 'NIN must be 10 digits'),
+  // }),
+});
 
 export const StepFour = ({ next }) => {
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const manualEntry = useSelector((state) => state.businessSignUp.manualEntry);
 
   const handleIDVerification = async (values) => {
-    const idType = values.idType; // Example: 'NIN' or 'BVN'
+    const idType = values.idType;
+    // Example: 'NIN' or 'BVN'
     const identificationNumber = values.identificationNumber; // Example: NIN or BVN entered by the user
     setApiError('');
+    if (idType === '') {
+      setApiError('Select Identity');
+    }
     if (identificationNumber.length !== 11) {
       setApiError('Identification number must be 11 digits!');
       return;
@@ -96,18 +103,30 @@ export const StepFour = ({ next }) => {
 
           // Access the message
           const message = parsedResponse.message;
+          message !==
+          'No matching records found. Please ensure the information is accurate and try again.'
+            ? dispatch(setManualEntry(true))
+            : dispatch(setManualEntry(false));
           setApiError(message || 'Verification failed. Please try again.');
         }
       }
     } catch (error) {
       // Handle network or unexpected errors
       console.log(error);
+      dispatch(setManualEntry(true));
       setApiError('An error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
   };
-
+  const handleManualEntry = () => {
+    next({
+      ...{
+        idType: '',
+        identificationNumber: '',
+      },
+    });
+  };
   localStorage.setItem('currentStep', 4);
   const Options = [
     { value: 'BVN', label: 'BVN' },
@@ -173,7 +192,7 @@ export const StepFour = ({ next }) => {
             idType: '',
             identificationNumber: '',
           }}
-          // validationSchema={StepFourValidationSchema}
+          validationSchema={StepFourValidationSchema}
           onSubmit={(values) => {
             handleIDVerification(values); // Single handler for both BVN and NIN
           }}>
@@ -218,16 +237,25 @@ export const StepFour = ({ next }) => {
               </div>
 
               {apiError && <div className="text-red-500 mb-4">{apiError}</div>}
-
-              <CustomButton
-                padding="15px"
-                type="submit"
-                children={loading ? 'Loading...' : 'Next'}
-                className={`hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8 ${
-                  !(isValid && dirty) ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-                disabled={!(isValid && dirty)}
-              />
+              {manualEntry ? (
+                <CustomButton
+                  padding="15px"
+                  type="button"
+                  onClick={handleManualEntry}
+                  children="Proceed to Manual Entry"
+                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6"
+                />
+              ) : (
+                <CustomButton
+                  padding="15px"
+                  type="submit"
+                  children={loading ? 'Loading...' : 'Next'}
+                  className={`hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8 ${
+                    !(isValid && dirty) ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                  disabled={!(isValid && dirty)}
+                />
+              )}
             </Form>
           )}
         </Formik>

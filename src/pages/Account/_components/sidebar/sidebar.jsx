@@ -239,6 +239,7 @@ import { resetState, resetToken } from '../../../../Redux/BusinessSignUpSlice.js
 import { clearState } from '../../../../Redux/ForgotPasswordSlice.jsx';
 import { reSetClientsDetails } from '../../../../Redux/GetClientsSlice.jsx';
 import { reSetWalletDetails } from '../../../../Redux/WalletSlice.jsx';
+import useLocalStorage from '../../../../hooks/useLocalStorage.js';
 
 export const Sidebar = () => {
   const location = useLocation();
@@ -248,6 +249,7 @@ export const Sidebar = () => {
   const [toggle, setToggle] = useState(false);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [newAuthToken] = useLocalStorage('authToken', '');
 
   // Get user details from Redux store
   const userDetails = useSelector((state) => state.user.user);
@@ -260,7 +262,7 @@ export const Sidebar = () => {
       try {
         const response = await fetch(import.meta.env.VITE_GET_USER, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`, // Assuming token is stored in localStorage
+            Authorization: `Bearer ${newAuthToken}`, // Assuming token is stored in localStorage
           },
         });
 
@@ -395,9 +397,7 @@ export const Sidebar = () => {
               className={`${
                 toggle ? 'h-[50px] overflow-visible' : 'h-0 overflow-hidden'
               } transition-all duration-300 flex-col space-y-3 !mt-[15px] ml -auto`}>
-
-                  <Link to="/account/inventory" className="flex items-center space-x-7">
-
+              <Link to="/account/inventory" className="flex items-center space-x-7">
                 <RiFileSettingsLine size={22} />
                 <span className="hover:text-lightBlue ease transition-colors text-nowrap ">
                   View/Update

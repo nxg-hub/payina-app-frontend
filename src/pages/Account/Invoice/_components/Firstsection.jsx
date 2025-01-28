@@ -12,6 +12,10 @@ const Firstsection = ({
   setShowFiltered,
   clientId,
   handleSetRecentInvoices,
+  setTotalPages,
+  currentPage,
+  setCurrentPage,
+  setInvoiceCurrentPage,
 }) => {
   // const [clients, setClients] = useState([]);
   const { corporateCustomerId } = useContext(CorporateCustomerContext);
@@ -60,7 +64,7 @@ const Firstsection = ({
 
         if (response.ok) {
           const responseData = await response.json();
-          console.log(responseData);
+          // console.log(responseData);
 
           const clientsData = responseData?.content?.map((client) => ({
             id: client.id,
@@ -98,13 +102,13 @@ const Firstsection = ({
 
         return;
       }
-      const formattedBeginDate = beginDate ? `${beginDate}T00:00:00` : '';
-      const formattedEndDate = endDate ? `${endDate}T23:59:59` : '';
+      const formattedBeginDate = beginDate ? `${beginDate}` : '';
+      const formattedEndDate = endDate ? `${endDate}` : '';
       setLoadingInvoices(true);
       dispatch(setFilterLoader(true));
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_FILTER_INVOICES_ENDPOINT}?corporateCustomerClientId=${selectedClientId}&startDateStr=${formattedBeginDate}&endDateStr=${formattedEndDate}&status=${status}`,
+          `${import.meta.env.VITE_FILTER_INVOICES_ENDPOINT}?corporateCustomerClientId=${selectedClientId}&startDateStr=${formattedBeginDate}&endDateStr=${formattedEndDate}&status=${status}&page=${currentPage}&size=${4}`,
           {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
@@ -116,12 +120,17 @@ const Firstsection = ({
         }
 
         const data = await response.json();
-        setFilteredInvoices(data);
+
+        setFilteredInvoices(data.content);
+        setTotalPages(data.totalPages);
         setShowFiltered(true);
         dispatch(setFilterLoader(false));
+        // setTotalPages(Math.ceil(data.length / 5) || 1);
         // console.log("Filtered Invoices:", data);
       } catch (error) {
         console.error('Error filtering invoices:', error);
+        setShowFiltered(false);
+        setFilteredInvoices(null);
       } finally {
         setLoadingInvoices(false);
         dispatch(setFilterLoader(false));
@@ -129,7 +138,7 @@ const Firstsection = ({
     };
 
     fetchFilteredInvoices();
-  }, [selectedClientId, beginDate, endDate, status]);
+  }, [selectedClientId, beginDate, endDate, status, currentPage]);
 
   return (
     <>
@@ -159,7 +168,11 @@ const Firstsection = ({
                   name="beginDate"
                   className="text-[9px] md:text-base w-[90%] md:w-full bg-[#82B5C6] h-[30px] sm:text-[13px] md:h-[48px] p-2 rounded-md"
                   value={beginDate}
-                  onChange={(e) => setBeginDate(e.target.value)}
+                  onChange={(e) => {
+                    setBeginDate(e.target.value);
+                    setCurrentPage(0);
+                    setInvoiceCurrentPage(0);
+                  }}
                 />
               </div>
               <div className=" ">
@@ -170,7 +183,11 @@ const Firstsection = ({
                   name="endDate"
                   className="text-[9px] md:text-base w-[90%] md:w-full bg-[#F1A2A2] h-[30px] sm:text-[13px] md:h-[48px] p-2 rounded-md"
                   value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
+                  onChange={(e) => {
+                    setEndDate(e.target.value);
+                    setCurrentPage(0);
+                    setInvoiceCurrentPage(0);
+                  }}
                 />
               </div>
               <div className="">
@@ -179,7 +196,11 @@ const Firstsection = ({
                   id="status"
                   name="status"
                   value={status}
-                  onChange={(e) => setStatus(e.target.value)}
+                  onChange={(e) => {
+                    setStatus(e.target.value);
+                    setCurrentPage(0);
+                    setInvoiceCurrentPage(0);
+                  }}
                   className=" h-[30px] md:h-[48px] rounded-md p-2 w-full md:w-full text-[9px] sm:text-[13px] md:text-base bg-[#BADD56]
 ">
                   <option value="">Select </option>
@@ -223,6 +244,8 @@ const Firstsection = ({
                                   client.id,
                                   `${client.firstName} ${client.lastName}`
                                 );
+                                setCurrentPage(0);
+                                setInvoiceCurrentPage(0);
                               }}
                               className={`${selectedClientId === client.id ? 'bg-slate-300' : ' cursor-pointer'}`}
                               key={client.id}

@@ -10,7 +10,7 @@ import {
   StepThree,
   StepTwo,
   StepSix,
-  StepEight
+  StepEight,
 } from './_components';
 import { useDispatch, useSelector } from 'react-redux';
 import { nextStep } from '../../Redux/PersonalSignUpSlice';
@@ -42,9 +42,15 @@ export default function PersonalSignupForm() {
     <StepTwo next={handleNextStep} initialValues={data} />,
     <StepThree next={handleNextStep} data={data} />,
     <StepFour next={handleNextStep} />,
-    <StepFive next={handleNextStep} bvnData={data} ninData={data} initialValues={data} email={data.email} />,
-    <StepSix next={handleNextStep} email={data.email}/>,
-    <StepEight next={handleNextStep} text= "Your Identity Has been Verified!" />,
+    <StepFive
+      next={handleNextStep}
+      bvnData={data}
+      ninData={data}
+      initialValues={data}
+      email={data.email}
+    />,
+    <StepSix next={handleNextStep} email={data.email} />,
+    <StepEight next={handleNextStep} text="Your Identity Has been Verified!" />,
     <StepSixteen next={handleNextStep} email={data.email} />,
     <StepSeven next={handleNextStep} text="You Have Successfully Set Your Pin" />,
     <StepSeventeen next={handleNextStep} data={data} />,
