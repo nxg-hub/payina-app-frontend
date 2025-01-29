@@ -8,16 +8,16 @@ import 'jspdf-autotable';
 import { utils, writeFile } from 'xlsx';
 
 export const ExportMenu = ({
-                             showExportMenu,
-                             setShowExportMenu,
-                             transactions,
-                             selectedRows,
-                             showAllFields,
-                             closeOtherMenus,
-                             formatCurrency,
-                             filters,
-                             dateRange,
-                           }) => {
+  showExportMenu,
+  setShowExportMenu,
+  transactions,
+  selectedRows,
+  showAllFields,
+  closeOtherMenus,
+  formatCurrency,
+  filters,
+  dateRange,
+}) => {
   const columns = [
     { header: 'Type', key: 'type' },
     { header: 'Description', key: 'description' },
@@ -27,10 +27,10 @@ export const ExportMenu = ({
     { header: 'Date', key: 'createdAt' },
     ...(showAllFields
       ? [
-        { header: 'ID', key: 'id' },
-        { header: 'Previous Balance', key: 'previousBalance' },
-        { header: 'New Balance', key: 'newBalance' },
-      ]
+          { header: 'ID', key: 'id' },
+          { header: 'Previous Balance', key: 'previousBalance' },
+          { header: 'New Balance', key: 'newBalance' },
+        ]
       : []),
   ];
 
@@ -40,9 +40,10 @@ export const ExportMenu = ({
     exportData.push(headers);
 
     if (Array.isArray(transactions) && transactions.length > 0) {
-      const tableData = selectedRows.length > 0
-        ? transactions.filter((t) => selectedRows.includes(t.id))
-        : transactions;
+      const tableData =
+        selectedRows.length > 0
+          ? transactions.filter((t) => selectedRows.includes(t.id))
+          : transactions;
 
       const rows = tableData.map((transaction) =>
         columns.map((col) => {
@@ -96,7 +97,7 @@ export const ExportMenu = ({
       const doc = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
-        format: 'a4'
+        format: 'a4',
       });
 
       const exportData = getExportData();

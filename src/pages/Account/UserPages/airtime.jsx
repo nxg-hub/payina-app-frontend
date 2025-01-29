@@ -271,7 +271,7 @@ const UserAirtime = () => {
         errorIcon={errorImage}
         buttons={
           walletBalance !== null && Number(amount) > walletBalance
-            ? ['fundWallet', 'back']
+            ? ['fundWallet', 'dashboard']
             : ['back']
         }
         onFundWallet={handleFundWallet}

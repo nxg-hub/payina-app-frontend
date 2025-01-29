@@ -174,7 +174,8 @@ const EnterPin = ({ data }) => {
         }
       } else {
         console.log('PIN validation failed.');
-        setErrorMessage('PIN validation failed.');
+        setErrorMessage('Incorrect PIN. Please try again.');
+        // setErrorMessage('PIN validation failed.');
         setShowDecline(true);
       }
     } catch (error) {
@@ -183,19 +184,43 @@ const EnterPin = ({ data }) => {
       if (error.response) {
         console.error('Error Status:', error.response.status);
         console.error('Error Data:', error.response.data);
+
+        // Extracting the error message correctly
         const backendMessage =
-          error.response.data.response || error.response.data.debugMessage || 'Transaction failed.';
+          error.response.data?.data || // If the message is nested inside 'data'
+          error.response.data?.response || // If message is under 'response'
+          error.response.data?.debugMessage || // If message is under 'debugMessage'
+          error.response.data || // Direct string message
+          'Transaction failed.'; // Default fallback
+
         setErrorMessage(backendMessage);
       } else {
-        console.error('Error Message:', error.message);
+        setErrorMessage('Transaction process failed. Please try again.');
       }
-
-      setErrorMessage('Transaction process failed. Please try again.');
       setShowDecline(true);
     } finally {
       setLoading(false);
     }
   };
+  //   catch (error) {
+  //     console.error('Error during transaction process:', error);
+
+  //     if (error.response) {
+  //       console.error('Error Status:', error.response.status);
+  //       console.error('Error Data:', error.response.data);
+  //       const backendMessage =
+  //         error.response.data.response || error.response.data.debugMessage || 'Transaction failed.';
+  //       setErrorMessage(backendMessage);
+  //     } else {
+  //       console.error('Error Message:', error.message);
+  //     }
+
+  //     setErrorMessage('Transaction process failed. Please try again.');
+  //     setShowDecline(true);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   if (showSuccess) return <SuccessMessage />;
   if (showDecline) return <DeclineMessage errorMessage={errorMessage} />;
