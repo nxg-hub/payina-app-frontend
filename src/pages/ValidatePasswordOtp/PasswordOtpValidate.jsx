@@ -36,15 +36,22 @@ const PasswordOtpValidate = () => {
   }, [timer]);
 
   const handleSubmit = async (values) => {
-    console.log('Form submitted:', values);
+    // console.log('Form submitted:', values);
     setLoading(true);
     setUploadStatus('');
     try {
       const response = await axios.post(import.meta.env.VITE_VALIDATE_OTP_ENDPOINT, {
         otp: values.otp,
       });
-      if (response.status === 200) {
+      const data = response.data;
+      if (data.status === 'ACCEPTED') {
         navigate('/reset-password');
+        setLoading(false);
+      } else if (data.status === 'BAD_REQUEST') {
+        setUploadStatus(data.debugMessage || 'Invalid OTP');
+        return;
+      } else {
+        setUploadStatus(data.debugMessage || 'Invalid OTP');
       }
     } catch (err) {
       setUploadStatus(`Error:Something went wrong`);

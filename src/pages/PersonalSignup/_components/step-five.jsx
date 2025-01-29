@@ -161,7 +161,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
                 />
               </div>
 
-              <div className="my-2">
+              {/* <div className="my-2">
                 <label htmlFor="gender" className="text-secondary block mb-4 w-full text-sm">
                   Gender
                 </label>
@@ -176,6 +176,26 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
                 </Field>
+                value={bvnData.gender || ninData.gender || values.gender}
+
+                <ErrorMessage
+                  name="gender"
+                  component="div"
+                  className="text-[#db3a3a] mt-2 text-sm"
+                />
+              </div> */}
+               <div className="my-2">
+                <label htmlFor="lastName" className="text-secondary block mb-4 w-full text-sm">
+                  Gender
+                </label>
+                <Field
+                  type="text"
+                  id="gender"
+                  name="gender"
+                  onChange={handleChange}
+                  value={bvnData.gender || ninData.gender || values.gender}
+                  className="text-gray w-full lg:w-[500px] h-[3.4rem] border border-[#9ca3af] outline-none rounded-[5px] py-2 px-[10px]"
+                />
                 <ErrorMessage
                   name="gender"
                   component="div"
@@ -222,7 +242,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
                   disabled={loading}
                   onClick={handlePrevious}
                   className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6">
-                  back
+                  Back
                 </button>
                 <CustomButton
                   padding="15px"

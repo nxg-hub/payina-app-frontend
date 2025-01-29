@@ -100,7 +100,7 @@ const EmailVerification = ({}) => {
               regLevel === 'SET_TRANSACTION_PIN' ||
               regLevel === 'CORPORATE_PROFILE_UPDATE_SET_PIN'
             ) {
-              dispatch(setPersonalStep(15));
+              dispatch(setPersonalStep(7));
               navigate('/personal/signUp');
               return;
             }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ProfileSetting from './ProfileSetting';
 import PasswordSetting from './PasswordSetting';
 import NotificationSetting from './NotificationSetting';
+import PinSetting from './PinSetting';
 
 const SettingType = () => {
   const [activeTab, setActiveTab] = useState('profile');
@@ -10,8 +11,8 @@ const SettingType = () => {
     setActiveTab(tab);
   };
   return (
-    <div className="flex flex-col md:flex-row w-full mt-5">
-      <div className="w-[60%] md:w-[40%] lg:w-[30%] h-[200px] space-y-9 pt-2  border-2 border-[#aaa] shadow-sm md:shadow-2xl rounded-md mx-auto">
+    <div className="flex flex-col md:flex-row w-full mt-5 ">
+      <div className="w-[60%] md:w-[40%] lg:w-[30%] h-[250px] space-y-9 pt-2  border-2 border-[#aaa] shadow-sm md:shadow-2xl rounded-md mx-auto">
         <span
           onClick={() => handleActiveTabChange('profile')}
           className={
@@ -55,6 +56,28 @@ const SettingType = () => {
           Password Settings
         </span>
         <span
+          onClick={() => handleActiveTabChange('pin')}
+          className={
+            activeTab === 'pin'
+              ? 'bg-[#D9EDF8] flex w-[90%] m-auto gap-2'
+              : 'flex cursor-pointer w-[90%] m-auto gap-2'
+          }>
+          <svg
+            width="18"
+            height="20"
+            viewBox="0 0 18 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M5 8V6C5 3.239 6.239 1 9 1C11.761 1 13 3.239 13 6V8M9 13.75V13.25M13 13.75V13.25M5 13.75V13.25M0.5 15.8V11.2C0.5 10.08 0.5 9.52 0.718 9.093C0.909574 8.71632 1.21554 8.41 1.592 8.218C2.02 8.001 2.58 8.001 3.7 8.001H14.3C15.42 8.001 15.98 8.001 16.408 8.218C16.7843 8.40974 17.0903 8.71569 17.282 9.092C17.5 9.52 17.5 10.08 17.5 11.2V15.8C17.5 16.92 17.5 17.48 17.282 17.908C17.0903 18.2843 16.7843 18.5903 16.408 18.782C15.98 19 15.42 19 14.3 19H3.7C2.58 19 2.02 19 1.592 18.782C1.21569 18.5903 0.909744 18.2843 0.718 17.908C0.5 17.481 0.5 16.921 0.5 15.8Z"
+              stroke="black"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          Pin Settings
+        </span>
+        <span
           onClick={() => handleActiveTabChange('notification')}
           className={
             activeTab === 'notification'
@@ -85,6 +108,7 @@ const SettingType = () => {
         {activeTab === 'profile' && <ProfileSetting />}
         {activeTab === 'password' && <PasswordSetting />}
         {activeTab === 'notification' && <NotificationSetting />}
+        {activeTab === 'pin' && <PinSetting />}
       </section>
     </div>
   );

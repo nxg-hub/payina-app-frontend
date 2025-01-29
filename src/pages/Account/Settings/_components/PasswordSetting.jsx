@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import useLocalStorage from '../../../../hooks/useLocalStorage';
+import { BsEye, BsEyeSlash } from 'react-icons/bs';
 
 // Validation schema for the password channge form
 const validationSchema = Yup.object().shape({
@@ -16,6 +17,11 @@ const PasswordSetting = () => {
   const [uploadStatus, setUploadStatus] = useState('');
   const [success, setSuccess] = useState(false);
   const [newAuthToken] = useLocalStorage('authToken', '');
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleSubmit = async (values, actions) => {
     const { resetForm } = actions;
@@ -67,7 +73,7 @@ const PasswordSetting = () => {
                 </label>
                 <Field
                   className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                  type="text"
+                  type={showPassword ? 'text' : 'password'}
                   name="oldPassword"
                 />
                 <ErrorMessage className="text-red-500" name="oldPassword" component="div" />
@@ -78,7 +84,7 @@ const PasswordSetting = () => {
                 </label>
                 <Field
                   className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                  type="text"
+                  type={showPassword ? 'text' : 'password'}
                   name="newPassword"
                 />
                 <ErrorMessage className="text-red-500" name="newPassword" component="div" />
@@ -89,9 +95,14 @@ const PasswordSetting = () => {
                 </label>
                 <Field
                   className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                  type="text"
+                  type={showPassword ? 'text' : 'password'}
                   name="confirmPassword"
                 />
+                {showPassword ? (
+                  <BsEye onClick={handleShowPassword} className="absolute top-14 right-1" />
+                ) : (
+                  <BsEyeSlash onClick={handleShowPassword} className="absolute top-14 right-1" />
+                )}
                 <ErrorMessage className="text-red-500" name="confirmPassword" component="div" />
               </div>
               {uploadStatus && (
