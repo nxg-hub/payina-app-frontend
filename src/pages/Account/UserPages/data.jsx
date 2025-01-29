@@ -6,23 +6,25 @@ import { useDataPlans } from '../../../hooks/useDataPlans';
 import NetworkSelection from '../../../components/NetworkSelection';
 import TransactionModal from '../../../utilities/TransactionModal';
 import VendInitiator from '../../../utilities/VendInitiator';
-import WalletBalanceChecker from '../../../utilities/WalletBalanceChecker';
 import { useAuth } from '../../../context/useAuth';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import Loader from '../../../assets/LoadingSpinner';
 import CustomButton from '../../../components/button/button.jsx';
 import successImage from '../../../assets/images/Group-successful.png';
 import errorImage from '../../../assets/images/Group 10275-decline.png';
+import TransactionReceipt from '../../../utilities/TransactionReceipt.jsx';
 
 const UserData = () => {
   const { formValues, updateFormValues } = useForm();
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
+  const [amount, setAmount] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [modalStatus, setModalStatus] = useState('error');
   const [modalTitle, setModalTitle] = useState('');
   const [modalMessage, setModalMessage] = useState('');
   const [modalDetails, setModalDetails] = useState('');
+  const [modalContent, setModalContent] = useState(null);
   const [isProcessingVend, setIsProcessingVend] = useState(false);
   const [userPhone, setUserPhone] = useState('');
   const [submitDisabled, setSubmitDisabled] = useState(false);
@@ -30,6 +32,9 @@ const UserData = () => {
   const [userDetails] = useLocalStorage('userDetails', '');
   const [authToken] = useLocalStorage('authToken', '');
   const walletCheckerRef = useRef();
+  const [apiKey] = useLocalStorage('apiKey', import.meta.env.VITE_API_KEY);
+  const [walletBalance, setWalletBalance] = useState(null);
+  const [currentTransactionRef, setCurrentTransactionRef] = useState(null);
 
   const {
     plans,
@@ -85,21 +90,6 @@ const UserData = () => {
     }
   };
 
-  const checkWalletBalance = async (amount) => {
-    try {
-      await walletCheckerRef.current.checkBalance(amount);
-    } catch (error) {
-      setModalStatus('error');
-      setModalTitle('Insufficient Funds');
-      setModalMessage('Insufficient funds on merchant wallet');
-      setModalDetails(`Required Amount: ₦${amount}`);
-      setShowModal(true);
-      setSubmitDisabled(true);
-      return false;
-    }
-    setSubmitDisabled(false);
-    return true;
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -115,43 +105,113 @@ const UserData = () => {
       return;
     }
 
-    const hasBalance = await checkWalletBalance(selectedPlan.amount);
-    if (!hasBalance) {
-      return;
-    }
+    const balance = await walletCheckerRef.current.checkBalance();
+    setWalletBalance(balance);
 
-    setIsProcessingVend(true);
+    if (Number(amount) > balance) {
+      setModalStatus('error');
+      setModalTitle('Insufficient Funds');
+      setModalMessage('Wallet balance too low. Fund your wallet to proceed.');
+      setModalDetails(`Wallet Balance: ₦${balance.toFixed(2)}, Required Amount: ₦${amount}`);
+      setShowModal(true);
+    } else {
+      setIsProcessingVend(true);
+    }
   };
 
-  const handleVendInitiated = (reference) => {
+  const handleVendInitiated = (response) => {
+    console.log('Vend initiated with response:', response);
+
+    const paymentRef = response?.responseData?.paymentReference;
+    console.log('Extracted payment reference:', paymentRef);
+
+    if (paymentRef) {
+      setCurrentTransactionRef(paymentRef);
+      setModalStatus('success');
+      setModalTitle('Transaction Successful');
+      setModalMessage('Successfully processed the vend request');
+      setModalDetails(`Transaction Reference: ${paymentRef}`);
+      setShowModal(true);
+    } else {
+      console.error('Payment reference not found in response:', response);
+      handleError(new Error('Invalid transaction response'));
+    }
+
     setIsProcessingVend(false);
-    setModalStatus('success');
-    setModalTitle('Transaction Successful');
-    setModalMessage('Successfully processed the vend request');
-    setShowModal(true);
+    setAmount('');
+    updateFormValues({ phoneNumber: '', selectedNetwork: '', packageSlug: '' });
   };
 
   const handleError = (err) => {
     setIsProcessingVend(false);
     setModalStatus('error');
     setModalTitle('Transaction Failed');
-
-    let errorMessage = err.message;
-    try {
-      const errorResponse = JSON.parse(err.message);
-      if (errorResponse.debugMessage) {
-        errorMessage = errorResponse.debugMessage;
-      }
-    } catch (e) {
-      console.error('Error parsing API response:', e);
-    }
-
-    setModalMessage(errorMessage);
+    setModalMessage(err.message || 'An unknown error occurred');
     setModalDetails('');
     setShowModal(true);
+  };
 
-    if (errorMessage.toLowerCase().includes('insufficient funds')) {
-      setSubmitDisabled(true);
+  const handlePullReceipt = async () => {
+    if (!currentTransactionRef) {
+      setModalStatus('error');
+      setModalTitle('Error');
+      setModalMessage('Transaction reference not found. Please try again or contact support.');
+      setShowModal(true);
+      return;
+    }
+
+    try {
+      setModalStatus('loading');
+      setModalTitle('Fetching Receipt');
+      setModalMessage('Please wait...');
+
+      const response = await fetch(
+        `https://payina-wallet-service-api.onrender.com/api/receipts/${currentTransactionRef}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`,
+            apiKey: apiKey,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch receipt: ${response.statusText}`);
+      }
+
+      const receiptData = await response.json();
+
+      if (!receiptData || !receiptData.transactionRef || !receiptData.amount) {
+        throw new Error('Invalid receipt data received');
+      }
+
+      console.log('Receipt data:', receiptData);
+
+      setModalStatus(null);
+      setModalTitle('');
+      setModalMessage('');
+      setModalDetails('');
+
+      setModalContent(
+        <TransactionReceipt
+          receiptData={receiptData}
+          onClose={() => {
+            setShowModal(false);
+            setModalContent(null);
+          }}
+        />
+      );
+
+      setTimeout(() => setShowModal(true), 0);
+    } catch (error) {
+      console.error('Error pulling receipt:', error);
+      setModalStatus('error');
+      setModalTitle('Error');
+      setModalMessage(`Failed to fetch receipt: ${error.message}`);
+      setModalContent(null);
+      setShowModal(true);
     }
   };
 
@@ -172,6 +232,18 @@ const UserData = () => {
       </div>
     );
   }
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    if (modalStatus === 'error') {
+      setCurrentTransactionRef(null);
+      setModalContent(null);
+      setModalStatus(null);
+      setModalTitle('');
+      setModalMessage('');
+      setModalDetails('');
+    }
+  };
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -222,24 +294,6 @@ const UserData = () => {
                         <p className="mt-2 text-sm text-red-600">{errors.selectedPlan}</p>
                       )}
                     </div>
-
-                    {/*<WalletBalanceChecker*/}
-                    {/*  ref={walletCheckerRef}*/}
-                    {/*  amount={selectedPlan?.amount}*/}
-                    {/*  onInsufficientFunds={(balance, requiredAmount) => {*/}
-                    {/*    setModalStatus('error');*/}
-                    {/*    setModalTitle('Insufficient Funds');*/}
-                    {/*    setModalMessage('Insufficient funds on merchant wallet');*/}
-                    {/*    setModalDetails(*/}
-                    {/*      `Wallet Balance: ₦${balance.toFixed(2)}, Required Amount: ₦${requiredAmount}`*/}
-                    {/*    );*/}
-                    {/*    setShowModal(true);*/}
-                    {/*    setSubmitDisabled(true);*/}
-                    {/*  }}*/}
-                    {/*  onSufficientFunds={() => {*/}
-                    {/*    setSubmitDisabled(false);*/}
-                    {/*  }}*/}
-                    {/*/>*/}
                   </div>
 
                   <VendInitiator
@@ -273,20 +327,27 @@ const UserData = () => {
 
       <TransactionModal
         isOpen={showModal}
-        onClose={() => setShowModal(false)}
+        onClose={handleModalClose}
         title={modalTitle}
-        message={
-          modalMessage === 'Request failed'
-            ? ['Request failed, wallet balance too low']
-            : ['Request failed, please try again.']
-        }
+        message={modalMessage}
         status={modalStatus}
+        details={modalDetails}
         successIcon={successImage}
         errorIcon={errorImage}
-        details={modalDetails}
-        buttons={modalStatus === 'error' ? ['fundWallet', 'back'] : ['back']}
+        buttons={
+          modalStatus === 'success'
+            ? ['pullReceipt', 'back']
+            : modalStatus === 'error' && walletBalance !== null && Number(amount) > walletBalance
+              ? ['fundWallet', 'back']
+              : modalStatus
+                ? ['back']
+                : []
+        }
         onFundWallet={handleFundWallet}
+        onPullReceipt={handlePullReceipt}
+        transactionRef={currentTransactionRef}
         successButtonText="Fund Wallet"
+        modalContent={modalContent}
       />
     </div>
   );

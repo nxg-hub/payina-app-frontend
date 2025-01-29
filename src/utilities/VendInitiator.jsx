@@ -135,16 +135,16 @@ const VendInitiator = ({
         customerMessage = customerMessage.replace(" C'Gate", '');
         onVendInitiated(vendValueResponse.data);
       } else {
-        const responseData = vendValueResponse.data.responseData || {};
-        const errorNarration = responseData.narration || responseData.errorNarration || 'Unknown error occurred';
-        const debugMessage = vendValueResponse.data.debugMessage || `Vend value failed: ${errorNarration}`;
+        const responseData = 'AAA' + vendValueResponse.data.responseData || {};
+        const errorNarration = 'BBB'+ responseData.narration || 'CCC' + responseData.errorNarration || 'Unknown error occurred';
+        const debugMessage = 'DDD' + vendValueResponse.data.debugMessage || `Vend value failed: ${errorNarration}`;
         throw new Error(debugMessage);
       }
     } catch (err) {
       console.error('Error in vend process:', err);
-      const errorMessage = err.response?.data?.debugMessage ||
-        err.response?.data?.message ||
-        err.message ||
+      const errorMessage = 'EEE' + err.response?.data?.debugMessage ||
+        'FFF' + err.response?.data?.message ||
+        'GGG' + err.message ||
         'Vend process failed';
       onError(new Error(errorMessage));
     } finally {
