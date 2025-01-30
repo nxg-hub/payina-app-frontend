@@ -49,7 +49,6 @@ const Airtime = () => {
 
     const newErrors = { ...errors };
     if (Number(enteredAmount) < 0) {
-    // if (Number(enteredAmount) < 70) {
       newErrors.amount = 'Amount must be 70 Naira or above';
     } else {
       delete newErrors.amount;
