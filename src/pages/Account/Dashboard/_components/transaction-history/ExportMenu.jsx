@@ -1,9 +1,7 @@
 import React from 'react';
 import { Download } from 'lucide-react';
 
-// Import jsPDF with proper type definition
 import { jsPDF } from 'jspdf';
-// Need to import jspdf-autotable as a plugin
 import 'jspdf-autotable';
 import { utils, writeFile } from 'xlsx';
 

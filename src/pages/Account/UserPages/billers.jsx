@@ -190,9 +190,9 @@ const Billers = () => {
                   type="button"
                   className="w-full mb-6 text-left bg-blue-50 text-blue-600 p-4 rounded-lg hover:bg-blue-100 transition-colors duration-200"
                 >
-                  Want to enjoy discounts?{' '}
-                  <span className="font-semibold">Register</span> or{' '}
-                  <span className="font-semibold">Login</span>
+                  Want to paybills and enjoy discount?{' '}
+                  {/*<span className="font-semibold">Register</span> or{' '}*/}
+                  {/*<span className="font-semibold">Login</span>*/}
                 </CustomButton>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
