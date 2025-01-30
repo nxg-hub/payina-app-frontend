@@ -1,7 +1,7 @@
 import { Form, Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import CustomButton from '../../../components/button/button';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { previousStep } from '../../../Redux/PersonalSignUpSlice';
 import { images } from '../../../constants';
@@ -10,14 +10,27 @@ const StepFiveValidationSchema = Yup.object().shape({
   username: Yup.string().required('Username is required'),
 });
 
-export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
+export const StepFive = ({ next, bvnData, ninData, email, initialValues, values }) => {
   const userEmail = localStorage.getItem('userEmail');
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const [isGenderSelected, setIsGenderSelected] = useState(false);
 
   const handlePrevious = () => {
     dispatch(previousStep());
+  };
+  useEffect(() => {
+    if (bvnData?.gender || ninData?.gender || initialValues?.gender) {
+      setIsGenderSelected(true);
+    }
+  }, [bvnData, ninData, initialValues]);
+
+  const handleAddGender = (event) => {
+    handleChange (event);
+    if (event.target.value) {
+      setIsGenderSelected (true)
+    }
   };
 
   // Robust data extraction with fallbacks
@@ -69,6 +82,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
   localStorage.setItem('currentStep', 5);
 
   const extractedData = extractData();
+  
 
   return (
     <div className="relative bg-black min-h-screen flex items-center justify-center">
@@ -161,7 +175,9 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
                 />
               </div>
 
-              {/* <div className="my-2">
+               <div className="my-2">
+               {!isGenderSelected ? ( // Conditionally render the dropdown
+        <>
                 <label htmlFor="gender" className="text-secondary block mb-4 w-full text-sm">
                   Gender
                 </label>
@@ -169,39 +185,28 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
                   as="select"
                   id="gender"
                   name="gender"
-                  onChange={handleChange}
-                  value={bvnData.gender || ninData.gender || values.gender}
+                  onChange={(e) => {
+                    handleAddGender(e);
+                    handleChange(e);
+                  }}                  value={bvnData.gender || ninData.gender || values.gender}
                   className="text-gray w-full lg:w-[500px] h-[3.4rem] border border-[#9ca3af] outline-none rounded-[5px] py-2 px-[10px]">
                   <option value="">Select Gender</option>
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
                 </Field>
-                value={bvnData.gender || ninData.gender || values.gender}
 
                 <ErrorMessage
                   name="gender"
                   component="div"
                   className="text-[#db3a3a] mt-2 text-sm"
                 />
-              </div> */}
-               <div className="my-2">
-                <label htmlFor="lastName" className="text-secondary block mb-4 w-full text-sm">
-                  Gender
-                </label>
-                <Field
-                  type="text"
-                  id="gender"
-                  name="gender"
-                  onChange={handleChange}
-                  value={bvnData.gender || ninData.gender || values.gender}
-                  className="text-gray w-full lg:w-[500px] h-[3.4rem] border border-[#9ca3af] outline-none rounded-[5px] py-2 px-[10px]"
-                />
-                <ErrorMessage
-                  name="gender"
-                  component="div"
-                  className="text-[#db3a3a] mt-2 text-sm"
-                />
-              </div>
+                </>
+               ) : (
+                <div className="text-gray w-full lg:w-[500px] h-[3.4rem] py-2 px-[10px] border border-[#9ca3af] rounded-[5px] flex items-center">
+          {bvnData.gender || ninData.gender || values.gender}
+        </div>
+      )}
+              </div> 
 
               <div className="my-2">
                 <label htmlFor="dob" className="text-secondary block mb-4 w-full text-sm">
