@@ -1,52 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCredits } from '../../../../Redux/transactionsSlice';
+import useLocalStorage from '../../../../hooks/useLocalStorage';
 import { Link } from 'react-router-dom';
 import { LiaGreaterThanSolid } from 'react-icons/lia';
-import useLocalStorage from '../../../../hooks/useLocalStorage';
+
 const Credits = () => {
+  const dispatch = useDispatch();
   const [authToken] = useLocalStorage('authToken', '');
-  const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [page, setPage] = useState(1);
-  const [pageSize] = useState(5); // Show 5 recent transactions
 
-  const fetchTransactions = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await fetch(import.meta.env.VITE_TRANSACTION_HISTORY, {
-        method: 'POST',
-        headers: {
-          accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({
-          type: 'CREDIT',
-          page: 0,
-          pageSize: 5,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch credit transactions');
-      }
-
-      const data = await response.json();
-      setTransactions(data.data.content);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { credits, loading, error } = useSelector((state) => state.transactions);
 
   useEffect(() => {
     if (authToken) {
-      fetchTransactions();
+      dispatch(fetchCredits(authToken));
     }
-  }, [authToken]);
+  }, [authToken, dispatch]);
 
   return (
     <div className="md:px-[.7rem] pb-4 w-auto md:clear-right ml-5 md:ml-2 xl:ml-[19.5rem] mr-5 md:mr-3">
@@ -76,8 +45,8 @@ const Credits = () => {
               </tr>
             </thead>
             <tbody>
-              {transactions.length > 0 ? (
-                transactions.map((transaction, index) => (
+              {credits.length > 0 ? (
+                credits.map((transaction, index) => (
                   <tr key={transaction.id || index} className="border-b border-[#d9d9d9]">
                     <td className="p-2">
                       <div className="w-[32px] h-[32px] md:w-[42px] md:h-[42px]">

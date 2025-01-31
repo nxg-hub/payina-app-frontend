@@ -12,6 +12,8 @@ export const StepSeventeen = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const token = localStorage.getItem('authToken');
+
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -54,13 +56,37 @@ export const StepSeventeen = () => {
 
     navigate('/login');
   };
-  // const handleSubmit = (values) => {
-  //     if (location.pathname.includes('/personal/signup')) {
-  //       navigate('/personal/dashboard');
-  //     }
-  //     next(values);
-  //     // dispatch(resetState());
-  //   };
+  // const handleClick = () => {
+  //   if (newAuthToken) {
+  //     navigate('/account/dashboard');
+  //   } else {
+  //     navigate('/login');
+  //   }
+  // }
+//   const token = localStorage.getItem('authToken');
+// console.log (token)
+//   const handleClick = (values, token) => {
+//       if (location.pathname.includes('/personal/signup')) {
+//         navigate('/personal/dashboard');
+//       }
+//       // next(values);
+//       dispatch(resetState());
+//     };
+
+// const handleClick = (values, token) => {
+//   if (!token) {
+//     console.error('No token found. Redirecting to login.');
+//     navigate('/login'); // Redirect to login if token is missing
+//     return;
+//   }
+
+//   if (location.pathname.includes('/personal/signup')) {
+//     navigate('/personal/dashboard'); // Navigate to the dashboard
+//   }
+
+//   dispatch(resetState());
+// };
+
 
   if (isLoading) {
     return <div className="text-center py-8">Loading...</div>;
@@ -168,10 +194,12 @@ export const StepSeventeen = () => {
           
           </div>
           <CustomButton
-            onClick={handleClick}
-            padding="15px"
+  // onClick={() => handleClick({}, token)} 
+  onClick={handleClick}
+
+  padding="15px"
             type="submit"
-            children="Proceed to Login"
+            children="Proceed to Log in"
             className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
           />
         </div>

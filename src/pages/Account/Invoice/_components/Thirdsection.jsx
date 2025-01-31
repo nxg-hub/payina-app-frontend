@@ -56,7 +56,7 @@ const Thirdsection = ({
         } else if (corporateCustomerId) {
           // Fetch recent invoices for a corporate customer
           response = await fetch(
-            `${import.meta.env.VITE_GET_CUSTOMERS_INVOICES_ENDPOINT}${corporateCustomerId}?page=0&size=5`,
+            `${import.meta.env.VITE_GET_CUSTOMERS_INVOICES_ENDPOINT}${corporateCustomerId}?page=0&size=4`,
             {
               method: 'GET',
               headers: {

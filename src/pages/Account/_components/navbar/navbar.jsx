@@ -101,16 +101,20 @@ import { GiHamburgerMenu } from 'react-icons/gi';
 import { LuX } from 'react-icons/lu';
 import { MobileSidebar } from '../sidebar/mobile-sidebar';
 import useLocalStorage from '../../../../hooks/useLocalStorage.js';
+import { useSelector } from 'react-redux';
 
 export const Navbar = () => {
   const navigate = useNavigate();
   const [toggleMenu, setToggleMenu] = useState(false);
-  const [customerUserName, setCustomerUserName] = useState('User');
-  const [userType, setUserType] = useState('PERSONAL'); // Default to PERSONAL
-  const [userImage, setUserImage] = useState('');
-  const [newAuthToken] = useLocalStorage('authToken', '');
-  const [userTier, setUserTier] = useState('');
+  // const [customerUserName, setCustomerUserName] = useState('User');
+  // const [userType, setUserType] = useState('PERSONAL'); // Default to PERSONAL
+  // const [userImage, setUserImage] = useState('');
+  // const [newAuthToken] = useLocalStorage('authToken', '');
+  // const [userTier, setUserTier] = useState('');
   const [showTierAlert, setShowTierAlert] = useState(false);
+
+  //getting the userDetails  from the store
+  const userDetails = useSelector((state) => state.user.user);
 
   // Tier levels and requirements for PERSONAL users
   const TIER_LEVELS = {
@@ -118,6 +122,10 @@ export const Navbar = () => {
     TIER_TWO: 'Tier 2 (Advanced)',
     TIER_THREE: 'Tier 3 (Premium)',
   };
+
+  const userTier = TIER_LEVELS[userDetails?.tierLevel] || 'Tier 1 (Basic)';
+  const userType = userDetails?.userType || 'PERSONAL';
+  const customerUserName = userDetails?.payinaUserName || 'User';
 
   const TIER_REQUIREMENTS = {
     'Tier 1': {
@@ -135,35 +143,35 @@ export const Navbar = () => {
   };
 
   // Fetch user details on component mount
-  useEffect(() => {
-    const fetchAccountDetails = async () => {
-      try {
-        const response = await fetch(import.meta.env.VITE_GET_USER, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${newAuthToken}`,
-          },
-        });
-        if (!response.ok) {
-          throw new Error('Failed to fetch user data');
-        }
+  // useEffect(() => {
+  //   const fetchAccountDetails = async () => {
+  //     try {
+  //       const response = await fetch(import.meta.env.VITE_GET_USER, {
+  //         method: 'GET',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           Authorization: `Bearer ${newAuthToken}`,
+  //         },
+  //       });
+  //       if (!response.ok) {
+  //         throw new Error('Failed to fetch user data');
+  //       }
 
-        const data = await response.json();
+  //       const data = await response.json();
 
-        setCustomerUserName(data.payinaUserName || 'User');
-        setUserType(data.userType || 'PERSONAL'); // Default to PERSONAL if userType is not provided
-        const tier = TIER_LEVELS[data.tierLevel] || 'Tier 1 (Basic)';
-        setUserTier(tier);
-      } catch (error) {
-        console.error('Error fetching account details:', error);
-        setUserType('PERSONAL'); // Fallback to PERSONAL
-        setUserTier('Tier 1 (Basic)');
-      }
-    };
+  //       setCustomerUserName(data.payinaUserName || 'User');
+  //       setUserType(data.userType || 'PERSONAL'); // Default to PERSONAL if userType is not provided
+  //       const tier = TIER_LEVELS[data.tierLevel] || 'Tier 1 (Basic)';
+  //       setUserTier(tier);
+  //     } catch (error) {
+  //       console.error('Error fetching account details:', error);
+  //       setUserType('PERSONAL'); // Fallback to PERSONAL
+  //       setUserTier('Tier 1 (Basic)');
+  //     }
+  //   };
 
-    fetchAccountDetails();
-  }, [newAuthToken]);
+  //   fetchAccountDetails();
+  // }, [newAuthToken]);
 
   const renderTierStatus = () => {
     if (userType !== 'PERSONAL') {

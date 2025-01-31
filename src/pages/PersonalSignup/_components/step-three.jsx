@@ -195,6 +195,7 @@ export const StepThree = ({ next, data }) => {
                   value={formik.values.otp}
                   autoFocus
                 />
+
                 <div className="flex xl:-mt-12 -mt-8 justify-between w-full px-4">
                   <span className="xl:w-[35px] w-[24px] xl:mt-2 -mt-6 text-center h-[30px] font-bold text-2xl inline-block border-b border-[#E80516]">
                     &nbsp;

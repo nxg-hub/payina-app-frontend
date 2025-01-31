@@ -5,12 +5,13 @@ import DeclineMessage from '../step6.jsx';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import ReactLoading from 'react-loading';
+import { useSelector } from 'react-redux';
 
 const EnterPin = ({ data }) => {
   const [pin, setPin] = useState(['', '', '', '']);
-  const [userEmail, setUserEmail] = useState('');
-  const [walletId, setWalletId] = useState('');
-  const [customerId, setCustomerId] = useState('');
+  // const [userEmail, setUserEmail] = useState('');
+  // const [walletId, setWalletId] = useState('');
+  // const [customerId, setCustomerId] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const [showDecline, setShowDecline] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -20,29 +21,35 @@ const EnterPin = ({ data }) => {
   const [loading, setLoading] = useState(false);
   const [userLoader, setUserLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      setUserLoading(true);
-      try {
-        const userResponse = await axios.get(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${newAuthToken}`,
-          },
-        });
-        // console.log('User data fetched successfully:', userResponse.data);
-        setUserLoading(false);
-        setUserEmail(userResponse.data.email);
-        setWalletId(userResponse.data.walletId);
-        setCustomerId(userResponse.data.customerId);
-      } catch (error) {
-        console.error('Error fetching user data:', error.response?.data || error.message);
-      } finally {
-        setUserLoading(false);
-      }
-    };
-    fetchUserData();
-  }, [newAuthToken]);
+  //getting the userDetails  from the store
+  const userDetails = useSelector((state) => state.user.user);
+  const userEmail = userDetails.email;
+  const walletId = userDetails.walletId;
+  const customerId = userDetails.customerId;
+
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     setUserLoading(true);
+  //     try {
+  //       const userResponse = await axios.get(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           Authorization: `Bearer ${newAuthToken}`,
+  //         },
+  //       });
+  //       // console.log('User data fetched successfully:', userResponse.data);
+  //       setUserLoading(false);
+  //       setUserEmail(userResponse.data.email);
+  //       setWalletId(userResponse.data.walletId);
+  //       setCustomerId(userResponse.data.customerId);
+  //     } catch (error) {
+  //       console.error('Error fetching user data:', error.response?.data || error.message);
+  //     } finally {
+  //       setUserLoading(false);
+  //     }
+  //   };
+  //   fetchUserData();
+  // }, [newAuthToken]);
 
   const checkIfBeneficiaryExists = async () => {
     const endpoint = import.meta.env.VITE_GET_SAVED_BENEFICIARIES_ENDPOINT.replace(
@@ -168,6 +175,17 @@ const EnterPin = ({ data }) => {
       error.response.data === 'Invalid Transaction PIN or PIN is Incorrect.'
         ? setErrorMessage(error.response.data)
         : setErrorMessage('Transaction process failed. Please try again.');
+      if (error.response) {
+        const backendMessage =
+          error.response?.data?.data ||
+          error.response?.data?.response ||
+          error.response?.data?.debugMessage ||
+          error.response?.data ||
+          'Invalid Transaction PIN or PIN is Incorrect.';
+        setErrorMessage(backendMessage);
+      } else {
+        setErrorMessage('Transaction process failed. Please try again.');
+      }
       setShowDecline(true);
     } finally {
       setLoading(false);
@@ -222,20 +240,31 @@ const EnterPin = ({ data }) => {
         setShowSuccess(true);
         console.log('Transaction Success: Transaction completed successfully.');
       } else {
-        setErrorMessage(
-          transactionResponse.data?.response || 'Transaction process failed. Please try again.'
-        );
+        const backendMessage =
+          transactionResponse.data?.response || 'Invalid Transaction PIN or PIN is Incorrect.';
+        setErrorMessage(backendMessage);
         setShowDecline(true);
         console.log('Transaction Declined: Transaction could not be completed.');
       }
     } catch (error) {
-      setErrorMessage(
-        error.response?.data?.debugMessage ||
+      console.error('Error during transaction process:', error);
+
+      if (error.response) {
+        console.error('Error Status:', error.response.status);
+        console.error('Error Data:', error.response.data);
+
+        const backendMessage =
+          error.response?.data?.data ||
           error.response?.data?.response ||
-          'Transaction process failed. Please try again.'
-      );
-      console.error('Error Status:', error.response?.status);
-      console.error('Error Data:', error.response?.data);
+          error.response?.data?.debugMessage ||
+          error.response?.data ||
+          'Transaction process failed.';
+
+        console.error('Transaction Error:', backendMessage); // Log for debugging
+        setErrorMessage(backendMessage); // Show actual backend message
+      } else {
+        setErrorMessage('Transaction process failed. Please try again.');
+      }
       setShowDecline(true);
     } finally {
       setLoading(false);

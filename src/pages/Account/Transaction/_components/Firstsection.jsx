@@ -6,11 +6,13 @@ import Debits from './Debits';
 import redrectangle from './../../../../assets/images/redrectangle.png';
 import greenrectangle from './../../../../assets/images/greenrectangle.png';
 import { useSelector } from 'react-redux';
+import ExportTransaction from './ExportTransaction';
 
 const Firstsection = () => {
   const [showCredit, setShowCredit] = useState(true);
   const [showDebit, setShowDebit] = useState(false);
   const currentBalance = useSelector((state) => state.wallet.wallet);
+  const { credits, debits } = useSelector((state) => state.transactions);
 
   const toggleCredit = () => {
     setShowCredit(true);
@@ -71,16 +73,21 @@ const Firstsection = () => {
             </div>
           </div>
         </div>
-        <div className="flex py-2 px-2 md:px-6 text-[7.5px] md:text-base">
-          <p className="font-bold">Recent Transactions</p>
-          <nav className="flex">
-            <p className={`mr-7 ml-7 ${showCredit ? 'border-b-2 border-secondary' : ''}`}>
-              <button onClick={toggleCredit}>Credit</button>
-            </p>
-            <p className={`${showDebit ? 'border-b-2 border-secondary ' : ''}`}>
-              <button onClick={toggleDebit}>Debit</button>
-            </p>
-          </nav>
+        <div className="flex flex-row justify-between py-2">
+          <div className="flex px-2 md:px-6 text-[7.5px] md:text-base">
+            <p className="font-bold">Recent Transactions</p>
+            <nav className="flex">
+              <p className={`mr-7 ml-7 ${showCredit ? 'border-b-2 border-secondary' : ''}`}>
+                <button onClick={toggleCredit}>Credit</button>
+              </p>
+              <p className={`${showDebit ? 'border-b-2 border-secondary ' : ''}`}>
+                <button onClick={toggleDebit}>Debit</button>
+              </p>
+            </nav>
+          </div>
+          <div className="mr-[5rem]">
+            <ExportTransaction credits={credits} debits={debits} />
+          </div>
         </div>
       </div>
 
