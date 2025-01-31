@@ -86,7 +86,7 @@ const EnterPin = ({ data }) => {
       // console.log('Full PIN Validation Response:', pinResponse);
 
       if (pinResponse.data === 'Transaction PIN is valid.') {
-        // console.log('PIN validated successfully. Starting another bank transfer...');
+        console.log('PIN validated successfully. Starting another bank transfer...');
 
         const transactionPayload = {
           amount: data.amount,
@@ -134,18 +134,43 @@ const EnterPin = ({ data }) => {
         setShowDecline(true);
       }
     } catch (error) {
-      setErrorMessage(
-        error.response?.data?.debugMessage ||
-          error.response?.data?.response ||
-          'Transaction process failed. Please try again.'
-      );
-      console.error('Error Status:', error.response?.status);
-      console.error('Error Data:', error.response?.data);
+      console.error('Error during transaction process:', error);
+
+      if (error.response) {
+        console.error('Error Status:', error.response.status);
+        console.error('Error Data:', error.response.data);
+
+        // Extracting the error message correctly
+        const backendMessage =
+          error.response.data?.data || // If the message is nested inside 'data'
+          error.response.data?.response || // If message is under 'response'
+          error.response.data?.debugMessage || // If message is under 'debugMessage'
+          error.response.data || // Direct string message
+          'Transaction failed.'; // Default fallback
+
+        console.log('Extracted error message:', backendMessage);
+        setErrorMessage(backendMessage);
+      } else {
+        setErrorMessage('Transaction process failed. Please try again.');
+      }
       setShowDecline(true);
     } finally {
       setLoading(false);
     }
   };
+  //   catch (error) {
+  //     setErrorMessage(
+  //       error.response?.data?.debugMessage ||
+  //         error.response?.data?.response ||
+  //         'Transaction process failed. Please try again.'
+  //     );
+  //     console.error('Error Status:', error.response?.status);
+  //     console.error('Error Data:', error.response?.data);
+  //     setShowDecline(true);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   if (showSuccess) return <SuccessMessage />;
   if (showDecline) return <DeclineMessage errorMessage={errorMessage} />;

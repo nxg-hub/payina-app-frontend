@@ -166,7 +166,17 @@ const EnterPin = ({ data }) => {
         setShowDecline(true);
       }
     } catch (error) {
-      setErrorMessage('Transaction process failed. Please try again.');
+      if (error.response) {
+        const backendMessage =
+          error.response?.data?.data ||
+          error.response?.data?.response ||
+          error.response?.data?.debugMessage ||
+          error.response?.data ||
+          'Invalid Transaction PIN or PIN is Incorrect.';
+        setErrorMessage(backendMessage);
+      } else {
+        setErrorMessage('Transaction process failed. Please try again.');
+      }
       setShowDecline(true);
     } finally {
       setLoading(false);
@@ -221,25 +231,50 @@ const EnterPin = ({ data }) => {
         setShowSuccess(true);
         console.log('Transaction Success: Transaction completed successfully.');
       } else {
-        setErrorMessage(
-          transactionResponse.data?.response || 'Transaction process failed. Please try again.'
-        );
+        const backendMessage =
+          transactionResponse.data?.response || 'Invalid Transaction PIN or PIN is Incorrect.';
+        setErrorMessage(backendMessage);
         setShowDecline(true);
         console.log('Transaction Declined: Transaction could not be completed.');
       }
     } catch (error) {
-      setErrorMessage(
-        error.response?.data?.debugMessage ||
+      console.error('Error during transaction process:', error);
+
+      if (error.response) {
+        console.error('Error Status:', error.response.status);
+        console.error('Error Data:', error.response.data);
+
+        const backendMessage =
+          error.response?.data?.data ||
           error.response?.data?.response ||
-          'Transaction process failed. Please try again.'
-      );
-      console.error('Error Status:', error.response?.status);
-      console.error('Error Data:', error.response?.data);
+          error.response?.data?.debugMessage ||
+          error.response?.data ||
+          'Transaction process failed.';
+
+        console.error('Transaction Error:', backendMessage); // Log for debugging
+        setErrorMessage(backendMessage); // Show actual backend message
+      } else {
+        setErrorMessage('Transaction process failed. Please try again.');
+      }
       setShowDecline(true);
     } finally {
       setLoading(false);
     }
   };
+
+  //   catch (error) {
+  //     setErrorMessage(
+  //       error.response?.data?.debugMessage ||
+  //         error.response?.data?.response ||
+  //         'Transaction process failed. Please try again.'
+  //     );
+  //     console.error('Error Status:', error.response?.status);
+  //     console.error('Error Data:', error.response?.data);
+  //     setShowDecline(true);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   if (showSuccess) return <SuccessMessage />;
   if (showDecline) return <DeclineMessage errorMessage={errorMessage} />;

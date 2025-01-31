@@ -788,7 +788,6 @@
 //   );
 // }
 
-
 import React, { useState, useEffect } from 'react';
 import { MoreHorizontal } from 'lucide-react';
 import useLocalStorage from '../../../../../hooks/useLocalStorage';
@@ -802,7 +801,7 @@ export default function TransactionTable() {
   const [error, setError] = useState(null);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
-  const [showMoreMenu, setShowMoreMenu] = useState(false);
+  // const [showMoreMenu, setShowMoreMenu] = useState(false);
 
   // Set default date range to last month
   const defaultEndDate = new Date().toISOString().split('T')[0];
@@ -832,8 +831,67 @@ export default function TransactionTable() {
     { key: 'createdAt', label: 'Date', type: 'date' },
   ];
 
-  const fetchTransactions = async (type) => {
+  // const fetchTransactions = async (type) => {
+  //   try {
+  //     const response = await fetch(import.meta.env.VITE_TRANSACTION_HISTORY, {
+  //       method: 'POST',
+  //       headers: {
+  //         accept: 'application/json',
+  //         'Content-Type': 'application/json',
+  //         Authorization: `Bearer ${authToken}`,
+  //       },
+  //       body: JSON.stringify({
+  //         type,
+  //         startDate: new Date(dateRange.startDate).toISOString(),
+  //         endDate: new Date(dateRange.endDate).toISOString(),
+  //         page: page - 1,
+  //         pageSize,
+  //       }),
+  //     });
+
+  //     if (!response.ok) {
+  //       const errorResponse = await response.json();
+  //       throw new Error(JSON.stringify(errorResponse));
+  //     }
+
+  //     const data = await response.json();
+  //     return data.data.content;
+  //   } catch (err) {
+  //     throw err;
+  //   }
+  // };
+
+  // const fetchAllTransactions = async () => {
+  //   try {
+  //     setLoading(true);
+  //     setError(null);
+
+  //     const [creditTransactions, debitTransactions] = await Promise.all([
+  //       fetchTransactions('CREDIT'),
+  //       fetchTransactions('DEBIT'),
+  //     ]);
+
+  //     const allTransactions = [...creditTransactions, ...debitTransactions];
+  //     const uniqueTransactions = Array.from(
+  //       new Map(allTransactions.map((item) => [item.transactionRef, item])).values()
+  //     );
+
+  //     uniqueTransactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  //     setTransactions(uniqueTransactions);
+  //     setTotalPages(Math.ceil(uniqueTransactions.length / pageSize) || 1);
+  //   } catch (err) {
+  //     const serverError = JSON.parse(err.message);
+  //     setError(serverError.response || 'An error occurred while fetching transactions.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+  const fetchAllTransactions = async () => {
     try {
+      setLoading(true);
+      setError(null);
+
+      // Fetch all transactions directly without filtering by type
       const response = await fetch(import.meta.env.VITE_TRANSACTION_HISTORY, {
         method: 'POST',
         headers: {
@@ -842,7 +900,6 @@ export default function TransactionTable() {
           Authorization: `Bearer ${authToken}`,
         },
         body: JSON.stringify({
-          type,
           startDate: new Date(dateRange.startDate).toISOString(),
           endDate: new Date(dateRange.endDate).toISOString(),
           page: page - 1,
@@ -856,37 +913,19 @@ export default function TransactionTable() {
       }
 
       const data = await response.json();
-      return data.data.content;
-    } catch (err) {
-      throw err;
-    }
-  };
+      const allTransactions = data.data.content;
 
-  const fetchAllTransactions = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const [creditTransactions, debitTransactions] = await Promise.all([
-        fetchTransactions('CREDIT'),
-        fetchTransactions('DEBIT'),
-      ]);
-
-      const allTransactions = [...creditTransactions, ...debitTransactions];
-      const uniqueTransactions = Array.from(
-        new Map(allTransactions.map((item) => [item.transactionRef, item])).values()
-      );
-
-      uniqueTransactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      setTransactions(uniqueTransactions);
-      setTotalPages(Math.ceil(uniqueTransactions.length / pageSize) || 1);
+      // Sort transactions by creation date in descending order
+      allTransactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setTransactions(allTransactions);
+      setTotalPages(Math.ceil(allTransactions.length / pageSize) || 1);
     } catch (err) {
       const serverError = JSON.parse(err.message);
       setError(serverError.response || 'An error occurred while fetching transactions.');
     } finally {
       setLoading(false);
     }
-  };  
+  };
 
   useEffect(() => {
     if (authToken) {
@@ -940,7 +979,7 @@ export default function TransactionTable() {
       if (!value) return true;
       return String(transaction[key]).toLowerCase().includes(String(value).toLowerCase());
     })
-  );  
+  );
 
   const paginatedTransactions = filteredTransactions.slice((page - 1) * pageSize, page * pageSize);
 
@@ -957,7 +996,7 @@ export default function TransactionTable() {
   const clearAllFilters = () => {
     setFilters({});
     setPage(1);
-  };  
+  };
 
   return (
     <div className="md:px-[.7rem] pb-4 w-auto md:clear-right ml-5 md:ml-2 xl:ml-[19.5rem] mr-5 md:mr-3">
@@ -1004,7 +1043,7 @@ export default function TransactionTable() {
                 <MoreHorizontal className="w-5 h-5 text-gray-600" />
               </button>
 
-              {showMoreMenu && (
+              {/* {showMoreMenu && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
                   <button
                     onClick={() => {
@@ -1015,7 +1054,7 @@ export default function TransactionTable() {
                     {showAllFields ? 'Hide Details' : 'Show More Fields'}
                   </button>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </div>
@@ -1029,124 +1068,124 @@ export default function TransactionTable() {
         <div className="w-full overflow-x-auto">
           <table className="min-w-full table-auto border-collapse">
             <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
-              <th className="p-2 text-left">
-                <input
-                  type="checkbox"
-                  onChange={(e) => {
-                    setSelectedRows(
-                      e.target.checked ? filteredTransactions.map((t) => t.id) : []
-                    );
-                  }}
-                  checked={
-                    selectedRows.length === filteredTransactions.length &&
-                    filteredTransactions.length > 0
-                  }
-                  className="rounded border-gray-300"
-                />
-              </th>
-              <th className="p-2 text-left">Type</th>
-              <th className="p-2 text-left">Description</th>
-              <th className="p-2 text-left">Reference</th>
-              <th className="p-2 text-left">Status</th>
-              <th className="p-2 text-left">Amount</th>
-              <th className="p-2 text-left">Date</th>
-              {showAllFields && (
-                <>
-                  <th className="p-2 text-left">ID</th>
-                  <th className="p-2 text-left">Previous Balance</th>
-                  <th className="p-2 text-left">New Balance</th>
-                </>
-              )}
-            </tr>
+              <tr className="bg-gray-50 border-b border-gray-200">
+                <th className="p-2 text-left">
+                  <input
+                    type="checkbox"
+                    onChange={(e) => {
+                      setSelectedRows(
+                        e.target.checked ? filteredTransactions.map((t) => t.id) : []
+                      );
+                    }}
+                    checked={
+                      selectedRows.length === filteredTransactions.length &&
+                      filteredTransactions.length > 0
+                    }
+                    className="rounded border-gray-300"
+                  />
+                </th>
+                <th className="p-2 text-left">Type</th>
+                <th className="p-2 text-left">Description</th>
+                <th className="p-2 text-left">Reference</th>
+                <th className="p-2 text-left">Status</th>
+                <th className="p-2 text-left">Amount</th>
+                <th className="p-2 text-left">Date</th>
+                {showAllFields && (
+                  <>
+                    <th className="p-2 text-left">ID</th>
+                    <th className="p-2 text-left">Previous Balance</th>
+                    <th className="p-2 text-left">New Balance</th>
+                  </>
+                )}
+              </tr>
             </thead>
             <tbody>
-            {paginatedTransactions.length > 0 ? (
-              paginatedTransactions.map((transaction) => (
-                <tr key={transaction.id} className="border-b border-gray-200">
-                  <td className="p-2">
-                    <input
-                      type="checkbox"
-                      checked={selectedRows.includes(transaction.id)}
-                      onChange={() => {
-                        setSelectedRows((prev) =>
-                          prev.includes(transaction.id)
-                            ? prev.filter((id) => id !== transaction.id)
-                            : [...prev, transaction.id]
-                        );
-                      }}
-                      className="rounded border-gray-300"
-                    />
+              {paginatedTransactions.length > 0 ? (
+                paginatedTransactions.map((transaction) => (
+                  <tr key={transaction.id} className="border-b border-gray-200">
+                    <td className="p-2">
+                      <input
+                        type="checkbox"
+                        checked={selectedRows.includes(transaction.id)}
+                        onChange={() => {
+                          setSelectedRows((prev) =>
+                            prev.includes(transaction.id)
+                              ? prev.filter((id) => id !== transaction.id)
+                              : [...prev, transaction.id]
+                          );
+                        }}
+                        className="rounded border-gray-300"
+                      />
+                    </td>
+                    <td className="p-2">
+                      <div className="w-[32px] h-[32px] md:w-[42px] md:h-[42px]">
+                        {transaction.type.toLowerCase() === 'credit' ? (
+                          <svg
+                            width="42"
+                            height="42"
+                            viewBox="0 0 42 42"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="21" cy="21" r="21" fill="#00D222" />
+                            <path d="M20.5 32L11.4067 16.25H29.5933L20.5 32Z" fill="white" />
+                          </svg>
+                        ) : (
+                          <svg
+                            width="42"
+                            height="42"
+                            viewBox="0 0 42 42"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="21" cy="21" r="21" fill="#E80516" />
+                            <path d="M20.5 32L11.4067 16.25H29.5933L20.5 32Z" fill="white" />
+                          </svg>
+                        )}
+                      </div>
+                    </td>
+                    <td className="p-2 font-manrope text-sm font-semibold">
+                      {transaction.description}
+                    </td>
+                    <td className="p-2 font-manrope text-sm">{transaction.transactionRef}</td>
+                    <td className="p-2">
+                      <div
+                        className={`inline-flex px-2 py-1 rounded-full text-sm ${
+                          transaction.status === 'PROCESSING'
+                            ? 'bg-yellow-50 text-yellow-800'
+                            : transaction.status === 'COMPLETED'
+                              ? 'bg-green-50 text-green-800'
+                              : 'bg-gray-50 text-gray-800'
+                        }`}>
+                        {transaction.status}
+                      </div>
+                    </td>
+                    <td className="p-2 font-manrope text-sm">
+                      {formatCurrency(transaction.amount)}
+                    </td>
+                    <td className="p-2 font-manrope text-sm">
+                      {new Date(transaction.createdAt).toLocaleString()}
+                    </td>
+                    {showAllFields && (
+                      <>
+                        <td className="p-2 font-manrope text-sm">{transaction.id}</td>
+                        <td className="p-2 font-manrope text-sm">
+                          {formatCurrency(transaction.previousBalance)}
+                        </td>
+                        <td className="p-2 font-manrope text-sm">
+                          {formatCurrency(transaction.newBalance)}
+                        </td>
+                      </>
+                    )}
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={showAllFields ? 10 : 7}
+                    className="text-center py-4 font-manrope text-sm">
+                    No transactions found
                   </td>
-                  <td className="p-2">
-                    <div className="w-[32px] h-[32px] md:w-[42px] md:h-[42px]">
-                      {transaction.type.toLowerCase() === 'credit' ? (
-                        <svg
-                          width="42"
-                          height="42"
-                          viewBox="0 0 42 42"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg">
-                          <circle cx="21" cy="21" r="21" fill="#00D222" />
-                          <path d="M20.5 32L11.4067 16.25H29.5933L20.5 32Z" fill="white" />
-                        </svg>
-                      ) : (
-                        <svg
-                          width="42"
-                          height="42"
-                          viewBox="0 0 42 42"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg">
-                          <circle cx="21" cy="21" r="21" fill="#E80516" />
-                          <path d="M20.5 32L11.4067 16.25H29.5933L20.5 32Z" fill="white" />
-                        </svg>
-                      )}
-                    </div>
-                  </td>
-                  <td className="p-2 font-manrope text-sm font-semibold">
-                    {transaction.description}
-                  </td>
-                  <td className="p-2 font-manrope text-sm">{transaction.transactionRef}</td>
-                  <td className="p-2">
-                    <div
-                      className={`inline-flex px-2 py-1 rounded-full text-sm ${
-                        transaction.status === 'PROCESSING'
-                          ? 'bg-yellow-50 text-yellow-800'
-                          : transaction.status === 'COMPLETED'
-                            ? 'bg-green-50 text-green-800'
-                            : 'bg-gray-50 text-gray-800'
-                      }`}>
-                      {transaction.status}
-                    </div>
-                  </td>
-                  <td className="p-2 font-manrope text-sm">
-                    {formatCurrency(transaction.amount)}
-                  </td>
-                  <td className="p-2 font-manrope text-sm">
-                    {new Date(transaction.createdAt).toLocaleString()}
-                  </td>
-                  {showAllFields && (
-                    <>
-                      <td className="p-2 font-manrope text-sm">{transaction.id}</td>
-                      <td className="p-2 font-manrope text-sm">
-                        {formatCurrency(transaction.previousBalance)}
-                      </td>
-                      <td className="p-2 font-manrope text-sm">
-                        {formatCurrency(transaction.newBalance)}
-                      </td>
-                    </>
-                  )}
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td
-                  colSpan={showAllFields ? 10 : 7}
-                  className="text-center py-4 font-manrope text-sm">
-                  No transactions found
-                </td>
-              </tr>
-            )}
+              )}
             </tbody>
           </table>
 
