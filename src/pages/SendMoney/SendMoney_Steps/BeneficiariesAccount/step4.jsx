@@ -136,7 +136,8 @@ const EnterPin = ({ data }) => {
     } catch (error) {
       setErrorMessage(
         error.response?.data?.debugMessage ||
-          error.response?.data?.response ||
+          error.response.data.response ||
+          error.response?.data ||
           'Transaction process failed. Please try again.'
       );
       console.error('Error Status:', error.response?.status);

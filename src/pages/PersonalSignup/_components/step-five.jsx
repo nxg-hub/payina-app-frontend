@@ -2,7 +2,7 @@ import { Form, Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import CustomButton from '../../../components/button/button';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { previousStep } from '../../../Redux/PersonalSignUpSlice';
 import { images } from '../../../constants';
 
@@ -15,6 +15,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const manualEntry = useSelector((state) => state.personalSignUp.manualEntry);
 
   const handlePrevious = () => {
     dispatch(previousStep());
@@ -132,6 +133,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
                   id="firstName"
                   name="firstName"
                   onChange={handleChange}
+                  readOnly={manualEntry ? false : true}
                   value={bvnData.firstname || ninData.firstname || values.firstName}
                   className="text-gray w-full lg:w-[500px] h-[3.4rem] border border-[#9ca3af] outline-none  rounded-[5px] py-2 px-[10px]"
                 />
@@ -151,6 +153,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
                   id="lastName"
                   name="lastName"
                   onChange={handleChange}
+                  readOnly={manualEntry ? false : true}
                   value={bvnData.lastname || ninData.lastname || values.lastName}
                   className="text-gray w-full lg:w-[500px] h-[3.4rem] border border-[#9ca3af] outline-none rounded-[5px] py-2 px-[10px]"
                 />

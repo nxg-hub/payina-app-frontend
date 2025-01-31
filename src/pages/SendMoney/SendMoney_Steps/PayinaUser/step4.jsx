@@ -184,13 +184,16 @@ const EnterPin = ({ data }) => {
         console.error('Error Status:', error.response.status);
         console.error('Error Data:', error.response.data);
         const backendMessage =
-          error.response.data.response || error.response.data.debugMessage || 'Transaction failed.';
+          error.response.data.response ||
+          error.response.data ||
+          error.response.data.debugMessage ||
+          'Transaction failed.';
         setErrorMessage(backendMessage);
       } else {
         console.error('Error Message:', error.message);
       }
 
-      setErrorMessage('Transaction process failed. Please try again.');
+      // setErrorMessage('Transaction process failed. Please try again.');
       setShowDecline(true);
     } finally {
       setLoading(false);

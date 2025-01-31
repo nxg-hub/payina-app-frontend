@@ -158,7 +158,6 @@ const EnterPin = ({ data }) => {
         }
       );
       // console.log('Full PIN Validation Response:', pinResponse);
-
       if (pinResponse.status === 200) {
         console.log('PIN validated successfully. Starting another bank transfer...');
         setShowModal(true);
@@ -166,7 +165,9 @@ const EnterPin = ({ data }) => {
         setShowDecline(true);
       }
     } catch (error) {
-      setErrorMessage('Transaction process failed. Please try again.');
+      error.response.data === 'Invalid Transaction PIN or PIN is Incorrect.'
+        ? setErrorMessage(error.response.data)
+        : setErrorMessage('Transaction process failed. Please try again.');
       setShowDecline(true);
     } finally {
       setLoading(false);

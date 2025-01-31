@@ -86,12 +86,12 @@ const RecipientDetails = ({ nextStep }) => {
       return;
     }
 
-    console.log('Navigating to next step with data:', {
-      accountName: accountName,
-      bankName: values.bankName,
-      accountNumber,
-      accountBankCode,
-    });
+    // console.log('Navigating to next step with data:', {
+    //   accountName: accountName,
+    //   bankName: values.bankName,
+    //   accountNumber,
+    //   accountBankCode,
+    // });
     nextStep({
       accountName: accountName,
       bankName: values.bankName,

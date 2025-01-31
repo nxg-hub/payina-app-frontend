@@ -45,6 +45,7 @@ const DocumentUploader = () => {
       if (responses[0].ok && responses[1].ok && responses[2].ok) {
         setUploadStatus('Files uploaded successfully!');
         setSuccess(true);
+        setTimeout(() => setUploadStatus(''), 10000);
       }
     } catch (err) {
       console.log(err);

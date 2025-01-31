@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import { AmountSchema } from './schemas/schemas.js';
+import { useSelector } from 'react-redux';
 
 const currencies = [
   { code: 'NGN', name: 'Naira (NGN)' },
@@ -16,10 +17,27 @@ const currencies = [
 ];
 
 const AmountDetails = ({ nextStep }) => {
+  const [error, setError] = useState(false);
+  const currentBalance = useSelector((state) => state.wallet.wallet);
   const handleSubmit = (values) => {
+    if (values.amount > currentBalance) {
+      setError(true);
+      return;
+    }
     nextStep({ amount: values.amount, purpose: values.purpose, currency: values.currency });
   };
+  // Function to format a number to Naira currency
+  const formatNumber = (value) => {
+    if (!value) return ''; // If input is empty, return empty string
+    const numericValue = parseFloat(value.replace(/,/g, '')); // Remove commas and convert to number
+    if (isNaN(numericValue)) return ''; // Ensure it's a valid number
+    return numericValue.toLocaleString('en-NG'); // Format with commas
+  };
 
+  // Function to parse formatted value back to raw numeric value
+  const parseNumber = (value) => {
+    return value.replace(/,/g, ''); // Remove commas
+  };
   return (
     <div className="flex flex-col items-left justify-between gap-4 form mt-5 lg:ml-0 ml-3">
       <span className="text-md md:text-xl font-medium mt-5">Amount Details</span>
@@ -31,16 +49,22 @@ const AmountDetails = ({ nextStep }) => {
         }}
         validationSchema={AmountSchema}
         onSubmit={handleSubmit}>
-        {() => (
+        {({ field, values, setFieldValue }) => (
           <Form>
             <div className="flex flex-col items-left gap-2">
               <label htmlFor="amount" className="text-left font-md text-md">
                 How much are you sending?
               </label>
-              <Field
+              <input
+                {...field}
                 name="amount"
                 type="text"
+                value={values.amount ? formatNumber(values.amount) : ''}
                 placeholder="Enter Amount"
+                onChange={(e) => {
+                  const rawValue = parseNumber(e.target.value); // Parse raw numeric value
+                  setFieldValue('amount', rawValue); // Save raw value to Formik state
+                }}
                 className="lg:w-[700px] w-[300px] border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
               />
               <ErrorMessage
@@ -48,6 +72,18 @@ const AmountDetails = ({ nextStep }) => {
                 component="span"
                 className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
               />
+              {error && (
+                <p className="text-[#db3a3a] text-xs !mt-[2px] md:text-base">
+                  Amount entered is greater than current balance
+                  <br className="md:hidden" />
+                  <span className="text-black md:px-3">
+                    Balance:
+                    <strong>
+                      ₦{currentBalance.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+                    </strong>
+                  </span>
+                </p>
+              )}
             </div>
             <div className="flex flex-col items-left gap-2 mt-3">
               <label htmlFor="currency" className="text-left font-md text-md">
