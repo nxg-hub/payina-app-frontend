@@ -5,13 +5,14 @@ import DeclineMessage from '../step6.jsx';
 import useLocalStorage from '../../../../hooks/useLocalStorage.js';
 import PropTypes from 'prop-types';
 import ReactLoading from 'react-loading';
+import { useSelector } from 'react-redux';
 
 const EnterPin = ({ data }) => {
   const [pin, setPin] = useState(['', '', '', '']);
-  const [userEmail, setUserEmail] = useState('');
-  const [sourceId, setSourceId] = useState('');
+  // const [userEmail, setUserEmail] = useState('');
+  // const [sourceId, setSourceId] = useState('');
   const [destinationId, setDestinationId] = useState('');
-  const [senderName, setSenderName] = useState('');
+  // const [senderName, setSenderName] = useState('');
   const [receiverName, setReceiverName] = useState('');
   const [receiverEmailAddress, setReceiverEmailAddress] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
@@ -20,6 +21,12 @@ const EnterPin = ({ data }) => {
   const [newAuthToken] = useLocalStorage('authToken', '');
   const [loading, setLoading] = useState(false);
   const [userLoader, setUserLoading] = useState(false);
+
+  //getting the userDetails  from the store
+  const userDetails = useSelector((state) => state.user.user);
+  const userEmail = userDetails.email;
+  const sourceId = userDetails.walletId;
+  const senderName = userDetails.accountName;
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -32,9 +39,9 @@ const EnterPin = ({ data }) => {
           },
         });
         // console.log('User data fetched successfully:', userResponse.data);
-        setUserEmail(userResponse.data.email);
-        setSenderName(userResponse.data.accountName);
-        setSourceId(userResponse.data.walletId);
+        // setUserEmail(userResponse.data.email);
+        // setSenderName(userResponse.data.accountName);
+        // setSourceId(userResponse.data.walletId);
         setUserLoading(false);
       } catch (error) {
         console.error('Error fetching user data:', error.response?.data || error.message);
@@ -44,6 +51,7 @@ const EnterPin = ({ data }) => {
     };
 
     const fetchDestinationId = async (payinaTag) => {
+      setUserLoading(true);
       try {
         let endpoint;
         if (isNaN(payinaTag)) {
@@ -62,12 +70,15 @@ const EnterPin = ({ data }) => {
         setDestinationId(payinaResponse.data.walletId);
         setReceiverName(payinaResponse.data.accountName);
         setReceiverEmailAddress(payinaResponse.data.email);
+        setUserLoading(false);
       } catch (error) {
         console.error('Error fetching destination ID:', error.response?.data || error.message);
+      } finally {
+        setUserLoading(false);
       }
     };
 
-    fetchUserData();
+    // fetchUserData();
     if (data.payinaTag) {
       fetchDestinationId(data.payinaTag);
     }
@@ -182,9 +193,6 @@ const EnterPin = ({ data }) => {
       console.error('Error during transaction process:', error);
 
       if (error.response) {
-        console.error('Error Status:', error.response.status);
-        console.error('Error Data:', error.response.data);
-
         // Extracting the error message correctly
         const backendMessage =
           error.response.data?.data || // If the message is nested inside 'data'
@@ -197,6 +205,8 @@ const EnterPin = ({ data }) => {
       } else {
         setErrorMessage('Transaction process failed. Please try again.');
       }
+
+      // setErrorMessage('Transaction process failed. Please try again.');
       setShowDecline(true);
     } finally {
       setLoading(false);

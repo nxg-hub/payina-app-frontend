@@ -138,6 +138,7 @@ const PasswordOtpValidate = () => {
                   name="otp"
                   id="otp"
                   maxLength={6}
+                  inputMode="numeric" // Ensures mobile users get a numeric keyboard
                   pattern="\d{6}"
                   onChange={(e) => {
                     const value = e.target.value.replace(/\D/g, '').slice(0, 6);

@@ -42,7 +42,7 @@ const Firstsection = () => {
                 <p>Current Balance</p>
 
                 <div className=" ">
-                  <span className="text-[9px] sm:text-[12px] md:text-[18px] font-bold ">NGN</span>
+                  <span className="text-[9px] sm:text-[12px] md:text-[18px] font-bold ">₦</span>
                   <span className="text-[14px] sm:text-[18px]  md:text-[32px] font-bold">
                     {walletBalance}
                   </span>

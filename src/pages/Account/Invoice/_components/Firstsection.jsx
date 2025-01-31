@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import plus from './../../../../assets/images/invoiceplus.png';
 import { Link } from 'react-router-dom';
@@ -30,14 +30,31 @@ const Firstsection = ({
   const success = useSelector((state) => state.clients.success);
   const clientss = useSelector((state) => state.clients.clients);
   const [search, setSearch] = useState('');
+  const [filteredClients, setFilteredClients] = useState(clientss);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
-  const handleSearchChange = (e) => setSearch(e.target.value);
-  // Filter clients based on the search term
-  const filteredClients = clientss?.filter(
-    (client) =>
-      client.firstName.toLowerCase().includes(search.toLowerCase()) ||
-      client.lastName.toLowerCase().includes(search.toLowerCase())
-  );
+  // Filter clients based on search input
+  useEffect(() => {
+    setFilteredClients(
+      clientss.filter((client) =>
+        `${client.firstName} ${client.lastName}`.toLowerCase().includes(search.toLowerCase())
+      )
+    );
+  }, [search, clientss]);
+
+  // Handle clicking outside to close dropdown
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleClientClick = (clientId, clientName) => {
     setSelectedClientId(clientId);
@@ -201,8 +218,7 @@ const Firstsection = ({
                     setCurrentPage(0);
                     setInvoiceCurrentPage(0);
                   }}
-                  className=" h-[30px] md:h-[48px] rounded-md p-2 w-full md:w-full text-[9px] sm:text-[13px] md:text-base bg-[#BADD56]
-">
+                  className=" h-[30px] md:h-[48px] rounded-md p-2 w-full md:w-full text-[9px] sm:text-[13px] md:text-base bg-[#BADD56]">
                   <option value="">Select </option>
                   <option value="PAID">Paid</option>
                   <option value="UNPAID">Unpaid</option>
@@ -211,56 +227,52 @@ const Firstsection = ({
               <div className=" w-[120%]">
                 <p className="pb-2 text-[10px] sm:text-[13px] md:text-base font-bold">Clients</p>
                 <div
-                  // onClick={(e) => {
-                  //   const selectedOption = e.target.options[e.target.selectedIndex];
-                  //   const clientId = selectedOption.value;
-                  //   const clientName = selectedOption.text;
-                  //   handleClientClick(clientId, clientName);
-                  // }}
-                  className="p-2 text-[9px] sm:text-[13px] md:text-base rounded-md w-[100%] md:w-full  bg-[#A3F5FB]"
-                  disabled={loadingClients}>
+                  ref={dropdownRef}
+                  className="relative w-full md:w-full p-2 bg-[#A3F5FB] rounded-md">
+                  {/* Search Input */}
                   <input
                     type="text"
                     id="search"
                     value={search}
-                    onChange={handleSearchChange}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                      setIsDropdownOpen(true);
+                    }}
                     placeholder="Search..."
-                    className="w-full h-5 md:h-11 static border px-6 border-gray-300 rounded-lg p-2 text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full h-5 md:h-8 border px-3 border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    onClick={() => setIsDropdownOpen(true)}
                   />
-                  <div className="h-[150px] overflow-y-scroll ">
-                    {loadingClients ? (
-                      <option value="" disabled>
-                        Loading clients...
-                      </option>
-                    ) : (
-                      <>
-                        <option value="">Select Client</option>
 
-                        {clientss && clientss.length > 0 ? (
-                          filteredClients.map((client) => (
-                            <option
-                              onClick={() => {
-                                handleClientClick(
-                                  client.id,
-                                  `${client.firstName} ${client.lastName}`
-                                );
-                                setCurrentPage(0);
-                                setInvoiceCurrentPage(0);
-                              }}
-                              className={`${selectedClientId === client.id ? 'bg-slate-300' : ' cursor-pointer'}`}
-                              key={client.id}
-                              value={client.id}>
-                              {client.firstName} {client.lastName}
-                            </option>
-                          ))
-                        ) : (
-                          <option value="" disabled>
-                            No clients available
-                          </option>
-                        )}
-                      </>
-                    )}
-                  </div>
+                  {/* Dropdown List (Visible only if dropdown is open) */}
+                  {isDropdownOpen && (
+                    <ul className="absolute w-full bg-white border border-gray-300 rounded-md shadow-md mt-1 max-h-40 overflow-y-auto z-50">
+                      {loadingClients ? (
+                        <li className="px-3 py-2 text-gray-500">Loading clients...</li>
+                      ) : filteredClients.length > 0 ? (
+                        filteredClients.map((client) => (
+                          <li
+                            key={client.id}
+                            className={`px-3 py-2 cursor-pointer ${
+                              selectedClientId === client.id ? 'bg-gray-200' : 'hover:bg-gray-100'
+                            }`}
+                            onClick={() => {
+                              setSearch(`${client.firstName} ${client.lastName}`);
+                              setIsDropdownOpen(false);
+                              handleClientClick(
+                                client.id,
+                                `${client.firstName} ${client.lastName}`
+                              );
+                              setCurrentPage(0);
+                              setInvoiceCurrentPage(0);
+                            }}>
+                            {client.firstName} {client.lastName}
+                          </li>
+                        ))
+                      ) : (
+                        <li className="px-3 py-2 text-gray-500">No clients available</li>
+                      )}
+                    </ul>
+                  )}
                 </div>
               </div>
             </div>
