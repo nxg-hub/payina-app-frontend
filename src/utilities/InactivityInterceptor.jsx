@@ -1,6 +1,18 @@
 import React, { useEffect, useCallback, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { reSetUserDetails } from '../Redux/UserSlice';
+import { resetCorporate } from '../Redux/CoorperateCustomerSlice';
+import { resetInventory } from '../Redux/InventorySlice';
+import { resetState } from '../Redux/BusinessSignUpSlice';
+import { clearState } from '../Redux/ForgotPasswordSlice';
+import { reSetClientsDetails } from '../Redux/GetClientsSlice';
+import { reSetWalletDetails } from '../Redux/WalletSlice';
+import { persistor } from '../Redux/Store';
+import { useNavigate } from 'react-router-dom';
 
 const InactivityInterceptor = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   // Use useRef instead of useState for values that shouldn't trigger re-renders
   const modalRef = useRef(false);
   const countdownRef = useRef(300);
@@ -51,6 +63,7 @@ const InactivityInterceptor = () => {
   }, [startCountdown]);
 
   const handleLogout = () => {
+    console.log(inactivityTimerRef.current, countdownTimerRef.current);
     // Clear timers
     if (inactivityTimerRef.current) {
       clearTimeout(inactivityTimerRef.current);
@@ -62,26 +75,30 @@ const InactivityInterceptor = () => {
     // Clear storage
     localStorage.clear();
     sessionStorage.clear();
+    persistor.purge();
+    dispatch(reSetUserDetails());
+    dispatch(resetCorporate());
+    dispatch(resetInventory());
+    dispatch(resetState());
+    dispatch(clearState());
+    dispatch(reSetClientsDetails());
+    dispatch(reSetWalletDetails());
 
     // Redirect to login
-    window.location.href = '/login';
+    navigate('/login');
   };
 
-  const handleCancel = useCallback((e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    resetInactivityTimer();
-  }, [resetInactivityTimer]);
+  const handleCancel = useCallback(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      resetInactivityTimer();
+    },
+    [resetInactivityTimer]
+  );
 
   useEffect(() => {
-    const events = [
-      'mousemove',
-      'mousedown',
-      'keydown',
-      'touchstart',
-      'scroll',
-      'click'
-    ];
+    const events = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'click'];
 
     const handleUserActivity = () => {
       if (!modalRef.current) {
@@ -90,7 +107,7 @@ const InactivityInterceptor = () => {
     };
 
     // Set up event listeners
-    events.forEach(event => {
+    events.forEach((event) => {
       document.addEventListener(event, handleUserActivity);
     });
 
@@ -105,7 +122,7 @@ const InactivityInterceptor = () => {
       if (countdownTimerRef.current) {
         clearInterval(countdownTimerRef.current);
       }
-      events.forEach(event => {
+      events.forEach((event) => {
         document.removeEventListener(event, handleUserActivity);
       });
     };
@@ -122,34 +139,23 @@ const InactivityInterceptor = () => {
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
-      onClick={(e) => e.stopPropagation()}
-    >
+      onClick={(e) => e.stopPropagation()}>
       <div className="bg-white rounded-lg p-6 max-w-md w-full mx-auto">
         <div className="text-center space-y-4">
-          <h2 className="text-xl font-bold text-gray-900">
-            Session Timeout Warning
-          </h2>
-          <p className="text-gray-500">
-            Due to inactivity, your session will expire in:
-          </p>
-          <div className="text-3xl font-bold text-red-600">
-            {formatTime(countdownRef.current)}
-          </div>
-          <p className="text-sm text-gray-500">
-            Click 'Cancel' to continue your session
-          </p>
+          <h2 className="text-xl font-bold text-gray-900">Session Timeout Warning</h2>
+          <p className="text-gray-500">Due to inactivity, your session will expire in:</p>
+          <div className="text-3xl font-bold text-red-600">{formatTime(countdownRef.current)}</div>
+          <p className="text-sm text-gray-500">Click 'Cancel' to continue your session</p>
         </div>
         <div className="mt-6 flex justify-center gap-4">
           <button
             onClick={handleCancel}
-            className="px-4 py-2 min-w-24 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-          >
+            className="px-4 py-2 min-w-24 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
             Cancel
           </button>
           <button
             onClick={handleLogout}
-            className="px-4 py-2 min-w-24 bg-red-600 text-white rounded-md hover:bg-red-700"
-          >
+            className="px-4 py-2 min-w-24 bg-red-600 text-white rounded-md hover:bg-red-700">
             Logout
           </button>
         </div>

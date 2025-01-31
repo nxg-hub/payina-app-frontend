@@ -202,6 +202,7 @@ export const StepThree = ({ next, data }) => {
                   name="otp"
                   id="otp"
                   type="number"
+                  inputMode="numeric" // Ensures mobile users get a numeric keyboard
                   maxLength={6}
                   pattern="\d{6}"
                   onInput={(e) => {

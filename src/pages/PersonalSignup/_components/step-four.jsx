@@ -3,11 +3,14 @@ import * as Yup from 'yup';
 import CustomButton from '../../../components/button/button';
 import { useState } from 'react';
 import { images } from '../../../constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { setManualEntry } from '../../../Redux/PersonalSignUpSlice';
 
 export const StepFour = ({ next }) => {
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [fallbackMode, setFallbackMode] = useState(false);
+  const dispatch = useDispatch();
+  const manualEntry = useSelector((state) => state.personalSignUp.manualEntry);
 
   const handleIDVerification = async (values) => {
     const idType = values.idType;
@@ -19,8 +22,6 @@ export const StepFour = ({ next }) => {
     }
 
     setLoading(true);
-
-    setFallbackMode(false);
 
     const endpoints = {
       NIN: {
@@ -75,30 +76,38 @@ export const StepFour = ({ next }) => {
             dob: dob,
           });
         } else {
-          // Both search and verify failed, enable fallback mode
-          setFallbackMode(true);
-          setApiError('Verification failed. Please complete your details manually.');
+          // Extract the JSON part of the response
+          const response = searchResult.message;
+          const jsonPart = response.match(/{.*}/)[0]; // Match and extract the JSON string
+
+          // Parse the JSON part to a JavaScript object
+          const parsedResponse = JSON.parse(jsonPart);
+
+          // Access the message
+          const message = parsedResponse.message;
+          message !==
+          'No matching records found. Please ensure the information is accurate and try again.'
+            ? dispatch(setManualEntry(true))
+            : dispatch(setManualEntry(false));
+          setApiError(message || 'Verification failed. Please try again.');
         }
       }
     } catch (error) {
       // Handle network or unexpected errors
-      setFallbackMode(true);
-      setApiError('An error occurred. Please complete your details manually.');
+      setApiError('An error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleFallbackProceed = () => {
+  const handleManualEntry = () => {
     next({
       ...{
         idType: '',
         identificationNumber: '',
       },
-      fallbackMode: true,
     });
   };
-
   localStorage.setItem('currentStep', 4);
 
   const Options = [
@@ -204,11 +213,11 @@ export const StepFour = ({ next }) => {
 
               {apiError && <div className="text-red-500 mb-4">{apiError}</div>}
 
-              {fallbackMode ? (
+              {manualEntry ? (
                 <CustomButton
                   padding="15px"
                   type="button"
-                  onClick={handleFallbackProceed}
+                  onClick={handleManualEntry}
                   children="Proceed to Manual Entry"
                   className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6"
                 />
