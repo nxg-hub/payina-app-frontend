@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Download } from 'lucide-react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
 
 const ExportTransaction = ({ credits, debits }) => {
   const [isOpen, setIsOpen] = useState(false);
