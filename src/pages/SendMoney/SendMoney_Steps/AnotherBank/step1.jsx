@@ -42,7 +42,7 @@ const RecipientDetails = ({ nextStep }) => {
     const verifyAccountNumber = async () => {
       if (!accountNumber || !accountBankCode) return;
 
-      console.log('Verifying account details:', { accountNumber, accountBankCode });
+      // console.log('Verifying account details:', { accountNumber, accountBankCode });
 
       try {
         setIsVerifying(true);
@@ -86,12 +86,12 @@ const RecipientDetails = ({ nextStep }) => {
       return;
     }
 
-    console.log('Navigating to next step with data:', {
-      accountName: accountName,
-      bankName: values.bankName,
-      accountNumber,
-      accountBankCode,
-    });
+    // console.log('Navigating to next step with data:', {
+    //   accountName: accountName,
+    //   bankName: values.bankName,
+    //   accountNumber,
+    //   accountBankCode,
+    // });
     nextStep({
       accountName: accountName,
       bankName: values.bankName,

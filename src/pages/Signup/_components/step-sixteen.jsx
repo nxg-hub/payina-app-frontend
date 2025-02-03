@@ -35,11 +35,9 @@ export const StepSixteen = ({ next, email }) => {
           body: JSON.stringify(requestData),
         });
 
-
         const result = await response.json();
 
-        if (response.ok && result.status !== "BAD_REQUEST" ) {
-        
+        if (response.ok && result.status !== 'BAD_REQUEST') {
           const token = result.data;
           setAuthToken(token);
           localStorage.setItem('authToken', token);
@@ -47,18 +45,17 @@ export const StepSixteen = ({ next, email }) => {
           const decodedString = decodeJWT(token);
           setuserDetails(decodedString);
           next(result);
-        } else if  (result.status === "BAD_REQUEST") {
+        } else if (result.status === 'BAD_REQUEST') {
           setPinError('Failed to set pin');
         }
       } catch (error) {
         console.error('Error setting pin:', error);
-      }finally {
+      } finally {
         setLoading(false);
-    }
+      }
     } else {
       setPinError('An error occurred. Please try again.');
-    } 
-    
+    }
   };
 
   const validationSchema = Yup.object().shape({

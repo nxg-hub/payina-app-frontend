@@ -34,6 +34,12 @@ const PinSetting = () => {
     if (newPinValue !== confirmPinValue) {
       setUploadStatus('Transaction Pin Must Match!');
     }
+
+    if (oldPinValue === '' || newPinValue === '' || confirmPinValue === '') {
+      setUploadStatus('All inputs must be filled!');
+      setTimeout(() => setUploadStatus(''), 10000);
+      return;
+    }
     const { resetForm } = actions;
     setUploadStatus('');
 
@@ -81,17 +87,6 @@ const PinSetting = () => {
         {({ isSubmitting, values, setFieldValue }) => (
           <Form className="py-5 w-[80%] md:w-[60%] m-auto bg-primary border-2 border-[#a0a0a0] shadow-2xl rounded-xl mt-[100px] mb-[50px]">
             <div className="w-[80%] md:w-[60%] m-auto">
-              {/* <div className="py-5 relative ">
-                <label className="font-bold block md:text-md" htmlFor="oldPin">
-                  Old Pin
-                </label>
-                <Field
-                  className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                  type="number"
-                  name="oldPin"
-                />
-                <ErrorMessage className="text-red-500" name="oldPin" component="div" />
-              </div> */}
               <div className="flex flex-col">
                 <label htmlFor="oldPin" className="font-semibold pt-8">
                   Enter Old Pin:

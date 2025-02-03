@@ -3,36 +3,13 @@ import axios from 'axios';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import { RecieverSchema } from './schemas/schemas.js';
 import useLocalStorage from '../../../../hooks/useLocalStorage.js';
+import { useSelector } from 'react-redux';
 
 const RecipientDetails = ({ nextStep }) => {
   const [beneficiaries, setBeneficiaries] = useState([]);
-  const [customerId, setCustomerId] = useState('');
   const [newAuthToken] = useLocalStorage('authToken', '');
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      setLoading(true);
-      try {
-        const userResponse = await axios.get(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${newAuthToken}`,
-          },
-        });
-        // console.log('User data fetched successfully:', userResponse.data);
-        const fetchedCustomerId = userResponse.data.customerId;
-        setCustomerId(fetchedCustomerId);
-        setLoading(false);
-        // console.log('Set customerId:', fetchedCustomerId);
-      } catch (error) {
-        console.error('Error fetching user data:', error.response?.data || error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUserData();
-  }, [newAuthToken]);
+  const customerId = useSelector((state) => state.user.user.customerId);
 
   useEffect(() => {
     const fetchBeneficiaries = async () => {

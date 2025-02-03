@@ -1,6 +1,19 @@
 import React, { useEffect, useCallback, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { reSetUserDetails } from '../Redux/UserSlice';
+import { resetCorporate } from '../Redux/CoorperateCustomerSlice';
+import { resetInventory } from '../Redux/InventorySlice';
+import { resetState } from '../Redux/BusinessSignUpSlice';
+import { clearState } from '../Redux/ForgotPasswordSlice';
+import { reSetClientsDetails } from '../Redux/GetClientsSlice';
+import { reSetWalletDetails } from '../Redux/WalletSlice';
+import { persistor } from '../Redux/Store';
+import { useNavigate } from 'react-router-dom';
 
 const InactivityInterceptor = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  // Use useRef instead of useState for values that shouldn't trigger re-renders
   const modalRef = useRef(false);
   const countdownRef = useRef(300);
   const inactivityTimerRef = useRef(null);
@@ -50,6 +63,7 @@ const InactivityInterceptor = () => {
   }, [startCountdown]);
 
   const handleLogout = () => {
+    console.log(inactivityTimerRef.current, countdownTimerRef.current);
     // Clear timers
     if (inactivityTimerRef.current) {
       clearTimeout(inactivityTimerRef.current);
@@ -58,11 +72,20 @@ const InactivityInterceptor = () => {
       clearInterval(countdownTimerRef.current);
     }
 
+    // Clear storage
     localStorage.clear();
     sessionStorage.clear();
+    persistor.purge();
+    dispatch(reSetUserDetails());
+    dispatch(resetCorporate());
+    dispatch(resetInventory());
+    dispatch(resetState());
+    dispatch(clearState());
+    dispatch(reSetClientsDetails());
+    dispatch(reSetWalletDetails());
 
     // Redirect to login
-    window.location.href = '/login';
+    navigate('/login');
   };
 
   const handleCancel = useCallback(
@@ -115,7 +138,7 @@ const InactivityInterceptor = () => {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
       onClick={(e) => e.stopPropagation()}>
       <div className="bg-white rounded-lg p-6 max-w-md w-full mx-auto">
         <div className="text-center space-y-4">

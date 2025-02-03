@@ -88,7 +88,7 @@ const BalanceCard = () => {
             </div>
             {hideIcon && (
               <div className="md:text-[32px] text-2xl font-bold">
-                <span className="uppercase text-sm md:text-[23.282px] ">NGN</span>
+                <span className="uppercase text-sm md:text-[23.282px] ">₦</span>
                 {loading
                   ? '....'
                   : currentBalance.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
