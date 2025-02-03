@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback, useRef } from 'react';
 
 const InactivityInterceptor = () => {
-  // Use useRef instead of useState for values that shouldn't trigger re-renders
   const modalRef = useRef(false);
   const countdownRef = useRef(300);
   const inactivityTimerRef = useRef(null);
@@ -59,7 +58,6 @@ const InactivityInterceptor = () => {
       clearInterval(countdownTimerRef.current);
     }
 
-    // Clear storage
     localStorage.clear();
     sessionStorage.clear();
 
@@ -67,21 +65,17 @@ const InactivityInterceptor = () => {
     window.location.href = '/login';
   };
 
-  const handleCancel = useCallback((e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    resetInactivityTimer();
-  }, [resetInactivityTimer]);
+  const handleCancel = useCallback(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      resetInactivityTimer();
+    },
+    [resetInactivityTimer]
+  );
 
   useEffect(() => {
-    const events = [
-      'mousemove',
-      'mousedown',
-      'keydown',
-      'touchstart',
-      'scroll',
-      'click'
-    ];
+    const events = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'click'];
 
     const handleUserActivity = () => {
       if (!modalRef.current) {
@@ -90,7 +84,7 @@ const InactivityInterceptor = () => {
     };
 
     // Set up event listeners
-    events.forEach(event => {
+    events.forEach((event) => {
       document.addEventListener(event, handleUserActivity);
     });
 
@@ -105,7 +99,7 @@ const InactivityInterceptor = () => {
       if (countdownTimerRef.current) {
         clearInterval(countdownTimerRef.current);
       }
-      events.forEach(event => {
+      events.forEach((event) => {
         document.removeEventListener(event, handleUserActivity);
       });
     };
@@ -121,35 +115,24 @@ const InactivityInterceptor = () => {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
-      onClick={(e) => e.stopPropagation()}
-    >
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+      onClick={(e) => e.stopPropagation()}>
       <div className="bg-white rounded-lg p-6 max-w-md w-full mx-auto">
         <div className="text-center space-y-4">
-          <h2 className="text-xl font-bold text-gray-900">
-            Session Timeout Warning
-          </h2>
-          <p className="text-gray-500">
-            Due to inactivity, your session will expire in:
-          </p>
-          <div className="text-3xl font-bold text-red-600">
-            {formatTime(countdownRef.current)}
-          </div>
-          <p className="text-sm text-gray-500">
-            Click 'Cancel' to continue your session
-          </p>
+          <h2 className="text-xl font-bold text-gray-900">Session Timeout Warning</h2>
+          <p className="text-gray-500">Due to inactivity, your session will expire in:</p>
+          <div className="text-3xl font-bold text-red-600">{formatTime(countdownRef.current)}</div>
+          <p className="text-sm text-gray-500">Click 'Cancel' to continue your session</p>
         </div>
         <div className="mt-6 flex justify-center gap-4">
           <button
             onClick={handleCancel}
-            className="px-4 py-2 min-w-24 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-          >
+            className="px-4 py-2 min-w-24 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
             Cancel
           </button>
           <button
             onClick={handleLogout}
-            className="px-4 py-2 min-w-24 bg-red-600 text-white rounded-md hover:bg-red-700"
-          >
+            className="px-4 py-2 min-w-24 bg-red-600 text-white rounded-md hover:bg-red-700">
             Logout
           </button>
         </div>

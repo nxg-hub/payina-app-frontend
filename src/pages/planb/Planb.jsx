@@ -438,16 +438,11 @@ const Planb = () => {
       ) {
         const { checkoutLink, orderReference } = initializePaymentResponse;
 
-        // Store the order reference for later use
         setPaymentReference(orderReference);
         sessionStorage.setItem('pendingFormData', JSON.stringify(formData));
 
-        // Redirect to the checkout link
         window.location.href = checkoutLink;
 
-        // After redirecting, we need to handle the response from the checkout
-        // This can be done by polling or using a callback URL if provided
-        // For simplicity, let's assume we are polling for the order status
         const pollVendStatus = async () => {
           try {
             const vendResponse = await apiService.checkVendStatus(orderReference);
