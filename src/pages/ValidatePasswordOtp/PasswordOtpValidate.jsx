@@ -93,7 +93,7 @@ const PasswordOtpValidate = () => {
       <div className="flex flex-col justify-center items-center bg-white shadow-md lg:px-8 lg:py-2 px-4 rounded-lg mt-5 mx-auto w-[300px] lg:w-[600px]">
         <h1 className="text-4xl text-center text-lightBlue font-bold mt-8 mb-2">OTP Validation </h1>
         <span className="font-light mt-5 leading-5 text-sm xl:text-base">
-          We&apos;ve send an OTP Validation code to your email address
+          We&apos;ve sent an OTP Validation code to your email address
         </span>
         <Formik
           initialValues={{ email: userEmail || '', otp: '' }}
