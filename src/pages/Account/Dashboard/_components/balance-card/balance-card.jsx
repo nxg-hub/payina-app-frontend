@@ -26,7 +26,7 @@ const BalanceCard = () => {
         const response = await fetch(import.meta.env.VITE_GET_WALLET_ENDPOINT, {
           headers: {
             accept: '*/*',
-            apiKey: import.meta.env.VITE_API_KEY,
+            // apiKey: import.meta.env.VITE_API_KEY,
             Authorization: `Bearer ${newAuthToken}`,
             'Content-Type': 'application/json',
           },
