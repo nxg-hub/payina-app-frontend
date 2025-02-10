@@ -109,8 +109,7 @@ export const InvoiceForm = ({ next, lineItems }) => {
         );
         if (response.ok) {
           const responseData = await response.json();
-
-          const clientsData = responseData.map((client) => ({
+          const clientsData = responseData.content.map((client) => ({
             id: client.id,
             firstName: client.firstName,
             lastName: client.lastName,
@@ -548,9 +547,10 @@ export const InvoiceForm = ({ next, lineItems }) => {
             onSubmit={(values) => {}}>
             {({ isSubmitting, setFieldValue, values, resetForm }) => (
               <Form className="bg-white  rounded px-4 pt-0 pb-8 mb-4 ">
-                <fieldset className="mb-6 shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px] py-6  pt-0 px-4 rounded-md   ">
+                <fieldset
+                  className={`mb-6 shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px] py-6  pt-0 px-4 rounded-md h-[500px] ${showClientList && clientss.length > 0 ? 'transition-all duration-500 h-[900px]' : 'h-[500px] transition-all duration-500'}  `}>
                   <legend className="text-xl font-semibold mb-4 pt-11">Customer Information</legend>
-                  <div className="mb-4">
+                  <div className="mb-4 ">
                     <div className="flex">
                       <label
                         htmlFor="customer.Firstname"
@@ -674,38 +674,39 @@ export const InvoiceForm = ({ next, lineItems }) => {
                       <FaUser className="mr-2" />
                       {isLoadingClients ? 'Loading... please wait' : 'Select Existing Customer'}
                     </button>
-                    {showClientList && clientss.length > 0 && (
-                      <div className="client-list-box border border-gray-300 rounded-lg p-4 max-w-md mx-auto h-[300px] overflow-y-scroll mt-4 bg-white shadow-md">
-                        <input
-                          type="text"
-                          id="search"
-                          value={search}
-                          onChange={handleSearchChange}
-                          placeholder="Search..."
-                          className="w-full static border px-6 border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        />
+                    {/* {showClientList && clientss.length > 0 && ( */}
+                    <div
+                      className={`${showClientList && clientss.length > 0 ? 'transition-all duration-500 h-[300px] visible ' : 'transition-all duration-500 h-0 invisible'}   client-list-box border border-gray-300 rounded-lg p-4 max-w-md mx-auto overflow-hidden overflow-y-scroll mt-4 bg-white shadow-md`}>
+                      <input
+                        type="text"
+                        id="search"
+                        value={search}
+                        onChange={handleSearchChange}
+                        placeholder="Search..."
+                        className="w-full static border px-6 border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
 
-                        <h3 className="font-bold text-lg mb-2">Select a customer:</h3>
-                        <ul className="space-y-2">
-                          {filteredClients.map((client) => (
-                            <li key={client.id} className="flex justify-between items-center">
-                              <div>
-                                <span className="font-medium">
-                                  {client.firstName} {client.lastName}
-                                </span>
-                                {/* <p className="text-sm text-gray-500">{client.email}</p> */}
-                              </div>
-                              <button
-                                type="button"
-                                onClick={() => handleSelectClient(client)}
-                                className="text-xs text-white bg-[#126180] hover:bg-[#26428B] py-1 px-2 rounded">
-                                Select
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
+                      <h3 className="font-bold text-lg mb-2">Select a customer:</h3>
+                      <ul className="space-y-2">
+                        {filteredClients.map((client) => (
+                          <li key={client.id} className="flex justify-between items-center">
+                            <div>
+                              <span className="font-medium">
+                                {client.firstName} {client.lastName}
+                              </span>
+                              {/* <p className="text-sm text-gray-500">{client.email}</p> */}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => handleSelectClient(client)}
+                              className="text-xs text-white bg-[#126180] hover:bg-[#26428B] py-1 px-2 rounded">
+                              Select
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    {/* )} */}
                   </div>
                 </fieldset>
                 <fieldset className="mb-6 shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px] py-6   pt-0 px-4 rounded-md  ">

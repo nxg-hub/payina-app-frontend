@@ -5,11 +5,12 @@ import DeclineMessage from '../step6';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import ReactLoading from 'react-loading';
+import { useSelector } from 'react-redux';
 
 const EnterPin = ({ data }) => {
   const [pin, setPin] = useState(['', '', '', '']);
-  const [userEmail, setUserEmail] = useState('');
-  const [walletId, setWalletId] = useState('');
+  // const [userEmail, setUserEmail] = useState('');
+  // const [walletId, setWalletId] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const [showDecline, setShowDecline] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -17,28 +18,32 @@ const EnterPin = ({ data }) => {
   const [loading, setLoading] = useState(false);
   const [userLoader, setUserLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      setUserLoading(true);
-      try {
-        const userResponse = await axios.get(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${newAuthToken}`,
-          },
-        });
-        // console.log('User data fetched successfully:', userResponse.data);
-        setUserLoading(false);
-        setUserEmail(userResponse.data.email);
-        setWalletId(userResponse.data.walletId);
-      } catch (error) {
-        console.error('Error fetching user data:', error.response?.data || error.message);
-      } finally {
-        setUserLoading(false);
-      }
-    };
-    fetchUserData();
-  }, [newAuthToken]);
+  //getting the userDetails  from the store
+  const userDetails = useSelector((state) => state.user.user);
+  const userEmail = userDetails.email;
+  const walletId = userDetails.walletId;
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     setUserLoading(true);
+  //     try {
+  //       const userResponse = await axios.get(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           Authorization: `Bearer ${newAuthToken}`,
+  //         },
+  //       });
+  //       // console.log('User data fetched successfully:', userResponse.data);
+  //       setUserLoading(false);
+  //       setUserEmail(userResponse.data.email);
+  //       setWalletId(userResponse.data.walletId);
+  //     } catch (error) {
+  //       console.error('Error fetching user data:', error.response?.data || error.message);
+  //     } finally {
+  //       setUserLoading(false);
+  //     }
+  //   };
+  //   fetchUserData();
+  // }, [newAuthToken]);
 
   const handlePinChange = (e, index) => {
     const value = e.target.value;
@@ -86,7 +91,7 @@ const EnterPin = ({ data }) => {
       // console.log('Full PIN Validation Response:', pinResponse);
 
       if (pinResponse.data === 'Transaction PIN is valid.') {
-        // console.log('PIN validated successfully. Starting another bank transfer...');
+        console.log('PIN validated successfully. Starting another bank transfer...');
 
         const transactionPayload = {
           amount: data.amount,
@@ -134,18 +139,39 @@ const EnterPin = ({ data }) => {
         setShowDecline(true);
       }
     } catch (error) {
-      setErrorMessage(
-        error.response?.data?.debugMessage ||
-          error.response?.data?.response ||
-          'Transaction process failed. Please try again.'
-      );
-      console.error('Error Status:', error.response?.status);
-      console.error('Error Data:', error.response?.data);
+      console.error('Error during transaction process:', error);
+
+      if (error.response) {
+        // Extracting the error message correctly
+        const backendMessage =
+          error.response.data?.data || // If the message is nested inside 'data'
+          error.response.data?.response || // If message is under 'response'
+          error.response.data?.debugMessage || // If message is under 'debugMessage'
+          error.response.data || // Direct string message
+          'Transaction failed.'; // Default fallback
+
+        setErrorMessage(backendMessage);
+      } else {
+        setErrorMessage('Transaction process failed. Please try again.');
+      }
       setShowDecline(true);
     } finally {
       setLoading(false);
     }
   };
+  //   catch (error) {
+  //     setErrorMessage(
+  //       error.response?.data?.debugMessage ||
+  //         error.response?.data?.response ||
+  //         'Transaction process failed. Please try again.'
+  //     );
+  //     console.error('Error Status:', error.response?.status);
+  //     console.error('Error Data:', error.response?.data);
+  //     setShowDecline(true);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   if (showSuccess) return <SuccessMessage />;
   if (showDecline) return <DeclineMessage errorMessage={errorMessage} />;

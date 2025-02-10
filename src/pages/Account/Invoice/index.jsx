@@ -10,7 +10,10 @@ import { fetchCoorperateCustomerDetails } from '../../../Redux/CoorperateCustome
 const Invoice = () => {
   const [selectedClient, setSelectedClient] = useState(null);
   const [showFiltered, setShowFiltered] = useState(false);
-  const [filteredInvoices, setFilteredInvoices] = useState([]);
+  const [filteredInvoices, setFilteredInvoices] = useState(null);
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0); // for filtered invoices
+  const [currentInvoicePage, setInvoiceCurrentPage] = useState(0); // for normal nvoices
   const dispatch = useDispatch();
   const customerId = useSelector((state) => state.user.user.customerId);
 
@@ -32,6 +35,10 @@ const Invoice = () => {
           onClientSelect={handleClientSelect}
           setFilteredInvoices={setFilteredInvoices}
           setShowFiltered={setShowFiltered}
+          setTotalPages={setTotalPages}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          setInvoiceCurrentPage={setInvoiceCurrentPage}
         />
         <Secondsection />
 
@@ -40,6 +47,12 @@ const Invoice = () => {
           clientName={selectedClient?.name || 'Recent Invoices'}
           filteredInvoices={filteredInvoices}
           showFiltered={showFiltered}
+          setTotalPages={setTotalPages}
+          totalPages={totalPages}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          setInvoiceCurrentPage={setInvoiceCurrentPage}
+          currentInvoicePage={currentInvoicePage}
         />
       </div>
     </CorporateCustomerProvider>

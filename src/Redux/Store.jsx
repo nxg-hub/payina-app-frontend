@@ -13,6 +13,7 @@ import forgotPasswordReducer from './ForgotPasswordSlice';
 import walletReducer from './WalletSlice';
 import loadingReducer from './loadingSlice';
 import payrollReducer from './payrollSlice';
+import transactionsReducer from './transactionsSlice';
 
 // Configuration for redux-persist
 const persistConfig = {
@@ -43,9 +44,7 @@ const rootReducer = combineReducers({
   wallet: walletReducer,
   loading: loadingReducer,
   payroll: payrollReducer,
-
-  
-  
+  transactions: transactionsReducer,
 });
 
 // Create persisted reducer

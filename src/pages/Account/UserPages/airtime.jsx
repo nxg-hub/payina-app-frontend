@@ -6,7 +6,7 @@ import { useDataPlans } from '../../../hooks/useDataPlans';
 import NetworkSelection from '../../../components/NetworkSelection';
 import TransactionModal from '../../../utilities/TransactionModal';
 import VendInitiator from '../../../utilities/VendInitiator';
-import WalletBalanceChecker from '../../../utilities/WalletBalanceChecker';
+import TransactionReceipt from '../../../utilities/TransactionReceipt';
 import { useAuth } from '../../../context/useAuth';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import Loader from '../../../assets/LoadingSpinner.jsx';
@@ -25,6 +25,7 @@ const UserAirtime = () => {
   const [modalTitle, setModalTitle] = useState('');
   const [modalMessage, setModalMessage] = useState('');
   const [modalDetails, setModalDetails] = useState('');
+  const [modalContent, setModalContent] = useState(null);
   const [isProcessingVend, setIsProcessingVend] = useState(false);
   const [userPhone, setUserPhone] = useState('');
   const auth = useAuth();
@@ -36,6 +37,7 @@ const UserAirtime = () => {
   const [isLoadingUser, setIsLoadingUser] = useState(true);
   const [apiKey] = useLocalStorage('apiKey', import.meta.env.VITE_API_KEY);
   const [walletBalance, setWalletBalance] = useState(null);
+  const [currentTransactionRef, setCurrentTransactionRef] = useState(null);
 
   const {
     plans,
@@ -51,40 +53,6 @@ const UserAirtime = () => {
     return { currentPlan: firstPlan, packageSlug: firstPlan.slug || '' };
   }, [plans]);
 
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     try {
-  //       const response = await fetch(import.meta.env.VITE_GET_USER_ENDPOINT, {
-  //         method: 'GET',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           Authorization: `Bearer ${authToken}`,
-  //           apiKey: apiKey,
-  //         },
-  //       });
-
-  //       if (!response.ok) {
-  //         throw new Error(`HTTP error! status: ${response.status}`);
-  //       }
-  //
-  //       const data = await response.json();
-  //       if (data.phoneNumber) {
-  //         const formattedPhone = data.phoneNumber.replace('+234', '0');
-  //         setUserPhone(formattedPhone);
-  //       }
-  //       setUserData(data);
-  //     } catch (error) {
-  //       console.error('Error fetching user data:', error);
-  //     } finally {
-  //       setIsLoadingUser(false);
-  //     }
-  //   };
-  //
-  //   if (authToken) {
-  //     fetchUserData();
-  //   }
-  // }, [authToken, apiKey]);
-
   useEffect(() => {
     if (packageSlug) updateFormValues({ packageSlug });
   }, [packageSlug, updateFormValues]);
@@ -94,13 +62,45 @@ const UserAirtime = () => {
     setAmount(enteredAmount);
     setErrors((prev) => ({
       ...prev,
-      amount: Number(enteredAmount) < 0 ? 'Amount must be 70 Naira or above' : undefined,
-      // amount: Number(enteredAmount) < 70 ? 'Amount must be 70 Naira or above' : undefined,
+      amount: Number(enteredAmount) < 70 ? 'Amount must be 70 Naira or above' : undefined,
     }));
+  };
+
+  const handleVendInitiated = (response) => {
+    console.log('Vend initiated with response:', response);
+
+    const paymentRef = response?.responseData?.paymentReference;
+    console.log('Extracted payment reference:', paymentRef);
+
+    if (paymentRef) {
+      setCurrentTransactionRef(paymentRef);
+      setModalStatus('success');
+      setModalTitle('Transaction Successful');
+      setModalMessage('Successfully processed the vend request');
+      setModalDetails(`Transaction Reference: ${paymentRef}`);
+      setShowModal(true);
+    } else {
+      console.error('Payment reference not found in response:', response);
+      handleError(new Error('Invalid transaction response'));
+    }
+
+    setIsProcessingVend(false);
+    setAmount('');
+    updateFormValues({ phoneNumber: '', selectedNetwork: '', packageSlug: '' });
+  };
+
+  const handleError = (err) => {
+    setIsProcessingVend(false);
+    setModalStatus('error');
+    setModalTitle('Transaction Failed');
+    setModalMessage(err.message || 'An unknown error occurred');
+    setModalDetails('');
+    setShowModal(true);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const newErrors = {};
     if (!formValues.phoneNumber) newErrors.phoneNumber = 'Phone number is required';
     if (!formValues.selectedNetwork) newErrors.selectedNetwork = 'Network selection is required';
@@ -114,7 +114,6 @@ const UserAirtime = () => {
       return;
     }
 
-    // Check wallet balance
     const balance = await walletCheckerRef.current.checkBalance();
     setWalletBalance(balance);
 
@@ -129,23 +128,69 @@ const UserAirtime = () => {
     }
   };
 
-  const handleVendInitiated = (reference) => {
-    setIsProcessingVend(false);
-    setModalStatus('success');
-    setModalTitle('Transaction Successful');
-    setModalMessage('Successfully processed the vend request');
-    setShowModal(true);
-    setAmount('');
-    updateFormValues({ phoneNumber: '', selectedNetwork: '', packageSlug: '' });
-  };
+  const handlePullReceipt = async () => {
+    if (!currentTransactionRef) {
+      setModalStatus('error');
+      setModalTitle('Error');
+      setModalMessage('Transaction reference not found. Please try again or contact support.');
+      setShowModal(true);
+      return;
+    }
 
-  const handleError = (err) => {
-    setIsProcessingVend(false);
-    setModalStatus('error');
-    setModalTitle('Transaction Failed');
-    setModalMessage(err.message || 'An unknown error occurred');
-    setModalDetails('');
-    setShowModal(true);
+    try {
+      setModalStatus('loading');
+      setModalTitle('Fetching Receipt');
+      setModalMessage('Please wait...');
+
+      const response = await fetch(
+        `https://payina-wallet-service-api.onrender.com/api/receipts/${currentTransactionRef}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`,
+            apiKey: apiKey,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch receipt: ${response.statusText}`);
+      }
+
+      const receiptData = await response.json();
+
+      if (!receiptData || !receiptData.transactionRef || !receiptData.amount) {
+        throw new Error('Invalid receipt data received');
+      }
+
+      console.log('Receipt data:', receiptData);
+
+      setModalStatus(null);
+      setModalTitle('');
+      setModalMessage('');
+      setModalDetails('');
+
+      setModalContent(
+        <TransactionReceipt
+          receiptData={receiptData}
+          onClose={() => {
+            setShowModal(false);
+            setModalContent(null);
+          }}
+        />
+      );
+
+      setTimeout(() => setShowModal(true), 0);
+
+    } catch (error) {
+      console.error('Error pulling receipt:', error);
+      setModalStatus('error');
+      setModalTitle('Error');
+      setModalMessage(`Failed to fetch receipt: ${error.message}`);
+      setModalContent(null);
+      setShowModal(true);
+    }
   };
 
   const handleFundWallet = () => {
@@ -160,6 +205,18 @@ const UserAirtime = () => {
         ...prev,
         phoneNumber: 'Unable to fetch your phone number. Please enter it manually.',
       }));
+    }
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    if (modalStatus === 'error') {
+      setCurrentTransactionRef(null);
+      setModalContent(null);
+      setModalStatus(null);
+      setModalTitle('');
+      setModalMessage('');
+      setModalDetails('');
     }
   };
 
@@ -207,7 +264,7 @@ const UserAirtime = () => {
                     <div className="relative">
                       <FaNairaSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                       <input
-                        type="number"
+                        // type="number"
                         value={amount}
                         onChange={handleAmountChange}
                         className="w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -217,18 +274,8 @@ const UserAirtime = () => {
                     </div>
                     {errors.amount && <p className="mt-2 text-sm text-red-600">{errors.amount}</p>}
                   </div>
-
-                  <WalletBalanceChecker
-                    ref={walletCheckerRef}
-                    amount={amount}
-                    onInsufficientFunds={(balance, requiredAmount) => {
-                      setWalletBalance(balance);
-                    }}
-                    onSufficientFunds={(balance) => {
-                      setWalletBalance(balance);
-                    }}
-                  />
                 </div>
+
 
                 <VendInitiator
                   selectedPlan={currentPlan}
@@ -260,9 +307,10 @@ const UserAirtime = () => {
           </div>
         </main>
       </div>
+
       <TransactionModal
         isOpen={showModal}
-        onClose={() => setShowModal(false)}
+        onClose={handleModalClose}
         title={modalTitle}
         message={modalMessage}
         status={modalStatus}
@@ -270,12 +318,17 @@ const UserAirtime = () => {
         successIcon={successImage}
         errorIcon={errorImage}
         buttons={
-          walletBalance !== null && Number(amount) > walletBalance
-            ? ['fundWallet', 'back']
-            : ['back']
+          modalStatus === 'success'
+            ? ['pullReceipt', 'back']
+            : modalStatus === 'error' && walletBalance !== null && Number(amount) > walletBalance
+              ? ['fundWallet', 'back']
+              : modalStatus ? ['back'] : []
         }
         onFundWallet={handleFundWallet}
+        onPullReceipt={handlePullReceipt}
+        transactionRef={currentTransactionRef}
         successButtonText="Fund Wallet"
+        modalContent={modalContent}
       />
     </div>
   );

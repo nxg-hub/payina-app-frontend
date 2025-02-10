@@ -29,7 +29,7 @@ const AccountCard = () => {
 
   useEffect(() => {
     const fetchAccountDetails = async () => {
-      console.log('Fetching account details...');
+      // console.log('Fetching account details...');
       const token = newAuthToken; // Use token from useLocalStorage
 
       if (!token) {

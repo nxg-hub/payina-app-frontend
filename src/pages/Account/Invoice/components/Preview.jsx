@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
 const Preview = ({ className = '', updatedLineItems = [] }) => {
-  // console.log(updatedLineItems);
+  console.log(updatedLineItems);
   const { invoiceNumber, dateOfIssue, due_date, vat } =
     updatedLineItems[updatedLineItems.length - 1] || {};
   const itemsWithTotalVAT = updatedLineItems.map((item) => {

@@ -54,6 +54,7 @@ const ProfileSetting = () => {
 
       if (response.ok) {
         setUploadStatus('Files uploaded successfully!');
+        setTimeout(() => setUploadStatus(''), 10000);
         setSuccess(true);
         // Fetch the updated user details
         const response = await fetch(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
