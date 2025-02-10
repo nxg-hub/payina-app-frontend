@@ -46,18 +46,18 @@ const AboutUs = () => {
           <p className="text-base lg:text-lg">
             At Payina, we are committed to revolutionizing the way you handle financial
             transactions. Our mission is to simplify payments and empower both individuals and
-            businesses to thrive in the digital economy.
+            businesses to thrive in the digital economy in africa.
           </p>
           <p className="text-base lg:text-lg">
             We believe that financial transactions should be seamless, secure, and accessible to
             all. With a vision of creating a world where payments are frictionless and transparent,
-            we leverage cutting-edge technology to transform how money moves.{' '}
+            we leverage cutting-edge technology to transform how money moves.
           </p>
           <p className="text-base lg:text-lg">
             Whether you&apos;re sending funds, paying bills, or managing finances, Payina ensures a
             smooth and hassle-free experience. Our goal is to become a trusted name in the payments
             industry, continuously innovating to enhance security, efficiency, and customer
-            satisfaction.
+            satisfactions.
           </p>
           <p className="text-base lg:text-lg">
             With a dedicated team working around the clock, we provide solutions that prioritize
