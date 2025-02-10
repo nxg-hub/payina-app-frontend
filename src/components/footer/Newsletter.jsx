@@ -17,8 +17,8 @@ const NewsletterForm = () => {
       setTimeout(() => {
         setShowPopup(false);
         setEmail('');
-      }, 3000); // Hide after 3 seconds
-    }, 2000); // Simulate loading time
+      }, 3000); // Hide after 3 seconds to run
+    }, 2000); // Simulate loading time to disappear
   };
 
   return (
@@ -60,13 +60,6 @@ const NewsletterForm = () => {
           </div>
         </div>
       )}
-      {/* {showPopup && (
-        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
-          <div className="bg-green-600 text-white px-6 py-4 rounded-lg text-center">
-            ✅ Thank you for subscribing!
-          </div>
-        </div>
-      )} */}
     </div>
   );
 };
