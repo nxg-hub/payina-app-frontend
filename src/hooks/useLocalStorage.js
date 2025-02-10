@@ -17,12 +17,21 @@ const useLocalStorage = (key, defaultValue) => {
   });
 
   useEffect(() => {
-    // Update localStorage when value changes
-    localStorage.setItem(key, JSON.stringify(value));
+    // Update localStorage when value changes, but prevent overwriting with an empty string
+    if (value !== '') {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
   }, [value, key]);
 
   return [value, setValue];
 };
+//   useEffect(() => {
+//     // Update localStorage when value changes
+//     localStorage.setItem(key, JSON.stringify(value));
+//   }, [value, key]);
+
+//   return [value, setValue];
+// };
 
 export default useLocalStorage;
 

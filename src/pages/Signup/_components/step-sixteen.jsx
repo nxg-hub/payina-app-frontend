@@ -41,6 +41,7 @@ export const StepSixteen = ({ next, email }) => {
           const token = result.data;
           setAuthToken(token);
           localStorage.setItem('authToken', token);
+          console.log('Stored Auth Token:', localStorage.getItem('authToken'));
 
           const decodedString = decodeJWT(token);
           setuserDetails(decodedString);

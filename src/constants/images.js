@@ -46,6 +46,7 @@ export { default as bet6 } from '../assets/images/bet6.png';
 import AddMoney from '../assets/images/add_money.svg';
 import SendMoney from '../assets/images/send_money.svg';
 import Invoice from '../assets/images/create_invoice.svg';
+import InvoiceMore from '../assets/images/Credit card-bro.svg';
 import Code from '../assets/images/code.svg';
 import Scan from '../assets/images/scan.svg';
 import Bills from '../assets/images/bills.svg';
@@ -74,10 +75,28 @@ import Revenue from '../assets/images/revenue.png';
 import TansIcon from '../assets/images/tansIcon.png';
 import ArrowRight from '../assets/images/arrow-right.svg';
 import Recurr from '../assets/images/recurring.svg';
-import ContactUs from '../assets/images/contact-us.svg';
+import ContactUs from '../assets/images/Contact us-amico.svg';
 import IdentityVerification from '../assets/images/identity-ver.svg';
-import TermsAndConditions from '../assets/images/terms.svg';
-import SwitchAccount from '../assets/images/switch-account.svg';
+import TermsAndConditions from '../assets/images/Accept terms-bro.svg';
+import SwitchAccount from '../assets/images/Switches-rafiki.svg';
+import BackIcon from '../assets/images/Group-backArrow.png';
+import CallingIcon from '../assets/images/Calling-amico.svg';
+import CustomerCare from '../assets/images/customerCare-icon.png';
+import TalkIcon from '../assets/images/chat.png';
+import CallIcon from '../assets/images/phone-call.png';
+import ReachAlways from '../assets/images/ReachAlways247.png';
+import SocialTree from '../assets/images/Social tree.svg';
+import WhatsAppIcon from '../assets/images/whatsappIcon.png';
+import InstagramIcon from '../assets/images/instagramIcon.png';
+import TwitterIcon from '../assets/images/twitterIcon.png';
+import FacebookIcon from '../assets/images/facebookIcon.png';
+import SendEmail from '../assets/images/sendEmail-icon.png';
+import linkedinIcon from '../assets/images/linkedinIcon.png';
+import arrowFooter from '../assets/images/arrowFooter.png';
+import section5 from '../assets/images/section-four.png';
+import polygon from '../assets/images/polygongroup.png';
+import transparentimg from '../assets/images/transparentimg.png';
+import CustomerSupport from '../assets/images/customer-support.png';
 
 export default {
   logo,
@@ -118,6 +137,7 @@ export default {
   AddMoney,
   SendMoney,
   Invoice,
+  InvoiceMore,
   Code,
   Scan,
   Bills,
@@ -149,5 +169,23 @@ export default {
   ContactUs,
   IdentityVerification,
   TermsAndConditions,
-  SwitchAccount
+  SwitchAccount,
+  BackIcon,
+  CallingIcon,
+  CustomerCare,
+  TalkIcon,
+  CallIcon,
+  ReachAlways,
+  SocialTree,
+  WhatsAppIcon,
+  InstagramIcon,
+  TwitterIcon,
+  FacebookIcon,
+  SendEmail,
+  linkedinIcon,
+  arrowFooter,
+  section5,
+  polygon,
+  transparentimg,
+  CustomerSupport,
 };

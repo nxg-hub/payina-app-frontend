@@ -11,6 +11,7 @@ export const SignUpSchema = Yup.object().shape({
     .max(20, 'Must not exceed 20 characters')
     .oneOf([Yup.ref('password')], 'Passwords must match')
     .required('Password is required'),
+  termsAccepted: Yup.boolean().oneOf([true], 'This field is required'),
 });
 
 export const BusinessDetailsSchema = Yup.object().shape({

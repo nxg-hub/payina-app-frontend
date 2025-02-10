@@ -57,10 +57,9 @@ const Paybills = () => {
             <Cards icon={<RiCurrencyFill size={30} color="white" />} title="Pay Bills" />
           </Link>
         </div>
-
-        <div className="mt-4">
-          <Footer />
-        </div>
+      </div>
+      <div className="mt-10">
+        <Footer />
       </div>
     </section>
   );

@@ -1,8 +1,9 @@
 // AccountLimits.jsx
 import React from 'react';
-import { Navbar, Sidebar } from '../Account/_components';
+import { images } from '../../constants';
+import PropTypes from 'prop-types';
 
-const AccountLimits = () => {
+const AccountLimits = ({ goBack }) => {
   const tiers = [
     {
       name: 'Basic Tier',
@@ -10,7 +11,7 @@ const AccountLimits = () => {
       limits: {
         dailyLimit: '₦50,000',
         monthlyLimit: '₦200,000',
-        transactionLimit: '₦20,000 per transaction',
+        transactionLimit: '₦20,000',
       },
     },
     {
@@ -19,7 +20,7 @@ const AccountLimits = () => {
       limits: {
         dailyLimit: '₦200,000',
         monthlyLimit: '₦1,000,000',
-        transactionLimit: '₦100,000 per transaction',
+        transactionLimit: '₦100,000',
       },
     },
     {
@@ -28,48 +29,63 @@ const AccountLimits = () => {
       limits: {
         dailyLimit: '₦1,000,000',
         monthlyLimit: 'Unlimited',
-        transactionLimit: '₦500,000 per transaction',
+        transactionLimit: '₦500,000',
       },
     },
   ];
 
   return (
-    <div className="bg-white min-h-screen">
-      <Navbar />
-      <Sidebar />
-      <br />
-      <div className="mt-16 ml-56">
-      <h1 className=" text-3xl font-bold text-center text-secondary">Account Limits</h1>
-      <p className="text-center text-neutral mt-4">
-        Learn more about the limits applied to different account tiers based on financial applications.
-      </p>
+    <div className="flex flex-col justify-between items-start py-7 px-5 lg:px-0 ml-0 lg:ml-80 lg:py-28 pt-10 mx-auto">
+      <div className="flex flex-row justify-between items-start md:gap-[15rem] gap-[5rem] lg:gap-[45rem] pb-7">
+        <div className="text-xl md:text-3xl font-medium">Account Limits</div>
+        <div className="cancelAction-img" onClick={goBack}>
+          <img src={images.BackIcon} alt="cancelAction"></img>
+        </div>
+      </div>
+      <div className="flex flex-col mt-3">
+        <div className="text-black ml-2 text-sm lg:text-lg lg:text-center">
+          Choose your preferred account tier to unlock higher transaction limits and additional
+          features.
+        </div>
 
-      <div className="max-w-4xl mx-auto mt-8 space-y-8">
-        {tiers.map((tier, index) => (
-          <div
-            key={index}
-            className="bg-lightBlue p-6 rounded-lg shadow-md text-white">
-            <h2 className="text-2xl font-semibold text-yellow">{tier.name}</h2>
-            <p className="mt-2 text-gray-100">{tier.description}</p>
-            <ul className="mt-4 space-y-2 text-gray-200">
-              <li>
-                <strong>Daily Limit:</strong> {tier.limits.dailyLimit}
-              </li>
-              <li>
-                <strong>Monthly Limit:</strong> {tier.limits.monthlyLimit}
-              </li>
-              <li>
-                <strong>Per Transaction Limit:</strong> {tier.limits.transactionLimit}
-              </li>
-            </ul>
-          </div>
-        ))}
+        <div className="flex lg:flex-row flex-col gap-5 my-0 mt-3 lg:my-5 mx-0 lg:mx-5 p-0 lg:p-5">
+          {tiers.map((tier, index) => (
+            <div
+              key={index}
+              className="flexItem flex flex-col gap-8 bg-[#eeeeee] text-black p-7 hover:bg-[#006180] hover:text-white rounded-lg shadow-md flex-1 min-h-[300px]">
+              <h2 className="text-2xl font-semibold">{tier.name}</h2>
+              <span className="mt-2 text-yellow">{tier.description}</span>
+              <div className="flex flex-col gap-5 ">
+                <div className="flex flex-row justify-between items-start">
+                  <h2>Daily Limit:</h2>
+                  <span>{tier.limits.dailyLimit}</span>
+                </div>
+                <div className="flex flex-row justify-between items-start">
+                  <h2>Monthly Limit:</h2>
+                  <span>{tier.limits.monthlyLimit}</span>
+                </div>
+                <div className="flex flex-row justify-between items-start">
+                  <h2 className="text-nowrap">Per Transaction Limit:</h2>
+                  <span className="text-nowrap">{tier.limits.transactionLimit}</span>
+                </div>
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  className="rounded-full text-xs md:text-base py-[10px] px-[30px] border border-lightBlue bg-yellow hover:bg-[#FFb950] text-black hover:bg-yellow-400 transition-all transform hover:scale-105 animate-bounce">
+                  Upgrade Account
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-      </div>
-      <br />
-      {/*<Footer />*/}
     </div>
   );
 };
 
 export default AccountLimits;
+
+AccountLimits.propTypes = {
+  goBack: PropTypes.func.isRequired,
+};

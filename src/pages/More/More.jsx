@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { images } from '../../constants';
-import { Navbar } from '../Account/_components/index.js';
-import { Sidebar } from '../Account/_components/sidebar/sidebar.jsx';
+import AccountLimits from './Limits';
+import SwitchAccount from './SwitchAccount';
+import Terms from './Terms';
+import ContactUs from './contactUs/moreContact';
 
 const More = () => {
+  const [activeSection, setActiveSection] = useState(null);
+
+  const goBack = () => {
+    setActiveSection(null);
+  };
+
   const menuItems = [
     // {
     //   icon: images.Invoice,
@@ -12,9 +20,10 @@ const More = () => {
     //   link: '/bank-statement'
     // },
     {
-      icon: images.Invoice,
+      icon: images.InvoiceMore,
       text: 'Account Limits',
-      link: '/account-limits'
+      spanText: 'Select a tier to view benefits and upgrade your account.',
+      section: 'accountLimits',
     },
     // {
     //   icon: images.Recurr,
@@ -29,63 +38,72 @@ const More = () => {
     {
       icon: images.ContactUs,
       text: 'Contact Us',
-      link: '/contact-us'
+      spanText: 'Get in touch with our support team for help.',
+      section: 'ContactUs',
     },
     {
       icon: images.TermsAndConditions,
       text: 'Terms and Conditions',
-      link: '/terms'
+      spanText: 'View the terms guiding your account and services.',
+      className: 'lg:px-[50px]',
+      section: 'terms',
     },
     {
       icon: images.SwitchAccount,
       text: 'Switch Account',
-      link: '/account/switch'
-    }
+      spanText: 'Switch between your accounts easily.',
+      section: 'switchAccount',
+    },
   ];
 
-  return (
-    <div className="flex bg-gray-100">
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Navbar />
-        <div className="max-w-md mx-auto w-full mt-28">
-        {/*<div className="max-w-md mx-auto p-4">*/}
-          <div className="space-y-2 w-4/5">
-            {menuItems.map((item, index) => (
-              <Link
-                to={item.link}
-                key={index}
-                className="w-full flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="bg-blue-600 p-2 rounded-lg">
-                    <img
-                      src={item.icon}
-                      alt=""
-                      className="w-6 h-6"
-                    />
-                  </div>
-                  <span className="text-gray-700 font-medium">{item.text}</span>
-                </div>
-                <div className="text-gray-400">
-                  <img
-                    src={images.ArrowRight}
-                    alt=""
-                    className="w-5 h-5"
-                  />
+  const renderSection = () => {
+    switch (activeSection) {
+      case 'accountLimits':
+        return <AccountLimits goBack={goBack} />;
+      case 'ContactUs':
+        return <ContactUs goBack={goBack} />;
+      case 'terms':
+        return <Terms goBack={goBack} />;
+      case 'switchAccount':
+        return <SwitchAccount goBack={goBack} />;
+      default:
+        return (
+          <div className="flex flex-col justify-between items-start p-7 lg:px-0 lg:ml-80 lg:py-28 pt-10 mx-auto">
+            <div className="flex flex-row justify-between items-left gap-[5rem] md:gap-[15rem] lg:gap-[45rem] pb-7">
+              <div className="text-xl md:text-3xl font-medium">More</div>
+              <Link to="/account/dashboard">
+                <div className="cancelAction-img">
+                  <img src={images.BackIcon} alt="cancelAction"></img>
                 </div>
               </Link>
+            </div>
+            {menuItems.map((item, index) => (
+              <div
+                key={index}
+                onClick={() => setActiveSection(item.section)}
+                className={`flex flex-row lg:gap-[7rem] gap-5 justify-between items-center cursor-pointer hover:border-yellow mt-3 lg:px-[69px] px-2 py-2 bg-[#D9D9D9] text-black border border-[#006181] rounded-lg ${item.className}`}>
+                <div className="flex flex-col gap-3">
+                  <h1 className="text-left text-black font-bold mt-5 ml-2 text-md lg:text-2xl whitespace-nowrap">
+                    {item.text}
+                  </h1>
+                  <p className="text-left text-neutral ml-2 text-sm md:text-base max-w-[220px]">
+                    {item.spanText}
+                  </p>
+                </div>
+                <div className="border border-yellow rounded-full lg:p-3 p-2">
+                  <img src={item.icon} alt="" className="lg:w-[100px] w-[200px]" />
+                </div>
+                <div className="text-gray-400">
+                  <img src={images.ArrowRight} alt="" className="lg:w-5 lg:h-5 w-3 h-3" />
+                </div>
+              </div>
             ))}
-
-            {/*<button*/}
-            {/*  className="w-full mt-4 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-600 transition-colors flex items-center justify-center space-x-2">*/}
-            {/*  <span>Log Out</span>*/}
-            {/*</button>*/}
           </div>
-        </div>
-      </div>
-    </div>
         );
-        };
+    }
+  };
 
-        export default More;
+  return <div className="">{renderSection()}</div>;
+};
+
+export default More;
