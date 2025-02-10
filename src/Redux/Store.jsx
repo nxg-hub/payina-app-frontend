@@ -11,6 +11,8 @@ import inventoryByIdReducer from './InventoryByIdSlice';
 import clientsReducer from './GetClientsSlice';
 import forgotPasswordReducer from './ForgotPasswordSlice';
 import walletReducer from './WalletSlice';
+import loadingReducer from './loadingSlice';
+import payrollReducer from './payrollSlice';
 
 // Configuration for redux-persist
 const persistConfig = {
@@ -39,6 +41,11 @@ const rootReducer = combineReducers({
   clients: clientsReducer,
   forgotPassword: forgotPasswordReducer,
   wallet: walletReducer,
+  loading: loadingReducer,
+  payroll: payrollReducer,
+
+  
+  
 });
 
 // Create persisted reducer

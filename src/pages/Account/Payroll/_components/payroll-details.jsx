@@ -26,6 +26,12 @@ const PayrollDetails = ({ onSave }) => {
                   allowancePay: '',
                 },
               ],
+              deductions: [
+              {
+                 deductionPackageName:'',
+                 deductionAmount: ''
+                },
+              ],
             }}
             validationSchema={PayrollSchema}
             onSubmit={(values, actions) => {
@@ -151,6 +157,76 @@ const PayrollDetails = ({ onSave }) => {
                   className="flex gap-2 center rounded-[5px] py-2 px-4 w-[140px] md:w-[200px] border border-lightBlue text-lightBlue  float-right text-xs md:text-base text-nowrap">
                   <LuPlus size={20} color="#006181" />
                   Add allowance
+                </button>
+                <div className="flex flex-col w-full py-4 space-y-4">
+                  <div className="flex items-center">
+                    <hr className="border-none   bg-lightBlue ml-[3.2rem] h-[1px] w-[40%] mr-8 " />
+                    <label
+                      htmlFor="deductionFields"
+                      className="text-lightBlue text-center font-bold text-sm md:text-[18px] text-nowrap">
+                      Deductions
+                    </label>
+                    <hr className="border-none bg-lightBlue h-[1px] w-[40%] xl:mr-0 md:mr-14 me-12 ml-8 " />
+                  </div>
+                  <div className="flex w-full center gap-2">
+                    <div className="flex flex-col w-full">
+                      {values.deductions.map((deduction, i) => (
+                        <div className="flex gap-2 py-1" key={i}>
+                          <div className="flex flex-col w-full">
+                            <Field
+                              name={`deductions[${i}].deductionPackageName`}
+                              type="text"
+                              placeholder="Enter name of deduction package"
+                              className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                            />
+                            <ErrorMessage
+                              name={`deductions[${i}].deductionPackageName`}
+                              component="span"
+                              className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
+                            />
+                          </div>
+                          <div className="flex flex-col w-full">
+                            <Field
+                              name={`deductions[${i}].deductionAmount`}
+                              type="number"
+                              placeholder="Deduction Amount"
+                              className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                            />
+                            <ErrorMessage
+                              name={`deductions[${i}].deductionAmount`}
+                              component="span"
+                              className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
+                            />
+                          </div>
+                          {values.deductions.length > 1 && (
+                            <RiDeleteBinLine
+                              color="red"
+                              size={20}
+                              className="text-center w-full mx-auto hover:cursor-pointer hover:scale-90 !mt-2"
+                              onClick={() =>
+                                setFieldValue(
+                                  'deductions',
+                                  values.deductions.filter((_, index) => index !== i)
+                                )
+                              }
+                            />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFieldValue('deductions', [
+                      ...values.deductions,
+                      { deductionPackageName: '', deductionAmount: '' },
+                    ])
+                  }
+                  className="flex gap-2 center rounded-[5px] py-2 px-4 w-[140px] md:w-[200px] border border-lightBlue text-lightBlue  float-right text-xs md:text-base text-nowrap">
+                  <LuPlus size={20} color="#006181" />
+                  Add Deduction
                 </button>
                 <div className="flex center py-40 gap-4 w-full">
                   <button
