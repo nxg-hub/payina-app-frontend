@@ -4,7 +4,7 @@ import Footer from '../../components/footer/footer';
 import { images } from '../../constants';
 import { Link } from 'react-router-dom';
 
-function support() {
+function Support() {
   const [openFaq, setOpenFaq] = useState(null);
 
   const toggleFaq = (index) => {
@@ -155,4 +155,4 @@ function support() {
   );
 }
 
-export default support;
+export default Support;

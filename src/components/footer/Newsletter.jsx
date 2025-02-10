@@ -55,7 +55,7 @@ const NewsletterForm = () => {
       {/* Success Popup */}
       {showPopup && (
         <div className="absolute top-[18rem] left-[15rem] w-full h-[50px] flex justify-right items-right">
-          <div className="bg-green-600 text-white px-6 py-4 rounded-lg text-center">
+          <div className="bg-white text-lightBlue shadow-lg px-6 py-4 rounded-lg text-center">
             ✅ Thank you for subscribing!
           </div>
         </div>
