@@ -7,6 +7,7 @@ import { useAuth } from '../../../useAuth';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
 // import { useDispatch } from 'react-redux';
+// import { showLoading, hideLoading } from '../../../Redux/loadingSlice'
 // import { setToken } from '../../../Redux/BusinessSignUpSlice';
 import { Link } from 'react-router-dom';
 
@@ -30,6 +31,8 @@ const LoginForm = () => {
   };
   const handleSubmit = async (values) => {
     setIsLoading(true);
+    // dispatch(showLoading()); // Show Loader
+
     localStorage.setItem('userEmail', values.email);
 
     const requestData = {
@@ -71,6 +74,8 @@ const LoginForm = () => {
       setErrorMessage(`Error logging in: ${error.message}`);
     } finally {
       setIsLoading(false);
+      // dispatch(hideLoading()); // Hide Loader
+
     }
   };
 

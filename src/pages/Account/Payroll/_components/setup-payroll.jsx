@@ -9,7 +9,7 @@ const SetupPayroll = ({ onSetupClick, onViewClick }) => {
       <div className="flex flex-col center absolute top-[50%] gap-8 left-[50%] xl:translate-x-[36%] md:translate-x-[-50%] translate-x-[-50%] translate-y-[-50%]">
         <img src={images.PayrollIcon} alt="" />
         <button className="border-2 border-[#044B84] rounded-[4px] py-2 px-3" onClick={onViewClick}>
-          <span className="text-lightBlue font-bold text-xl hover:text-[#82B5C6]">View Payroll</span>
+          <span className="text-lightBlue font-bold text-xl hover:text-[#82B5C6]">View/Update Payroll</span>
         </button>
         <h3 className="text-black font-bold text-md">
           No Payroll yet?{' '}
