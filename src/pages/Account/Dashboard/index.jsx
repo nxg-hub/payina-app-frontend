@@ -60,7 +60,6 @@ const Dashboard = () => {
   }, []);
   return (
     <div>
-       {/* Show error message only when there's an error */}
   {error ? (
     <h2 className="text-red-500 text-center mt-10 font-bold">
       Something went wrong, check your internet connection
