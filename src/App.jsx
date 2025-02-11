@@ -238,6 +238,7 @@ import AccountLimits from './pages/More/Limits.jsx';
 import Terms from './pages/More/Terms.jsx';
 import EmailVerification from './pages/Onboarding/EmailVerification.jsx';
 import Loader from './assets/LoadingSpinner.jsx'
+import ProtectedRoute from './utilities/ProtectedRoute.jsx';
 
 function App() {
   const location = useLocation();

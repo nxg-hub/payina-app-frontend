@@ -240,6 +240,7 @@ import { clearState } from '../../../../Redux/ForgotPasswordSlice.jsx';
 import { reSetClientsDetails } from '../../../../Redux/GetClientsSlice.jsx';
 import { reSetWalletDetails } from '../../../../Redux/WalletSlice.jsx';
 import avatar from "../../../../assets/images/avatar.png"
+import useLocalStorage from '../../../../hooks/useLocalStorage.js';
 
 export const Sidebar = () => {
   const location = useLocation();
