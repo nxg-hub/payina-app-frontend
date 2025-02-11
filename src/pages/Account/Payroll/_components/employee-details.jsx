@@ -6,22 +6,27 @@ import calendar from '../../../../assets/images/calendar.svg';
 import dropdown from '../../../../assets/images/Vector-dropdown.svg';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { format } from 'date-fns';
 
-const EmployeeDetails = ({ onSave }) => {
+
+const EmployeeDetails = ({ onSave, values, setFieldValue }) => {
   const [startDate, setStartDate] = useState(null);
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const [automaticPayment, setAutomaticPayment] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [paymentFrequency, setPaymentFrequency] = useState('');
-
-  const handlePaymentFrequencySelect = (value) => {
+   
+  const handlePaymentFrequencySelect = (value, setFieldValue) => {
     setPaymentFrequency(value);
     setDropdownOpen(false);
+
   };
+ 
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
-  };
+  }
+
 
   return (
     <div className="flex flex-col justify-center items-start w-auto xl:ml-80 xl:pt-28 md:pt-10">
@@ -37,11 +42,15 @@ const EmployeeDetails = ({ onSave }) => {
                 employeeId: '',
                 employmentDate: '',
               },
+              employeeEmailAddress: '',
               accountDetails: {
                 nameOfBank: '',
                 accountNumber: '',
                 paymentFrequency: '',
                 automaticPayment: false,
+                paymentDay: '',
+                paymentDayofMonth: '',
+
               },
             }}
             validationSchema={EmployeeSchema}
@@ -50,7 +59,7 @@ const EmployeeDetails = ({ onSave }) => {
               onSave(values);
               actions.setSubmitting(false);
             }}>
-            {({ setFieldValue, resetForm }) => (
+            {({ setFieldValue, resetForm, values }) => (
               <Form>
                 <div className="flex flex-col  w-full py-4 space-y-4">
                   <div className="flex items-center">
@@ -124,7 +133,7 @@ const EmployeeDetails = ({ onSave }) => {
                         className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                       />
                       <div
-                        className="absolute md:left-[16rem] lg:left-[22rem] top-2 cursor-pointer"
+                        className="absolute md:right-[19rem] lg:right-[22rem] top-2 cursor-pointer"
                         onClick={() => setStartDate(new Date())}>
                         <img src={calendar} alt="Calendar Icon" />
                       </div>
@@ -160,6 +169,29 @@ const EmployeeDetails = ({ onSave }) => {
                       />
                     </div>
                   </div>
+                </div>
+                <div className="flex flex-col  w-full py-4 space-y-4">
+                  <div className="flex items-center">
+                    <hr className="border-none bg-lightBlue ml-[3.2rem] h-[1px] w-[40%] mr-8 " />
+                    <label
+                      htmlFor="employeeEmailAddress"
+                      className="text-lightBlue text-center font-bold text-sm md:text-[18px] text-nowrap">
+                      Employee Email
+                    </label>
+                    <hr className="border-none bg-lightBlue h-[1px] w-[39%] xl:mr-0 md:mr-14 mr-12 ml-8 " />
+                  </div>
+
+                  <Field
+                    name="employeeEmailAddress"
+                    type="text"
+                    placeholder="Enter Employee's Email Address"
+                    className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                  />
+                  <ErrorMessage
+                    name="employeeEmailAddress"
+                    component="span"
+                    className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
+                  />
                 </div>
 
                 <div className="flex flex-col w-full py-4 space-y-4">
@@ -228,11 +260,11 @@ const EmployeeDetails = ({ onSave }) => {
                     </div>
                     {dropdownOpen && (
                       <div className="absolute bg-white border border-gray-300 rounded-md w-[20%] mt-1 z-10">
-                        {['Yearly', 'Monthly', 'Weekly', 'Daily'].map((option) => (
+                        {[ 'MONTHLY', 'WEEKLY', 'DAILY'].map((option) => (
                           <div
                             key={option}
                             className="p-2 hover:bg-gray-100 cursor-pointer"
-                            onClick={() => {
+                             onClick={() => {
                               handlePaymentFrequencySelect(option);
                               setFieldValue('accountDetails.paymentFrequency', option);
                             }}>
@@ -248,6 +280,7 @@ const EmployeeDetails = ({ onSave }) => {
                       name="accountDetails.automaticPayment"
                       className={`border border-[#D9D9D9] bg-black rounded-md px-[5px] py-[2px] w-[15px] ml-3 cursor-pointer`}>
                       <span
+                       
                         className={`automatic-on border rounded-full cursor-pointer px-[5px] py-[2px] ${automaticPayment ? 'bg-green-500' : 'bg-red-500'}`}
                         onClick={() => {
                           setAutomaticPayment(!automaticPayment);
@@ -255,7 +288,60 @@ const EmployeeDetails = ({ onSave }) => {
                         }}></span>
                     </span>
                   </div>
-                </div>
+                  <div className="mt-3">
+                <label className="font-normal text-sm">Payment Date</label>
+                <DatePicker
+  selected={
+    values.accountDetails.paymentDayOfMonth
+      ? new Date(2000, 0, values.accountDetails.paymentDayOfMonth) // Ensure valid date
+      : null
+  }
+  onChange={(date) => {
+    if (date) {
+      const dayNumber = format(date, "d"); // Extracts day number (1-31)
+      const dayOfWeek = format(date, "EEEE").toUpperCase(); // Gets "MONDAY", "TUESDAY"...
+
+      setFieldValue("accountDetails.paymentDayOfMonth", dayNumber);
+      setFieldValue("accountDetails.paymentDay", dayOfWeek);
+    }
+  }}
+  name="accountDetails.paymentDayOfMonth"
+  dateFormat="d"
+  showMonthDropdown={false}
+  showYearDropdown={false}
+  placeholderText="Select Payment Date"
+  className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-sm"
+/>
+<ErrorMessage
+      name="accountDetails.paymentDayOfMonth"
+      component="span"
+      className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
+    />
+              </div>
+  
+  <div className="mt-3">
+    <label className="font-normal text-xs md:text-sm">Payment Day</label>
+    <Field
+      as="select"
+      name="accountDetails.paymentDay"
+      className="w-full border outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+    >
+      <option value="" disabled>Select Payment Day</option>
+      <option value="SUNDAY">Sunday</option>
+      <option value="MONDAY">Monday</option>
+      <option value="TUESDAY">Tuesday</option>
+      <option value="WEDNESDAY">Wednesday</option>
+      <option value="THURSDAY">Thursday</option>
+      <option value="FRIDAY">Friday</option>
+      <option value="SATURDAY">Saturday</option>
+    </Field>
+    <ErrorMessage
+      name="accountDetails.paymentDay"
+      component="span"
+      className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
+    />
+  </div>
+      </div>
 
                 <div className="flex center py-40 gap-4 w-full">
                   <button
