@@ -36,15 +36,22 @@ const PasswordOtpValidate = () => {
   }, [timer]);
 
   const handleSubmit = async (values) => {
-    console.log('Form submitted:', values);
+    // console.log('Form submitted:', values);
     setLoading(true);
     setUploadStatus('');
     try {
       const response = await axios.post(import.meta.env.VITE_VALIDATE_OTP_ENDPOINT, {
         otp: values.otp,
       });
-      if (response.status === 200) {
+      const data = response.data;
+      if (data.status === 'ACCEPTED') {
         navigate('/reset-password');
+        setLoading(false);
+      } else if (data.status === 'BAD_REQUEST') {
+        setUploadStatus(data.debugMessage || 'Invalid OTP');
+        return;
+      } else {
+        setUploadStatus(data.debugMessage || 'Invalid OTP');
       }
     } catch (err) {
       setUploadStatus(`Error:Something went wrong`);
@@ -86,7 +93,7 @@ const PasswordOtpValidate = () => {
       <div className="flex flex-col justify-center items-center bg-white shadow-md lg:px-8 lg:py-2 px-4 rounded-lg mt-5 mx-auto w-[300px] lg:w-[600px]">
         <h1 className="text-4xl text-center text-lightBlue font-bold mt-8 mb-2">OTP Validation </h1>
         <span className="font-light mt-5 leading-5 text-sm xl:text-base">
-          We&apos;ve send an OTP Validation code to your email address
+          We&apos;ve sent an OTP Validation code to your email address
         </span>
         <Formik
           initialValues={{ email: userEmail || '', otp: '' }}
@@ -131,6 +138,7 @@ const PasswordOtpValidate = () => {
                   name="otp"
                   id="otp"
                   maxLength={6}
+                  inputMode="numeric" // Ensures mobile users get a numeric keyboard
                   pattern="\d{6}"
                   onChange={(e) => {
                     const value = e.target.value.replace(/\D/g, '').slice(0, 6);

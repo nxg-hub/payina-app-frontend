@@ -8,6 +8,7 @@ const initialState = {
   step: 0,
   token: '',
   sameAddress: '',
+  manualEntry: false,
 };
 
 const businessSignUpSlice = createSlice({
@@ -25,6 +26,7 @@ const businessSignUpSlice = createSlice({
     },
     resetState(state) {
       state.step = 0;
+      state.manualEntry = false;
     },
     setToken(state, action) {
       state.token = action.payload;
@@ -35,10 +37,21 @@ const businessSignUpSlice = createSlice({
     setAddress(state, action) {
       state.sameAddress = action.payload;
     },
+    setManualEntry(state, action) {
+      state.manualEntry = action.payload;
+    },
   },
   extraReducers: (builder) => {},
 });
 
-export const { nextStep, resetState, setStep, setToken, resetToken, previousStep, setAddress } =
-  businessSignUpSlice.actions;
+export const {
+  nextStep,
+  resetState,
+  setStep,
+  setToken,
+  resetToken,
+  previousStep,
+  setAddress,
+  setManualEntry,
+} = businessSignUpSlice.actions;
 export default businessSignUpSlice.reducer;

@@ -26,7 +26,7 @@ const BalanceCard = () => {
         const response = await fetch(import.meta.env.VITE_GET_WALLET_ENDPOINT, {
           headers: {
             accept: '*/*',
-            apiKey: import.meta.env.VITE_API_KEY,
+            // apiKey: import.meta.env.VITE_API_KEY,
             Authorization: `Bearer ${newAuthToken}`,
             'Content-Type': 'application/json',
           },
@@ -88,7 +88,7 @@ const BalanceCard = () => {
             </div>
             {hideIcon && (
               <div className="md:text-[32px] text-2xl font-bold">
-                <span className="uppercase text-sm md:text-[23.282px] ">NGN</span>
+                <span className="uppercase text-sm md:text-[23.282px] ">₦</span>
                 {loading
                   ? '....'
                   : currentBalance.toLocaleString('en-NG', { minimumFractionDigits: 2 })}

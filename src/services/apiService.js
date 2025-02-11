@@ -13,7 +13,7 @@ const apiService = {
         {
           headers: {
             'Content-Type': 'application/json',
-          }
+          },
         }
       );
       return response.data;
@@ -65,15 +65,15 @@ const apiService = {
         {
           email,
           amount,
-          channels: ["card"],
-          walletId: userData.walletId
+          channels: ['card'],
+          walletId: userData.walletId,
         },
         {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
-            apiKey: paystackPublicKey
-          }
+            apiKey: paystackPublicKey,
+          },
         }
       );
       return response.data;
@@ -92,8 +92,8 @@ const apiService = {
       const response = await axios.get(import.meta.env.VITE_GET_USER, {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       });
       return response.data;
     } catch (error) {
@@ -113,12 +113,14 @@ const apiService = {
     }
   },
 
-  initializePayment: async (planId, email, amount) => {
+  initializePayment: async (email, amount) => {
     try {
       const response = await axios.post(import.meta.env.VITE_INITIALIZE_PAYMENT, {
-        planId,
-        email,
-        amount
+        order: {
+          email,
+          amount,
+        },
+        tokenizeCard: true,
       });
       return response.data;
     } catch (error) {
@@ -194,19 +196,22 @@ const apiService = {
 
   signout: async () => {
     try {
-      const response = await axios.post(import.meta.env.VITE_SIGNOUT, {}, {
-        headers: {
-          'Content-Type': 'application/json'
+      const response = await axios.post(
+        import.meta.env.VITE_SIGNOUT,
+        {},
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
         }
-      });
+      );
 
       return response.data;
     } catch (error) {
       console.error('Error during signout:', error);
       throw error;
     }
-  }
+  },
 };
-
 
 export default apiService;

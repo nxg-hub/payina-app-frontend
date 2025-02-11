@@ -1,8 +1,8 @@
 import { Form, Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import CustomButton from '../../../components/button/button';
-import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { previousStep } from '../../../Redux/PersonalSignUpSlice';
 import { images } from '../../../constants';
 
@@ -15,7 +15,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues, values 
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const [isGenderSelected, setIsGenderSelected] = useState(false);
+  const manualEntry = useSelector((state) => state.personalSignUp.manualEntry);
 
   const handlePrevious = () => {
     dispatch(previousStep());
@@ -27,9 +27,9 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues, values 
   }, [bvnData, ninData, initialValues]);
 
   const handleAddGender = (event) => {
-    handleChange (event);
+    handleChange(event);
     if (event.target.value) {
-      setIsGenderSelected (true)
+      setIsGenderSelected(true);
     }
   };
 
@@ -82,7 +82,6 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues, values 
   localStorage.setItem('currentStep', 5);
 
   const extractedData = extractData();
-  
 
   return (
     <div className="relative bg-black min-h-screen flex items-center justify-center">
@@ -146,6 +145,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues, values 
                   id="firstName"
                   name="firstName"
                   onChange={handleChange}
+                  readOnly={manualEntry ? false : true}
                   value={bvnData.firstname || ninData.firstname || values.firstName}
                   className="text-gray w-full lg:w-[500px] h-[3.4rem] border border-[#9ca3af] outline-none  rounded-[5px] py-2 px-[10px]"
                 />
@@ -165,6 +165,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues, values 
                   id="lastName"
                   name="lastName"
                   onChange={handleChange}
+                  readOnly={manualEntry ? false : true}
                   value={bvnData.lastname || ninData.lastname || values.lastName}
                   className="text-gray w-full lg:w-[500px] h-[3.4rem] border border-[#9ca3af] outline-none rounded-[5px] py-2 px-[10px]"
                 />
@@ -175,38 +176,39 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues, values 
                 />
               </div>
 
-               <div className="my-2">
-               {!isGenderSelected ? ( // Conditionally render the dropdown
-        <>
-                <label htmlFor="gender" className="text-secondary block mb-4 w-full text-sm">
-                  Gender
-                </label>
-                <Field
-                  as="select"
-                  id="gender"
-                  name="gender"
-                  onChange={(e) => {
-                    handleAddGender(e);
-                    handleChange(e);
-                  }}                  value={bvnData.gender || ninData.gender || values.gender}
-                  className="text-gray w-full lg:w-[500px] h-[3.4rem] border border-[#9ca3af] outline-none rounded-[5px] py-2 px-[10px]">
-                  <option value="">Select Gender</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </Field>
+              <div className="my-2">
+                {!isGenderSelected ? ( // Conditionally render the dropdown
+                  <>
+                    <label htmlFor="gender" className="text-secondary block mb-4 w-full text-sm">
+                      Gender
+                    </label>
+                    <Field
+                      as="select"
+                      id="gender"
+                      name="gender"
+                      onChange={(e) => {
+                        handleAddGender(e);
+                        handleChange(e);
+                      }}
+                      value={bvnData.gender || ninData.gender || values.gender}
+                      className="text-gray w-full lg:w-[500px] h-[3.4rem] border border-[#9ca3af] outline-none rounded-[5px] py-2 px-[10px]">
+                      <option value="">Select Gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </Field>
 
-                <ErrorMessage
-                  name="gender"
-                  component="div"
-                  className="text-[#db3a3a] mt-2 text-sm"
-                />
-                </>
-               ) : (
-                <div className="text-gray w-full lg:w-[500px] h-[3.4rem] py-2 px-[10px] border border-[#9ca3af] rounded-[5px] flex items-center">
-          {bvnData.gender || ninData.gender || values.gender}
-        </div>
-      )}
-              </div> 
+                    <ErrorMessage
+                      name="gender"
+                      component="div"
+                      className="text-[#db3a3a] mt-2 text-sm"
+                    />
+                  </>
+                ) : (
+                  <div className="text-gray w-full lg:w-[500px] h-[3.4rem] py-2 px-[10px] border border-[#9ca3af] rounded-[5px] flex items-center">
+                    {bvnData.gender || ninData.gender || values.gender}
+                  </div>
+                )}
+              </div>
 
               <div className="my-2">
                 <label htmlFor="dob" className="text-secondary block mb-4 w-full text-sm">

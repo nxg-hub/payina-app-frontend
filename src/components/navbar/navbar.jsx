@@ -62,7 +62,9 @@ const Navbar = () => {
                 <Link to="/" className="hover:text-lightBlue font-semibold">
                   Personal
                 </Link>
-                <LuMoveRight />
+                <Link to="/">
+                  <LuMoveRight />
+                </Link>
               </div>
             </li>
             <li className="m-6 mt-12 cursor-pointer text-primary text-xl">
@@ -70,7 +72,9 @@ const Navbar = () => {
                 <Link to="/business" className="hover:text-lightBlue font-semibold">
                   Business
                 </Link>
-                <LuMoveRight />
+                <Link to="/business">
+                  <LuMoveRight />
+                </Link>
               </div>
             </li>
             <li className="m-6 mt-12 cursor-pointer text-primary text-xl">
