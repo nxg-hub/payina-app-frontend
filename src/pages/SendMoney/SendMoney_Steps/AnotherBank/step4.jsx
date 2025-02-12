@@ -9,9 +9,6 @@ import { useSelector } from 'react-redux';
 
 const EnterPin = ({ data }) => {
   const [pin, setPin] = useState(['', '', '', '']);
-  // const [userEmail, setUserEmail] = useState('');
-  // const [walletId, setWalletId] = useState('');
-  // const [customerId, setCustomerId] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const [showDecline, setShowDecline] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -23,33 +20,12 @@ const EnterPin = ({ data }) => {
 
   //getting the userDetails  from the store
   const userDetails = useSelector((state) => state.user.user);
+  const userBusinessDetails = useSelector((state) => state.coporateCustomerProfile.customerDetails);
   const userEmail = userDetails.email;
   const walletId = userDetails.walletId;
   const customerId = userDetails.customerId;
-
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     setUserLoading(true);
-  //     try {
-  //       const userResponse = await axios.get(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           Authorization: `Bearer ${newAuthToken}`,
-  //         },
-  //       });
-  //       // console.log('User data fetched successfully:', userResponse.data);
-  //       setUserLoading(false);
-  //       setUserEmail(userResponse.data.email);
-  //       setWalletId(userResponse.data.walletId);
-  //       setCustomerId(userResponse.data.customerId);
-  //     } catch (error) {
-  //       console.error('Error fetching user data:', error.response?.data || error.message);
-  //     } finally {
-  //       setUserLoading(false);
-  //     }
-  //   };
-  //   fetchUserData();
-  // }, [newAuthToken]);
+  const userType = userDetails.userType;
+  const businessName = userBusinessDetails?.businessName;
 
   const checkIfBeneficiaryExists = async () => {
     const endpoint = import.meta.env.VITE_GET_SAVED_BENEFICIARIES_ENDPOINT.replace(
@@ -200,27 +176,41 @@ const EnterPin = ({ data }) => {
     }
     setLoading(true);
     try {
-      const transactionPayload = {
-        amount: data.amount,
-        name: data.accountName,
-        account_number: data.accountNumber,
-        bank_code: data.accountBankCode,
-        customerEmail: userEmail,
-        walletId: walletId,
-        description: data.purpose,
-        currency: data.currency,
-        trxPin: pinString,
-      };
-
-      // console.log('Headers:', {
-      //   Authorization: `Bearer ${newAuthToken}`,
-      //   apiKey: import.meta.env.VITE_API_KEY,
-      // });
-
-      // console.log('Transaction payload:', transactionPayload);
-
+      const transactionPayload =
+        //conditionally set transactionPayload based on userType
+        userType === 'CORPORATE'
+          ? {
+              corporateCustomerId: customerId,
+              amount: data.amount,
+              name: businessName,
+              account_number: data.accountNumber,
+              bank_code: data.accountBankCode,
+              recipient: data.accountName,
+              customerEmail: userEmail,
+              walletId: walletId,
+              description: data.purpose,
+              reason: data.purpose,
+              currency: data.currency,
+              initiatorEmail: userEmail,
+              trxPin: pinString,
+            }
+          : {
+              amount: data.amount,
+              name: data.accountName,
+              account_number: data.accountNumber,
+              bank_code: data.accountBankCode,
+              customerEmail: userEmail,
+              walletId: walletId,
+              description: data.purpose,
+              currency: data.currency,
+              trxPin: pinString,
+            };
+      // console.log(transactionPayload);
       const transactionResponse = await axios.post(
-        import.meta.env.VITE_API_OTHER_BANK_SEND_MONEY_ENDPOINT,
+        //conditionally call the transfer and initiallize endpoint depending on userType
+        userType === 'CORPORATE'
+          ? import.meta.env.VITE_INITIATE_TRANSFER_REQUEST
+          : import.meta.env.VITE_API_OTHER_BANK_SEND_MONEY_ENDPOINT,
         transactionPayload,
         {
           headers: {
@@ -234,11 +224,13 @@ const EnterPin = ({ data }) => {
       // console.log('Transaction Response Data:', transactionResponse.data);
 
       const isSuccess =
-        transactionResponse.data?.httpStatusCode === 'OK' &&
-        transactionResponse.data?.response?.toLowerCase().includes('transfer successful');
+        (transactionResponse.data?.httpStatusCode === 'OK' &&
+          transactionResponse.data?.response?.toLowerCase().includes('transfer successful')) ||
+        (transactionResponse.data?.httpStatusCode === '202 Accepted' &&
+          transactionResponse.data?.data === 'Approval emails have been sent.');
       if (isSuccess) {
         setShowSuccess(true);
-        console.log('Transaction Success: Transaction completed successfully.');
+        // console.log('Transaction Success: Transaction completed successfully.');
       } else {
         const backendMessage =
           transactionResponse.data?.response || 'Invalid Transaction PIN or PIN is Incorrect.';

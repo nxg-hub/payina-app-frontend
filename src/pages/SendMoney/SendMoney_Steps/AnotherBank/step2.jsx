@@ -17,11 +17,17 @@ const currencies = [
 ];
 
 const AmountDetails = ({ nextStep }) => {
-  const [error, setError] = useState(false);
+  const [error, setError] = useState('');
+  const [isAmountGreater, setIsAmountGreater] = useState(false);
   const currentBalance = useSelector((state) => state.wallet.wallet);
   const handleSubmit = (values) => {
     if (values.amount > currentBalance) {
-      setError(true);
+      setIsAmountGreater(true);
+      setError('Amount Entered is Greater Than Current Balance');
+      return;
+    }
+    if (values.amount < 100) {
+      setError('Amount must not be less than ₦100');
       return;
     }
     nextStep({ amount: values.amount, purpose: values.purpose, currency: values.currency });
@@ -74,14 +80,16 @@ const AmountDetails = ({ nextStep }) => {
               />
               {error && (
                 <p className="text-[#db3a3a] text-xs !mt-[2px] md:text-base">
-                  Amount entered is greater than current balance
+                  {error}
                   <br className="md:hidden" />
-                  <span className="text-black md:px-3">
-                    Balance:
-                    <strong>
-                      ₦{currentBalance.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
-                    </strong>
-                  </span>
+                  {isAmountGreater && (
+                    <span className="text-black md:px-3">
+                      Balance:
+                      <strong>
+                        ₦{currentBalance.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+                      </strong>
+                    </span>
+                  )}
                 </p>
               )}
             </div>

@@ -263,10 +263,6 @@
 //
 // export default Planb;
 
-
-
-
-
 import React, { useEffect, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from '../../components/navbar/navbar';
@@ -279,6 +275,8 @@ import Loader from '../../assets/LoadingSpinner';
 import { useNavigate } from 'react-router-dom';
 import successIcon from '../../assets/images/tansIcon.png';
 import errorIcon from '../../assets/images/redrectangle.png';
+import { useDispatch } from 'react-redux';
+import { setVendPayload } from '../../Redux/WalletSlice.jsx';
 
 const Planb = () => {
   const location = useLocation();
@@ -288,7 +286,7 @@ const Planb = () => {
   const [isProcessingVend, setIsProcessingVend] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [paymentReference, setPaymentReference] = useState(null);
-
+  const dispatch = useDispatch();
   const [modalState, setModalState] = useState({
     isOpen: false,
     status: 'success',
@@ -441,34 +439,21 @@ const Planb = () => {
         // Store the order reference for later use
         setPaymentReference(orderReference);
         sessionStorage.setItem('pendingFormData', JSON.stringify(formData));
-
+        // vend payload
+        const payload = {
+          customerId: formData.formValues.phoneNumber,
+          packageSlug: formData.selectedPlan.planSlug,
+          channel: 'web',
+          amount: formData.formValues.amount,
+          customerName: formData.formValues.email,
+          phoneNumber: formData.formValues.phoneNumber,
+          email: formData.formValues.email,
+          accountNumber: formData.formValues.phoneNumber,
+        };
+        //store the vend payload in redux store
+        dispatch(setVendPayload(payload));
         // Redirect to the checkout link
         window.location.href = checkoutLink;
-
-        // After redirecting, we need to handle the response from the checkout
-        // This can be done by polling or using a callback URL if provided
-        // For simplicity, let's assume we are polling for the order status
-        const pollVendStatus = async () => {
-          try {
-            const vendResponse = await apiService.checkVendStatus(orderReference);
-            if (vendResponse.status === 'completed') {
-              setModalState({
-                isOpen: true,
-                status: 'success',
-                title: 'Transaction Successful',
-                message: 'Successfully processed the vend request',
-                reference: vendResponse.paymentReference,
-              });
-            } else if (vendResponse.status === 'failed') {
-              throw new Error(vendResponse.message || 'Vend process failed');
-            }
-          } catch (err) {
-            handleError(err, orderReference);
-          }
-        };
-
-        // Poll for the vend status after a delay
-        setTimeout(pollVendStatus, 5000); // Adjust the delay as needed
       } else {
         throw new Error(initializePaymentResponse.message || 'Payment initialization failed');
       }
@@ -499,7 +484,6 @@ const Planb = () => {
       sessionStorage.removeItem('pendingFormData');
     }
   }, [formData]);
-
   if (!formData || !formData.selectedPlan) {
     return (
       <section className="text-primary">

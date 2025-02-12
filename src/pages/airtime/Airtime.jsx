@@ -105,7 +105,7 @@ const Airtime = () => {
   };
 
   return (
-    <section className="w-full h-screen text-white bg-black">
+    <section className="w-full h-full text-white bg-black">
       <Navbar className="pt-6" />
       <div className="container">
         <div className="w-[80%] h-1 border-none mr-auto ml-auto mt-[-2px] mb-40 bg-yellow"></div>
@@ -152,7 +152,7 @@ const Airtime = () => {
                 <input
                   type="number"
                   placeholder="Enter Phone number"
-                  className="border-2 rounded-[5px] px-5 py-2 border-primary bg-black text-slate-600"
+                  className="border-2 rounded-[5px] px-5 py-2 border-primary bg-white text-slate-600"
                   value={formValues.phoneNumber}
                   onChange={(e) => updateFormValues({ phoneNumber: e.target.value })}
                 />
@@ -163,7 +163,7 @@ const Airtime = () => {
                 <input
                   type="number"
                   placeholder="Enter amount"
-                  className="border-2 mb-8 rounded-[5px] px-5 py-2 border-primary bg-black text-slate-600"
+                  className="border-2 mb-8 rounded-[5px] px-5 py-2 border-primary bg-white text-slate-600"
                   value={amount}
                   onChange={handleAmountChange}
                 />

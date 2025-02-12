@@ -53,7 +53,6 @@ const RecipientDetails = ({ nextStep }) => {
             accountBankCode,
           }
         );
-        console.log('API Response:', response.data);
 
         if (response.data.account_name && response.data.account_number) {
           setConfirmationMessage(`Receiver Details confirmed: ${response.data.account_name}`);

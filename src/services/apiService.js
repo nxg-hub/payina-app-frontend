@@ -113,12 +113,13 @@ const apiService = {
     }
   },
 
-  initializePayment: async (email, amount) => {
+  initializePayment: async (customerEmail, amount) => {
     try {
       const response = await axios.post(import.meta.env.VITE_INITIALIZE_PAYMENT, {
         order: {
-          email,
+          customerEmail,
           amount,
+          callbackUrl: 'http://localhost:5173/vend',
         },
         tokenizeCard: true,
       });

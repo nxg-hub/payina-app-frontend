@@ -152,23 +152,125 @@
 //
 // export default Debits;
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useLocalStorage from '../../../../hooks/useLocalStorage';
 import { Link } from 'react-router-dom';
 import { LiaGreaterThanSolid } from 'react-icons/lia';
-import { fetchDebits } from '../../../../Redux/transactionsSlice';
+import { fetchDebits, resetTransactions } from '../../../../Redux/transactionsSlice';
+import { MoreHorizontal } from 'lucide-react';
+import TransactionModal from '../../../../utilities/TransactionModal';
+import TransactionReceipt from '../../../../utilities/TransactionReceipt';
+import successImage from '../../../../assets/images/Group-successful.png';
+import errorImage from '../../../../assets/images/Group 10275-decline.png';
 
-const Debits = () => {
+const Debits = ({ sortedDebits }) => {
+  const [action, setAction] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalStatus, setModalStatus] = useState('error');
+  const [modalTitle, setModalTitle] = useState('');
+  const [modalMessage, setModalMessage] = useState('');
+  const [modalDetails, setModalDetails] = useState('');
+  const [currentTransactionRef, setCurrentTransactionRef] = useState(null);
+  const [modalContent, setModalContent] = useState(null);
   const dispatch = useDispatch();
   const [authToken] = useLocalStorage('authToken', '');
+  const [pageIncrease, setPageIncrease] = useState(10);
 
-  const { debits, loading, error } = useSelector((state) => state.transactions);
+  const { loading, error, currentDebitPage, hasMoreDebit } = useSelector(
+    (state) => state.transactions
+  );
+
+  const handleAction = (reference) => {
+    setAction(!action);
+    setCurrentTransactionRef(reference);
+  };
+
+  const handlePullReceipt = async (currentTransactionRef) => {
+    if (!currentTransactionRef) {
+      setModalStatus('error');
+      setModalTitle('Error');
+      setModalMessage('Transaction reference not found. Please try again or contact support.');
+      setShowModal(true);
+      return;
+    }
+
+    try {
+      setModalStatus('loading');
+      setModalTitle('Fetching Receipt');
+      setModalMessage('Please wait...');
+
+      const response = await fetch(
+        `${import.meta.env.VITE_GET_TRANSACTION_RECIEPT}/${currentTransactionRef}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`,
+            // apiKey: apiKey,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch receipt: ${response.statusText}`);
+      }
+
+      const receiptData = await response.json();
+
+      if (!receiptData || !receiptData.transactionRef || !receiptData.amount) {
+        throw new Error('Invalid receipt data received');
+      }
+
+      setModalStatus(null);
+      setModalTitle('');
+      setModalMessage('');
+      setModalDetails('');
+
+      setModalContent(
+        <TransactionReceipt
+          receiptData={receiptData}
+          onClose={() => {
+            setShowModal(false);
+            setModalContent(null);
+          }}
+        />
+      );
+
+      setTimeout(() => setShowModal(true), 0);
+    } catch (error) {
+      console.error('Error pulling receipt:', error);
+      setModalStatus('error');
+      setModalTitle('Error');
+      setModalMessage(`Failed to fetch receipt: ${error.message}`);
+      setModalContent(null);
+      setShowModal(true);
+    }
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    if (modalStatus === 'error') {
+      setCurrentTransactionRef(null);
+      setModalContent(null);
+      setModalStatus(null);
+      setModalTitle('');
+      setModalMessage('');
+      setModalDetails('');
+    }
+  };
+
+  // Load more transactions
+  const loadMore = () => {
+    setPageIncrease(pageIncrease + 10);
+    if (hasMoreDebit && !loading) {
+      dispatch(fetchDebits({ authToken, page: currentDebitPage + pageIncrease }));
+    }
+    // dispatch(resetTransactions());
+  };
 
   useEffect(() => {
-    if (authToken) {
-      dispatch(fetchDebits(authToken));
-    }
+    dispatch(fetchDebits({ authToken, page: 10 }));
   }, [authToken, dispatch]);
 
   return (
@@ -177,7 +279,7 @@ const Debits = () => {
         <h2 className="text-xl md:text-2xl font-bold mb-4">Recent Debit Transactions</h2>
       </div>
 
-      {loading ? (
+      {sortedDebits.length === 0 && loading ? (
         <div className="w-full text-center font-manrope text-sm md:text-base font-normal leading-5 text-[#1a1d1f]">
           Loading...
         </div>
@@ -196,11 +298,12 @@ const Debits = () => {
                 <th className="p-2 text-left text-xs md:text-sm">Status</th>
                 <th className="p-2 text-left text-xs md:text-sm">Amount</th>
                 <th className="p-2 text-left text-xs md:text-sm">Date</th>
+                <th className="p-2 text-left text-xs md:text-sm">More</th>
               </tr>
             </thead>
             <tbody>
-              {debits.length > 0 ? (
-                debits.map((transaction, index) => (
+              {sortedDebits.length > 0 ? (
+                sortedDebits.map((transaction, index) => (
                   <tr key={transaction.id || index} className="border-b border-[#d9d9d9]">
                     <td className="p-2">
                       <div className="w-[32px] h-[32px] md:w-[42px] md:h-[42px]">
@@ -241,6 +344,21 @@ const Debits = () => {
                     <td className="p-2 font-manrope text-xs md:text-base font-normal leading-5 text-[#1a1d1f]">
                       {new Date(transaction.createdAt).toLocaleString()}
                     </td>
+                    <td className="p-2 font-manrope text-sm">
+                      <button onClick={() => handleAction(transaction.transactionRef)}>
+                        <MoreHorizontal className="w-5 h-5 text-gray-600" />
+                      </button>
+                    </td>
+                    {action && currentTransactionRef === transaction.transactionRef && (
+                      <button
+                        className="bg-white py-2 px-5 border font-bold border-stone-100 shadow-xl rounded-sm absolute w-[150px] right-[5%]"
+                        onClick={() => {
+                          setAction(false);
+                          handlePullReceipt(transaction.transactionRef);
+                        }}>
+                        View Reciept
+                      </button>
+                    )}
                   </tr>
                 ))
               ) : (
@@ -254,13 +372,50 @@ const Debits = () => {
               )}
             </tbody>
           </table>
+
+          {/* Load More Button */}
+          {hasMoreDebit && (
+            <button
+              onClick={loadMore}
+              disabled={loading}
+              className="mt-4 mb-4 bg-[#CCDFE6] text-black font-bold py-2 px-4 rounded m-auto absolute md:left-[45%] xl:left-[55%] ">
+              {loading ? 'Loading...' : 'Load More Trasanctions'}
+            </button>
+          )}
+          {/* No More Data Message */}
+          {!hasMoreDebit && (
+            <p className="mt-4 text-gray-500 text-center">No more transactions to load.</p>
+          )}
         </div>
       )}
       <Link
-        to="/account/transaction"
+        to="/account/statement"
         className="float-right pr-0 p-4 text-lightBlue flex items-center gap-2 font-medium text-xs md:text-base">
-        See All Transactions <LiaGreaterThanSolid color="#006181" />
+        Account Statement <LiaGreaterThanSolid color="#006181" />
       </Link>
+      <TransactionModal
+        isOpen={showModal}
+        onClose={handleModalClose}
+        title={modalTitle}
+        message={modalMessage}
+        status={modalStatus}
+        details={modalDetails}
+        successIcon={successImage}
+        errorIcon={errorImage}
+        buttons={
+          modalStatus === 'success'
+            ? ['pullReceipt', 'back']
+            : // : modalStatus === 'error' && walletBalance !== null && Number(amount) > walletBalance
+              //   ? ['fundWallet', 'back']
+              modalStatus
+              ? ['back']
+              : []
+        }
+        onPullReceipt={handlePullReceipt}
+        transactionRef={currentTransactionRef}
+        successButtonText="Fund Wallet"
+        modalContent={modalContent}
+      />
     </div>
   );
 };

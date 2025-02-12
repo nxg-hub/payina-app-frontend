@@ -15,7 +15,7 @@ const SwitchAccount = () => {
         </div>
 
         <div className="space-y-4">
-          <a href="/personal/login">
+          <a href="/login">
             <div
               className="bg-lightBlue border border-gray-200 rounded-lg p-4 hover:bg-secondary hover:text-white cursor-pointer transition-colors duration-200 flex items-center justify-between shadow-sm mb-10"
               role="button"

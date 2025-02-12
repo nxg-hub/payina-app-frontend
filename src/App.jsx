@@ -238,6 +238,8 @@ import AccountLimits from './pages/More/Limits.jsx';
 import Terms from './pages/More/Terms.jsx';
 import EmailVerification from './pages/Onboarding/EmailVerification.jsx';
 import ProtectedRoute from './utilities/ProtectedRoute.jsx';
+import AccountStatement from './pages/Account/Transaction/_components/AccountStatement.jsx';
+import Vend from './pages/vend/Vend.jsx';
 
 function App() {
   const location = useLocation();
@@ -292,6 +294,7 @@ function App() {
             <Route path="/data" element={<Data />} />
             <Route path="/plans/review" element={<Planb />} />
             <Route path="/bills" element={<Betone />} />
+            <Route path="/vend" element={<Vend />} />
             <Route path="/bills/plans" element={<Bettwo />} />
             <Route path="/bills-payment" element={<UsersPaybill />} />
             <Route path="/bills/review" element={<Befour />} />
@@ -371,6 +374,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Transaction />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/account/statement"
+              element={
+                <ProtectedRoute>
+                  <AccountStatement />
                 </ProtectedRoute>
               }
             />

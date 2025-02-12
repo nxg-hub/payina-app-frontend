@@ -18,6 +18,7 @@ import { resetState, resetToken } from '../../../../Redux/BusinessSignUpSlice.js
 import { clearState } from '../../../../Redux/ForgotPasswordSlice.jsx';
 import { reSetClientsDetails } from '../../../../Redux/GetClientsSlice.jsx';
 import { reSetWalletDetails } from '../../../../Redux/WalletSlice.jsx';
+import { resetTransactions } from '../../../../Redux/transactionsSlice.jsx';
 
 export const MobileSidebar = () => {
   const location = useLocation();
@@ -38,6 +39,8 @@ export const MobileSidebar = () => {
   };
 
   const handleLogout = () => {
+    localStorage.clear();
+    navigate('/login');
     localStorage.removeItem('userEmail');
     persistor.purge();
     dispatch(reSetUserDetails());
@@ -48,9 +51,7 @@ export const MobileSidebar = () => {
     dispatch(clearState());
     dispatch(reSetClientsDetails());
     dispatch(reSetWalletDetails());
-
-    localStorage.clear();
-    navigate('/login');
+    dispatch(resetTransactions());
   };
 
   const renderSidebarContent = () => {
@@ -58,7 +59,7 @@ export const MobileSidebar = () => {
       return (
         <>
           <Link
-            to="/personal/dashboard"
+            to="/account/dashboard"
             className={`flex items-center space-x-6 ${
               currentRoute === '/account/dashboard' ? '!ml-3 font-bold text-lightBlue' : ''
             }`}>

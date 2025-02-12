@@ -24,9 +24,16 @@ const EnterPin = ({ data }) => {
 
   //getting the userDetails  from the store
   const userDetails = useSelector((state) => state.user.user);
+  const userBusinessDetails = useSelector(
+    (state) => state.coporateCustomerProfile?.customerDetails
+  );
   const userEmail = userDetails.email;
   const sourceId = userDetails.walletId;
   const senderName = userDetails.accountName;
+  const userType = userDetails.userType;
+  const customerId = userDetails.customerId;
+  const businessName = userBusinessDetails?.businessName;
+  // console.log(customerId);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -139,22 +146,38 @@ const EnterPin = ({ data }) => {
       if (pinResponse.data === 'Transaction PIN is valid.') {
         console.log('PIN validated successfully. Starting in-house transfer...');
 
-        const transactionPayload = {
-          sourceId: sourceId,
-          destinationId: destinationId,
-          amount: data.amount,
-          senderName: senderName,
-          receiverName: receiverName,
-          senderEmailAddress: userEmail,
-          receiverEmailAddress: receiverEmailAddress,
-          description: data.purpose,
-          trxPin: pinString,
-        };
+        const transactionPayload =
+          //conditionally set transactionPayload based on userType
+          userType === 'CORPORATE'
+            ? {
+                sourceId: sourceId,
+                corporateCustomerId: customerId,
+                destinationId: destinationId,
+                amount: data.amount,
+                senderName: businessName,
+                receiverName: receiverName,
+                senderEmailAddress: userEmail,
+                receiverEmailAddress: receiverEmailAddress,
+                description: data.purpose,
+              }
+            : {
+                sourceId: sourceId,
+                destinationId: destinationId,
+                amount: data.amount,
+                senderName: senderName,
+                receiverName: receiverName,
+                senderEmailAddress: userEmail,
+                receiverEmailAddress: receiverEmailAddress,
+                description: data.purpose,
+              };
 
         // console.log('Transaction payload:', transactionPayload);
 
         const transactionResponse = await axios.post(
-          import.meta.env.VITE_IN_HOUSE_TRANSFER_ENDPOINT,
+          //conditionally call the endpoints based on userType
+          userType === 'CORPORATE'
+            ? import.meta.env.VITE_INITIATE_INHOUSE_TRANSFER_REQUEST
+            : import.meta.env.VITE_IN_HOUSE_TRANSFER_ENDPOINT,
           transactionPayload,
           {
             headers: {
@@ -166,18 +189,13 @@ const EnterPin = ({ data }) => {
         );
 
         // console.log('Full Transaction Response:', transactionResponse);
-        if (transactionResponse.status === 200) {
-          const responseData = transactionResponse.data;
-          if (responseData.response === 'Transfer was successful') {
-            // console.log('Transaction Success: Transaction completed successfully.');
-            setShowSuccess(true);
-          } else {
-            console.log('Transaction Declined: Transaction could not be completed.', responseData);
-            setErrorMessage(
-              responseData.debugMessage || responseData.response || 'Transaction failed.'
-            );
-            setShowDecline(true);
-          }
+        const isSuccess =
+          transactionResponse.data?.response === 'Transfer was successful' ||
+          (transactionResponse.data?.httpStatusCode === '202 Accepted' &&
+            transactionResponse.data?.data === 'Approval emails have been sent.');
+
+        if (isSuccess) {
+          setShowSuccess(true);
         } else {
           console.log('Unexpected response structure:', transactionResponse.data);
           setErrorMessage('Unexpected error occurred. Please try again.');
@@ -198,6 +216,7 @@ const EnterPin = ({ data }) => {
           error.response.data?.data || // If the message is nested inside 'data'
           error.response.data?.response || // If message is under 'response'
           error.response.data?.debugMessage || // If message is under 'debugMessage'
+          error.response.data?.message || // If message is under 'debugMessage'
           error.response.data || // Direct string message
           'Transaction failed.'; // Default fallback
 
@@ -212,25 +231,6 @@ const EnterPin = ({ data }) => {
       setLoading(false);
     }
   };
-  //   catch (error) {
-  //     console.error('Error during transaction process:', error);
-
-  //     if (error.response) {
-  //       console.error('Error Status:', error.response.status);
-  //       console.error('Error Data:', error.response.data);
-  //       const backendMessage =
-  //         error.response.data.response || error.response.data.debugMessage || 'Transaction failed.';
-  //       setErrorMessage(backendMessage);
-  //     } else {
-  //       console.error('Error Message:', error.message);
-  //     }
-
-  //     setErrorMessage('Transaction process failed. Please try again.');
-  //     setShowDecline(true);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   if (showSuccess) return <SuccessMessage />;
   if (showDecline) return <DeclineMessage errorMessage={errorMessage} />;
