@@ -207,7 +207,6 @@
 //
 // export default VendInitiator;
 
-
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import useLocalStorage from '../hooks/useLocalStorage';
@@ -217,17 +216,17 @@ import { useNavigate } from 'react-router-dom';
 import TransactionPinModal from './TransactionPinModal';
 
 const VendInitiator = ({
-                         selectedPlan,
-                         formValues,
-                         packageSlug,
-                         phoneNumber,
-                         amount,
-                         onVendInitiated,
-                         onError,
-                         accountNumber,
-                         isProcessing,
-                         setIsProcessing,
-                       }) => {
+  selectedPlan,
+  formValues,
+  packageSlug,
+  phoneNumber,
+  amount,
+  onVendInitiated,
+  onError,
+  accountNumber,
+  isProcessing,
+  setIsProcessing,
+}) => {
   const navigate = useNavigate();
   const [showPinModal, setShowPinModal] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
@@ -307,10 +306,10 @@ const VendInitiator = ({
       { value: packageSlug, errorMsg: 'Package details are missing' },
       { value: phoneNumber, errorMsg: 'Phone number is required' },
       { value: amount, errorMsg: 'Amount is required' },
-      { value: formValues.email, errorMsg: 'Email is required' }
+      { value: formValues.email, errorMsg: 'Email is required' },
     ];
 
-    const emptyField = requiredFields.find(field => !field.value);
+    const emptyField = requiredFields.find((field) => !field.value);
     if (emptyField) {
       setValidationError(emptyField.errorMsg);
       return false;
@@ -336,7 +335,11 @@ const VendInitiator = ({
     }
 
     if (isInsufficientBalance) {
-      onError(new Error(`Insufficient funds. Required: ₦${Number(amount).toLocaleString()}, Available: ₦${walletBalance.toLocaleString()}`));
+      onError(
+        new Error(
+          `Insufficient funds. Required: ₦${Number(amount).toLocaleString()}, Available: ₦${walletBalance.toLocaleString()}`
+        )
+      );
       return;
     }
 
@@ -380,13 +383,18 @@ const VendInitiator = ({
         onVendInitiated(vendValueResponse.data);
       } else {
         const responseData = 'AAA' + vendValueResponse.data.responseData || {};
-        const errorNarration = 'BBB'+ responseData.narration || 'CCC' + responseData.errorNarration || 'Unknown error occurred';
-        const debugMessage = 'DDD' + vendValueResponse.data.debugMessage || `Vend value failed: ${errorNarration}`;
+        const errorNarration =
+          'BBB' + responseData.narration ||
+          'CCC' + responseData.errorNarration ||
+          'Unknown error occurred';
+        const debugMessage =
+          'DDD' + vendValueResponse.data.debugMessage || `Vend value failed: ${errorNarration}`;
         throw new Error(debugMessage);
       }
     } catch (err) {
       console.error('Error in vend process:', err);
-      const errorMessage = 'EEE' + err.response?.data?.debugMessage ||
+      const errorMessage =
+        'EEE' + err.response?.data?.debugMessage ||
         'FFF' + err.response?.data?.message ||
         'GGG' + err.message ||
         'Vend process failed';
@@ -412,9 +420,7 @@ const VendInitiator = ({
       />
 
       {/* TODO: MAYBE MODIFY THE VALIDATION ERROR DISPLAY */}
-      {validationError && (
-        <div className="text-sm text-red-600 mb-2">{validationError}</div>
-      )}
+      {validationError && <div className="text-sm text-red-600 mb-2">{validationError}</div>}
 
       {!packageSlug && (
         <div className="text-sm text-red-600 mb-2">Warning: User package details is missing</div>
@@ -422,8 +428,13 @@ const VendInitiator = ({
 
       <div className="mb-4 p-4 bg-gray-50">
         <div className="text-sm text-gray-600">Available Balance</div>
-        <div className={`text-xl font-semibold ${isInsufficientBalance ? 'text-red-600' : 'text-gray-800'}`}>
-          ₦{walletBalance?.toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+        <div
+          className={`text-xl font-semibold ${isInsufficientBalance ? 'text-red-600' : 'text-gray-800'}`}>
+          ₦
+          {walletBalance?.toLocaleString('en-NG', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) || '0.00'}
           {isInsufficientBalance && (
             <div className="text-sm text-red-600 mt-1">
               Required: ₦{Number(amount).toLocaleString('en-NG', { minimumFractionDigits: 2 })}
@@ -439,8 +450,7 @@ const VendInitiator = ({
           isInsufficientBalance
             ? 'bg-green-600 hover:bg-green-700'
             : 'bg-blue-600 hover:bg-blue-700'
-        } disabled:bg-gray-400 disabled:cursor-not-allowed`}
-      >
+        } disabled:bg-gray-400 disabled:cursor-not-allowed`}>
         {isProcessing ? 'Processing...' : isInsufficientBalance ? 'Fund Wallet' : 'Proceed'}
       </CustomButton>
     </div>
