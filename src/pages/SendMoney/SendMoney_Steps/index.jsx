@@ -11,6 +11,7 @@ import beneficiaryImg from '../../../assets/images/Group-beneficiaries.png';
 import Stepper from '../stepper';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCoorperateCustomerDetails } from '../../../Redux/CoorperateCustomerSlice';
+import { hideLoading, showLoading } from '../../../Redux/loadingSlice';
 
 const SendMoneySteps = () => {
   const [selectedForm, setSelectedForm] = useState(null);
@@ -24,6 +25,13 @@ const SendMoneySteps = () => {
   const error = useSelector((state) => state.coporateCustomerProfile.error);
   const dispatch = useDispatch();
   const userType = userDetails.userType;
+  if (loading) {
+    dispatch(showLoading());
+  } else if (success) {
+    dispatch(hideLoading());
+  } else {
+    dispatch(hideLoading());
+  }
   useEffect(() => {
     if (success || userType !== 'CORPORATE') {
       return; //do not dispatch the function once it is successful or if user is not a coporate user
@@ -79,11 +87,12 @@ const SendMoneySteps = () => {
       default:
         return (
           <div className="flex flex-col justify-center items-start ml-[50px] xl:ml-80 xl:pt-28 md:pt-10 mx-auto">
-            {loading ? (
-              <div className="absolute w-[5 top-[30%] left-[45%] md:left-[55%]">
-                <h2 className="font-bold text-center">loading...</h2>
-              </div>
-            ) : (
+            {
+              // loading ? (
+              //   <div className="absolute w-[5 top-[30%] left-[45%] md:left-[55%]">
+              //     <h2 className="font-bold text-center">loading...</h2>
+              //   </div>
+              // ) :
               <>
                 <div className="flex flex-row justify-between items-left gap-[5rem] lg:gap-[45rem]">
                   <div className="text-xl md:text-3xl font-medium">Send Money</div>
@@ -128,7 +137,7 @@ const SendMoneySteps = () => {
                   </div>
                 </div>
               </>
-            )}
+            }
           </div>
         );
     }

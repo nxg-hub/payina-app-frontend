@@ -278,16 +278,33 @@ const UserData = () => {
                       <label className="block text-sm font-medium text-gray-700">
                         Select Data Plan
                       </label>
+                      {/*<select*/}
+                      {/*  value={selectedPlan?.slug || ''}*/}
+                      {/*  onChange={handlePlanSelect}*/}
+                      {/*  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">*/}
+                      {/*  <option value="">Select a plan</option>*/}
+                      {/*  {plans.map((plan) => (*/}
+                      {/*    <option key={plan.slug} value={plan.slug}>*/}
+                      {/*      {plan.name} - ₦{plan.amount}*/}
+                      {/*    </option>*/}
+                      {/*  ))}*/}
+                      {/*</select>*/}
+
                       <select
                         value={selectedPlan?.slug || ''}
                         onChange={handlePlanSelect}
                         className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="">Select a plan</option>
-                        {plans.map((plan) => (
-                          <option key={plan.slug} value={plan.slug}>
-                            {plan.name} - ₦{plan.amount}
-                          </option>
-                        ))}
+                        {plans.map((plan) => {
+                          // Add ₦1 service charge if plan.amount >= 1000 FOR TESTING PURPOSE ONLY
+                          const totalAmount = plan.amount >= 1000 ? plan.amount + 100 : plan.amount;
+
+                          return (
+                            <option key={plan.slug} value={plan.slug}>
+                              {plan.name} - ₦{totalAmount}
+                            </option>
+                          );
+                        })}
                       </select>
                       {errors.selectedPlan && (
                         <p className="mt-2 text-sm text-red-600">{errors.selectedPlan}</p>

@@ -280,7 +280,7 @@ const Debits = ({ sortedDebits }) => {
       </div>
 
       {sortedDebits.length === 0 && loading ? (
-        <div className="w-full text-center font-manrope text-sm md:text-base font-normal leading-5 text-[#1a1d1f]">
+        <div className="w-full text-center font-manrope text-sm md:text-base font-semibold leading-5 text-[#1a1d1f]">
           Loading...
         </div>
       ) : error ? (

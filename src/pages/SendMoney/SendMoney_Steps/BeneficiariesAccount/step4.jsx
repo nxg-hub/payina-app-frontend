@@ -5,12 +5,12 @@ import DeclineMessage from '../step6';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import ReactLoading from 'react-loading';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { hideLoading, showLoading } from '../../../../Redux/loadingSlice.jsx';
 
 const EnterPin = ({ data }) => {
+  const dispatch = useDispatch();
   const [pin, setPin] = useState(['', '', '', '']);
-  // const [userEmail, setUserEmail] = useState('');
-  // const [walletId, setWalletId] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const [showDecline, setShowDecline] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -25,7 +25,11 @@ const EnterPin = ({ data }) => {
   const userType = userDetails.userType;
   const customerId = userDetails.customerId;
   const businessName = userBusinessDetails?.businessName;
-
+  if (loading) {
+    dispatch(showLoading());
+  } else {
+    dispatch(hideLoading());
+  }
   const handlePinChange = (e, index) => {
     const value = e.target.value;
     if (value.length > 1) return;
@@ -171,12 +175,7 @@ const EnterPin = ({ data }) => {
 
   return (
     <div className="transaction-pin flex flex-col justify-center items-center bg-[#D2D2D285] rounded-md px-[2rem] py-[2rem] lg:py-[3rem] lg:px-[5rem] mt-[5rem] gap-8 mx-auto">
-      {loading ? (
-        <div className="flex flex-col items-center">
-          <ReactLoading type="spin" color="#00678F" height={50} width={50} />
-          <span className="mt-4 text-lightBlue">Transaction processing...</span>
-        </div>
-      ) : userLoader ? (
+      {userLoader ? (
         <div className="flex flex-col items-center">
           <ReactLoading type="spin" color="#00678F" height={50} width={50} />
           {/* <span className="mt-4 text-ligthBlue">Transaction processing...</span> */}

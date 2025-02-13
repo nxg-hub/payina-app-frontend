@@ -73,7 +73,7 @@ const Airtime = () => {
     if (phone.length > 11) newErrors.phoneNumber = 'Phone number is over 11 digits';
     if (!formValues.selectedNetwork) newErrors.selectedNetwork = 'Network selection is required';
     if (!amount) newErrors.amount = 'Amount is required';
-    if (amount && Number(amount) < 70) newErrors.amount = 'Amount must be 70 Naira or above';
+    if (amount && Number(amount) < 100) newErrors.amount = 'Amount must be 100 Naira or above';
     if (!selectedPlan) newErrors.selectedPlan = 'Please select a data plan';
 
     if (Object.keys(newErrors).length > 0) {

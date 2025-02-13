@@ -5,9 +5,11 @@ import DeclineMessage from '../step6.jsx';
 import useLocalStorage from '../../../../hooks/useLocalStorage.js';
 import PropTypes from 'prop-types';
 import ReactLoading from 'react-loading';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { hideLoading, showLoading } from '../../../../Redux/loadingSlice.jsx';
 
 const EnterPin = ({ data }) => {
+  const dispatch = useDispatch();
   const [pin, setPin] = useState(['', '', '', '']);
   // const [userEmail, setUserEmail] = useState('');
   // const [sourceId, setSourceId] = useState('');
@@ -34,7 +36,11 @@ const EnterPin = ({ data }) => {
   const customerId = userDetails.customerId;
   const businessName = userBusinessDetails?.businessName;
   // console.log(customerId);
-
+  if (loading) {
+    dispatch(showLoading());
+  } else {
+    dispatch(hideLoading());
+  }
   useEffect(() => {
     const fetchUserData = async () => {
       setUserLoading(true);
@@ -238,12 +244,7 @@ const EnterPin = ({ data }) => {
 
   return (
     <div className="transaction-pin flex flex-col justify-center items-center bg-[#D2D2D285] rounded-md p-[2rem] lg:py-[3rem] lg:px-[5rem] mt-[5rem] gap-8 mx-auto">
-      {loading ? (
-        <div className="flex flex-col items-center">
-          <ReactLoading type="spin" color="#00678F" height={50} width={50} />
-          <span className="mt-4 text-ligthBlue">Transaction processing...</span>
-        </div>
-      ) : userLoader ? (
+      {userLoader ? (
         <div className="flex flex-col items-center">
           <ReactLoading type="spin" color="#00678F" height={50} width={50} />
           {/* <span className="mt-4 text-ligthBlue">Transaction processing...</span> */}

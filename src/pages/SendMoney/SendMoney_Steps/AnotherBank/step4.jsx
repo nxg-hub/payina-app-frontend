@@ -5,9 +5,11 @@ import DeclineMessage from '../step6.jsx';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import ReactLoading from 'react-loading';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { hideLoading, showLoading } from '../../../../Redux/loadingSlice.jsx';
 
 const EnterPin = ({ data }) => {
+  const dispatch = useDispatch();
   const [pin, setPin] = useState(['', '', '', '']);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showDecline, setShowDecline] = useState(false);
@@ -26,7 +28,12 @@ const EnterPin = ({ data }) => {
   const customerId = userDetails.customerId;
   const userType = userDetails.userType;
   const businessName = userBusinessDetails?.businessName;
-
+  //loading state
+  if (loading) {
+    dispatch(showLoading());
+  } else {
+    dispatch(hideLoading());
+  }
   const checkIfBeneficiaryExists = async () => {
     const endpoint = import.meta.env.VITE_GET_SAVED_BENEFICIARIES_ENDPOINT.replace(
       '{customerId}',
@@ -249,8 +256,10 @@ const EnterPin = ({ data }) => {
           error.response?.data?.data ||
           error.response?.data?.response ||
           error.response?.data?.debugMessage ||
+          error.response.data?.message || // If message is under 'debugMessage'
           error.response?.data ||
-          'Transaction process failed.';
+          error.message;
+        ('Transaction process failed.');
 
         console.error('Transaction Error:', backendMessage); // Log for debugging
         setErrorMessage(backendMessage); // Show actual backend message
@@ -269,12 +278,7 @@ const EnterPin = ({ data }) => {
 
   return (
     <div className="transaction-pin flex flex-col justify-center items-center bg-[#D2D2D285] rounded-md p-[2rem] lg:py-[3rem] lg:px-[5rem] mt-[5rem] gap-8 mx-auto">
-      {loading ? (
-        <div className="flex flex-col items-center">
-          <ReactLoading type="spin" color="#00678F" height={50} width={50} />
-          <span className="mt-4 text-lightBlue">Transaction processing...</span>
-        </div>
-      ) : userLoader ? (
+      {userLoader ? (
         <div className="flex flex-col items-center">
           <ReactLoading type="spin" color="#00678F" height={50} width={50} />
           {/* <span className="mt-4 text-ligthBlue">Transaction processing...</span> */}

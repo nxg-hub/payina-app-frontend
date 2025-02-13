@@ -237,6 +237,7 @@ import SwitchAccount from './pages/More/SwitchAccount.jsx';
 import AccountLimits from './pages/More/Limits.jsx';
 import Terms from './pages/More/Terms.jsx';
 import EmailVerification from './pages/Onboarding/EmailVerification.jsx';
+import Loader from './assets/LoadingSpinner.jsx';
 import ProtectedRoute from './utilities/ProtectedRoute.jsx';
 import AccountStatement from './pages/Account/Transaction/_components/AccountStatement.jsx';
 import Vend from './pages/vend/Vend.jsx';
@@ -581,6 +582,7 @@ function App() {
               }
             />
           </Routes>
+          <Loader />
         </ErrorBoundary>
       </FormProvider>
     </UserContext.Provider>

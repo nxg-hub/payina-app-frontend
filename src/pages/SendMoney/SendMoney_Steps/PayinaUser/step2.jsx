@@ -15,6 +15,7 @@ const AmountDetails = ({ nextStep }) => {
     }
     if (values.amount < 100) {
       setError('Amount must not be less than ₦100');
+      setIsAmountGreater(false);
       return;
     }
     nextStep({ amount: values.amount, purpose: values.purpose });

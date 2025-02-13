@@ -119,7 +119,7 @@ const apiService = {
         order: {
           customerEmail,
           amount,
-          callbackUrl: 'http://localhost:5173/vend',
+          callbackUrl: 'https://payina.com.ng/vend',
         },
         tokenizeCard: true,
       });
