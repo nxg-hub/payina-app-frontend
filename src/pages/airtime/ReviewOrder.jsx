@@ -58,6 +58,7 @@ const ReviewOrder = () => {
         window.open(authorizationUrl, '_blank');
 
         const vendValueResponse = await apiService.vendValue(paymentReference);
+        console.log(vendValueResponse);
 
         if (vendValueResponse.status === true) {
           navigate('/transaction-success', { state: { message: vendValueResponse.message } });

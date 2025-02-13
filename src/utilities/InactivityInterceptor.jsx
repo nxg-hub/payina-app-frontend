@@ -9,6 +9,7 @@ import { reSetClientsDetails } from '../Redux/GetClientsSlice';
 import { reSetWalletDetails } from '../Redux/WalletSlice';
 import { persistor } from '../Redux/Store';
 import { useNavigate } from 'react-router-dom';
+import { resetTransactions } from '../Redux/transactionsSlice';
 
 const InactivityInterceptor = () => {
   const dispatch = useDispatch();
@@ -83,6 +84,7 @@ const InactivityInterceptor = () => {
     dispatch(clearState());
     dispatch(reSetClientsDetails());
     dispatch(reSetWalletDetails());
+    dispatch(resetTransactions());
 
     // Redirect to login
     navigate('/login');
@@ -138,7 +140,7 @@ const InactivityInterceptor = () => {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
       onClick={(e) => e.stopPropagation()}>
       <div className="bg-white rounded-lg p-6 max-w-md w-full mx-auto">
         <div className="text-center space-y-4">

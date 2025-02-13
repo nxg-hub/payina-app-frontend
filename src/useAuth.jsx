@@ -46,24 +46,24 @@ export function useAuth() {
       // Special handling for personal users
       if (isPersonalUser) {
         if (userData.registrationLevel === 'VALIDATE_OTP') {
-          navigate('/personal/dashboard');
+          navigate('/account/dashboard');
           return;
         }
         if (userData.registrationLevel === 'BVN_VERIFICATION_DOCUMENT_UPLOAD') {
-          navigate('/personal/dashboard');
+          navigate('/account/dashboard');
           return;
         }
         if (userData.registrationLevel === 'BVN_DETAILS_CONFIRMATION_SAVE_USERNAME') {
-          navigate('/personal/dashboard');
+          navigate('/account/dashboard');
           return;
         }
 
         if (userData.registrationLevel === 'SET_TRANSACTION_PIN') {
-          navigate('/personal/dashboard');
+          navigate('/account/dashboard');
           return;
         }
         if (userData.registrationLevel === 'KYC_COMPLETED') {
-          navigate('/personal/dashboard');
+          navigate('/account/dashboard');
           return;
         }
         // If not completed level 4, redirect to signup

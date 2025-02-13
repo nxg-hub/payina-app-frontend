@@ -3,16 +3,14 @@ import { Download } from 'lucide-react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { utils, writeFile } from 'xlsx';
-import * as XLSX from 'xlsx';
 
-const ExportTransaction = ({ credits, debits }) => {
+const ExportStatement = ({ transactions }) => {
   const [isOpen, setIsOpen] = useState(false);
-
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
     doc.text('Transaction Report', 20, 20);
 
-    const transactions = [...credits, ...debits];
+    // const transactions = [...credits, ...debits];
     const tableData = transactions.map((transaction) => [
       transaction.type,
       transaction.description,
@@ -44,7 +42,6 @@ const ExportTransaction = ({ credits, debits }) => {
 
   const handleDownloadExcel = () => {
     try {
-      const transactions = [...credits, ...debits];
       const data = transactions.map((transaction) => ({
         Type: transaction.type,
         Description: transaction.description,
@@ -58,9 +55,8 @@ const ExportTransaction = ({ credits, debits }) => {
       const wb = utils.book_new();
       utils.book_append_sheet(wb, ws, 'Transactions');
       writeFile(wb, 'transactions.xlsx');
-    } catch (error) {
+    } catch (err) {
       console.error('Error generating Excel:', error);
-      // You might want to add error handling here
     }
   };
 
@@ -89,4 +85,4 @@ const ExportTransaction = ({ credits, debits }) => {
   );
 };
 
-export default ExportTransaction;
+export default ExportStatement;

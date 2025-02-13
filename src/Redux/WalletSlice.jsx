@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   wallet: '',
+  vendPayload: [],
 };
 
 const walletSlice = createSlice({
@@ -12,13 +13,17 @@ const walletSlice = createSlice({
     setWalletBalance(state, action) {
       state.wallet = action.payload; // Store fetched data in the state
     },
+    setVendPayload(state, action) {
+      state.vendPayload = action.payload; // Store fetched data in the state
+    },
 
     reSetWalletDetails(state, action) {
       state.wallet = '';
+      state.vendPayload = [];
     },
   },
   extraReducers: (builder) => {},
 });
 
-export const { setWalletBalance, reSetWalletDetails } = walletSlice.actions;
+export const { setWalletBalance, reSetWalletDetails, setVendPayload } = walletSlice.actions;
 export default walletSlice.reducer;

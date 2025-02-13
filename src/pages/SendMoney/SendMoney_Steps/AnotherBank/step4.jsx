@@ -5,13 +5,12 @@ import DeclineMessage from '../step6.jsx';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import ReactLoading from 'react-loading';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { hideLoading, showLoading } from '../../../../Redux/loadingSlice.jsx';
 
 const EnterPin = ({ data }) => {
+  const dispatch = useDispatch();
   const [pin, setPin] = useState(['', '', '', '']);
-  // const [userEmail, setUserEmail] = useState('');
-  // const [walletId, setWalletId] = useState('');
-  // const [customerId, setCustomerId] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const [showDecline, setShowDecline] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -23,34 +22,18 @@ const EnterPin = ({ data }) => {
 
   //getting the userDetails  from the store
   const userDetails = useSelector((state) => state.user.user);
+  const userBusinessDetails = useSelector((state) => state.coporateCustomerProfile.customerDetails);
   const userEmail = userDetails.email;
   const walletId = userDetails.walletId;
   const customerId = userDetails.customerId;
-
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     setUserLoading(true);
-  //     try {
-  //       const userResponse = await axios.get(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           Authorization: `Bearer ${newAuthToken}`,
-  //         },
-  //       });
-  //       // console.log('User data fetched successfully:', userResponse.data);
-  //       setUserLoading(false);
-  //       setUserEmail(userResponse.data.email);
-  //       setWalletId(userResponse.data.walletId);
-  //       setCustomerId(userResponse.data.customerId);
-  //     } catch (error) {
-  //       console.error('Error fetching user data:', error.response?.data || error.message);
-  //     } finally {
-  //       setUserLoading(false);
-  //     }
-  //   };
-  //   fetchUserData();
-  // }, [newAuthToken]);
-
+  const userType = userDetails.userType;
+  const businessName = userBusinessDetails?.businessName;
+  //loading state
+  if (loading) {
+    dispatch(showLoading());
+  } else {
+    dispatch(hideLoading());
+  }
   const checkIfBeneficiaryExists = async () => {
     const endpoint = import.meta.env.VITE_GET_SAVED_BENEFICIARIES_ENDPOINT.replace(
       '{customerId}',
@@ -200,27 +183,41 @@ const EnterPin = ({ data }) => {
     }
     setLoading(true);
     try {
-      const transactionPayload = {
-        amount: data.amount,
-        name: data.accountName,
-        account_number: data.accountNumber,
-        bank_code: data.accountBankCode,
-        customerEmail: userEmail,
-        walletId: walletId,
-        description: data.purpose,
-        currency: data.currency,
-        trxPin: pinString,
-      };
-
-      // console.log('Headers:', {
-      //   Authorization: `Bearer ${newAuthToken}`,
-      //   apiKey: import.meta.env.VITE_API_KEY,
-      // });
-
-      // console.log('Transaction payload:', transactionPayload);
-
+      const transactionPayload =
+        //conditionally set transactionPayload based on userType
+        userType === 'CORPORATE'
+          ? {
+              corporateCustomerId: customerId,
+              amount: data.amount,
+              name: businessName,
+              account_number: data.accountNumber,
+              bank_code: data.accountBankCode,
+              recipient: data.accountName,
+              customerEmail: userEmail,
+              walletId: walletId,
+              description: data.purpose,
+              reason: data.purpose,
+              currency: data.currency,
+              initiatorEmail: userEmail,
+              trxPin: pinString,
+            }
+          : {
+              amount: data.amount,
+              name: data.accountName,
+              account_number: data.accountNumber,
+              bank_code: data.accountBankCode,
+              customerEmail: userEmail,
+              walletId: walletId,
+              description: data.purpose,
+              currency: data.currency,
+              trxPin: pinString,
+            };
+      // console.log(transactionPayload);
       const transactionResponse = await axios.post(
-        import.meta.env.VITE_API_OTHER_BANK_SEND_MONEY_ENDPOINT,
+        //conditionally call the transfer and initiallize endpoint depending on userType
+        userType === 'CORPORATE'
+          ? import.meta.env.VITE_INITIATE_TRANSFER_REQUEST
+          : import.meta.env.VITE_API_OTHER_BANK_SEND_MONEY_ENDPOINT,
         transactionPayload,
         {
           headers: {
@@ -234,11 +231,13 @@ const EnterPin = ({ data }) => {
       // console.log('Transaction Response Data:', transactionResponse.data);
 
       const isSuccess =
-        transactionResponse.data?.httpStatusCode === 'OK' &&
-        transactionResponse.data?.response?.toLowerCase().includes('transfer successful');
+        (transactionResponse.data?.httpStatusCode === 'OK' &&
+          transactionResponse.data?.response?.toLowerCase().includes('transfer successful')) ||
+        (transactionResponse.data?.httpStatusCode === '202 Accepted' &&
+          transactionResponse.data?.data === 'Approval emails have been sent.');
       if (isSuccess) {
         setShowSuccess(true);
-        console.log('Transaction Success: Transaction completed successfully.');
+        // console.log('Transaction Success: Transaction completed successfully.');
       } else {
         const backendMessage =
           transactionResponse.data?.response || 'Invalid Transaction PIN or PIN is Incorrect.';
@@ -257,8 +256,10 @@ const EnterPin = ({ data }) => {
           error.response?.data?.data ||
           error.response?.data?.response ||
           error.response?.data?.debugMessage ||
+          error.response.data?.message || // If message is under 'debugMessage'
           error.response?.data ||
-          'Transaction process failed.';
+          error.message;
+        ('Transaction process failed.');
 
         console.error('Transaction Error:', backendMessage); // Log for debugging
         setErrorMessage(backendMessage); // Show actual backend message
@@ -277,12 +278,7 @@ const EnterPin = ({ data }) => {
 
   return (
     <div className="transaction-pin flex flex-col justify-center items-center bg-[#D2D2D285] rounded-md p-[2rem] lg:py-[3rem] lg:px-[5rem] mt-[5rem] gap-8 mx-auto">
-      {loading ? (
-        <div className="flex flex-col items-center">
-          <ReactLoading type="spin" color="#00678F" height={50} width={50} />
-          <span className="mt-4 text-lightBlue">Transaction processing...</span>
-        </div>
-      ) : userLoader ? (
+      {userLoader ? (
         <div className="flex flex-col items-center">
           <ReactLoading type="spin" color="#00678F" height={50} width={50} />
           {/* <span className="mt-4 text-ligthBlue">Transaction processing...</span> */}

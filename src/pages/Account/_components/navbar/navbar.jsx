@@ -187,7 +187,7 @@ export const Navbar = () => {
     }
 
     return (
-      <div className="relative z-50">
+      <div className="relative z-40">
         <div className="flex items-center space-x-2">
           <span className="text-sm font-medium">{userTier}</span>
           <button
