@@ -117,16 +117,16 @@ const Electricity = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <label htmlFor="betting-service-select"
-                         className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="betting-service-select"
+                    className="block text-sm font-medium text-gray-700">
                     Choose Service
                   </label>
                   <select
                     id="betting-service-select"
                     value={formValues.selectedBettingService || ''}
                     onChange={(e) => updateFormValues({ selectedBettingService: e.target.value })}
-                    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700"
-                  >
+                    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700">
                     <option value="">Select Service</option>
                     {bettingServices.map((service) => (
                       <option key={service.id} value={service.slug}>
@@ -141,9 +141,7 @@ const Electricity = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Phone
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700">Phone</label>
                   <input
                     type="number"
                     placeholder="Enter Phone number"
@@ -160,8 +158,7 @@ const Electricity = () => {
               <CustomButton
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
-              >
+                className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200">
                 {isLoading ? 'Loading...' : 'Proceed'}
               </CustomButton>
             </form>

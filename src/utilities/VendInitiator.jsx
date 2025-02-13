@@ -318,8 +318,8 @@ const VendInitiator = ({
     //NB: Check minimum amount(#1 IS FOR TESTING PURPOSE ONLY)
     const parsedAmount = Number(amount);
     // if (parsedAmount < 1) {
-    if (parsedAmount < 70) {
-      setValidationError('Minimum airtime amount is ₦70');
+    if (parsedAmount < 10) {
+      setValidationError('Minimum airtime amount is ₦10');
       return false;
     }
 
@@ -383,14 +383,18 @@ const VendInitiator = ({
         onVendInitiated(vendValueResponse.data);
       } else {
         const responseData = vendValueResponse.data.responseData || {};
-        const errorNarration = responseData.narration || responseData.errorNarration || 'Unknown error occurred';
-        const debugMessage = vendValueResponse.data.debugMessage || `Vend value failed: ${errorNarration}`;
+        const errorNarration =
+          responseData.narration || responseData.errorNarration || 'Unknown error occurred';
+        const debugMessage =
+          vendValueResponse.data.debugMessage || `Vend value failed: ${errorNarration}`;
         throw new Error(debugMessage);
       }
     } catch (err) {
       console.error('Error in vend process:', err);
-      const errorMessage = 'Error:' + err.response?.data?.debugMessage ||
-         err.response?.data?.message || err.message ||
+      const errorMessage =
+        'Error:' + err.response?.data?.debugMessage ||
+        err.response?.data?.message ||
+        err.message ||
         'Vend process failed';
       onError(new Error(errorMessage));
     } finally {

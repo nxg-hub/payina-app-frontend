@@ -58,7 +58,7 @@ const Paybills = () => {
           </Link>
         </div>
       </div>
-      <div className="mt-10">
+      <div className="mt-[10rem]">
         <Footer />
       </div>
     </section>
