@@ -117,7 +117,7 @@ const Scan = () => {
               <div className="flex mb-4">
                 <button
                   className={`flex-1 py-2 px-4 text-center ${
-                    activeTab === 'scan' ? 'bg-lightBlue text-white' : 'bg-gray-200 text-gray-700'
+                    activeTab === 'scan' ? 'bg-lightBlue text-white' : 'bg-gray-200 text-lightBlue'
                   }`}
                   onClick={() => setActiveTab('scan')}>
                   Scan QR Code
@@ -126,7 +126,7 @@ const Scan = () => {
                   className={`flex-1 py-2 px-4 text-center ${
                     activeTab === 'generate'
                       ? 'bg-lightBlue whitespace-nowrap text-white'
-                      : 'bg-gray-200 text-gray-700'
+                      : 'bg-gray-200 text-lightBlue'
                   }`}
                   onClick={() => setActiveTab('generate')}>
                   Generate QR Code
