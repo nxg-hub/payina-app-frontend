@@ -106,9 +106,14 @@ const Scan = () => {
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Navbar />
-        <div className="flex h-screen bg-gray-100">
+
+        <div className="flex h-screen bg-gray-100 mt-28">
           <div className="flex-1 flex flex-col overflow-hidden">
-            <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md mt-28">
+            <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+              <h1 className="text-center md:text-4xl font-extrabold text-lightBlue">Scan to Pay</h1>
+              <br/>
+              <hr className="border-t border-lightBlue" />
+              <br/>
               <div className="flex mb-4">
                 <button
                   className={`flex-1 py-2 px-4 text-center ${
@@ -131,7 +136,7 @@ const Scan = () => {
               {activeTab === 'generate' && (
                 <div className="space-y-4">
                   <Input
-                    type="number"
+                    // type="number"
                     placeholder="Enter amount"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
