@@ -9,7 +9,7 @@ const SixthSection = () => {
     <div className="bg-[#000]">
       <div className="flex  text-primary py-12 px-12 items-center">
         <hr className="border mt-4 mb-4 text-yellow w-[35%] mx-auto" />
-        <h1 className="w-[158px] text-center  text-[11px] sm:text-[13px] md:text-[16px] font-bold ">
+        <h1 className="text-center  text-[11px] sm:text-[13px] lg:text-[23px] font-bold ">
           {' '}
           Join Our Community
         </h1>
@@ -77,7 +77,7 @@ const SixthSection = () => {
         </div>
       </div>
       <div className="grid place-content-end pr-4 ">
-        <button className="bg-[white] w-[200px] rounded-md  font-medium  mx-auto  py-3 text-lightBlue">
+        <button className="bg-[white] w-[200px] rounded-md font-medium mx-auto py-3 text-lightBlue">
           See more reviews
         </button>
       </div>
