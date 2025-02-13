@@ -26,11 +26,11 @@ const HeroSection = () => {
                 padding="10px 50px"
                 className="hover:scale-95 font-extrabold duration-300 center gap-2 w-[130px] xl:w-full">
                 <img src={images.googlePlay} alt="google_play" />
-                <Link
-                  target="_blank"
-                  to="https://play.google.com/store/apps/details?id=com.nxtgenhub.payina">
-                  Playstore
-                </Link>
+                {/*<Link*/}
+                {/*  target="_blank"*/}
+                {/*  to="https://play.google.com/store/apps/details?id=com.nxtgenhub.payina">*/}
+                {/*  Playstore*/}
+                {/*</Link>*/}
               </CustomButton>
             </div>
             <div className="flex items-center mr-8 xl:mr-0">

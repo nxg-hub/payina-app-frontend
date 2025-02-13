@@ -229,7 +229,7 @@ import Onboarding from './pages/Onboarding/Onboarding.jsx';
 import TierTwo from './pages/PersonalSignup/upgrade/tier-two.jsx';
 import More from './pages/More/More.jsx';
 import TierOne from './pages/PersonalSignup/id-verification/tier-one.jsx';
-import { VirtualCards } from './pages/Cards/pages/VirtualCards.jsx';
+import Scan from './pages/Scan/scan.jsx';
 import ForgotPassword from './pages/forgotPassword/ForgotPassword.jsx';
 import PasswordOtpValidate from './pages/ValidatePasswordOtp/PasswordOtpValidate.jsx';
 import ResetPassword from './pages/ResetPassword/ResetPassword.jsx';
@@ -311,10 +311,10 @@ function App() {
               }
             />
             <Route
-              path="/personal/cards"
+              path="/scan"
               element={
                 <ProtectedRoute>
-                  <VirtualCards />
+                  <Scan />
                 </ProtectedRoute>
               }
             />
