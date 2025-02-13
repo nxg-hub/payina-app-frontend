@@ -35,7 +35,7 @@ const VendInitiator = ({
   const totalAmount = useMemo(() => {
     const baseAmount = Number(amount || 0);
     return baseAmount + 70;
-    // return baseAmount + 100; //for testing only
+   
   }, [amount]);
 
   const isInsufficientFunds = useMemo(() => {
