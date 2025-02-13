@@ -194,14 +194,12 @@ const TransactionReceipt = ({ receiptData, onClose }) => {
     });
   };
 
-
-
   return (
     <div className="relative bg-white rounded-lg w-full max-w-xl mx-auto shadow-xl">
       <button
         onClick={onClose}
-        className="absolute right-4 top-4 text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300 rounded-full p-1">
-        <X className="w-6 h-6" />
+        className="absolute left-4 top-4 text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300 rounded-full p-1">
+        <X className="w-6 h-6 text-red-600 " />
       </button>
 
       <div className="p-6 space-y-4">

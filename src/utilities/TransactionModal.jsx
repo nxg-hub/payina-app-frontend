@@ -2,7 +2,7 @@
 //
 // const TransactionModal = ({
 //                             isOpen,
-//                             onClose,
+//                             s,
 //                             status = 'success',
 //                             title,
 //                             message,
@@ -24,7 +24,7 @@
 //
 //   const handleOverlayClick = (e) => {
 //     if (e.target === e.currentTarget) {
-//       onClose();
+//       s();
 //     }
 //   };
 //
@@ -45,7 +45,7 @@
 //     },
 //     cancel: {
 //       label: 'Cancel',
-//       onClick: onClose,
+//       onClick: s,
 //       className: buttonStyles.cancel || 'bg-[#006181] hover:opacity-90',
 //     },
 //     back: {

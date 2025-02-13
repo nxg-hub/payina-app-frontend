@@ -10,7 +10,6 @@ export const FilterMenu = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const hasActiveFilters = Object.keys(filters).some((key) => filters[key]);
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (isOpen && !event.target.closest('.filter-menu')) {
@@ -30,7 +29,7 @@ export const FilterMenu = ({
         String(transaction[key]).toLowerCase().includes(String(value).toLowerCase())
       )
     );
-  }; 
+  };
   return (
     <div className="relative filter-menu">
       <button

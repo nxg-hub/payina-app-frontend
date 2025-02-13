@@ -85,7 +85,7 @@ const PinSetting = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}>
         {({ isSubmitting, values, setFieldValue }) => (
-          <Form className="py-5 w-[80%] md:w-[60%] m-auto bg-primary border-2 border-[#a0a0a0] shadow-2xl rounded-xl mt-[100px] mb-[50px]">
+          <Form className="py-5 w-[80%] md:w-[60%] m-auto bg-primary border-2 border-stone-300 shadow-2xl rounded-xl mt-[100px] mb-[50px]">
             <div className="w-[80%] md:w-[60%] m-auto">
               <div className="flex flex-col">
                 <label htmlFor="oldPin" className="font-semibold pt-8">
@@ -192,28 +192,7 @@ const PinSetting = () => {
                 </div>
                 <ErrorMessage name="confirmPin" component="div" className="text-[#db3a3a]" />
               </div>
-              {/* <div className="py-5 relative">
-                <label className="font-bold block md:text-md" htmlFor="newPin">
-                  New Pin
-                </label>
-                <Field
-                  className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                  type="number"
-                  name="newPin"
-                />
-                <ErrorMessage className="text-red-500" name="newPin" component="div" />
-              </div>
-              <div className="py-5 relative">
-                <label className="font-bold block md:text-md" htmlFor="confirmPin">
-                  Confirm Pin
-                </label>
-                <Field
-                  className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
-                  type="number"
-                  name="confirmPin"
-                />
-                <ErrorMessage className="text-red-500" name="confirmPin" component="div" />
-              </div> */}
+
               {uploadStatus && (
                 <p className={`mt-4 ${success ? 'text-green-500' : 'text-red-500'}`}>
                   {uploadStatus}

@@ -12,7 +12,7 @@ const SettingType = () => {
   };
   return (
     <div className="flex flex-col md:flex-row w-full mt-5 ">
-      <div className="w-[60%] md:w-[40%] lg:w-[30%] h-[250px] space-y-9 pt-2  border-2 border-[#aaa] shadow-sm md:shadow-2xl rounded-md mx-auto">
+      <div className="w-[60%] md:w-[40%] lg:w-[30%] h-[250px] space-y-9 pt-2  border-2 border-stone-300 shadow-sm md:shadow-2xl rounded-md mx-auto">
         <span
           onClick={() => handleActiveTabChange('profile')}
           className={
@@ -104,7 +104,7 @@ const SettingType = () => {
           Notification Settings
         </span>
       </div>
-      <section className=" w-[100%] mt-5  md:w-[60%] h-[100%] border-2 border-[#aaa] shadow-2xl rounded-md md:mt-0 m-auto">
+      <section className=" w-[100%] mt-5  md:w-[60%] h-[100%] border-2 border-stone-300 shadow-2xl rounded-md md:mt-0 m-auto">
         {activeTab === 'profile' && <ProfileSetting />}
         {activeTab === 'password' && <PasswordSetting />}
         {activeTab === 'notification' && <NotificationSetting />}

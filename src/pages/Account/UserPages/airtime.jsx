@@ -143,7 +143,7 @@ const UserAirtime = () => {
       setModalMessage('Please wait...');
 
       const response = await fetch(
-        `https://payina-wallet-service-api.onrender.com/api/receipts/${currentTransactionRef}`,
+        `${import.meta.env.VITE_GET_TRANSACTION_RECIEPT}/${currentTransactionRef}`,
         {
           method: 'GET',
           headers: {
