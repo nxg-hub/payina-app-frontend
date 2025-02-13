@@ -7,19 +7,19 @@ import {
   HeroSection,
   SecondSection,
   SixthSection,
-  ThirdSection
+  ThirdSection,
 } from './_components';
 
 const PersonalPage = () => {
   return (
     <div className="overflow-x-hidden">
       <Navbar />
+      <FifthSection />
       <HeroSection />
       <FirstSection />
       <SecondSection />
       <ThirdSection />
       <FourthSection />
-      <FifthSection />
       <SixthSection />
       <Footer />
     </div>

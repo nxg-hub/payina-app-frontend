@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React from 'react';
 import section5 from './../../../../assets/images/section-four.png';
+import { Link } from 'react-router-dom';
 
 const FifthSection = () => {
   return (
@@ -14,9 +15,11 @@ const FifthSection = () => {
           <p className="font-bold text-[36px] text-primary text-center md:text-[48px] ">
             Infinite Possibilities{' '}
           </p>
-          <button className="bg-[white] w-[200px] rounded-md font-medium md:my-6 my-8 mx-auto py-3 text-[#000]">
-            Get Started
-          </button>
+          <Link to="/onboarding/email_verification">
+            <button className="bg-[white] w-[200px] rounded-md font-medium md:my-6 my-8 mx-auto py-3 text-[#000]">
+              Get Started
+            </button>
+          </Link>
         </div>
       </div>
     </div>
