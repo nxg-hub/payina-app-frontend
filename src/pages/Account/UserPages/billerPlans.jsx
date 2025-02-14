@@ -16,7 +16,9 @@ import errorImage from '../../../assets/images/Group 10275-decline.png';
 const BillerPlans = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { email, selectedBettingService,
+  const {
+    email,
+    selectedBettingService,
     // phoneNumber
   } = location.state?.formValues || {};
 
@@ -111,7 +113,7 @@ const BillerPlans = () => {
             status: 'success',
             narration: response.message || 'Verification successful.',
           });
-          setCustomerDetails(response.responseData?.customer || null);
+          setCustomerDetails({ ...response.responseData?.customer, totalAmount: amount } || null);
           setIsCustomerVerified(true);
           setError(null);
           return true;
@@ -381,7 +383,9 @@ const BillerPlans = () => {
                     </div>
                     {/*phone*/}
                     <div className="space-y-2">
-                      <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Phone Number
+                      </label>
                       <input
                         id="amount"
                         type="text"
@@ -422,6 +426,9 @@ const BillerPlans = () => {
                             Address: {customerDetails.address}
                           </p>
                         )}
+                        <p className="text-sm text-blue-700">
+                          Amount: {customerDetails.totalAmount}
+                        </p>
                       </div>
                     )}
 
@@ -457,7 +464,7 @@ const BillerPlans = () => {
                       packageSlug: selectedPlanSlug,
                       phoneNumber,
                       selectedBiller,
-                      customerId: customerReference // Set accountNumber in formValues to use customerReference
+                      customerId: customerReference, // Set accountNumber in formValues to use customerReference
                     }}
                     amount={amount}
                     packageSlug={selectedPlanSlug}

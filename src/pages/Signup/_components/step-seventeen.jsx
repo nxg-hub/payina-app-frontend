@@ -54,7 +54,8 @@ export const StepSeventeen = () => {
   }, [userEmail]);
 
   const handleClick = () => {
-    if (newAuthToken) {
+    console.log('AuthToken:', newAuthToken);
+    if (newAuthToken && newAuthToken !== '') {
       navigate('/account/dashboard');
     } else {
       navigate('/login');
@@ -198,7 +199,7 @@ export const StepSeventeen = () => {
             onClick={handleClick}
             padding="15px"
             type="submit"
-            children="Proceed to Sign in"
+            children="Proceed to Dashboard"
             className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
           />
         </div>

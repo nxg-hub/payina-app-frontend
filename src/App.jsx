@@ -227,15 +227,15 @@ import PersonalSignup from './pages/PersonalSignup/index.jsx';
 import PersonalDashboard from './pages/Account/PersonalDashboard/index.jsx';
 import Onboarding from './pages/Onboarding/Onboarding.jsx';
 import TierTwo from './pages/PersonalSignup/upgrade/tier-two.jsx';
-import More from './pages/More/More.jsx';
+import More from './pages/More/index.jsx';
 import TierOne from './pages/PersonalSignup/id-verification/tier-one.jsx';
 import Scan from './pages/Scan/scan.jsx';
 import ForgotPassword from './pages/forgotPassword/ForgotPassword.jsx';
 import PasswordOtpValidate from './pages/ValidatePasswordOtp/PasswordOtpValidate.jsx';
 import ResetPassword from './pages/ResetPassword/ResetPassword.jsx';
-import SwitchAccount from './pages/More/SwitchAccount.jsx';
-import AccountLimits from './pages/More/Limits.jsx';
-import Terms from './pages/More/Terms.jsx';
+// import SwitchAccount from './pages/More/SwitchAccount.jsx';
+// import AccountLimits from './pages/More/Limits.jsx';
+// import Terms from './pages/More/Terms.jsx';
 import EmailVerification from './pages/Onboarding/EmailVerification.jsx';
 import Loader from './assets/LoadingSpinner.jsx';
 import ProtectedRoute from './utilities/ProtectedRoute.jsx';
@@ -278,7 +278,7 @@ function App() {
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
-            <Route path="/contact-us" element={<ContactUs />} />
+            {/* <Route path="/contact-us" element={<ContactUs />} /> */}
             <Route path="/support" element={<Support />} />
             <Route path="/onboarding/email_verification" element={<EmailVerification />} />
             <Route path="/account/onboarding" element={<Onboarding />} />
@@ -287,9 +287,9 @@ function App() {
             <Route path="/ren" element={<Ren />} />
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
-            <Route path="/terms" element={<Terms />} />
+            {/* <Route path="/terms" element={<Terms />} /> */}
             <Route path="/contact-us" element={<ContactUs />} />
-            <Route path="/account-limits" element={<AccountLimits />} />
+            {/* <Route path="/account-limits" element={<AccountLimits />} /> */}
             <Route path="/support" element={<Support />} />
             <Route path="/thanks" element={<Thanks />} />
             <Route path="/data" element={<Data />} />
@@ -444,14 +444,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
+            {/* <Route
               path="/account/switch"
               element={
                 <ProtectedRoute>
                   <SwitchAccount />
                 </ProtectedRoute>
               }
-            />
+            /> */}
             <Route
               path="/account/bills"
               element={
