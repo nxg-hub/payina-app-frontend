@@ -62,7 +62,7 @@ const UserAirtime = () => {
     setAmount(enteredAmount);
     setErrors((prev) => ({
       ...prev,
-      amount: Number(enteredAmount) < 70 ? 'Amount must be 70 Naira or above' : undefined,
+      amount: Number(enteredAmount) < 70 ? 'Amount must be 10 Naira or above' : undefined,
     }));
   };
 

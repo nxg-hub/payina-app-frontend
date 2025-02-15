@@ -78,19 +78,19 @@ const BillerDetails = () => {
         const response = await apiService.verifyCustomer({
           customerId,
           productName: `${selectedBiller.name}_PREPAID`,
-          billerSlug: selectedBiller.slug
+          billerSlug: selectedBiller.slug,
         });
 
         if (response.error) {
           setError(response.message || 'An error occurred during verification.');
           setVerificationResult({
             status: 'failed',
-            narration: response.responseData?.narration || 'Verification failed.'
+            narration: response.responseData?.narration || 'Verification failed.',
           });
         } else {
           setVerificationResult({
             status: 'success',
-            narration: response.message || 'Verification successful.'
+            narration: response.message || 'Verification successful.',
           });
           if (response.responseData?.customer) {
             setCustomerDetails(response.responseData.customer);
@@ -101,7 +101,7 @@ const BillerDetails = () => {
         setError('Failed to verify user. Please check your customer reference.');
         setVerificationResult({
           status: 'failed',
-          narration: "An error occurred while validating the customer's identity."
+          narration: "An error occurred while validating the customer's identity.",
         });
       } finally {
         setIsLoading(false);
@@ -170,8 +170,8 @@ const BillerDetails = () => {
         phoneNumber,
         customerDetails,
         verificationResult,
-        selectedPlan
-      }
+        selectedPlan,
+      },
     });
   };
 
@@ -181,7 +181,7 @@ const BillerDetails = () => {
       PAY_TV: 'Select Your TV Provider',
       ELECTRIC_DISCO: 'Choose Your Electricity Provider',
       AIRTIME_AND_DATA: 'Select Your Network Provider',
-      ENTERTAINMENT_AND_LIFESTYLE: 'Choose Your Entertainment Service'
+      ENTERTAINMENT_AND_LIFESTYLE: 'Choose Your Entertainment Service',
       // Add more titles as needed
     };
     return titles[selectedBettingService] || 'Select Service Provider';
@@ -199,7 +199,7 @@ const BillerDetails = () => {
 
         <button className="text-primary text-left p-10 border-none rounded-[5px] w-[64%] bg-neutral mb-3 px-4 py-2">
           Want to enjoy discounts?
-          <span className="text-yellow"> Register</span> or{' '}
+          <span className="text-yellow"> Register </span> or{' '}
           <span className="text-yellow">Login</span>{' '}
         </button>
 
@@ -331,7 +331,9 @@ const BillerDetails = () => {
           Proceed
         </button>
       </div>
-      <Footer />
+      <div className="mt-10">
+        <Footer />
+      </div>
     </section>
   );
 };

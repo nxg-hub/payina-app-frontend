@@ -9,8 +9,7 @@ import back from '../../../../assets/icons/back.svg';
 const BillOption = ({ iconSrc, label, onClick }) => (
   <button
     onClick={onClick}
-    className="w-full h-20 pl-2 flex items-center space-x-4 bg-customGray border-[0.1px] border-lightBlue rounded-lg hover:bg-gray-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-  >
+    className="w-full h-20 pl-2 flex items-center space-x-4 bg-customGray border-[0.1px] border-lightBlue rounded-lg hover:bg-gray-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
     <div className="relative w-24 h-24 bg-customGray rounded-full border-8 border-white -ml-4 -mt-4 -mb-4 flex items-center justify-center">
       <div className="absolute top-0 left-0 w-full h-full rounded-full border-2 border-yellow"></div>
       <img src={iconSrc} alt={`${label} icon`} className="text-lightBlue" />
@@ -31,12 +30,12 @@ const BillOptions = () => {
       state: {
         formValues: {
           selectedBettingService: 'ELECTRIC_DISCO',
-          isBetting: false
+          isBetting: false,
         },
         selectedBettingService: 'ELECTRIC_DISCO',
-        slug: 'ELECTRIC_DISCO'
+        slug: 'ELECTRIC_DISCO',
       },
-      replace: true
+      replace: true,
     });
   };
 
@@ -51,8 +50,7 @@ const BillOptions = () => {
             <div>
               <button
                 onClick={handleBack}
-                className="bg-transparent hover:bg-gray-200 p-2 rounded-full transition duration-300"
-              >
+                className="bg-transparent hover:bg-gray-200 p-2 rounded-full transition duration-300">
                 <img src={back} alt="Back" className="w-15 h-15" />
               </button>
             </div>
@@ -63,10 +61,18 @@ const BillOptions = () => {
       <div className="container mx-auto px-4">
         <div className="max-w-md mx-auto ml-[25%] w-3/4">
           <div className="space-y-4 mt-20">
-            <BillOption iconSrc={phoneIcon} label="Airtime" onClick={() => navigate('/account/airtime')} />
+            <BillOption
+              iconSrc={phoneIcon}
+              label="Airtime"
+              onClick={() => navigate('/account/airtime')}
+            />
             <BillOption iconSrc={wifiIcon} label="Data" onClick={() => navigate('/account/data')} />
             <BillOption iconSrc={zapIcon} label="Electricity" onClick={handleElectricityClick} />
-            <BillOption iconSrc={slidersIcon} label="Custom Bill" onClick={() => navigate('/account/bills')} />
+            <BillOption
+              iconSrc={slidersIcon}
+              label="Custom Bill"
+              onClick={() => navigate('/account/bills')}
+            />
           </div>
         </div>
       </div>

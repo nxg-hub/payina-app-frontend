@@ -35,7 +35,6 @@ const VendInitiator = ({
   const totalAmount = useMemo(() => {
     const baseAmount = Number(amount || 0);
     return baseAmount + 70;
-   
   }, [amount]);
 
   const isInsufficientFunds = useMemo(() => {
@@ -261,7 +260,6 @@ const VendInitiator = ({
     );
   };
 
-
   return (
     <div className="mt-4">
       <PayinaLoader isVisible={showLoader} />
@@ -306,7 +304,7 @@ const VendInitiator = ({
             maximumFractionDigits: 2,
           }) || '0.00'}
         </div>
-        <div className="text-sm text-gray-500 mt-1">Transaction Charge: ₦100</div>
+        {/* <div className="text-sm text-gray-500 mt-1">Transaction Charge: ₦100</div> */}
         {isInsufficientFunds && (
           <div className="text-sm text-red-600 mt-1">
             Insufficient funds. Required: ₦{totalAmount.toLocaleString()}

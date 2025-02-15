@@ -1,9 +1,9 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import CustomButton from '../../../components/button/button';
-import { images } from '../../../constants';
 import { SignUpSchema } from '../schemas/schema';
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export const StepOne = ({ next }) => {
   const savedEmail = localStorage.getItem('userEmail') || ''; // Fallback to an empty string if no email is stored
@@ -15,9 +15,14 @@ export const StepOne = ({ next }) => {
   const handleSubmit = (values) => {
     localStorage.setItem('currentStep', 1);
     localStorage.setItem('userEmail', values.email);
+
+    // If the user wants to subscribe to the newsletter, log it or handle it
+    if (values.subscribeNewsletter) {
+      console.log('User subscribed to newsletter with email:', values.email);
+    }
     next(values);
   };
-  
+
   return (
     <div className="flex flex-col items-center justify-center py-6 px-5 bg-black">
       <div className="text-center mb-2 mt-20 xl:mt-0 text-primary font-extrabold xl:text-5xl text-2xl">
@@ -32,7 +37,7 @@ export const StepOne = ({ next }) => {
           validationSchema={SignUpSchema}
           onSubmit={(values) => handleSubmit(values)}>
           {() => (
-            <Form className="w-full space-y-4">
+            <Form className="w-full space-y-4" data-netlify="true">
               <div className="xl:py-16 p-4 pt-[2.2rem] xl:p-10 xl:pl-[5rem] xl:pr-40 xl:w-auto w-full m-auto xl:space-y-8 space-y-4 pb-2 xl:pb-6">
                 <div className="text-lightBlue text-start font-bold xl:text-[32px] text-nowrap text-xl">
                   Personal Signup
@@ -88,6 +93,33 @@ export const StepOne = ({ next }) => {
                     component="span"
                     className="text-[#db3a3a]"
                   />
+                </div>
+
+                {/* Terms & Newsletter Checkboxes */}
+                <div className="xl:w-[120%] flex flex-col space-y-3">
+                  <label className="flex items-center space-x-2 text-black text-sm">
+                    <Field
+                      type="checkbox"
+                      name="termsAccepted"
+                      className="w-5 h-5 cursor-pointer text-lightBlue"
+                    />
+                    <span>
+                      I agree to the{' '}
+                      <Link to="/terms-of-service" className="text-lightBlue">
+                        Terms of Service
+                      </Link>
+                    </span>
+                  </label>
+                  <ErrorMessage name="termsAccepted" component="span" className="text-[#db3a3a]" />
+
+                  <label className="flex items-center space-x-2 text-black text-sm">
+                    <Field
+                      type="checkbox"
+                      name="subscribeNewsletter"
+                      className="w-5 h-5 cursor-pointer text-lightBlue"
+                    />
+                    <span>I&apos;d like to receive Payina Newsletter</span>
+                  </label>
                 </div>
               </div>
               <CustomButton
