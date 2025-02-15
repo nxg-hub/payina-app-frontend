@@ -92,7 +92,7 @@ const UpdateModal = ({ isOpen, onClose, employee, type, customerId }) => {
         setSuccessMessage("Updated successfully!");
         setTimeout(() => {
           setSuccessMessage('');
-          onClose();
+          // onClose();
         }, 2000);
       } catch (error) {
         console.error("Error updating:", error);
@@ -412,7 +412,7 @@ const UpdateModal = ({ isOpen, onClose, employee, type, customerId }) => {
               </>
               
             )}
-                    {successMessage && <p className="text-green-500 text-center">{successMessage}</p>}
+              {successMessage && <p className="text-green-500 text-center">{successMessage}</p>}
 
 
   

@@ -14,6 +14,7 @@ const PayrollSubmit = ({ onSuccess }) => {
   const [newAuthToken] = useLocalStorage('authToken', '');
   const [email, setEmail] = useState(null);
   const [walletId, setWalletId] = useState(null);
+  const [accountName, setAccountName] = useState(null);
   // const dispatch = useDispatch();
 
 
@@ -35,11 +36,12 @@ const PayrollSubmit = ({ onSuccess }) => {
 
         const result = await response.json();
 
-        console.log('Fetched user data:', result.email, result.walletId);
+        console.log('Fetched user data:', result.email, result.walletId, result.accountName);
 
         setCustomerId(result.customerId);
         setEmail(result.email);
         setWalletId(result.walletId);
+        setAccountName(result.accountName);
       } catch (error) {
         console.error('Error fetching user data:', error);
       } 
@@ -134,6 +136,8 @@ const PayrollSubmit = ({ onSuccess }) => {
     <div className="container mx-auto">
       {step === 1 && (
         <EmployeeDetails
+        // customerId={customerId}
+        accountName={accountName}
         onSave={(data) => {
           setEmployeeDetails(data); 
           handleEmployeeSave(data, email, walletId); 
