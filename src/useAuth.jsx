@@ -57,11 +57,6 @@ export function useAuth() {
           navigate('/personal/dashboard');
           return;
         }
-
-        if (userData.registrationLevel === 'FACIAL_CAPTURE_AND_UPLOAD') {
-          navigate('/personal/dashboard');
-          return;
-        }
         
 
         if (userData.registrationLevel === 'SET_TRANSACTION_PIN') {
