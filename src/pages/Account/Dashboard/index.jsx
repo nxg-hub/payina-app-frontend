@@ -9,13 +9,17 @@ import { fetchDataSuccess } from '../../../Redux/UserSlice';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import { useNavigate } from 'react-router-dom';
 import { showLoading, hideLoading } from '../../../Redux/loadingSlice';
+// import { bvnConfirm } from './_components/bvnConfirm';
 import Loader from '../../../assets/LoadingSpinner';
+
 
 const Dashboard = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.loading.isLoading); // Global loading state
   const [newAuthToken] = useLocalStorage('authToken', '');
   const [error, setError] = useState(false);
+  // const [isBvnModalOpen, setIsBvnModalOpen] = useState(false);
+  
   const navigate = useNavigate();
   //getting the success state from the store
   const success = useSelector((state) => state.user.success);
@@ -42,6 +46,10 @@ const Dashboard = () => {
 
         //storing the user details in the userSlice using the redux store
         dispatch(fetchDataSuccess(data));
+
+        // if (data.bvn === null) {
+        //   setIsBvnModalOpen(true)
+        // }
       } catch (error) {
         console.error('Error fetching user data:', error);
         setError(true);
@@ -67,9 +75,12 @@ const Dashboard = () => {
           <QuickAction />
           <TransactionHistory />
         </>
-      )}
+        
+       )}  
+      
     </div>
   );
 };
 
 export default Dashboard;
+
