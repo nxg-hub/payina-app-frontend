@@ -123,7 +123,7 @@ const AccountStatementForm = () => {
 
       {success && (
         <>
-          <div className="bg-[#CCDFE6] z-[55] border-[#CCDFE6] border shadow-2xl rounded-md h-[200px] w-[80%] left-[10%] md:w-[35%] m-auto absolute top-[300px] md:left-[35%]">
+          <div className="bg-[#CCDFE6] z-[55] border-[#CCDFE6] border shadow-2xl rounded-md h-[200px] w-[80%] left-[10%] md:w-[35%] m-auto absolute top-[300px] md:top-[200px] md:left-[35%]">
             <article className="w-[80%] m-auto text-center font-semibold mt-5">
               <h2>Account statement fectched successfully, click on the icon below to download.</h2>
             </article>
@@ -141,7 +141,7 @@ const AccountStatementForm = () => {
               onClick={() => {
                 setViewTransaction(true);
               }}
-              className="text-bold px-4 py-2 bg-blue-600 text-white rounded left-2 bottom-3 mr-2 absolute font-bold">
+              className="text-bold px-4 py-2 bg-secondary text-white rounded left-2 bottom-3 mr-2 absolute font-bold">
               View
             </button>
           </div>
@@ -150,7 +150,7 @@ const AccountStatementForm = () => {
       )}
 
       {viewTransaction && (
-        <div className=" z-[60] h-[500px] w-[80%] md:w-[70%] left-[10%] md:left-[20%] overflow-y-scroll rounded-md overflow-x-scroll md:overflow-x-hidden border shadow-md fixed top-[160px] m-auto bg-[#CCDFE6]">
+        <div className=" z-[60] h-[500px] w-[80%] md:w-[70%] left-[10%] md:left-[20%] overflow-y-scroll rounded-md overflow-x-scroll md:overflow-x-hidden border shadow-md fixed top-[160px] md:top-[100px] m-auto bg-[#CCDFE6]">
           <table className="min-w-full table-auto border-collapse">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">

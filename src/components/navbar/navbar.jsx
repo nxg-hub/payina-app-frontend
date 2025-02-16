@@ -66,10 +66,10 @@ const Navbar = () => {
             </div>
           </ul>
           <div className="flex text-sm gap-2  bottom-0 my-8 relative right-[5%]">
-            <Link to={'/onboarding/email_verification'}>
+            <Link to="/paybills">
               <Button
                 className="hover:bg-lightBlue hover:scale-95 font-extrabold duration-300 center"
-                children="Sign Up"
+                children="Paybills"
               />
             </Link>
             <Link to={'/login'}>
@@ -80,12 +80,6 @@ const Navbar = () => {
                 children="Login"
               />
             </Link>
-            {/* <Link to="/paybills">
-              <Button
-                className="hover:bg-lightBlue hover:scale-95 font-extrabold duration-300 center"
-                children="Paybills"
-              />
-            </Link> */}
           </div>
         </div>
       </div>
