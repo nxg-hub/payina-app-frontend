@@ -263,10 +263,6 @@
 //
 // export default Planb;
 
-
-
-
-
 import React, { useEffect, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from '../../components/navbar/navbar';
@@ -279,6 +275,8 @@ import Loader from '../../assets/LoadingSpinner';
 import { useNavigate } from 'react-router-dom';
 import successIcon from '../../assets/images/tansIcon.png';
 import errorIcon from '../../assets/images/redrectangle.png';
+import { useDispatch } from 'react-redux';
+import { setVendPayload } from '../../Redux/WalletSlice.jsx';
 
 const Planb = () => {
   const location = useLocation();
@@ -288,7 +286,7 @@ const Planb = () => {
   const [isProcessingVend, setIsProcessingVend] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [paymentReference, setPaymentReference] = useState(null);
-
+  const dispatch = useDispatch();
   const [modalState, setModalState] = useState({
     isOpen: false,
     status: 'success',
@@ -317,103 +315,6 @@ const Planb = () => {
     });
   }, []);
 
-  const pollVendStatus = useCallback(
-    async (reference) => {
-      try {
-        const maxAttempts = 10;
-        const pollInterval = 5000;
-
-        for (let attempt = 0; attempt < maxAttempts; attempt++) {
-          const response = await apiService.checkVendStatus(reference);
-
-          if (response.status === 'completed') {
-            setModalState({
-              isOpen: true,
-              status: 'success',
-              title: 'Transaction Successful',
-              message: 'Successfully processed the vend request',
-              reference: response.paymentReference,
-            });
-            setIsProcessingVend(false);
-            return;
-          } else if (response.status === 'failed') {
-            throw new Error(response.message || 'Vend process failed');
-          }
-
-          await new Promise((resolve) => setTimeout(resolve, pollInterval));
-        }
-
-        throw new Error('Vend process timed out');
-      } catch (err) {
-        handleError(err, reference);
-      } finally {
-        setIsProcessingVend(false);
-      }
-    },
-    [handleError]
-  );
-
-  const vendValue = useCallback(
-    async (reference) => {
-      try {
-        setIsProcessingVend(true);
-        const { formValues, selectedPlan } = formData;
-        if (!selectedPlan || !selectedPlan.planSlug) {
-          throw new Error('Selected plan or plan slug is missing');
-        }
-
-        const payload = {
-          paymentReference: reference,
-          customerId: formValues.phoneNumber,
-          packageSlug: selectedPlan.planSlug,
-          channel: 'WEB',
-          amount: Math.round(selectedPlan.planPrice * 1),
-          customerName: 'Non-Payina-User',
-          phoneNumber: formValues.phoneNumber,
-          email: formValues.email,
-        };
-
-        const vendValueResponse = await apiService.vendValue(reference, payload);
-
-        if (vendValueResponse.status === 202) {
-          setStatusMessage('Vend request accepted. Processing...');
-          pollVendStatus(reference);
-        } else if (vendValueResponse.status === 'success') {
-          setModalState({
-            isOpen: true,
-            status: 'success',
-            title: 'Transaction Successful',
-            message: 'Successfully processed the vend request',
-            reference: vendValueResponse.responseData.paymentReference,
-          });
-          setIsProcessingVend(false);
-        } else {
-          throw new Error(vendValueResponse.message || 'Vend value failed');
-        }
-      } catch (err) {
-        handleError(err, reference);
-        setIsProcessingVend(false);
-      }
-    },
-    [formData, handleError, pollVendStatus]
-  );
-
-  const handleReturn = useCallback(async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const reference = urlParams.get('reference');
-
-    if (reference) {
-      setStatusMessage('Processing vend request...');
-      await vendValue(reference);
-    }
-  }, [vendValue]);
-
-  useEffect(() => {
-    if (location.search) {
-      handleReturn();
-    }
-  }, [location.search, handleReturn]);
-
   const handleProceed = async () => {
     setIsSubmitting(true);
     setStatusMessage('Initializing payment...');
@@ -440,30 +341,21 @@ const Planb = () => {
 
         setPaymentReference(orderReference);
         sessionStorage.setItem('pendingFormData', JSON.stringify(formData));
-
-        window.location.href = checkoutLink;
-
-        const pollVendStatus = async () => {
-          try {
-            const vendResponse = await apiService.checkVendStatus(orderReference);
-            if (vendResponse.status === 'completed') {
-              setModalState({
-                isOpen: true,
-                status: 'success',
-                title: 'Transaction Successful',
-                message: 'Successfully processed the vend request',
-                reference: vendResponse.paymentReference,
-              });
-            } else if (vendResponse.status === 'failed') {
-              throw new Error(vendResponse.message || 'Vend process failed');
-            }
-          } catch (err) {
-            handleError(err, orderReference);
-          }
+        // vend payload
+        const payload = {
+          customerId: formData.formValues.phoneNumber,
+          packageSlug: formData.selectedPlan.planSlug,
+          channel: 'web',
+          amount: formData.formValues.amount,
+          customerName: formData.formValues.email,
+          phoneNumber: formData.formValues.phoneNumber,
+          email: formData.formValues.email,
+          accountNumber: formData.formValues.phoneNumber,
         };
-
-        // Poll for the vend status after a delay
-        setTimeout(pollVendStatus, 5000); // Adjust the delay as needed
+        //store the vend payload in redux store
+        dispatch(setVendPayload(payload));
+        // Redirect to the checkout link
+        window.location.href = checkoutLink;
       } else {
         throw new Error(initializePaymentResponse.message || 'Payment initialization failed');
       }
@@ -494,7 +386,6 @@ const Planb = () => {
       sessionStorage.removeItem('pendingFormData');
     }
   }, [formData]);
-
   if (!formData || !formData.selectedPlan) {
     return (
       <section className="text-primary">

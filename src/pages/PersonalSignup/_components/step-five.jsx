@@ -1,7 +1,7 @@
 import { Form, Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import CustomButton from '../../../components/button/button';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { previousStep } from '../../../Redux/PersonalSignUpSlice';
 import { images } from '../../../constants';
@@ -16,6 +16,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues, values 
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const manualEntry = useSelector((state) => state.personalSignUp.manualEntry);
+  const [isGenderSelected, setIsGenderSelected] = useState(false);
 
   const handlePrevious = () => {
     dispatch(previousStep());

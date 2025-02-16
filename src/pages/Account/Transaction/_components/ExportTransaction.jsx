@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Download } from 'lucide-react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { utils, writeFile } from 'xlsx';
 import * as XLSX from 'xlsx';
 
 const ExportTransaction = ({ credits, debits }) => {
@@ -42,20 +43,25 @@ const ExportTransaction = ({ credits, debits }) => {
   };
 
   const handleDownloadExcel = () => {
-    const transactions = [...credits, ...debits];
-    const data = transactions.map((transaction) => ({
-      Type: transaction.type,
-      Description: transaction.description,
-      Reference: transaction.transactionRef,
-      Status: transaction.status,
-      Amount: `₦${transaction.amount.toLocaleString()}`,
-      Date: new Date(transaction.createdAt).toLocaleString(),
-    }));
+    try {
+      const transactions = [...credits, ...debits];
+      const data = transactions.map((transaction) => ({
+        Type: transaction.type,
+        Description: transaction.description,
+        Reference: transaction.transactionRef,
+        Status: transaction.status,
+        Amount: `₦${transaction.amount.toLocaleString()}`,
+        Date: new Date(transaction.createdAt).toLocaleString(),
+      }));
 
-    const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Transactions');
-    XLSX.writeFile(wb, 'transactions.xlsx');
+      const ws = utils.json_to_sheet(data);
+      const wb = utils.book_new();
+      utils.book_append_sheet(wb, ws, 'Transactions');
+      writeFile(wb, 'transactions.xlsx');
+    } catch (error) {
+      console.error('Error generating Excel:', error);
+      // You might want to add error handling here
+    }
   };
 
   return (

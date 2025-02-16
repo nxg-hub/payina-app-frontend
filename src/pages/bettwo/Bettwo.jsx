@@ -231,7 +231,7 @@ const Bettwo = () => {
             id="biller-select"
             value={selectedBiller?.slug || ''}
             onChange={handleBillerChange}
-            className="border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-black text-slate-600 w-[64%] mb-3">
+            className="border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-white text-slate-600 w-[64%] mb-3">
             <option value="">Select a Service platform</option>
             {billerOptions?.map((biller) => (
               <option key={biller.slug} value={biller.slug}>
@@ -250,7 +250,7 @@ const Bettwo = () => {
               id="plan-select"
               value={selectedPlan?.id || ''}
               onChange={handlePlanChange}
-              className="border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-black text-slate-600 w-[64%] mb-3">
+              className="border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-white text-slate-600 w-[64%] mb-3">
               <option value="">Select a plan</option>
               {plans.map((plan) => (
                 <option key={plan.id} value={plan.id}>
@@ -270,7 +270,7 @@ const Bettwo = () => {
             type="text"
             value={customerReference}
             onChange={handleCustomerReferenceChange}
-            className="border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-black text-slate-600 w-[64%] mb-3"
+            className="border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-white text-slate-600 w-[64%] mb-3"
             placeholder="Enter customer reference"
           />
         </div>
@@ -295,7 +295,7 @@ const Bettwo = () => {
             type="text"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className="border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-black text-slate-600 w-[64%] mb-3"
+            className="border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-white text-slate-600 w-[64%] mb-3"
             placeholder="Enter amount"
           />
         </div>

@@ -241,6 +241,7 @@ import { reSetClientsDetails } from '../../../../Redux/GetClientsSlice.jsx';
 import { reSetWalletDetails } from '../../../../Redux/WalletSlice.jsx';
 import avatar from "../../../../assets/images/avatar.png"
 import useLocalStorage from '../../../../hooks/useLocalStorage.js';
+import { resetTransactions } from '../../../../Redux/transactionsSlice.jsx';
 
 export const Sidebar = () => {
   const location = useLocation();
@@ -288,6 +289,8 @@ export const Sidebar = () => {
   };
 
   const handleLogout = () => {
+    localStorage.clear();
+    navigate('/login');
     localStorage.removeItem('userEmail');
     persistor.purge();
     dispatch(reSetUserDetails());
@@ -298,8 +301,7 @@ export const Sidebar = () => {
     dispatch(clearState());
     dispatch(reSetClientsDetails());
     dispatch(reSetWalletDetails());
-    localStorage.clear();
-    navigate('/login');
+    dispatch(resetTransactions());
   };
 
   const renderSidebarContent = () => {
@@ -307,7 +309,7 @@ export const Sidebar = () => {
       return (
         <>
           <Link
-            to="/personal/dashboard"
+            to="/account/dashboard"
             className={`flex items-center space-x-6 ${
               currentRoute === '/account/dashboard' ? '!ml-3 font-bold text-lightBlue' : ''
             }`}>
@@ -356,6 +358,7 @@ export const Sidebar = () => {
             className={`flex items-center space-x-6 ${
               currentRoute === '/account/dashboard' ? '!ml-3 font-bold text-lightBlue' : ''
             }`}>
+            <AiOutlineAppstore size={22} />
             <span className="hover:text-lightBlue ease transition-colors">Dashboard</span>
           </Link>
           <Link

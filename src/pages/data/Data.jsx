@@ -67,6 +67,7 @@ export const DataPurchaseForm = () => {
     const stateToPass = {
       formValues: {
         ...formValues,
+        amount: selectedPlan.amount,
         email: localEmail,
         phoneNumber: formValues.phoneNumber,
         selectedNetwork: formValues.selectedNetwork,
@@ -78,7 +79,6 @@ export const DataPurchaseForm = () => {
         planSlug: selectedPlan.slug,
       },
     };
-
     navigate('/plans/review', { state: stateToPass });
   };
   const handlePlanSelection = useCallback(

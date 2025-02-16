@@ -3,17 +3,15 @@ import { FaArrowLeft, FaSearch } from 'react-icons/fa';
 import useLocalStorage from '../../../../hooks/useLocalStorage.js';
 import { images } from '../../../../constants';
 import UpdateModal from './UpdateModal.jsx';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchPayrollData } from '../../../../Redux/payrollSlice';
 
-
-const PayrollView = ({ onBackClick, onSetupClick, }) => {
+const PayrollView = ({ onBackClick, onSetupClick }) => {
   const dispatch = useDispatch();
   const payrollData = useSelector((state) => state.payroll.payrollData);
   const loading = useSelector((state) => state.payroll.loading);
   const error = useSelector((state) => state.payroll.error);
   const [isDataFetched, setIsDataFetched] = useState(false);
-
 
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -22,10 +20,8 @@ const PayrollView = ({ onBackClick, onSetupClick, }) => {
   const [newAuthToken] = useLocalStorage('authToken', '');
   const [showUpdateOptions, setShowUpdateOptions] = useState(null);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const [modalType, setModalType] = useState(""); 
+  const [modalType, setModalType] = useState('');
 
- 
-  
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -52,12 +48,12 @@ const PayrollView = ({ onBackClick, onSetupClick, }) => {
     fetchUserData();
   }, []);
 
- useEffect(() => {
-  if (customerId) {
-    dispatch(fetchPayrollData(customerId));
-  }
-}, [customerId, dispatch]);
-  
+  useEffect(() => {
+    if (customerId) {
+      dispatch(fetchPayrollData(customerId));
+    }
+  }, [customerId, dispatch]);
+
   const handleSeeMoreClick = (employee) => {
     setSelectedEmployee(employee);
     setModalOpen(true);
@@ -67,18 +63,19 @@ const PayrollView = ({ onBackClick, onSetupClick, }) => {
     setModalOpen(false);
     setSelectedEmployee(null);
   };
-  
+
   useEffect(() => {
     if (!loading) {
       setIsDataFetched(true);
     }
   }, [loading]);
 
-  const filteredPayrollData = payrollData?.filter((employee) =>
-    (employee.employeeName?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
-    (employee.jobRoleTitle?.toLowerCase() || "").includes(searchTerm.toLowerCase())
+  const filteredPayrollData = payrollData?.filter(
+    (employee) =>
+      (employee.employeeName?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+      (employee.jobRoleTitle?.toLowerCase() || '').includes(searchTerm.toLowerCase())
   );
-  
+
   const handleUpdateClick = (employee) => {
     setShowUpdateOptions((prev) => (prev === employee.id ? null : employee.id));
   };
@@ -87,7 +84,6 @@ const PayrollView = ({ onBackClick, onSetupClick, }) => {
     setModalType(type);
     setIsUpdateModalOpen(true);
     setShowUpdateOptions(null);
-
   };
 
   // const filteredPayrollData = payrollData.filter(
@@ -100,9 +96,9 @@ const PayrollView = ({ onBackClick, onSetupClick, }) => {
     <div className="flex flex-col">
       <div className="flex flex-col justify-center items-start w-auto xl:ml-80 xl:pt-28 md:pt-10 mx-auto h-full">
         <div className="flex flex-row justify-center items-left gap-[5rem]">
-        <div className="flex justify-center text-xl md:text-2xl text-lightBlue font-bold px-6 py-2 md:py-0">
-  Employee Details
-</div>
+          <div className="flex justify-center text-xl md:text-2xl text-lightBlue font-bold px-6 py-2 md:py-0">
+            Employee Details
+          </div>
 
           {/* <div className="text-xl md:text-3xl font-bold px-6 py-2 md:py-0">Payroll </div> */}
           <div className="flex flex-row relative">
@@ -116,67 +112,65 @@ const PayrollView = ({ onBackClick, onSetupClick, }) => {
             <FaSearch className="absolute right-0 mr-4 mt-3 text-lightBlue font-bold" />
           </div>
         </div>
-      
 
         {loading ? (
           <div className="text-center text-lg">Loading Employees Details...</div>
         ) : payrollData && payrollData.length > 0 ? ( 
           <div className="grid grid-cols-3 justify-center items-center gap-4 mt-[4rem] px-[5rem] py-2">
-          {filteredPayrollData.map((employee) => (  
-           <div
-              key={employee.id}
-              className="flex flex-col justify-center items-center gap-4 bg-white p-6 rounded shadow-lg">
-              <div className="flex flex-col items-start gap-2">
-               <div className="text-sm font-bold">
-                   Name: <span className="font-medium">{employee.employeeName}</span>
+            {filteredPayrollData.map((employee) => (
+              <div
+                key={employee.id}
+                className="flex flex-col justify-center items-center gap-4 bg-white p-6 rounded shadow-lg">
+                <div className="flex flex-col items-start gap-2">
+                  <div className="text-sm font-bold">
+                    Name: <span className="font-medium">{employee.employeeName}</span>
+                  </div>
+                  <div className="text-sm font-bold">
+                    Role: <span className="font-medium">{employee.employeeRole}</span>
+                  </div>
+                  <div className="text-sm font-bold">
+                    I.D:{' '}
+                    <span className="font-medium">{employee.employmentDetails?.employeeId}</span>
+                  </div>
+                  <div className="text-sm font-bold">
+                    Employment Date:{' '}
+                    <span className="font-medium">
+                      {employee.employmentDetails?.employmentDate?.split('T')[0] || ''}
+                    </span>
+                  </div>
                 </div>
-                <div className="text-sm font-bold">
-                   Role: <span className="font-medium">{employee.employeeRole}</span>
-                </div> 
-                <div className="text-sm font-bold">
-                  I.D:{' '}
-                  <span className="font-medium">{employee.employmentDetails?.employeeId}</span>
+                <div className="mt-1 flex space-x-16">
+                  <button
+                    className=" text-lightBlue hover:underline"
+                    onClick={() => handleSeeMoreClick(employee)}>
+                    See More
+                  </button>
+                  <button
+                    className=" text-lightBlue hover:underline"
+                    onClick={() => handleUpdateClick(employee)}>
+                    {' '}
+                    Update
+                  </button>
                 </div>
-                <div className="text-sm font-bold">
-                  Employment Date:{' '}
-                  <span className="font-medium">
-                  {employee.employmentDetails?.employmentDate?.split("T")[0] || ""}  
-  </span>
-  </div>
-                </div>             
-              <div className='mt-1 flex space-x-16'>
-              <button
-                className=" text-lightBlue hover:underline"
-                onClick={() => handleSeeMoreClick(employee)}>
-                See More
-              </button>
-              <button
-                className=" text-lightBlue hover:underline"
-                onClick={() => handleUpdateClick(employee)}
-               > Update
-              </button>
+                {showUpdateOptions === employee.id && (
+                  <div className=" bg-white shadow-md border rounded-lg -mt-1 w-30">
+                    <button
+                      className="block w-full text-right px-1 py-1 text-lightBlue hover:underline"
+                      onClick={() => openModal(employee, 'employee')}>
+                      Employee Details
+                    </button>
+                    <button
+                      className="block w-full text-right px-1 py-1 text-lightBlue hover:underline"
+                      onClick={() => openModal(employee, 'payroll')}>
+                      Payroll Details
+                    </button>
+                  </div>
+                )}
               </div>
-              {showUpdateOptions === employee.id && (
-                <div className=" bg-white shadow-md border rounded-lg -mt-1 w-30">
-                <button
-                   className="block w-full text-right px-1 py-1 text-lightBlue hover:underline"
-                   onClick={() => openModal(employee, "employee")}
-                 >
-                    Employee Details
-                 </button>
-                 <button
-                   className="block w-full text-right px-1 py-1 text-lightBlue hover:underline"
-                   onClick={() => openModal(employee, "payroll")}
-                 >
-                    Payroll Details
-                 </button>
-               </div>
-  )}
-         </div>
-          ))}
+            ))}
           </div>
-                  ) : (
-        <div className="flex flex-col center absolute top-[50%] gap-8 left-[50%] xl:translate-x-[36%] md:translate-x-[-50%] translate-x-[-50%] translate-y-[-50%]">
+        ) : (
+          <div className="flex flex-col center absolute top-[50%] gap-8 left-[50%] xl:translate-x-[36%] md:translate-x-[-50%] translate-x-[-50%] translate-y-[-50%]">
             <img src={images.PayrollIcon} alt="" />
             <h3 className="text-black font-bold text-md">
               No Payroll yet?{' '}
@@ -185,31 +179,30 @@ const PayrollView = ({ onBackClick, onSetupClick, }) => {
               </span>
             </h3>
           </div>
-         
         )}
 
         {isModalOpen && selectedEmployee && (
-         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 overflow-y-auto p-4">
-         <div className="bg-white p-11 rounded shadow-lg w-[500px] max-h-[90%] overflow-y-auto">
-         <h1 className="text-xl font-bold text-lightBlue">Employee Details</h1>
-         <div className="flex flex-col gap-2 mt-4">
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 overflow-y-auto p-4">
+            <div className="bg-white p-11 rounded shadow-lg w-[500px] max-h-[90%] overflow-y-auto">
+              <h1 className="text-xl font-bold text-lightBlue">Employee Details</h1>
+              <div className="flex flex-col gap-2 mt-4">
                 <div className="text-sm font-bold">
-                   Name:{' '}
-                  <span className="font-medium">{selectedEmployee.employeeName}</span>
+                  Name: <span className="font-medium">{selectedEmployee.employeeName}</span>
                 </div>
                 <div className="text-sm font-bold">
-                   Role:{' '}
-                  <span className="font-medium">{selectedEmployee.employeeRole}</span>
+                  Role: <span className="font-medium">{selectedEmployee.employeeRole}</span>
                 </div>
                 <div className="text-sm font-bold">
-                Employment Date:{' '}
-  <span className="font-medium">
-    {new Date(selectedEmployee.employmentDetails?.employmentDate).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    })}
-  </span>
+                  Employment Date:{' '}
+                  <span className="font-medium">
+                    {new Date(
+                      selectedEmployee.employmentDetails?.employmentDate
+                    ).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </span>
                 </div>
                 <div className="text-sm font-bold">
                   Employee Id:{' '}
@@ -218,10 +211,8 @@ const PayrollView = ({ onBackClick, onSetupClick, }) => {
                   </span>
                 </div>
                 <div className="text-sm font-bold">
-                 Email:{' '}
-                  <span className="font-medium">
-                    {selectedEmployee.employeeEmailAddress}
-                  </span>
+                  Email:{' '}
+                  <span className="font-medium">{selectedEmployee.employeeEmailAddress}</span>
                 </div>
               </div>
 
@@ -251,9 +242,7 @@ const PayrollView = ({ onBackClick, onSetupClick, }) => {
                 </div>
                 <div className="text-sm font-bold">
                   Payment Day Of The Week:{' '}
-                  <span className="font-medium">
-                    {selectedEmployee.accountDetails?.paymentDay}
-                  </span>
+                  <span className="font-medium">{selectedEmployee.accountDetails?.paymentDay}</span>
                 </div>
                 <div className="text-sm font-bold">
                   Payment Date Of The Month:{' '}
@@ -279,11 +268,15 @@ const PayrollView = ({ onBackClick, onSetupClick, }) => {
                       <div key={index}>
                         <div className="text-sm font-bold">
                           Allowance Package Name:{' '}
-                          <span className="font-medium">{allowance.allowancePackageName || 'none'}</span>
+                          <span className="font-medium">
+                            {allowance.allowancePackageName || 'none'}
+                          </span>
                         </div>
                         <div className="text-sm font-bold">
                           Allowance Pay:{' '}
-                          <span className="font-medium">{allowance.allowancePay || 'No allowance pay'}</span>
+                          <span className="font-medium">
+                            {allowance.allowancePay || 'No allowance pay'}
+                          </span>
                         </div>
                       </div>
                     ))}
@@ -295,11 +288,15 @@ const PayrollView = ({ onBackClick, onSetupClick, }) => {
                       <div key={index}>
                         <div className="text-sm font-bold">
                           Deduction Package Name:{' '}
-                          <span className="font-medium">{deduction.deductionPackageName || 'none'}</span>
+                          <span className="font-medium">
+                            {deduction.deductionPackageName || 'none'}
+                          </span>
                         </div>
                         <div className="text-sm font-bold">
-                          Deduction  Amount:{' '}
-                          <span className="font-medium">{deduction.deductionAmount || 'No deduction'}</span>
+                          Deduction Amount:{' '}
+                          <span className="font-medium">
+                            {deduction.deductionAmount || 'No deduction'}
+                          </span>
                         </div>
                       </div>
                     ))}
@@ -322,15 +319,15 @@ const PayrollView = ({ onBackClick, onSetupClick, }) => {
         <span className="text-lightBlue text-xl">Back</span>
       </div>
 
-    {isUpdateModalOpen && (
-      <UpdateModal
-        isOpen={isUpdateModalOpen}
-        onClose={() => setIsUpdateModalOpen(false)}
-        employee={selectedEmployee}
-        customerId={customerId}
-        type={modalType}
-      />
-    )}
+      {isUpdateModalOpen && (
+        <UpdateModal
+          isOpen={isUpdateModalOpen}
+          onClose={() => setIsUpdateModalOpen(false)}
+          employee={selectedEmployee}
+          customerId={customerId}
+          type={modalType}
+        />
+      )}
     </div>
   );
 };

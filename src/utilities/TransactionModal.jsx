@@ -2,7 +2,7 @@
 //
 // const TransactionModal = ({
 //                             isOpen,
-//                             onClose,
+//                             s,
 //                             status = 'success',
 //                             title,
 //                             message,
@@ -24,7 +24,7 @@
 //
 //   const handleOverlayClick = (e) => {
 //     if (e.target === e.currentTarget) {
-//       onClose();
+//       s();
 //     }
 //   };
 //
@@ -45,7 +45,7 @@
 //     },
 //     cancel: {
 //       label: 'Cancel',
-//       onClick: onClose,
+//       onClick: s,
 //       className: buttonStyles.cancel || 'bg-[#006181] hover:opacity-90',
 //     },
 //     back: {
@@ -130,24 +130,24 @@
 import React from 'react';
 
 const TransactionModal = ({
-                            isOpen,
-                            onClose,
-                            status = 'success',
-                            title,
-                            message,
-                            details,
-                            reference,
-                            buttons = ['back'],
-                            onRegister,
-                            onLogin,
-                            onFundWallet,
-                            onPullReceipt,
-                            successIcon,
-                            errorIcon,
-                            buttonStyles = {},
-                            customButtons = [],
-                            modalContent = null // New prop for custom content
-                          }) => {
+  isOpen,
+  onClose,
+  status = 'success',
+  title,
+  message,
+  details,
+  reference,
+  buttons = ['back'],
+  onRegister,
+  onLogin,
+  onFundWallet,
+  onPullReceipt,
+  successIcon,
+  errorIcon,
+  buttonStyles = {},
+  customButtons = [],
+  modalContent = null, // New prop for custom content
+}) => {
   if (!isOpen) return null;
 
   const isSuccess = status === 'success';
@@ -215,8 +215,7 @@ const TransactionModal = ({
         <button
           key={buttonConfig.key || buttonConfig.label}
           onClick={buttonConfig.onClick}
-          className={`${buttonConfig.className} text-white px-4 py-2 rounded transition duration-300 ease-in-out`}
-        >
+          className={`${buttonConfig.className} text-white px-4 py-2 rounded transition duration-300 ease-in-out`}>
           {buttonConfig.label}
         </button>
       );
@@ -228,12 +227,8 @@ const TransactionModal = ({
     return (
       <div
         className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-        onClick={handleOverlayClick}
-      >
-        <div
-          className="bg-white rounded-lg max-w-md w-full"
-          onClick={(e) => e.stopPropagation()}
-        >
+        onClick={handleOverlayClick}>
+        <div className="bg-white rounded-lg max-w-md w-full" onClick={(e) => e.stopPropagation()}>
           {modalContent}
         </div>
       </div>
@@ -244,14 +239,12 @@ const TransactionModal = ({
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-      onClick={handleOverlayClick}
-    >
+      onClick={handleOverlayClick}>
       <div
         className={`bg-white p-8 rounded-lg max-w-md w-full text-center text-black ${
           isSuccess ? 'border-green-500' : 'border-red-500'
         } border-4`}
-        onClick={(e) => e.stopPropagation()}
-      >
+        onClick={(e) => e.stopPropagation()}>
         <img
           src={isSuccess ? successIcon : errorIcon}
           alt={isSuccess ? 'Success' : 'Error'}

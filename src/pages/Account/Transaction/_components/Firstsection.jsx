@@ -7,13 +7,44 @@ import redrectangle from './../../../../assets/images/redrectangle.png';
 import greenrectangle from './../../../../assets/images/greenrectangle.png';
 import { useSelector } from 'react-redux';
 import ExportTransaction from './ExportTransaction';
+import { FilterMenu } from '../../Dashboard/_components/transaction-history/FilterMenu';
 
 const Firstsection = () => {
   const [showCredit, setShowCredit] = useState(true);
   const [showDebit, setShowDebit] = useState(false);
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [filters, setFilters] = useState({});
+  const [showExportMenu, setShowExportMenu] = useState(false);
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
+
   const currentBalance = useSelector((state) => state.wallet.wallet);
   const { credits, debits } = useSelector((state) => state.transactions);
 
+  // Define filter options based on table headers
+  const filterOptions = [
+    { key: 'type', label: 'Type', options: ['CREDIT', 'DEBIT'] },
+    { key: 'status', label: 'Status', options: ['COMPLETED', 'PROCESSING', 'FAILED'] },
+    { key: 'description', label: 'Description', type: 'text' },
+    { key: 'transactionRef', label: 'Reference', type: 'text' },
+    { key: 'amount', label: 'Amount', type: 'number' },
+    { key: 'createdAt', label: 'Date', type: 'date' },
+  ];
+  const clearAllFilters = () => {
+    setFilters({});
+    // setPage(1);
+  };
+
+  const handleFilter = (key, value) => {
+    setFilters((prev) => {
+      const newFilters = { ...prev };
+      if (value === '') {
+        delete newFilters[key];
+      } else {
+        newFilters[key] = value;
+      }
+      return newFilters;
+    });
+  };
   const toggleCredit = () => {
     setShowCredit(true);
     setShowDebit(false);
@@ -23,7 +54,23 @@ const Firstsection = () => {
     setShowCredit(false);
     setShowDebit(true);
   };
+  // Sort transactions by creation date in descending order
+  let sortedCredits = [...credits].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  let sortedDebits = [...debits].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
+  const filteredCreditTransactions = sortedCredits.filter((transaction) =>
+    Object.entries(filters).every(([key, value]) => {
+      if (!value) return true;
+      return String(transaction[key]).toLowerCase().includes(String(value).toLowerCase());
+    })
+  );
+
+  const filteredDebitTransactions = sortedDebits.filter((transaction) =>
+    Object.entries(filters).every(([key, value]) => {
+      if (!value) return true;
+      return String(transaction[key]).toLowerCase().includes(String(value).toLowerCase());
+    })
+  );
   let walletBalance;
   return (
     <>
@@ -73,7 +120,7 @@ const Firstsection = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-row justify-between py-2">
+        <div className="flex flex-row justify-between py-2 mt-5">
           <div className="flex px-2 md:px-6 text-[7.5px] md:text-base">
             <p className="font-bold">Recent Transactions</p>
             <nav className="flex">
@@ -85,14 +132,29 @@ const Firstsection = () => {
               </p>
             </nav>
           </div>
-          <div className="mr-[5rem]">
-            <ExportTransaction credits={credits} debits={debits} />
+          <div className=" flex mr-10  items-center">
+            <FilterMenu
+              showFilterMenu={showFilterMenu}
+              setShowFilterMenu={setShowFilterMenu}
+              filters={filters}
+              filterOptions={filterOptions}
+              handleFilterChange={handleFilter}
+              transactions={[...credits, ...debits]}
+              clearAllFilters={clearAllFilters}
+              closeOtherMenus={() => {
+                setShowExportMenu(false);
+                setShowMoreMenu(false);
+              }}
+            />
+            <div className="">
+              <ExportTransaction credits={credits} debits={debits} />
+            </div>
           </div>
         </div>
       </div>
 
-      {showCredit && <Credits />}
-      {showDebit && <Debits />}
+      {showCredit && <Credits sortedCredits={filteredCreditTransactions} />}
+      {showDebit && <Debits sortedDebits={filteredDebitTransactions} />}
     </>
   );
 };

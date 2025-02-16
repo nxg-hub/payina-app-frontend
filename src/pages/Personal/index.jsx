@@ -7,7 +7,7 @@ import {
   HeroSection,
   SecondSection,
   SixthSection,
-  ThirdSection
+  ThirdSection,
 } from './_components';
 
 const PersonalPage = () => {

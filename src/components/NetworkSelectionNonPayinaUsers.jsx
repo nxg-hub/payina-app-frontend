@@ -16,8 +16,7 @@ export const NetworkSelectionNonPayinaUsers = ({ selectedNetwork, onNetworkChang
         id="network-select"
         value={selectedNetwork}
         onChange={(e) => onNetworkChange(e.target.value)}
-        className="flex flex-col w-[64%] mb-4 border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-black text-slate-600"
-      >
+        className="flex flex-col w-[64%] mb-4 border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-white text-slate-600">
         <option value="">Select Network</option>
         {networks.map((network) => (
           <option key={network} value={network}>

@@ -62,7 +62,7 @@ const UserAirtime = () => {
     setAmount(enteredAmount);
     setErrors((prev) => ({
       ...prev,
-      amount: Number(enteredAmount) < 70 ? 'Amount must be 70 Naira or above' : undefined,
+      amount: Number(enteredAmount) < 70 ? 'Amount must be 10 Naira or above' : undefined,
     }));
   };
 
@@ -143,7 +143,7 @@ const UserAirtime = () => {
       setModalMessage('Please wait...');
 
       const response = await fetch(
-        `https://payina-wallet-service-api.onrender.com/api/receipts/${currentTransactionRef}`,
+        `${import.meta.env.VITE_GET_TRANSACTION_RECIEPT}/${currentTransactionRef}`,
         {
           method: 'GET',
           headers: {
@@ -182,7 +182,6 @@ const UserAirtime = () => {
       );
 
       setTimeout(() => setShowModal(true), 0);
-
     } catch (error) {
       console.error('Error pulling receipt:', error);
       setModalStatus('error');
@@ -276,7 +275,6 @@ const UserAirtime = () => {
                   </div>
                 </div>
 
-
                 <VendInitiator
                   selectedPlan={currentPlan}
                   formValues={{
@@ -322,7 +320,9 @@ const UserAirtime = () => {
             ? ['pullReceipt', 'back']
             : modalStatus === 'error' && walletBalance !== null && Number(amount) > walletBalance
               ? ['fundWallet', 'back']
-              : modalStatus ? ['back'] : []
+              : modalStatus
+                ? ['back']
+                : []
         }
         onFundWallet={handleFundWallet}
         onPullReceipt={handlePullReceipt}

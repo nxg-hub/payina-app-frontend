@@ -9,11 +9,11 @@ const HeroSection = () => {
     <section className="xl:py-20 py-10 xl:pt-0 px-8 xl:px-10 bg-[#000]">
       <hr className="border-none bg-yellow h-1 w-[87%] mx-auto" />
       <div className="md:items-center flex flex-col">
-        <div className="lg:text-5xl xl:w-1/2 md:text-center xl:text-[64px] text-4xl flex justify-center font-bold text-lightBlue pt-10 !leading-normal">
+        <div className="lg:text-5xl xl:w-[55vw] md:text-center xl:text-[64px] text-4xl flex justify-center font-bold text-lightBlue pt-10 !leading-normal">
           Manage money on the go, anytime, anywhere.
         </div>
 
-        <p className="xl:text-xl text-[16px] font-normal xl:w-1/2 text-primary lg:pt-6 pt-4 md:text-center xl:leading-normal leading-8">
+        <p className="xl:text-xl text-[16px] font-normal xl:w-[60vw] text-primary lg:pt-6 pt-4 md:text-center xl:leading-normal leading-8">
           Choose us for a transformative financial experience—where innovation meets reliability.
           Enjoy seamless transactions, robust security, and personalized solutions. Embrace the
           future with a user-centric platform that adapts to your evolving needs
@@ -26,11 +26,11 @@ const HeroSection = () => {
                 padding="10px 50px"
                 className="hover:scale-95 font-extrabold duration-300 center gap-2 w-[130px] xl:w-full">
                 <img src={images.googlePlay} alt="google_play" />
-                <Link
-                  target="_blank"
-                  to="https://play.google.com/store/apps/details?id=com.nxtgenhub.payina">
-                  Playstore
-                </Link>
+                {/*<Link*/}
+                {/*  target="_blank"*/}
+                {/*  to="https://play.google.com/store/apps/details?id=com.nxtgenhub.payina">*/}
+                {/*  Playstore*/}
+                {/*</Link>*/}
               </CustomButton>
             </div>
             <div className="flex items-center mr-8 xl:mr-0">

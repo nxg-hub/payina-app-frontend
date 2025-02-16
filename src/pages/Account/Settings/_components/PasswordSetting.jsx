@@ -65,7 +65,7 @@ const PasswordSetting = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}>
         {({ isSubmitting }) => (
-          <Form className="py-5 w-[80%] md:w-[60%] m-auto bg-primary border-2 border-[#a0a0a0] shadow-2xl rounded-xl mt-[100px] mb-[50px]">
+          <Form className="py-5 w-[80%] md:w-[60%] m-auto bg-primary border-2 border-stone-300 shadow-2xl rounded-xl mt-[100px] mb-[50px]">
             <div className="w-[80%] md:w-[60%] m-auto">
               <div className="py-5 relative ">
                 <label className="font-bold block md:text-md" htmlFor="oldPassword">
