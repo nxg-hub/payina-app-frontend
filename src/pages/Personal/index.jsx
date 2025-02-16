@@ -14,12 +14,12 @@ const PersonalPage = () => {
   return (
     <div className="overflow-x-hidden">
       <Navbar />
+      <FifthSection />
       <HeroSection />
       <FirstSection />
       <SecondSection />
       <ThirdSection />
       <FourthSection />
-      <FifthSection />
       <SixthSection />
       <Footer />
     </div>
