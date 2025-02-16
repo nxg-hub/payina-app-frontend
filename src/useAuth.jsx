@@ -57,6 +57,7 @@ export function useAuth() {
           navigate('/account/dashboard');
           return;
         }
+        
 
         if (userData.registrationLevel === 'SET_TRANSACTION_PIN') {
           navigate('/account/dashboard');
