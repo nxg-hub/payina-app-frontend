@@ -28,7 +28,7 @@ const UpdateModal = ({ isOpen, onClose, employee, type, customerId }) => {
             nameOfBank: employee.accountDetails?.nameOfBank || "",
             accountNumber: employee.accountDetails?.accountNumber || "",
             paymentFrequency: employee.accountDetails?.paymentFrequency || "",
-            automaticPayment: employee.accountDetails?.automaticPayment ?? true,
+            automaticPayment: employee.accountDetails?.automaticPayment ?? '',
             paymentDay: employee.accountDetails?.paymentDay || "",
             paymentDayOfMonth: employee.accountDetails?.paymentDayOfMonth || 0,
           },
@@ -84,8 +84,7 @@ const UpdateModal = ({ isOpen, onClose, employee, type, customerId }) => {
   
         if (!response.ok) throw new Error("Update failed");
         const updatedData = await response.json();
-        // setFormData(updatedData); 
-        // dispatch(fetchEmployees(customerId));
+       
         dispatch(fetchPayrollData(customerId));
         // setUpdatedData(updatedData);
         console.log(customerId)
@@ -93,7 +92,7 @@ const UpdateModal = ({ isOpen, onClose, employee, type, customerId }) => {
         setTimeout(() => {
           setSuccessMessage('');
           // onClose();
-        }, 2000);
+        }, 4000);
       } catch (error) {
         console.error("Error updating:", error);
         setErrorMessage("An error occurred while updating. Please try again.");
@@ -103,8 +102,7 @@ const UpdateModal = ({ isOpen, onClose, employee, type, customerId }) => {
     };
   
     return (
-    //     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-    //   <div className="bg-white p-5 rounded-lg shadow-lg w-96">
+    
     <div className="fixed inset-0 flex items-center justify-center border-2 border-[#a0a0a0] bg-black bg-opacity-40 overflow-y-auto p-4">
          <div className="bg-white p-11 rounded shadow-lg w-[500px] max-h-[90%] overflow-y-auto"> 
 
@@ -166,38 +164,6 @@ const UpdateModal = ({ isOpen, onClose, employee, type, customerId }) => {
                       employmentDetails: { ...prev.employmentDetails, employmentDate: e.target.value },
                     }))
                   }
-                  className="border p-2 w-full rounded"
-                />
-                </div>
-                <div className="mb-4">
-                <label className="block text-md font-bold mb-1">Bank Name</label>
-                <input
-                  type="text"
-                  name="nameOfBank"
-                  value={formData.accountDetails.nameOfBank}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      accountDetails: { ...prev.accountDetails, nameOfBank: e.target.value },
-                    }))
-                  }
-                  placeholder="Bank Name"
-                  className="border p-2 w-full rounded"
-                />
-                </div>
-                <div className="mb-4">
-                <label className="block text-md font-bold mb-1">Account Number</label>
-                <input
-                  type="text"
-                  name="accountNumber"
-                  value={formData.accountDetails.accountNumber}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      accountDetails: { ...prev.accountDetails, accountNumber: e.target.value },
-                    }))
-                  }
-                  placeholder="Account Number"
                   className="border p-2 w-full rounded"
                 />
                 </div>
@@ -280,14 +246,16 @@ const UpdateModal = ({ isOpen, onClose, employee, type, customerId }) => {
       <div className="mb-4">
   <label className="block font-bold mb-1">Automatic Payment:</label>
   <select
-    value={formData.automaticPayment}
+    value={String(formData.accountDetails.automaticPayment)} // Ensure it's a string
     onChange={(e) =>
       setFormData((prev) => ({
         ...prev,
-        accountDetails: { ...prev.accountDetails, automaticPayment: e.target.value },
+        accountDetails: {
+          ...prev.accountDetails,
+          automaticPayment: e.target.value === "true", // Convert back to boolean
+        },
       }))
-    }
-   
+    }  
     className="border p-2 w-full rounded"
   >
     <option value="true">Enabled</option>
@@ -412,8 +380,10 @@ const UpdateModal = ({ isOpen, onClose, employee, type, customerId }) => {
               </>
               
             )}
-              {successMessage && <p className="text-green-500 text-center">{successMessage}</p>}
-
+{successMessage &&   <div className="item-added-box border border-blue-100 bg-blue-100 rounded-lg p-4 mt-4 text-blue-700 max-w-md mx-auto shadow-md">
+  <p className="mt-2 text-lightBlue font-bold">
+  {
+successMessage}</p></div>}
 
   
             <div className="flex justify-between mt-4">
@@ -434,7 +404,6 @@ const UpdateModal = ({ isOpen, onClose, employee, type, customerId }) => {
             </div>
           </form>
         </div>
-        {/* <PayrollView updatedData={updatedData} /> */}
 
       </div>
     );
