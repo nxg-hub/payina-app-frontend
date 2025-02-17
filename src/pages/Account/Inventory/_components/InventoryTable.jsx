@@ -105,7 +105,7 @@ const InventoryTable = ({ searchTerm }) => {
                     </td>
                     {update && (
                       <>
-                        <div className=" z-50 absolute top-[10%] right-[5%] w-[80%]">
+                        <div className=" z-[55] absolute top-[10%] right-[5%] w-[80%]">
                           <UpdateInventoryForm id={inventoryId} />
                           <button
                             onClick={() => {
@@ -119,7 +119,7 @@ const InventoryTable = ({ searchTerm }) => {
                           onClick={() => {
                             setUpdate(false);
                           }}
-                          className="text-black fixed top-0 left-0 right-0 w-full h-[150%] mt-[-1rem] z-20 backdrop-blur-[2px] transition-all duration-150 animate-slideLeft "></div>
+                          className="text-black fixed top-0 left-0 right-0 w-full h-[150%] mt-[-1rem] z-50 backdrop-blur-[2px] transition-all duration-150 animate-slideLeft "></div>
                       </>
                     )}
                   </tr>

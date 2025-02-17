@@ -176,7 +176,7 @@ const Firstsection = ({
         <div className="shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px] py-8 px-3 rounded-md">
           <div className="w-full md:w-[90%]">
             <h2 className="pb-6 md:text-[21px]  font-bold">All Invoices</h2>
-            <div className="grid grid-cols-4 gap-4   ">
+            <div className="grid grid-cols-3 md:grid-cols-4 gap-4   ">
               <div className="">
                 <p className="pb-2 text-[10px] sm:text-[13px] md:text-base font-bold">Begin Date</p>
                 <input
@@ -224,7 +224,7 @@ const Firstsection = ({
                   <option value="UNPAID">Unpaid</option>
                 </select>
               </div>
-              <div className=" w-[120%]">
+              <div className=" w-[100%]">
                 <p className="pb-2 text-[10px] sm:text-[13px] md:text-base font-bold">Clients</p>
                 <div
                   ref={dropdownRef}
@@ -239,7 +239,7 @@ const Firstsection = ({
                       setIsDropdownOpen(true);
                     }}
                     placeholder="Search..."
-                    className="w-full h-5 md:h-8 border px-3 border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full h-8 border px-3 border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     onClick={() => setIsDropdownOpen(true)}
                   />
 
