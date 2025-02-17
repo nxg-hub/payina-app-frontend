@@ -6,21 +6,33 @@ const NewsletterForm = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [email, setEmail] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    setTimeout(() => {
+    const formData = new FormData();
+    formData.append('form-name', 'newsletter'); // Ensure Netlify recognizes the form
+    formData.append('email', email);
+
+    try {
+      await fetch('/', {
+        method: 'POST',
+        body: new URLSearchParams(formData).toString(),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      });
+
       setIsSubmitting(false);
       setShowPopup(true);
-
       setTimeout(() => {
         setShowPopup(false);
         setEmail('');
-      }, 3000); // Hide after 3 seconds to run
-    }, 2000); // Simulate loading time to disappear
+      }, 3000);
+    } catch (error) {
+      alert('Form submission failed!');
+      setIsSubmitting(false);
+    }
   };
-
+  
   return (
     <div className="md:!ml-auto md:!mr-40 md:w-[30%] flex-col space-y-6 flex text-[#3d2e7c] relative">
       <div className="pt-10 font-semibold text-primary text-4xl">Subscribe to our newsletter</div>
