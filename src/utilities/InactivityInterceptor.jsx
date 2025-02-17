@@ -140,7 +140,7 @@ const InactivityInterceptor = () => {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[60]"
       onClick={(e) => e.stopPropagation()}>
       <div className="bg-white rounded-lg p-6 max-w-md w-full mx-auto">
         <div className="text-center space-y-4">
