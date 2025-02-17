@@ -1,5 +1,4 @@
 import { Field, Formik, Form, ErrorMessage } from 'formik';
-import { LuPlus } from 'react-icons/lu';
 import { useState } from 'react';
 import { EmployeeSchema } from '../../schemas/schemas';
 import calendar from '../../../../assets/images/calendar.svg';
@@ -13,6 +12,7 @@ const EmployeeDetails = ({ onSave, accountName }) => {
   const [step, setStep] = useState(1);
   const [createLoading, setCreateLoading] = useState(false);
   const [nextLoading, setNextLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const [automaticPayment, setAutomaticPayment] = useState(false);
@@ -25,7 +25,7 @@ const EmployeeDetails = ({ onSave, accountName }) => {
   const filteredName = accountName ? accountName.replace(/^.*\//, "").trim() : "";
 
 
-  console.log (filteredName)
+  // console.log (filteredName)
   
   const [formData, setFormData] = useState({
     employeeName: '',
@@ -264,7 +264,7 @@ const EmployeeDetails = ({ onSave, accountName }) => {
                   if (stepOneErrors.length === 0) {
                     const email = values.employeeEmailAddress
 
-                    fetch (`${import.meta.env.VITE_CHECK_IF_EMAIL_EXISTS}?email=${email}`)
+                    fetch (`${import.meta.env.VITE_EMAIL_CHECK}?email=${email}`)
                     .then((res) => res.json())
                     .then((data) => {
                       if (data.exists) {
@@ -284,18 +284,20 @@ const EmployeeDetails = ({ onSave, accountName }) => {
                                 },
                               });
                             }
-                            console.log(userData.accountNumber)
+                            // console.log(userData.accountNumber)
                             setStep(2); // Move to next step
                 })
-                .catch((error) => console.error("Error fetching user details:", error))
-                .finally(() => setLoading(false)); // ✅ Ensure loading stops after fetching user details
+                // .catch((error) => console.error("Error fetching user details:", error))
+                .catch((error) => setErrorMessage("Error fetching user details:", error.message))
+
+                .finally(() => setLoading(false));
             } else {
               setModalOpen(true);
-              setLoading(false); // ✅ Close loading here only when modal opens
+              setLoading(false); 
             }
           })
           .catch((error) => {
-            console.error("Error checking email:", error);
+            setErrorMessage("Error checking email:", error);
             setLoading(false);
           });
       } else {
@@ -306,7 +308,7 @@ const EmployeeDetails = ({ onSave, accountName }) => {
           "employmentDetails.employeeId": true,
           "employmentDetails.employmentDate": true,
         });
-        setLoading(false); // ✅ Stop loading if validation fails
+        setLoading(false); 
       }
     });
   }}
@@ -553,6 +555,8 @@ const EmployeeDetails = ({ onSave, accountName }) => {
     };
 
     setCreateLoading(true);
+    setErrorMessage(""); 
+    setSuccessMessage(""); 
 
     fetch(import.meta.env.VITE_CREATE_VIRTUAL_ACCOUNT, {
       method: "POST",
@@ -564,19 +568,20 @@ const EmployeeDetails = ({ onSave, accountName }) => {
       .then((res) => res.json())
       .then((data) => {
         console.log("Account Created:", data);
-        setSuccessMessage("Done! Please click next.");
-        setTimeout(() => {
-          setSuccessMessage('');
-          // onClose();
-        }, 70000);
        
         if (data.nombaBankAccountNumber) {
-          console.log(data)
+          setSuccessMessage("Done! Please click next.");
+         
+        } else {
+          const message = data.debugMessage || "An error occurred.";
+          setErrorMessage(`Phone number already exists: ${message}`);
         }
-        
       })
-      .catch((error) => console.error("Error creating account:", error))
-      .finally(() => setCreateLoading(false)); // ✅ Ensure loading stops
+      .catch((error) => {
+        console.error("Error creating account:", error);
+        setErrorMessage(`Error creating account: ${error.message}`);
+      })
+      .finally(() => setCreateLoading(false)); 
   }}
 >
   Create
@@ -609,9 +614,9 @@ const EmployeeDetails = ({ onSave, accountName }) => {
               setStep(2); // Move to next step
               setModalOpen(false)
             })
-            .catch((error) => console.error("Error fetching user details:", error));
+            .catch((error) => setErrorMessage("Error fetching user details:", error.message));
         } else {
-          setLoading(false); // ✅ Ensure loading stops if email doesn't exist
+          setLoading(false); 
         }
 
       })
@@ -629,6 +634,10 @@ const EmployeeDetails = ({ onSave, accountName }) => {
   <p className="mt-2 text-lightBlue font-bold">
   {
 successMessage}</p></div>}
+{errorMessage &&   
+  <p className="mt-2 text-red-400 font-bold">
+  {
+errorMessage}</p>}
 
               </div>
          </div>
