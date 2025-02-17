@@ -105,7 +105,7 @@ const ProfileSetting = () => {
       {/* display upload form conditionally */}
       {uploadDocuments && (
         <>
-          <div className=" z-50 fixed top-[25%] right-[5%] w-[80%]">
+          <div className=" z-[55] fixed top-[25%] right-[5%] w-[80%]">
             <DocumentUploader />
             <button
               onClick={() => {
@@ -119,14 +119,14 @@ const ProfileSetting = () => {
             onClick={() => {
               setUploadDocuments(false);
             }}
-            className="text-black fixed top-0 left-0 right-0 w-full h-[150%] mt-[-1rem] z-20 backdrop-blur-[2px] transition-all duration-150 animate-slideLeft "></div>
+            className="text-black fixed top-0 left-0 right-0 w-full h-[150%] mt-[-1rem] z-50 backdrop-blur-[2px] transition-all duration-150 animate-slideLeft "></div>
         </>
       )}
       {/* display edit form conditionally */}
       {editProfile && (
         <>
           <div
-            className={` w-full z-50 fixed ${userType === 'PERSONAL' ? '!mt-[100px]' : ''} top-[-100px] right-[5%] md:w-[80%]`}>
+            className={` w-full z-[55] fixed ${userType === 'PERSONAL' ? '!mt-[100px]' : ''} top-[-100px] right-[5%] md:w-[80%]`}>
             <EditProfileForm />
             <button
               onClick={() => {
@@ -140,7 +140,7 @@ const ProfileSetting = () => {
             onClick={() => {
               setEditProfile(false);
             }}
-            className="text-black fixed top-0 left-0 right-0 w-full h-[150%] mt-[-1rem] z-20 backdrop-blur-[2px] transition-all duration-150 animate-slideLeft "></div>
+            className="text-black fixed top-0 left-0 right-0 w-full h-[150%] mt-[-1rem] z-50 backdrop-blur-[2px] transition-all duration-150 animate-slideLeft "></div>
         </>
       )}
       <section className="w-[95%] m-auto h-full  mt-5">

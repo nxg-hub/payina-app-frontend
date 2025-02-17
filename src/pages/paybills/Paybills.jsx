@@ -10,12 +10,12 @@ import { Link } from 'react-router-dom';
 
 const Paybills = () => {
   return (
-    <section className="bg-black">
+    <section className="bg-black w-full">
       <Navbar />
       <div className=" w-full h-screen  text-center bg-black">
         <div
           className="w-[80%] h-1 border-none mr-auto ml-auto
-            mt-[-2px] mb-40 bg-yellow"></div>
+            mt-[50px] mb-40 bg-yellow"></div>
         <p className=" mt-[-100px] text-lightBlue font-sans text-6xl font-bold">
           Buy Data, Airtime and Pay
         </p>
