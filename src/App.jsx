@@ -241,6 +241,7 @@ import Loader from './assets/LoadingSpinner.jsx';
 import ProtectedRoute from './utilities/ProtectedRoute.jsx';
 import AccountStatement from './pages/Account/Transaction/_components/AccountStatement.jsx';
 import Vend from './pages/vend/Vend.jsx';
+import TransferSuccess from './pages/TransferSuccess/TransferSuccess.jsx';
 
 function App() {
   const location = useLocation();
@@ -286,6 +287,7 @@ function App() {
             <Route path="/airtime" element={<Airtime />} />
             <Route path="/ren" element={<Ren />} />
             <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/transferSuccess" element={<TransferSuccess />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             {/* <Route path="/terms" element={<Terms />} /> */}
             <Route path="/contact-us" element={<ContactUs />} />
