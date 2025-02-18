@@ -42,7 +42,7 @@ const SixthSection = () => {
             />
           </div> */}
           <hr className="border-[0.1px] mt-4 mb-4 text-primary w-full mx-auto" />
-          <p className="text-center">Doreen Schumm</p>
+          <p className="text-center">Peter Uche</p>
           <div className="flex justify-center">
             <img src={star} alt="" />
             <img src={star} alt="" />
@@ -66,7 +66,7 @@ const SixthSection = () => {
             />
           </div> */}
           <hr className="border-[0.1px] mt-4 mb-4 text-primary w-full mx-auto" />
-          <p className="text-center">Norman Conn</p>
+          <p className="text-center">Prosper Davids</p>
           <div className="flex justify-center">
             <img src={star} alt="" />
             <img src={star} alt="" />
