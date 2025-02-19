@@ -241,6 +241,7 @@ import Loader from './assets/LoadingSpinner.jsx';
 import ProtectedRoute from './utilities/ProtectedRoute.jsx';
 import AccountStatement from './pages/Account/Transaction/_components/AccountStatement.jsx';
 import Vend from './pages/vend/Vend.jsx';
+import PayinaQRTransfer from './pages/Scan/payina_to_payina.jsx';
 
 function App() {
   const location = useLocation();
@@ -307,6 +308,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <PersonalDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/scan/payina-to-payina"
+              element={
+                <ProtectedRoute>
+                  <PayinaQRTransfer />
                 </ProtectedRoute>
               }
             />
