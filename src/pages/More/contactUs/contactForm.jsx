@@ -293,6 +293,7 @@ const ContactForm = ({ goBack }) => {
               phoneNumber: '',
               complaint: '',
               screenshot: null,
+              hiddenField: '', // for honeypot (spam protection)
             }}
             validationSchema={FormSchemas}
             onSubmit={handleSubmit}>
@@ -420,6 +421,21 @@ const ContactForm = ({ goBack }) => {
             )}
           </Formik>
         </div>
+
+        {/* Success Message Modal */}
+        {isSubmitted && (
+          <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+              <h2 className="text-lg font-bold text-green-600">Success!</h2>
+              <p>Your form has been submitted successfully.</p>
+              <button
+                onClick={() => setIsSubmitted(false)}
+                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md">
+                Close
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

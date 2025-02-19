@@ -45,7 +45,7 @@ const More = () => {
       icon: images.TermsAndConditions,
       text: 'Terms and Conditions',
       spanText: 'View the terms guiding your account and services.',
-      className: 'lg:px-[50px]',
+      className: 'lg:px-[48px]',
       section: 'terms',
     },
     {

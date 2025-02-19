@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
-import { Textarea } from '@headlessui/react';
 import { FormSchemas } from '../More/contactUs/FormSchemas';
 
 const Contact = () => {
   const [screenshot, setScreenshot] = useState(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   return (
     <div className="flex flex-col justify-center items-center gap-5 lg:py-10 lg:px-5 p-5 lg:mx-auto">
       <div className="flex flex-col justify-between items-center gap-3 w-full lg:w-[630px] text-center">
@@ -32,8 +32,10 @@ const Contact = () => {
               phoneNumber: '',
               message: '',
               screenshot: null,
+              hiddenField: '', // for honeypot (spam protection)
             }}
             validationSchema={FormSchemas}
+
             onSubmit={(values, { setSubmitting }) => {
               const formData = new FormData();
               formData.append('form-name', 'contact');
@@ -58,16 +60,17 @@ const Contact = () => {
               <Form name="contact" method="POST" data-netlify="true">
               <div className="flex flex-col w-full gap-2">
                   <label htmlFor="firstName" className="text-left font-md text-md text-white">
-                    Full Name
+
+                Full Name
                   </label>
                   <Field
-                    name="payinaTag"
+                    name="fullName"
                     type="text"
-                    placeholder="first name"
+                    placeholder="Your full name"
                     className="lg:w-[700px] w-[250px] border border-yellow outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                   />
                   <ErrorMessage
-                    name="firstName"
+                    name="fullName"
                     component="span"
                     className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                   />
@@ -96,7 +99,7 @@ const Contact = () => {
                   </label>
                   <Field
                     name="phoneNumber"
-                    type="number"
+                    type="tel"
                     placeholder="Enter your phone number"
                     className="lg:w-[700px] w-[250px] border border-yellow outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                   />
@@ -165,6 +168,21 @@ const Contact = () => {
             )}
           </Formik>
         </div>
+
+        {/* Success Message Modal */}
+        {isSubmitted && (
+          <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+              <h2 className="text-lg font-bold text-green-600">Success!</h2>
+              <p>Your form has been submitted successfully.</p>
+              <button
+                onClick={() => setIsSubmitted(false)}
+                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md">
+                Close
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

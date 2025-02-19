@@ -12,99 +12,6 @@ export const BvnModal = ({ next, onClose }) => {
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
 
-
-//   const handleIDVerification = async (values) => {
-//     const idType = values.idType;
-//     // Example: 'NIN' or 'BVN'
-//     const identificationNumber = values.identificationNumber; // Example: NIN or BVN entered by the user
-//     setApiError('');
-//     if (idType === '') {
-//       setApiError('Select Identity');
-//     }
-//     if (identificationNumber.length !== 11) {
-//       setApiError('Identification number must be 11 digits!');
-//       return;
-//     }
-
-//     setLoading(true);
-
-//     const endpoints = {
-//       NIN: {
-//         search: import.meta.env.VITE_NIN_SEARCH_EXISTING_PROFILE_ENDPOINT,
-//         verify: import.meta.env.VITE_NIN_VERIFY_NEW_PROFILE_ENDPOINT,
-//       },
-//       BVN: {
-//         search: import.meta.env.VITE_BVN_SEARCH_EXISTING_PROFILE_ENDPOINT,
-//         verify: import.meta.env.VITE_BVN_VERIFY_NEW_PROFILE_ENDPOINT,
-//       },
-//     };
-//     setApiError('');
-//     try {
-//       // Call Search Profile Endpoint
-//       const searchResponse = await fetch(endpoints[idType].search, {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-
-//         body: JSON.stringify({ [idType.toLowerCase()]: identificationNumber }), // Send { nin: 'value' } or { bvn: 'value' }
-//       });
-
-//       const searchResult = await searchResponse.json();
-
-//       if (searchResponse.ok && searchResult.data) {
-//         const { firstname, lastname, gender, dob } = searchResult?.data?.identity || {};
-//         next({
-//           ...values,
-//           firstname: firstname,
-//           lastname: lastname,
-//           gender: gender,
-//           dob: dob,
-//         });
-//       } else {
-//         // Profile not found, call Verify New Profile
-//         const verifyResponse = await fetch(endpoints[idType].verify, {
-//           method: 'POST',
-//           headers: {
-//             'Content-Type': 'application/json',
-//           },
-
-//           body: JSON.stringify({ [idType.toLowerCase()]: identificationNumber }),
-//         });
-
-//         const verifyResult = await verifyResponse.json();
-
-//         if (verifyResponse.ok && verifyResult.data) {
-//           const { firstname, lastname, gender, dob } = searchResult?.data?.identity || {};
-//           next({
-//             ...values,
-//             firstname: firstname,
-//             lastname: lastname,
-//             gender: gender,
-//             dob: dob,
-//           });
-//         } else {
-//           // Handle errors from Verify New Profile
-//           // Extract the JSON part of the response
-//           const response = searchResult.message;
-//           const jsonPart = response.match(/{.*}/)[0]; // Match and extract the JSON string
-
-//           // Parse the JSON part to a JavaScript object
-//           const parsedResponse = JSON.parse(jsonPart);
-
-          
-//         }
-//       }
-//     } catch (error) {
-//       // Handle network or unexpected errors
-//       console.log(error);
-//     //   dispatch(setManualEntry(true));
-//       setApiError('An error occurred. Please try again.');
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
 const handleIDVerification = async (values) => {
     const { idType, identificationNumber } = values;
     setApiError('');
@@ -256,7 +163,6 @@ const handleIDVerification = async (values) => {
                 <button
                   padding="15px"
                   type="submit"
-                //   onClick={() => next()} 
 
                   children={loading ? 'Loading...' : 'Next'}
                   className={`hover:cursor-pointer flex justify-center items-center !text-white text-lg !border-none !bg-lightBlue font-extrabold duration-300 w-2/5 mx-auto my-8 ${

@@ -146,8 +146,10 @@ console.log ('bvn:', values.identificationNumber)
                   className="text-[#db3a3a] mt-2 text-sm"
                 />
               </div>
-              {successMessage && <div className="text-green-500 mb-4">{successMessage}</div>}
-
+              {successMessage &&   <div className="item-added-box border border-blue-100 bg-blue-100 rounded-lg p-4 mt-4 text-blue-700 max-w-md mx-auto shadow-md">
+  <p className="mt-2 text-lightBlue font-bold">
+  {
+successMessage}</p></div>}
 
               {apiError && <div className="text-red-500 mb-4">{apiError}</div>}
               <div className="flex gap-2">
