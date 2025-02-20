@@ -1,6 +1,7 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import React, { useState } from 'react';
+import avatar from '../../../../assets/images/avatar.png';
 
 // Validation schema for the  form
 const InventorySchema = Yup.object().shape({
@@ -161,7 +162,7 @@ const ProfileSetting = () => {
           <div className="rounded-full">
             <img
               className="h-[100px] w-[100px] rounded-full"
-              src={profilePic ? profilePic : images.Profile}
+              src={profilePic ? profilePic : avatar}
               alt="profilePic"
             />
           </div>

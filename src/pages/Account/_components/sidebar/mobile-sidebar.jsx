@@ -19,6 +19,7 @@ import { clearState } from '../../../../Redux/ForgotPasswordSlice.jsx';
 import { reSetClientsDetails } from '../../../../Redux/GetClientsSlice.jsx';
 import { reSetWalletDetails } from '../../../../Redux/WalletSlice.jsx';
 import { resetTransactions } from '../../../../Redux/transactionsSlice.jsx';
+import avatar from '../../../../assets/images/avatar.png';
 
 export const MobileSidebar = () => {
   const location = useLocation();
@@ -182,7 +183,7 @@ export const MobileSidebar = () => {
                 className="w-24 h-24 rounded-full object-cover"
               />
             ) : (
-              <img src={images.Profile} alt="profile image" className="w-24 h-24 rounded-full" />
+              <img src={avatar} alt="profile image" className="w-24 h-24 rounded-full" />
             )}
             <div className="font-semibold text-xl mt-2">{`Hi, ${userName}`}</div>
             {(!bvn || bvn === '') && (
