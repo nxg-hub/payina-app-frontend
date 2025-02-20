@@ -242,6 +242,7 @@ import ProtectedRoute from './utilities/ProtectedRoute.jsx';
 import AccountStatement from './pages/Account/Transaction/_components/AccountStatement.jsx';
 import Vend from './pages/vend/Vend.jsx';
 import TransferSuccess from './pages/TransferSuccess/TransferSuccess.jsx';
+import TransferFailed from './pages/TransferFail/TransferFailed.jsx';
 
 function App() {
   const location = useLocation();
@@ -288,6 +289,7 @@ function App() {
             <Route path="/ren" element={<Ren />} />
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/transferSuccess" element={<TransferSuccess />} />
+            <Route path="/transferFailed" element={<TransferFailed />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             {/* <Route path="/terms" element={<Terms />} /> */}
             <Route path="/contact-us" element={<ContactUs />} />
