@@ -29,40 +29,39 @@ const Contact = () => {
             initialValues={{
               fullName: '',
               email: '',
-              purpose: '',
               phoneNumber: '',
-              complaint: '',
+              message: '',
               screenshot: null,
               hiddenField: '', // for honeypot (spam protection)
             }}
             validationSchema={FormSchemas}
-            onSubmit={(values, { setSubmitting, resetForm }) => {
+
+            onSubmit={(values, { setSubmitting }) => {
+              const formData = new FormData();
+              formData.append('form-name', 'contact');
+              Object.keys(values).forEach((key) => {
+                formData.append(key, values[key]);
+              });
+
               fetch('/', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams(values).toString(),
+                body: formData,
               })
                 .then(() => {
-                  setIsSubmitted(true);
-                  resetForm();
+                  alert('Form successfully submitted');
+                  setSubmitting(false);
                 })
-                .catch((error) => alert('Form submission failed!'))
-                .finally(() => setSubmitting(false));
+                .catch((error) => {
+                  console.error('Form submission error:', error);
+                  setSubmitting(false);
+                });
             }}>
             {({ setFieldValue }) => (
-              <Form
-                name="contact"
-                method="POST"
-                data-netlify="true"
-                data-netlify-honeypot="hiddenField"
-                className="w-full">
-                {/* Netlify Hidden Input */}
-                <input type="hidden" name="form-name" value="contact" />
-                <input type="hidden" name="hiddenField" />
+              <Form name="contact" method="POST" data-netlify="true">
+              <div className="flex flex-col w-full gap-2">
+                  <label htmlFor="firstName" className="text-left font-md text-md text-white">
 
-                <div className="flex flex-col w-full gap-2">
-                  <label htmlFor="fullName" className="text-left font-md text-md text-white">
-                    Full Name
+                Full Name
                   </label>
                   <Field
                     name="fullName"
@@ -140,18 +139,19 @@ const Contact = () => {
                 </div>
 
                 <div className="flex flex-col w-full gap-2 py-2">
-                  <label htmlFor="complaint" className="text-left font-md text-md text-white">
+                  <label htmlFor="message" className="text-left font-md text-md text-white">
                     Write Your Complaint here
                   </label>
-                  <Field
-                    name="complaint"
-                    component="textarea"
+                  <Textarea
+                    name="message"
+                    type="text"
+                    cols={8}
                     rows={10}
                     placeholder="Write your complaint here"
                     className="lg:w-[700px] w-[250px] border border-yellow outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                   />
                   <ErrorMessage
-                    name="complaint"
+                    name="message"
                     component="span"
                     className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                   />

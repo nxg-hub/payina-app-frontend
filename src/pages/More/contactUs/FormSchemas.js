@@ -1,5 +1,3 @@
-//contactUs page schemas
-
 import * as Yup from 'yup';
 
 export const FormSchemas = Yup.object().shape({
