@@ -16,6 +16,7 @@ const Bettwo = () => {
   const [amount, setAmount] = useState('');
   const [customerReference, setCustomerReference] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [planLoading, setPlanLoading] = useState(false);
   const [error, setError] = useState(null);
   const [verificationResult, setVerificationResult] = useState(null);
   const [customerDetails, setCustomerDetails] = useState(null);
@@ -46,6 +47,7 @@ const Bettwo = () => {
   const fetchPlans = useCallback(async (billerSlug) => {
     setIsLoading(true);
     setError(null);
+    setPlanLoading(true);
     try {
       const planData = await apiService.fetchBillerPlans(billerSlug);
       if (Array.isArray(planData) && planData.length > 0) {
@@ -60,6 +62,7 @@ const Bettwo = () => {
       setError('Failed to fetch plans. Please try again or enter an amount manually.');
     } finally {
       setIsLoading(false);
+      setPlanLoading(false);
     }
   }, []);
 
@@ -251,7 +254,7 @@ const Bettwo = () => {
               value={selectedPlan?.id || ''}
               onChange={handlePlanChange}
               className="border-2 border-slate-400 rounded-[5px] px-4 py-2 bg-white text-slate-600 w-[64%] mb-3">
-              <option value="">Select a plan</option>
+              <option value="">{planLoading ? 'Loading plans...' : 'Select a plan'}</option>
               {plans.map((plan) => (
                 <option key={plan.id} value={plan.id}>
                   {plan.name} - ₦{plan.amount}

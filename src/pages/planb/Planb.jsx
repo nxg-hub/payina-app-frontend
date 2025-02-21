@@ -294,13 +294,12 @@ const Planb = () => {
     message: 'Your Transaction was Successful',
     reference: '',
   });
-
   useEffect(() => {
     if (location.state) {
       setFormData(location.state);
     }
   }, [location.state]);
-
+  console.log(Location.state);
   const handleError = useCallback((err, reference) => {
     let errorMessage = err.response?.data?.message || err.message || 'An unknown error occurred';
     if (errorMessage === 'Transaction was not successful, vending cannot be completed.') {
@@ -326,7 +325,9 @@ const Planb = () => {
         throw new Error('Selected plan or plan price is missing');
       }
 
-      const amountInKobo = Math.round(selectedPlan.planPrice);
+      const amountInKobo = Math.round(
+        selectedPlan.planPrice >= 1000 ? selectedPlan.planPrice + 100 : selectedPlan.planPrice
+      );
 
       const initializePaymentResponse = await apiService.initializePayment(
         formValues.email,
@@ -409,7 +410,7 @@ const Planb = () => {
         planName={planName}
         network={network}
         phoneNumber={phoneNumber}
-        planPrice={planPrice}
+        planPrice={planPrice >= 1000 ? planPrice + 100 : planPrice}
         email={email}
       />
       {isProcessingVend && <Loader />}

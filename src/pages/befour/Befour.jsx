@@ -10,6 +10,8 @@ import Loader from '../../assets/LoadingSpinner';
 import successIcon from '../../assets/images/tansIcon.png';
 import errorIcon from '../../assets/images/redrectangle.png';
 import { useNavigate } from 'react-router-dom';
+import { setVendPayload } from '../../Redux/WalletSlice.jsx';
+import { useDispatch } from 'react-redux';
 
 const Befour = () => {
   const location = useLocation();
@@ -18,8 +20,8 @@ const Befour = () => {
   const [isProcessingVend, setIsProcessingVend] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [paymentReference, setPaymentReference] = useState(null);
-  const navigate = useNavigate()
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [modalState, setModalState] = useState({
     isOpen: false,
     status: 'success',
@@ -33,7 +35,6 @@ const Befour = () => {
       setFormData(location.state);
     }
   }, [location.state]);
-
   useEffect(() => {
     const script = document.createElement('script');
     script.src = import.meta.env.VITE_SCRIPT;
@@ -66,114 +67,6 @@ const Befour = () => {
       reference,
     });
   }, []);
-
-  const pollVendStatus = useCallback(
-    async (reference) => {
-      try {
-        const maxAttempts = 10;
-        const pollInterval = 5000; // 5 seconds
-
-        for (let attempt = 0; attempt < maxAttempts; attempt++) {
-          const response = await apiService.checkVendStatus(reference);
-
-          if (response.status === 'completed') {
-            setModalState({
-              isOpen: true,
-              status: 'success',
-              title: 'Transaction Successful',
-              message: 'Successfully processed the vend request',
-              reference: response.paymentReference,
-            });
-            setIsProcessingVend(false);
-            return;
-          } else if (response.status === 'failed') {
-            throw new Error(response.message || 'Vend process failed');
-          }
-
-          await new Promise((resolve) => setTimeout(resolve, pollInterval));
-        }
-
-        throw new Error('Vend process timed out');
-      } catch (err) {
-        handleError(err, reference);
-      } finally {
-        setIsProcessingVend(false);
-      }
-    },
-    [handleError]
-  );
-
-  const vendValue = useCallback(
-    async (reference) => {
-      try {
-        setIsProcessingVend(true);
-        const {
-          selectedBiller,
-          amount,
-          customerReference,
-          email,
-          phoneNumber,
-          customerDetails,
-          packageSlug,
-          accountNumber,
-          merchantId
-
-        } = formData;
-        if (!selectedBiller || !selectedBiller.slug) {
-          throw new Error('Selected biller or biller slug is missing');
-        }
-
-        const isBettingLottery = isBettingOrLottery(selectedBiller);
-
-        const payload = {
-          paymentReference: reference,
-          customerId: customerReference,
-          packageSlug: packageSlug || 'UNKNOWN_SLUG',
-          accountNumber: customerReference,
-          channel: 'Web',
-          // amount: Math.round(Number(amount) + 100),
-          amount: Math.round(Number(amount) + 100).toString(),
-          customerName: customerDetails?.customerName || 'Non-Payina-User',
-          phoneNumber: phoneNumber,
-          email: customerDetails?.emailAddress || email,
-        };
-
-        const vendValueResponse = await apiService.vendValue(reference, payload);
-
-        if (vendValueResponse.status === 202) {
-          setStatusMessage('Vend request accepted. Processing...');
-          pollVendStatus(reference);
-        } else if (vendValueResponse.status === 'success') {
-          setModalState({
-            isOpen: true,
-            status: 'success',
-            title: 'Transaction Successful',
-            message: 'Successfully processed the vend request',
-            reference: vendValueResponse.responseData.paymentReference,
-          });
-          setIsProcessingVend(false);
-        } else {
-          throw new Error(vendValueResponse.message || 'Vend value failed');
-        }
-      } catch (err) {
-        handleError(err, reference);
-        setIsProcessingVend(false);
-      }
-    },
-    [formData, isBettingOrLottery, handleError, pollVendStatus]
-  );
-
-  const handlePaystackCallback = useCallback(
-    (response) => {
-      if (response.status === 'success') {
-        setStatusMessage('Payment successful. Processing vend request...');
-        vendValue(response.reference);
-      } else {
-        setStatusMessage('Payment was not completed.');
-      }
-    },
-    [vendValue]
-  );
 
   const handleProceed = async () => {
     if (!formData || !formData.selectedBiller) {
@@ -215,46 +108,32 @@ const Befour = () => {
         throw new Error('Selected biller or amount is missing');
       }
 
-      const amountWithCharges = Math.round(Number(amount) + 100);
+      const amountWithCharges = Math.round(Number(amount) + 70);
       const amountInKobo = Math.round(amountWithCharges);
 
-      const initializePaymentResponse = await apiService.initializePayment(
-        selectedBiller.id,
-        email,
-        amountInKobo
-      );
+      const initializePaymentResponse = await apiService.initializePayment(email, amountInKobo);
 
       if (
-        initializePaymentResponse.status === true &&
-        initializePaymentResponse.message === 'Authorization URL created'
+        initializePaymentResponse.success === true &&
+        initializePaymentResponse.message === 'Success'
       ) {
-        const { authorization_url, access_code, reference } = initializePaymentResponse.data;
-        setPaymentReference(reference);
-
-        // Open Paystack inline payment modal
-        if (window.PaystackPop) {
-          const handler = window.PaystackPop.setup({
-            key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
-            email: formData.email,
-            amount: amountInKobo,
-            ref: reference,
-            url: authorization_url,
-            access_code: access_code,
-            onClose: () => {
-              setStatusMessage('Payment cancelled.');
-            },
-            callback: handlePaystackCallback,
-          });
-          handler.openIframe();
-        } else {
-          setModalState({
-            isOpen: true,
-            status: 'error',
-            title: 'Error',
-            message: 'Payment system is not available at the moment. Please try again later.',
-          });
-          return;
-        }
+        const { checkoutLink, orderReference } = initializePaymentResponse;
+        setPaymentReference(orderReference);
+        // vend payload
+        const payload = {
+          customerId: formData.customerReference,
+          packageSlug: formData.selectedPlan.slug,
+          channel: 'web',
+          amount: formData.amount,
+          customerName: formData.customerDetails.customerName,
+          phoneNumber: formData.phoneNumber,
+          email: formData.email,
+          accountNumber: formData.customerReference,
+        };
+        //store the vend payload in redux store
+        dispatch(setVendPayload(payload));
+        // Redirect to the checkout link
+        window.location.href = checkoutLink;
       } else {
         throw new Error(initializePaymentResponse.message || 'Payment initialization failed');
       }
@@ -291,7 +170,7 @@ const Befour = () => {
       <OrderReview
         planName={selectedBiller.name}
         phoneNumber={phoneNumber}
-        planPrice={Number(amount) + 100}
+        planPrice={Number(amount) + 70}
         email={email}
         customerReference={customerReference}
       />
@@ -316,7 +195,7 @@ const Befour = () => {
         errorIcon={errorIcon}
         buttonStyles={{
           login: 'bg-blue-600 hover:bg-blue-700',
-          register: 'bg-blue-500 hover:bg-blue-600'
+          register: 'bg-blue-500 hover:bg-blue-600',
         }}
         onLogin={handleLogin}
         onRegister={handleRegister}

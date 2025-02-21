@@ -26,7 +26,7 @@ const Betone = () => {
         const response = await apiService.fetchBettingServices();
 
         // Log the entire response for debugging
-        console.log('API Response:', response);
+        // console.log('API Response:', response);
 
         // Check if response exists
         if (!response) {
@@ -53,11 +53,11 @@ const Betone = () => {
         }
 
         // Filter services
-        const filteredServices = serviceData.filter(service =>
-          service && service.slug && ALLOWED_SERVICES.includes(service.slug)
+        const filteredServices = serviceData.filter(
+          (service) => service && service.slug && ALLOWED_SERVICES.includes(service.slug)
         );
 
-        console.log('Filtered services:', filteredServices);
+        // console.log('Filtered services:', filteredServices);
 
         setBettingServices(filteredServices);
 
@@ -117,10 +117,10 @@ const Betone = () => {
       formValues: {
         ...formValues,
         email: localEmail,
-        isBetting: selectedService?.slug === 'BETTING_AND_LOTTERY'
+        isBetting: selectedService?.slug === 'BETTING_AND_LOTTERY',
       },
       selectedBettingService: formValues.selectedBettingService,
-      slug: selectedService ? selectedService.slug : ''
+      slug: selectedService ? selectedService.slug : '',
     };
 
     navigate('/bills/plans', { state: stateToPass });
@@ -159,8 +159,7 @@ const Betone = () => {
                   id="betting-service-select"
                   value={formValues.selectedBettingService || ''}
                   onChange={(e) => updateFormValues({ selectedBettingService: e.target.value })}
-                  className="border-2 text-xs rounded-[5px] px-5 py-2 border-primary bg-black text-slate-600 w-full"
-                >
+                  className="border-2 text-xs rounded-[5px] px-5 py-2 border-primary bg-black text-slate-600 w-full">
                   <option value="">Select Service</option>
                   {bettingServices.map((service) => (
                     <option key={service.id} value={service.slug}>
@@ -171,9 +170,7 @@ const Betone = () => {
                 {errors.selectedBettingService && (
                   <p className="text-red-500 mt-1">{errors.selectedBettingService}</p>
                 )}
-                {error && (
-                  <p className="text-red-500 mt-1">{error}</p>
-                )}
+                {error && <p className="text-red-500 mt-1">{error}</p>}
               </div>
               <div className="flex flex-col w-[64%]">
                 <label className="py-4">Phone</label>
@@ -191,8 +188,7 @@ const Betone = () => {
           <button
             type="submit"
             className="text-primary mb-10 mt-10 text-left px-16 py-4 border-none rounded-[5px] bg-lightBlue cursor-pointer hover:bg-neutral transition-all duration-200"
-            disabled={isLoading}
-          >
+            disabled={isLoading}>
             {isLoading ? 'Loading...' : 'Proceed'}
           </button>
         </form>

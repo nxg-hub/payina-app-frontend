@@ -73,9 +73,12 @@ const EnterPin = ({ data }) => {
         }
       );
 
-      // console.log('Full PIN Validation Response:', pinResponse);
+      console.log('Full PIN Validation Response:', pinResponse);
 
-      if (pinResponse.data === 'Transaction PIN is valid.') {
+      if (
+        pinResponse.data === 'Transaction PIN is valid.' ||
+        pinResponse.data.message === 'Transaction PIN is valid.'
+      ) {
         console.log('PIN validated successfully. Starting another bank transfer...');
 
         const transactionPayload =

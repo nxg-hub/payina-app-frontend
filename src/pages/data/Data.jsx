@@ -18,7 +18,6 @@ export const DataPurchaseForm = () => {
   const { plans, selectedPlan, setSelectedPlan, isLoading, error } = useDataPlans(
     formValues.selectedNetwork
   );
-
   useEffect(() => {}, [localEmail, selectedPlan]);
 
   const handleUserVerified = useCallback(
