@@ -13,6 +13,7 @@ const RecipientDetails = ({ nextStep }) => {
   const [isVerifying, setIsVerifying] = useState(false);
   const [accountNumber, setAccountNumber] = useState('');
   const [accountName, setAccountName] = useState('');
+  const [bankLoader, setBankLoader] = useState(false);
 
   useEffect(() => {
     if (selectedCountry) {
@@ -22,15 +23,19 @@ const RecipientDetails = ({ nextStep }) => {
       );
 
       const fetchBanks = async () => {
+        setBankLoader(true);
         try {
           const response = await axios.get(endpoint);
           const bankList = response.data.data || [];
           setBanks(bankList);
           setFilteredBanks(bankList);
+          setBankLoader(false);
         } catch (error) {
           console.error('Error fetching banks:', error);
           setBanks([]);
           setFilteredBanks([]);
+        } finally {
+          setBankLoader(false);
         }
       };
 
@@ -164,7 +169,7 @@ const RecipientDetails = ({ nextStep }) => {
                   type="text"
                   name="bankName"
                   value={values.bankName}
-                  placeholder="Type to search bank"
+                  placeholder={bankLoader ? ' Loading...' : 'Type to search bank'}
                   onChange={(e) => {
                     setFieldValue('bankName', e.target.value);
                     setFilteredBanks(

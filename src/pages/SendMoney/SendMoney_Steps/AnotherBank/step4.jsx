@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import ReactLoading from 'react-loading';
 import { useDispatch, useSelector } from 'react-redux';
 import { hideLoading, showLoading } from '../../../../Redux/loadingSlice.jsx';
+import { setWalletBalance } from '../../../../Redux/WalletSlice.jsx';
 
 const EnterPin = ({ data }) => {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const EnterPin = ({ data }) => {
   const [userLoader, setUserLoading] = useState(false);
 
   //getting the userDetails  from the store
+  const currentBalance = useSelector((state) => state.wallet.wallet);
   const userDetails = useSelector((state) => state.user.user);
   const userBusinessDetails = useSelector((state) => state.coporateCustomerProfile.customerDetails);
   const userEmail = userDetails.email;
@@ -148,7 +150,7 @@ const EnterPin = ({ data }) => {
         }
       );
       // console.log('Full PIN Validation Response:', pinResponse);
-      if (pinResponse.status === 200) {
+      if (pinResponse.status === 200 || pinResponse.data.message === 'Transaction PIN is valid.') {
         console.log('PIN validated successfully. Starting another bank transfer...');
         setShowModal(true);
       } else {
@@ -236,8 +238,26 @@ const EnterPin = ({ data }) => {
         (transactionResponse.data?.httpStatusCode === '202 Accepted' &&
           transactionResponse.data?.data === 'Approval emails have been sent.');
       if (isSuccess) {
+        //update wallet balance
+        const response = await fetch(import.meta.env.VITE_GET_WALLET_ENDPOINT, {
+          headers: {
+            accept: '*/*',
+            Authorization: `Bearer ${newAuthToken}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          console.error('Error fetching balance:', response.status);
+          return;
+        }
+
+        const data = await response.json();
+        const balance = data.data.balance.amount;
+        if (balance !== currentBalance) {
+          dispatch(setWalletBalance(balance));
+        }
         setShowSuccess(true);
-        // console.log('Transaction Success: Transaction completed successfully.');
       } else {
         const backendMessage =
           transactionResponse.data?.response || 'Invalid Transaction PIN or PIN is Incorrect.';
@@ -273,7 +293,17 @@ const EnterPin = ({ data }) => {
   };
 
   if (showSuccess) return <SuccessMessage />;
-  if (showDecline) return <DeclineMessage errorMessage={errorMessage} />;
+  if (showDecline)
+    return (
+      <DeclineMessage
+        errorMessage={
+          errorMessage ===
+          'Cannot invoke "com.nxg.payina.external.customer.entity.Signatory.getEmail()" because the return value of "java.util.List.get(int)" is null'
+            ? 'No Signatories Found.'
+            : errorMessage
+        }
+      />
+    );
   // if (showDecline) return <DeclineMessage />;
 
   return (

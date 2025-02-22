@@ -13,6 +13,11 @@ const AmountDetails = ({ nextStep }) => {
       setError('Amount Entered is Greater Than Current Balance');
       return;
     }
+    if (currentBalance - values.amount < 100) {
+      setIsAmountGreater(true);
+      setError('Account Minimum Balance is ₦100 ');
+      return;
+    }
     if (values.amount < 100) {
       setError('Amount must not be less than ₦100');
       setIsAmountGreater(false);
