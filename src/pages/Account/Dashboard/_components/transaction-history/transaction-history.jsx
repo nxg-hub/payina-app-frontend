@@ -69,8 +69,8 @@ export default function TransactionTable() {
             Authorization: `Bearer ${authToken}`,
           },
           body: JSON.stringify({
-            startDate: new Date(dateRange.startDate).toISOString(),
-            endDate: new Date(dateRange.endDate).toISOString(),
+            // startDate: new Date(dateRange.startDate).toISOString(),
+            // endDate: new Date(dateRange.endDate).toISOString(),
             // page: page - 1,
             // pageSize,
           }),
@@ -238,9 +238,9 @@ export default function TransactionTable() {
     <div className="md:px-[.7rem] pb-4 w-auto md:clear-right ml-5 md:ml-2 xl:ml-[19.5rem] mr-5 md:mr-3">
       <div className="w-full">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl md:text-2xl font-bold">Transaction History</h2>
+          <h2 className="text-xl md:text-2xl font-bold">Recent Transactions</h2>
           <div className="flex gap-4">
-            <FilterMenu
+            {/* <FilterMenu
               showFilterMenu={showFilterMenu}
               setShowFilterMenu={setShowFilterMenu}
               filters={filters}
@@ -252,9 +252,9 @@ export default function TransactionTable() {
                 setShowExportMenu(false);
                 setShowMoreMenu(false);
               }}
-            />
+            /> */}
 
-            <ExportMenu
+            {/* <ExportMenu
               showExportMenu={showExportMenu}
               setShowExportMenu={setShowExportMenu}
               transactions={filteredTransactions}
@@ -265,10 +265,10 @@ export default function TransactionTable() {
                 setShowMoreMenu(false);
               }}
               formatCurrency={formatCurrency}
-            />
+            /> */}
 
             {/* More Menu */}
-            <div className="relative">
+            {/* <div className="relative">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -280,9 +280,9 @@ export default function TransactionTable() {
                 }}
                 className="p-2 hover:bg-gray-100 rounded-full">
                 <MoreHorizontal className="w-5 h-5 text-gray-600" />
-              </button>
+              </button> */}
 
-              {/* {showMoreMenu && (
+            {/* {showMoreMenu && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
                   <button
                     onClick={() => {
@@ -294,7 +294,7 @@ export default function TransactionTable() {
                   </button>
                 </div>
               )} */}
-            </div>
+            {/* </div> */}
           </div>
         </div>
       </div>

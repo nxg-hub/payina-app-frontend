@@ -11,15 +11,24 @@ import { useNavigate } from 'react-router-dom';
 import { showLoading, hideLoading } from '../../../Redux/loadingSlice';
 // import { bvnConfirm } from './_components/bvnConfirm';
 import Loader from '../../../assets/LoadingSpinner';
-
+import { BvnModal } from './_components/BvnModal';
+import { BvnConfirmModal } from './_components/BvnConfirmModal';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.loading.isLoading); // Global loading state
+  const userDetails = useSelector((state) => state.user.user);
   const [newAuthToken] = useLocalStorage('authToken', '');
   const [error, setError] = useState(false);
-  // const [isBvnModalOpen, setIsBvnModalOpen] = useState(false);
-  
+  const [isBvnModalOpen, setIsBvnModalOpen] = useState(false);
+  const [isBvnConfirmModalOpen, setIsBvnConfirmModalOpen] = useState(false);
+  const userBvn = userDetails?.bvn;
+
+  const [data, setData] = useState({
+    bvnData: {},
+    ninData: {},
+  });
+
   const navigate = useNavigate();
   //getting the success state from the store
   const success = useSelector((state) => state.user.success);
@@ -44,12 +53,12 @@ const Dashboard = () => {
         });
         const data = await response.json();
 
+        if (data.bvn === null) {
+          setIsBvnModalOpen(true);
+        }
+
         //storing the user details in the userSlice using the redux store
         dispatch(fetchDataSuccess(data));
-
-        // if (data.bvn === null) {
-        //   setIsBvnModalOpen(true)
-        // }
       } catch (error) {
         console.error('Error fetching user data:', error);
         setError(true);
@@ -59,7 +68,24 @@ const Dashboard = () => {
     };
 
     fetchLoginUserData();
+
+    if (userBvn === null) {
+      setIsBvnModalOpen(true);
+    }
   }, []);
+
+  const handleNext = (bvnData, ninData) => {
+    setData((prevData) => ({
+      ...prevData,
+      bvnData: bvnData,
+      ninData: ninData,
+
+      // Update state with the BVN response data
+    }));
+
+    setIsBvnModalOpen(false); // Close BvnModal
+    setIsBvnConfirmModalOpen(true); // Open BvnConfirmModal
+  };
   return (
     <div>
       {isLoading ? null : error ? (
@@ -75,12 +101,19 @@ const Dashboard = () => {
           <QuickAction />
           <TransactionHistory />
         </>
-        
-       )}  
-      
+      )}
+      <div>
+        {isBvnModalOpen && <BvnModal onClose={() => setIsBvnModalOpen(false)} next={handleNext} />}
+        {isBvnConfirmModalOpen && (
+          <BvnConfirmModal
+            onClose={() => setIsBvnConfirmModalOpen(false)}
+            bvnData={data.bvnData}
+            ninData={data.ninData}
+          />
+        )}
+      </div>
     </div>
   );
 };
 
 export default Dashboard;
-

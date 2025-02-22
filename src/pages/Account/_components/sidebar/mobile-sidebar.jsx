@@ -5,7 +5,6 @@ import { LuFileClock } from 'react-icons/lu';
 import { VscSignOut } from 'react-icons/vsc';
 import { MdVerified } from 'react-icons/md';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import images from '../../../../constants/images';
 import useLocalStorage from '../../../../hooks/useLocalStorage.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { persistor } from '../../../../Redux/Store.jsx';

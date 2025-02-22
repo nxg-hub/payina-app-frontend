@@ -13,7 +13,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import useLocalStorage from '../../../../hooks/useLocalStorage';
 import { fetchDataSuccess } from '../../../../Redux/UserSlice';
 import EditProfileForm from './EditProfileForm';
-import { images } from '../../../../constants';
 
 const ProfileSetting = () => {
   const dispatch = useDispatch();
@@ -161,7 +160,7 @@ const ProfileSetting = () => {
         <div className="w-full md:w-[80%] lg:w-[80%] flex-col flex md:flex-row items-center gap-8">
           <div className="rounded-full">
             <img
-              className="h-[100px] w-[100px] rounded-full"
+              className="h-[100px] w-[100px] rounded-full object-cover"
               src={profilePic ? profilePic : avatar}
               alt="profilePic"
             />
