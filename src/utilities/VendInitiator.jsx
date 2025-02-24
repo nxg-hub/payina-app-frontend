@@ -316,9 +316,9 @@ const VendInitiator = ({
     }
 
     const parsedAmount = Number(amount);
-    if (parsedAmount < 1) {
-    // if (parsedAmount < 70) {
-      setValidationError('Minimum airtime amount is ₦70');
+    // if (parsedAmount < 1) {
+    if (parsedAmount < 100) {
+      setValidationError('Minimum airtime amount is ₦100');
       return false;
     }
 
