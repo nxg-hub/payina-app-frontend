@@ -135,9 +135,10 @@ const VendInitiator = ({
         customerId: userData?.customerReference || customerReference,
         packageSlug: packageSlug,
         channel: 'web',
-        amount: totalAmount,
+        amount: amount,
         customerName: userData ? `${userData.firstName} ${userData.lastName}` : '',
         phoneNumber: phoneNumber,
+        billType: 'CUSTOM_BILL',
         accountNumber: userData?.accountNumber || accountNumber,
         email: userData?.email || formValues.email,
         merchantId: walletDetailsRef.current.businessId,
@@ -296,7 +297,11 @@ const VendInitiator = ({
       )}
 
       <div className="mb-4 p-4 bg-gray-50">
-        <div className="text-sm text-gray-600">Available Balance</div>
+        <div className="flex flex-wrap justify-between">
+          <div className="text-sm text-gray-600">Available Balance</div>
+          <small className="text-sm text-gray-600">Charge: ₦70</small>
+        </div>
+
         <div className="text-xl font-semibold">
           ₦
           {walletData?.balance?.toLocaleString('en-NG', {
@@ -304,6 +309,7 @@ const VendInitiator = ({
             maximumFractionDigits: 2,
           }) || '0.00'}
         </div>
+        <small>Charge: ₦70</small>
         {/* <div className="text-sm text-gray-500 mt-1">Transaction Charge: ₦100</div> */}
         {isInsufficientFunds && (
           <div className="text-sm text-red-600 mt-1">

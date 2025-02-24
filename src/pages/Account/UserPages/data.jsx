@@ -5,7 +5,7 @@ import { useForm } from '../../../context/formContext';
 import { useDataPlans } from '../../../hooks/useDataPlans';
 import NetworkSelection from '../../../components/NetworkSelection';
 import TransactionModal from '../../../utilities/TransactionModal';
-import VendInitiator from '../../../utilities/VendInitiator';
+import VendInitiator from '../../../utilities/VendInitiatorData.jsx';
 import { useAuth } from '../../../context/useAuth';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import Loader from '../../../assets/LoadingSpinner';
