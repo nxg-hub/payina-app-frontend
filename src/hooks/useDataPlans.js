@@ -18,7 +18,8 @@ export const useDataPlans = (networkSlug) => {
     setError('');
     try {
       const data = await apiService.fetchDataPlans(networkSlug);
-      setPlans(data || []);
+      const sortedPlans = [...(data || [])].sort((a, b) => a.amount - b.amount);
+      setPlans(sortedPlans);
     } catch (err) {
       setError('Error fetching data plans');
     } finally {
