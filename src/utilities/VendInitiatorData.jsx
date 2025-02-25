@@ -149,7 +149,7 @@ const VendInitiator = ({
         customerId: phoneNumber || '',
         packageSlug: packageSlug,
         channel: 'web',
-        amount: amount,
+        amount: amount >= 1000 ? amount - 100 : amount,
         billType: 'DATA',
         customerName: userData ? `${userData.firstName} ${userData.lastName}` : '',
         phoneNumber: phoneNumber,
