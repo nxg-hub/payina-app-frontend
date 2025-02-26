@@ -962,19 +962,19 @@ const BillerPlans = () => {
                       />
                     </div>
 
-                    <div className="space-y-2">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Phone Number
-                      </label>
-                      <input
-                        id="amount"
-                        type="text"
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
-                        className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter phone number"
-                      />
-                    </div>
+                    {/*<div className="space-y-2">*/}
+                    {/*  <label className="block text-sm font-medium text-gray-700">*/}
+                    {/*    Phone Number*/}
+                    {/*  </label>*/}
+                    {/*  <input*/}
+                    {/*    id="amount"*/}
+                    {/*    type="text"*/}
+                    {/*    value={phoneNumber}*/}
+                    {/*    onChange={(e) => setPhoneNumber(e.target.value)}*/}
+                    {/*    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"*/}
+                    {/*    placeholder="Enter phone number"*/}
+                    {/*  />*/}
+                    {/*</div>*/}
 
                     {verificationResult && (
                       <div
