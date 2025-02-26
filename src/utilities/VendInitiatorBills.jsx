@@ -299,7 +299,7 @@ const VendInitiator = ({
       <div className="mb-4 p-4 bg-gray-50">
         <div className="flex flex-wrap justify-between">
           <div className="text-sm text-gray-600">Available Balance</div>
-          <small className="text-sm text-gray-600">Charge: ₦70</small>
+          {/*<small className="text-sm text-gray-600">Total Charge: + {amount + 70}</small>*/}
         </div>
 
         <div className="text-xl font-semibold">
@@ -309,7 +309,8 @@ const VendInitiator = ({
             maximumFractionDigits: 2,
           }) || '0.00'}
         </div>
-        <small>Charge: ₦70</small>
+        {/*<small>Transaction Charge: ₦70</small>*/}
+        <small className="text-sm text-gray-600">Total due amount: + {amount + 70}</small>
         {/* <div className="text-sm text-gray-500 mt-1">Transaction Charge: ₦100</div> */}
         {isInsufficientFunds && (
           <div className="text-sm text-red-600 mt-1">
