@@ -182,7 +182,17 @@ const BillerDetails = () => {
       ELECTRIC_DISCO: 'Choose Your Electricity Provider',
       AIRTIME_AND_DATA: 'Select Your Network Provider',
       ENTERTAINMENT_AND_LIFESTYLE: 'Choose Your Entertainment Service',
-      // Add more titles as needed
+      // 'ELECTRIC_DISCO',
+      //   'PAY_TV',
+      //   'BETTING_AND_LOTTERY',
+      //   'TRANSPORT_AND_TOLL_PAYMENT',
+      //   'COLLECTIONS',
+      //   'GOVERNMENT_COLLECTIONS',
+      //   'INTERNATIONAL_AIRTIME',
+      //   'EDUCATION',
+      //   'ENTERTAINMENT_AND_LIFESTYLE',
+      //   'FOOD',
+      //   'paymentss',
     };
     return titles[selectedBettingService] || 'Select Service Provider';
   };
