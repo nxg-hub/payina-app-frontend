@@ -143,10 +143,10 @@ const BillOption = ({ iconSrc, label, onClick, isCustom = false, customIcons = [
       </div>
     )}
     <div className="flex flex-col">
-      <span className="text-gray-700 font-medium text-sm md:text-base">{label}</span>
+      <span className="text-gray-700 font-medium text-left text-sm md:text-base">{label}</span>
       {isCustom && (
-        <span className="text-gray-500 text-xs md:text-sm">
-          TV, Betting, Transport, Education, Jamb & more
+        <span className="text-gray-500 text-xs md:text-xs">
+          TV, Betting, Education, Jamb, Church offering & more
         </span>
       )}
     </div>
