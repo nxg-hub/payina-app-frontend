@@ -16,8 +16,8 @@ const ALLOWED_SERVICES = [
   'INTERNATIONAL_AIRTIME',
   'EDUCATION',
   'ENTERTAINMENT_AND_LIFESTYLE',
-  'FOOD',
-  'paymentss',
+  'CHURCH_COLLECTIONS',
+  'EVENTS_AND_LIFESTYLE',
 ];
 
 const Billers = () => {
@@ -89,11 +89,11 @@ const Billers = () => {
     console.log('Validating form values:', { formValues, localEmail });
     const newErrors = {};
 
-    if (!formValues.phoneNumber) {
-      newErrors.phoneNumber = 'Phone number is required';
-    } else if (!/^\d{10,11}$/.test(formValues.phoneNumber)) {
-      newErrors.phoneNumber = 'Phone number must be 10-11 digits';
-    }
+    // if (!formValues.phoneNumber) {
+    //   newErrors.phoneNumber = 'Phone number is required';
+    // } else if (!/^\d{10,11}$/.test(formValues.phoneNumber)) {
+    //   newErrors.phoneNumber = 'Phone number must be 10-11 digits';
+    // }
 
     if (!formValues.selectedBettingService) {
       newErrors.selectedBettingService = 'Service selection is required';
