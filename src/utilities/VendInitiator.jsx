@@ -315,11 +315,10 @@ const VendInitiator = ({
       return false;
     }
 
-    //NB: Check minimum amount(#1 IS FOR TESTING PURPOSE ONLY)
     const parsedAmount = Number(amount);
     // if (parsedAmount < 1) {
-    if (parsedAmount < 10) {
-      setValidationError('Minimum airtime amount is ₦10');
+    if (parsedAmount < 100) {
+      setValidationError('Minimum airtime amount is ₦100');
       return false;
     }
 
@@ -360,6 +359,7 @@ const VendInitiator = ({
         packageSlug: packageSlug,
         channel: 'web',
         amount: amount,
+        billType: 'AIRTIME',
         customerName: userData ? `${userData.firstName} ${userData.lastName}` : '',
         phoneNumber: phoneNumber,
         accountNumber: userData?.accountNumber || accountNumber,
@@ -430,8 +430,8 @@ const VendInitiator = ({
           className={`text-xl font-semibold ${isInsufficientBalance ? 'text-red-600' : 'text-gray-800'}`}>
           ₦
           {walletBalance?.toLocaleString('en-NG', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
           }) || '0.00'}
           {isInsufficientBalance && (
             <div className="text-sm text-red-600 mt-1">

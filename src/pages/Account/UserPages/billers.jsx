@@ -16,8 +16,8 @@ const ALLOWED_SERVICES = [
   'INTERNATIONAL_AIRTIME',
   'EDUCATION',
   'ENTERTAINMENT_AND_LIFESTYLE',
-  'FOOD',
-  'paymentss',
+  'CHURCH_COLLECTIONS',
+  'EVENTS_AND_LIFESTYLE',
 ];
 
 const Billers = () => {
@@ -89,11 +89,11 @@ const Billers = () => {
     console.log('Validating form values:', { formValues, localEmail });
     const newErrors = {};
 
-    if (!formValues.phoneNumber) {
-      newErrors.phoneNumber = 'Phone number is required';
-    } else if (!/^\d{10,11}$/.test(formValues.phoneNumber)) {
-      newErrors.phoneNumber = 'Phone number must be 10-11 digits';
-    }
+    // if (!formValues.phoneNumber) {
+    //   newErrors.phoneNumber = 'Phone number is required';
+    // } else if (!/^\d{10,11}$/.test(formValues.phoneNumber)) {
+    //   newErrors.phoneNumber = 'Phone number must be 10-11 digits';
+    // }
 
     if (!formValues.selectedBettingService) {
       newErrors.selectedBettingService = 'Service selection is required';
@@ -188,9 +188,9 @@ const Billers = () => {
               <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                 <CustomButton
                   type="button"
-                  className="w-full mb-6 text-left bg-blue-50 text-blue-600 p-4 rounded-lg hover:bg-blue-100 transition-colors duration-200"
+                  className="w-full mb-6 text-center bg-blue-50 text-blue-600 p-4 rounded-lg hover:bg-blue-100 transition-colors duration-200"
                 >
-                  Want to paybills and enjoy discount?{' '}
+                  Paybills
                   {/*<span className="font-semibold">Register</span> or{' '}*/}
                   {/*<span className="font-semibold">Login</span>*/}
                 </CustomButton>
@@ -213,7 +213,7 @@ const Billers = () => {
                         <option value="">Select Service</option>
                         {bettingServices.map((service) => (
                           <option key={service.id} value={service.slug}>
-                            {service.name}
+                            {service.name.toUpperCase()}
                           </option>
                         ))}
                       </select>
@@ -223,24 +223,24 @@ const Billers = () => {
                       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
                     </div>
 
-                    <div className="space-y-2">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Phone Number
-                      </label>
-                      <input
-                        type="number"
-                        placeholder="Enter Phone number"
-                        className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        value={formValues.phoneNumber || ''}
-                        onChange={(e) => {
-                          console.log('Phone number updated:', e.target.value);
-                          updateFormValues({ phoneNumber: e.target.value });
-                        }}
-                      />
-                      {errors.phoneNumber && (
-                        <p className="mt-2 text-sm text-red-600">{errors.phoneNumber}</p>
-                      )}
-                    </div>
+                    {/*<div className="space-y-2">*/}
+                    {/*  <label className="block text-sm font-medium text-gray-700">*/}
+                    {/*    Phone Number*/}
+                    {/*  </label>*/}
+                    {/*  <input*/}
+                    {/*    type="number"*/}
+                    {/*    placeholder="Enter Phone number"*/}
+                    {/*    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"*/}
+                    {/*    value={formValues.phoneNumber || ''}*/}
+                    {/*    onChange={(e) => {*/}
+                    {/*      console.log('Phone number updated:', e.target.value);*/}
+                    {/*      updateFormValues({ phoneNumber: e.target.value });*/}
+                    {/*    }}*/}
+                    {/*  />*/}
+                    {/*  {errors.phoneNumber && (*/}
+                    {/*    <p className="mt-2 text-sm text-red-600">{errors.phoneNumber}</p>*/}
+                    {/*  )}*/}
+                    {/*</div>*/}
                   </div>
 
                   <CustomButton

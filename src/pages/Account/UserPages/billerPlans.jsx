@@ -1,15 +1,13 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Navbar, Sidebar } from '../_components';
-import Footer from '../../../components/footer/footer';
 import ServiceImages from '../../../assets/serviceImages.jsx';
 import apiService from '../../../services/apiService';
 import CustomButton from '../../../components/button/button.jsx';
-// import WalletBalanceChecker from '../../../utilities/WalletBalanceChecker';
-// import VendInitiator from '../../../utilities/VendInitiator';
 import TransactionModal from '../../../utilities/TransactionModal';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import VendInitiatorBills from '../../../utilities/VendInitiatorBills.jsx';
+import TransactionReceipt from '../../../utilities/TransactionReceipt';
 import successImage from '../../../assets/images/Group-successful.png';
 import errorImage from '../../../assets/images/Group 10275-decline.png';
 
@@ -19,7 +17,6 @@ const BillerPlans = () => {
   const {
     email,
     selectedBettingService,
-    // phoneNumber
   } = location.state?.formValues || {};
 
   const [billerOptions, setBillerOptions] = useState([]);
@@ -39,11 +36,14 @@ const BillerPlans = () => {
   const [modalTitle, setModalTitle] = useState('');
   const [modalMessage, setModalMessage] = useState('');
   const [modalDetails, setModalDetails] = useState('');
+  const [modalContent, setModalContent] = useState(null);
   const [isProcessingVend, setIsProcessingVend] = useState(false);
   const [isCustomerVerified, setIsCustomerVerified] = useState(false);
   const [userDetails] = useLocalStorage('userDetails', '');
+  const [authToken] = useLocalStorage('authToken', '');
+  const [apiKey] = useLocalStorage('apiKey', import.meta.env.VITE_API_KEY);
+  const [currentTransactionRef, setCurrentTransactionRef] = useState(null);
   const walletCheckerRef = useRef();
-  const verificationTimeoutRef = useRef(null);
 
   const handleImageClick = (billerSlug) => {
     const selectedBillerObj = billerOptions.find((biller) => biller.slug === billerSlug);
@@ -132,8 +132,70 @@ const BillerPlans = () => {
         setIsLoading(false);
       }
     },
-    [selectedBiller, selectedPlan]
+    [selectedBiller, selectedPlan, amount]
   );
+
+  const handlePullReceipt = async () => {
+    if (!currentTransactionRef) {
+      setModalStatus('error');
+      setModalTitle('Error');
+      setModalMessage('Transaction reference not found. Please try again or contact support.');
+      setShowModal(true);
+      return;
+    }
+
+    try {
+      setModalStatus('loading');
+      setModalTitle('Fetching Receipt');
+      setModalMessage('Please wait...');
+
+      const response = await fetch(
+        `${import.meta.env.VITE_GET_TRANSACTION_RECIEPT}/${currentTransactionRef}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`,
+            apiKey: apiKey,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch receipt: ${response.statusText}`);
+      }
+
+      const receiptData = await response.json();
+
+      if (!receiptData || !receiptData.transactionRef || !receiptData.amount) {
+        throw new Error('Invalid receipt data received');
+      }
+
+      setModalStatus(null);
+      setModalTitle('');
+      setModalMessage('');
+      setModalDetails('');
+
+      setModalContent(
+        <TransactionReceipt
+          receiptData={receiptData}
+          onClose={() => {
+            setShowModal(false);
+            setModalContent(null);
+          }}
+        />
+      );
+
+      setTimeout(() => setShowModal(true), 0);
+    } catch (error) {
+      console.error('Error pulling receipt:', error);
+      setModalStatus('error');
+      setModalTitle('Error');
+      setModalMessage(`Failed to fetch receipt: ${error.message}`);
+      setModalContent(null);
+      setShowModal(true);
+    }
+  };
 
   useEffect(() => {
     if (selectedBettingService) {
@@ -149,23 +211,13 @@ const BillerPlans = () => {
     }
   }, [selectedBiller, fetchPlans]);
 
-  // Auto-verification effect
   useEffect(() => {
-    if (verificationTimeoutRef.current) {
-      clearTimeout(verificationTimeoutRef.current);
-    }
-
     if (customerReference && customerReference.length >= 3 && selectedBiller && selectedPlan) {
-      verificationTimeoutRef.current = setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         verifyUser(customerReference);
-      }, 1000); // Delay verification by 1 second after user stops typing
+      }, 1000);
+      return () => clearTimeout(timeoutId);
     }
-
-    return () => {
-      if (verificationTimeoutRef.current) {
-        clearTimeout(verificationTimeoutRef.current);
-      }
-    };
   }, [customerReference, selectedBiller, selectedPlan, verifyUser]);
 
   const handleBillerChange = (e) => {
@@ -196,7 +248,6 @@ const BillerPlans = () => {
       setAmount(selectedPlanObj.amount?.toString() || '');
       setSelectedPlanSlug(selectedPlanObj.slug || '');
 
-      // Trigger verification if customer reference exists
       if (customerReference && customerReference.length >= 3) {
         verifyUser(customerReference);
       }
@@ -219,16 +270,25 @@ const BillerPlans = () => {
     setError(null);
   };
 
-  const handleVendInitiated = (reference) => {
-    setIsProcessingVend(false);
-    setModalStatus('success');
-    setModalTitle('Transaction Successful');
-    setModalMessage('Successfully processed the vend request');
-    setShowModal(true);
+  const handleVendInitiated = (response) => {
+    console.log('Vend initiated with response:', response);
 
-    setTimeout(() => {
-      setShowModal(false);
-    }, 2000);
+    const paymentRef = response?.responseData?.paymentReference;
+    console.log('Extracted payment reference:', paymentRef);
+
+    if (paymentRef) {
+      setCurrentTransactionRef(paymentRef);
+      setModalStatus('success');
+      setModalTitle('Transaction Successful');
+      setModalMessage('Successfully processed the vend request');
+      setModalDetails(`Transaction Reference: ${paymentRef}`);
+      setShowModal(true);
+    } else {
+      console.error('Payment reference not found in response:', response);
+      handleError(new Error('Invalid transaction response'));
+    }
+
+    setIsProcessingVend(false);
   };
 
   const handleError = (err) => {
@@ -244,6 +304,18 @@ const BillerPlans = () => {
     navigate('/addmoney');
   };
 
+  const handleModalClose = () => {
+    setShowModal(false);
+    if (modalStatus === 'error') {
+      setCurrentTransactionRef(null);
+      setModalContent(null);
+      setModalStatus(null);
+      setModalTitle('');
+      setModalMessage('');
+      setModalDetails('');
+    }
+  };
+
   const getServiceTitle = () => {
     const titles = {
       BETTING_AND_LOTTERY: 'Choose Your Betting Platform',
@@ -251,6 +323,10 @@ const BillerPlans = () => {
       ELECTRIC_DISCO: 'Choose Your Electricity Provider',
       AIRTIME_AND_DATA: 'Select Your Network Provider',
       ENTERTAINMENT_AND_LIFESTYLE: 'Choose Your Entertainment Service',
+      CHURCH_COLLECTIONS: 'Pay church offerings here',
+      TRANSPORT_AND_TOLL_PAYMENT: 'Transport and Toll payments',
+      COLLECTIONS: 'COLLECTIONS',
+      EVENTS_AND_LIFESTYLE: 'EVENTS ANDLIFESTYLE',
     };
     return titles[selectedBettingService] || 'Select Service Provider';
   };
@@ -310,7 +386,6 @@ const BillerPlans = () => {
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="space-y-4">
-                    {/* Service Platform Selection */}
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-gray-700">
                         Chosen Service Platform
@@ -323,13 +398,12 @@ const BillerPlans = () => {
                         <option value="">Select a Service platform</option>
                         {billerOptions.map((biller) => (
                           <option key={biller.slug} value={biller.slug}>
-                            {biller.name}
+                            {biller.name.toUpperCase()}
                           </option>
                         ))}
                       </select>
                     </div>
 
-                    {/* Plan Selection */}
                     {selectedBiller && (
                       <div className="space-y-2">
                         <label className="block text-sm font-medium text-gray-700">
@@ -343,14 +417,13 @@ const BillerPlans = () => {
                           <option value="">Select a plan</option>
                           {plans.map((plan) => (
                             <option key={plan.id} value={plan.id}>
-                              {plan.name} - ₦{plan.amount}
+                              {plan.name.toUpperCase()} - ₦{plan.amount}
                             </option>
                           ))}
                         </select>
                       </div>
                     )}
 
-                    {/* Customer Reference Input */}
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-gray-700">
                         Customer Reference
@@ -368,7 +441,6 @@ const BillerPlans = () => {
                       )}
                     </div>
 
-                    {/* Amount */}
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-gray-700">Amount</label>
                       <input
@@ -378,26 +450,23 @@ const BillerPlans = () => {
                         onChange={(e) => setAmount(e.target.value)}
                         className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Enter amount"
-                        // readOnly={selectedPlan !== null}
-                      />
-                    </div>
-                    {/*phone*/}
-                    <div className="space-y-2">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Phone Number
-                      </label>
-                      <input
-                        id="amount"
-                        type="text"
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
-                        className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter phone number"
-                        // readOnly={selectedPlan !== null}
                       />
                     </div>
 
-                    {/* Verification Status */}
+                    {/*<div className="space-y-2">*/}
+                    {/*  <label className="block text-sm font-medium text-gray-700">*/}
+                    {/*    Phone Number*/}
+                    {/*  </label>*/}
+                    {/*  <input*/}
+                    {/*    id="amount"*/}
+                    {/*    type="text"*/}
+                    {/*    value={phoneNumber}*/}
+                    {/*    onChange={(e) => setPhoneNumber(e.target.value)}*/}
+                    {/*    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"*/}
+                    {/*    placeholder="Enter phone number"*/}
+                    {/*  />*/}
+                    {/*</div>*/}
+
                     {verificationResult && (
                       <div
                         className={`p-4 rounded-lg ${
@@ -414,7 +483,6 @@ const BillerPlans = () => {
                       </div>
                     )}
 
-                    {/* Customer Details */}
                     {customerDetails && (
                       <div className="p-4 bg-blue-50 rounded-lg">
                         <h3 className="text-sm font-medium text-blue-800 mb-2">Customer Details</h3>
@@ -427,33 +495,16 @@ const BillerPlans = () => {
                           </p>
                         )}
                         <p className="text-sm text-blue-700">
-                          Amount: {customerDetails.totalAmount}
+                          Amount: {customerDetails.amount}
                         </p>
                       </div>
                     )}
 
-                    {/* Error Message */}
                     {error && (
                       <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
                         <p className="text-sm text-red-600">{error}</p>
                       </div>
                     )}
-
-                    {/*<WalletBalanceChecker*/}
-                    {/*  ref={walletCheckerRef}*/}
-                    {/*  amount={amount}*/}
-                    {/*  onInsufficientFunds={(balance, requiredAmount) => {*/}
-                    {/*    setModalStatus('error');*/}
-                    {/*    setModalTitle('Insufficient Funds');*/}
-                    {/*    setModalMessage('Wallet balance too low. Fund your wallet to proceed.');*/}
-                    {/*    setModalDetails(*/}
-                    {/*      `Wallet Balance: ₦${balance.toFixed(2)}, Required Amount: ₦${requiredAmount}`*/}
-                    {/*    );*/}
-                    {/*    setShowModal(true);*/}
-                    {/*  }}*/}
-                    {/*  onSufficientFunds={() => {*/}
-                    {/*  }}*/}
-                    {/*/>*/}
                   </div>
 
                   <VendInitiatorBills
@@ -464,7 +515,7 @@ const BillerPlans = () => {
                       packageSlug: selectedPlanSlug,
                       phoneNumber,
                       selectedBiller,
-                      customerId: customerReference, // Set accountNumber in formValues to use customerReference
+                      customerId: customerReference,
                     }}
                     amount={amount}
                     packageSlug={selectedPlanSlug}
@@ -488,16 +539,27 @@ const BillerPlans = () => {
       </div>
       <TransactionModal
         isOpen={showModal}
-        onClose={() => setShowModal(false)}
+        onClose={handleModalClose}
         status={modalStatus}
         title={modalTitle}
         message={modalMessage}
         details={modalDetails}
         successIcon={successImage}
         errorIcon={errorImage}
+        buttons={
+          modalStatus === 'success'
+            ? ['pullReceipt', 'back']
+            : modalStatus === 'error'
+              ? ['fundWallet', 'back']
+              : modalStatus
+                ? ['back']
+                : []
+        }
         onBack={() => setShowModal(false)}
         onProceed={handleFundWallet}
+        onPullReceipt={handlePullReceipt}
         proceedText="Fund Wallet"
+        modalContent={modalContent}
       />
     </div>
   );
