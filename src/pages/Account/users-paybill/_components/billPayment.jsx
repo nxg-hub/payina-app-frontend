@@ -174,7 +174,6 @@ const BillOptions = () => {
     });
   };
 
-  // Array of custom bill icons
   const customIcons = [
     tvIcon,           // PAY_TV
     bettingIcon,      // BETTING_AND_LOTTERY
@@ -209,7 +208,7 @@ const BillOptions = () => {
       </div>
       <div className="container mx-auto px-4">
         <div className="max-w-md mx-auto w-full">
-          <div className="space-y-3 md:space-y-4 mt-8 md:mt-12 lg:mt-16">
+          <div className="space-y-3 md:space-y-4 mt-8 md:mt-12 lg:mt-16 pb-10">
             <BillOption
               iconSrc={phoneIcon}
               label="Airtime"

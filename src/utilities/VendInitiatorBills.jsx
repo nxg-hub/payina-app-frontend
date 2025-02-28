@@ -22,12 +22,14 @@ const VendInitiator = ({
   const navigate = useNavigate();
   const [showLoader, setShowLoader] = useState(false);
   const [showPinModal, setShowPinModal] = useState(false);
+  const [showFundWalletModal, setShowFundWalletModal] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [newAuthToken] = useLocalStorage('authToken', '');
   const [userData, setUserData] = useState(null);
   const [walletData, setWalletData] = useState(null);
   const [apiKey] = useLocalStorage('apiKey', import.meta.env.VITE_API_KEY);
   const [buttonState, setButtonState] = useState('initial'); // 'initial', 'processing'
+  const [insufficientFundsError, setInsufficientFundsError] = useState(false);
   const walletDetailsRef = useRef(null);
   const hasLoadedWalletRef = useRef(false);
 
@@ -38,8 +40,9 @@ const VendInitiator = ({
   }, [amount]);
 
   const isInsufficientFunds = useMemo(() => {
+    if (!amount) return false;
     return walletData && totalAmount > walletData.balance;
-  }, [totalAmount, walletData]);
+  }, [totalAmount, walletData, amount]);
 
   const fetchWalletDetails = useCallback(async () => {
     if (hasLoadedWalletRef.current) {
@@ -126,6 +129,7 @@ const VendInitiator = ({
       setShowLoader(true);
       setButtonState('processing');
       setStatusMessage('Processing vend request...');
+      setInsufficientFundsError(false);
 
       if (!walletDetailsRef.current) {
         throw new Error('Wallet details not available');
@@ -170,7 +174,20 @@ const VendInitiator = ({
     } catch (err) {
       console.error('Error in vend process:', err);
       const errorMessage = err.response?.data?.debugMessage || err.message || 'Vend process failed';
-      setStatusMessage(errorMessage);
+
+      // Check for insufficient funds error
+      if (
+        errorMessage.includes('Insufficient funds') ||
+        (err.response?.data?.debugMessage &&
+          err.response.data.debugMessage.includes('Insufficient funds'))
+      ) {
+        setInsufficientFundsError(true);
+        setStatusMessage('Insufficient funds on merchant wallet');
+        setShowFundWalletModal(true);
+      } else {
+        setStatusMessage(errorMessage);
+      }
+
       onError(err);
     } finally {
       setIsProcessing(false);
@@ -180,7 +197,7 @@ const VendInitiator = ({
   };
 
   const handleFundWallet = () => {
-    navigate('/fund-wallet');
+    navigate('/addMoney');
   };
 
   const handleVendProcess = () => {
@@ -188,6 +205,14 @@ const VendInitiator = ({
       onError(new Error('Package slug is required for this transaction'));
       return;
     }
+
+    // Check if there are insufficient funds before showing PIN modal
+    if (isInsufficientFunds) {
+      setStatusMessage('Insufficient funds on merchant wallet');
+      setShowFundWalletModal(true);
+      return;
+    }
+
     setShowPinModal(true);
   };
 
@@ -201,40 +226,6 @@ const VendInitiator = ({
       !!customerReference
     );
   }, [formValues, phoneNumber, amount, packageSlug, accountNumber, customerReference]);
-
-  // const renderButton = () => {
-  //   if (isInsufficientFunds) {
-  //     return (
-  //       <CustomButton
-  //         onClick={handleFundWallet}
-  //         className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors">
-  //         Fund Wallet
-  //       </CustomButton>
-  //     );
-  //   }
-  //
-  //   const isDisabled = isProcessing || !userData || !walletData || !isFormComplete;
-  //   const buttonStyle =
-  //     'w-full py-2 px-4 rounded-md transition-colors ' +
-  //     (isDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white');
-  //
-  //   if (buttonState === 'processing') {
-  //     return (
-  //       <CustomButton disabled={true} className={buttonStyle}>
-  //         <div className="flex justify-center items-center">
-  //           <Loader />
-  //           <span className="ml-2">Processing...</span>
-  //         </div>
-  //       </CustomButton>
-  //     );
-  //   }
-  //
-  //   return (
-  //     <CustomButton onClick={handleVendProcess} disabled={isDisabled} className={buttonStyle}>
-  //       Proceed to Vend
-  //     </CustomButton>
-  //   );
-  // };
 
   const renderButton = () => {
     const isDisabled = !isFormComplete || !userData || !walletData || isProcessing;
@@ -254,10 +245,48 @@ const VendInitiator = ({
       );
     }
 
+    if (isInsufficientFunds || insufficientFundsError) {
+      return (
+        <CustomButton
+          onClick={handleFundWallet}
+          className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors">
+          Fund Wallet
+        </CustomButton>
+      );
+    }
+
     return (
       <CustomButton onClick={handleVendProcess} disabled={isDisabled} className={buttonStyle}>
         Proceed
       </CustomButton>
+    );
+  };
+
+  const FundWalletModal = () => {
+    if (!showFundWalletModal) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg p-6 max-w-md w-full">
+          <h2 className="text-xl font-bold mb-4">Insufficient Funds</h2>
+          <p className="mb-4">
+            Your wallet balance is insufficient to complete this transaction. Required amount: ₦
+            {totalAmount.toLocaleString()}
+          </p>
+          <div className="flex justify-end space-x-4">
+            <button
+              onClick={() => setShowFundWalletModal(false)}
+              className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100">
+              Cancel
+            </button>
+            <button
+              onClick={handleFundWallet}
+              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+              Fund Wallet
+            </button>
+          </div>
+        </div>
+      </div>
     );
   };
 
@@ -279,6 +308,8 @@ const VendInitiator = ({
         }}
       />
 
+      <FundWalletModal />
+
       {!packageSlug && (
         <div className="text-sm text-red-600 mb-2">Warning: User package details is missing</div>
       )}
@@ -299,7 +330,6 @@ const VendInitiator = ({
       <div className="mb-4 p-4 bg-gray-50">
         <div className="flex flex-wrap justify-between">
           <div className="text-sm text-gray-600">Available Balance</div>
-          {/*<small className="text-sm text-gray-600">Total Charge: + {amount + 70}</small>*/}
         </div>
 
         <div className="text-xl font-semibold">
@@ -309,10 +339,14 @@ const VendInitiator = ({
             maximumFractionDigits: 2,
           }) || '0.00'}
         </div>
-        {/*<small>Transaction Charge: ₦70</small>*/}
-        <small className="text-sm text-gray-600">Total due amount: + {amount + 70}</small>
-        {/* <div className="text-sm text-gray-500 mt-1">Transaction Charge: ₦100</div> */}
-        {isInsufficientFunds && (
+
+        {amount && (
+          <small className="text-sm text-green-600">
+            Total due amount: ₦{totalAmount.toLocaleString()}
+          </small>
+        )}
+
+        {amount && isInsufficientFunds && (
           <div className="text-sm text-red-600 mt-1">
             Insufficient funds. Required: ₦{totalAmount.toLocaleString()}
           </div>

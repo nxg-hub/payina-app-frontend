@@ -1,85 +1,158 @@
-import { Link, useLocation } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import NotificationModal from '/src/components/navbar/_components/NotificationModalProps';
+import { Link } from 'react-router-dom';
 import { images } from '../../../../../constants';
-import NotificationModal from '../../../../../components/navbar/_components/NotificationModalProps.jsx';
-import React, { useEffect, useRef, useState } from 'react';
-import { connectWebSocket } from '../../../../../components/navbar/_components/websocket.js';
+import { useSelector } from 'react-redux';
 
 const ActionButtons = () => {
-  const location = useLocation();
-  const route = location.pathname;
-  // const location = useLocation();
   const [notificationCount, setNotificationCount] = useState(0);
-  const [messages, setMessages] = useState([]);
+  const [notifications, setNotifications] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const notificationRef = useRef(null);
-  //
-  // useEffect(() => {
-  //   console.log('Initializing WebSocket connection...');
-  //
-  //   const handleNewNotification = (data) => {
-  //     console.log('Notification received from backend:', data); // Log notification from backend
-  //     setNotificationCount((prevCount) => prevCount + 1); // Increment the notification count
-  //     setMessages((prevMessages) => [...prevMessages, data]); // Add new notification to the list
-  //   };
-  //
-  //   const closeWebSocket = connectWebSocket((data) => {
-  //     console.log('WebSocket message received:', data); // Log the raw message
-  //     handleNewNotification(data); // Pass the message to the notification handler
-  //   });
-  //
-  //   const handleClickOutside = (event) => {
-  //     if (notificationRef.current && !notificationRef.current.contains(event.target)) {
-  //       console.log('Clicked outside notification modal. Closing modal.');
-  //       setIsModalOpen(false);
-  //     }
-  //   };
-  //
-  //   document.addEventListener('mousedown', handleClickOutside);
-  //
-  //   return () => {
-  //     console.log('Cleaning up WebSocket connection and event listeners...');
-  //     closeWebSocket();
-  //     document.removeEventListener('mousedown', handleClickOutside);
-  //   };
-  // }, []);
+  const customerId = useSelector((state) => state.user.user.customerId);
+
+  const fetchNotifications = async () => {
+    try {
+      if (!customerId) {
+        console.error('No customer ID found');
+        return;
+      }
+
+      const apiUrl = `https://payina-be-6f08cdfb4414.herokuapp.com/api/v1/user-actions?customerId=${encodeURIComponent(customerId)}&page=0&size=20`;
+      console.log('Fetching notifications from:', apiUrl);
+
+      const response = await fetch(apiUrl);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Notification data received:', data);
+
+      if (data && data.content) {
+        setNotifications(data.content);
+        const unreadCount = data.content.filter((notification) => !notification.read).length;
+        setNotificationCount(unreadCount);
+        console.log(`Found ${unreadCount} unread notifications`);
+      } else {
+        console.error('Unexpected response format:', data);
+      }
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
+  };
+
+  useEffect(() => {
+    console.log('ActionButtons component mounted, fetching notifications...');
+    fetchNotifications();
+
+    // Set up polling to fetch notifications every 5 minutes
+    const intervalId = setInterval(
+      () => {
+        console.log('Polling for new notifications...');
+        fetchNotifications();
+      },
+      5 * 60 * 1000
+    );
+
+    return () => clearInterval(intervalId);
+  }, [customerId]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+        setIsModalOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // New useEffect to mark all notifications as read when modal opens
+  useEffect(() => {
+    if (isModalOpen && notifications.length > 0) {
+      const unreadNotifications = notifications.filter((notification) => !notification.read);
+      if (unreadNotifications.length > 0) {
+        // Mark all unread notifications as read
+        unreadNotifications.forEach((notification) => {
+          handleMarkAsRead(notification.id);
+        });
+      }
+    }
+  }, [isModalOpen, notifications]);
 
   const handleNotificationClick = () => {
-    console.log('Notification button clicked. Current modal state:', isModalOpen);
+    console.log('Notification bell clicked, toggling modal...');
+    console.log('Current notifications:', notifications);
     setIsModalOpen(!isModalOpen);
-    if (!isModalOpen) {
-      console.log('Resetting notification count to 0.');
-      setNotificationCount(0); // Reset the count when modal is opened
+  };
+
+  const handleMarkAsRead = async (notificationId) => {
+    try {
+      // Fixed: using customerId instead of userEmail
+      const apiUrl = `https://payina-be-6f08cdfb4414.herokuapp.com/api/v1/user-actions/${notificationId}/read?customerId=${encodeURIComponent(customerId)}`;
+      console.log('Marking notification as read:', apiUrl);
+
+      const response = await fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Update the local state
+      setNotifications((prevNotifications) =>
+        prevNotifications.map((notification) =>
+          notification.id === notificationId ? { ...notification, read: true } : notification
+        )
+      );
+      setNotificationCount((prevCount) => Math.max(0, prevCount - 1));
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
     }
   };
 
   return (
     <div className="flex items-center md:justify-between md:space-x-6 sm:px-10">
       <div className="flex space-x-16 justify-center items-center">
-        <Link href={'/contact-us'} className="md:flex items-center hidden">
+        <Link to={'/'} className="md:flex items-center hidden">
+          {/* Fixed: changed href to to since we're using react-router */}
           <div className="hover:scale-95">
             <img src={images.Headphone} alt="customer_care" />
           </div>
         </Link>
 
-        {/*<Link to={'/contact-us'}>*/}
-          <div className="relative" ref={notificationRef}>
-            <button
-              onClick={handleNotificationClick}
-              className="hover:scale-95 focus:outline-none"
-              aria-label="Notifications"
-            >
-              <img src={images.Bell} alt="Notifications" />
-              {notificationCount > 0 && (
-                <span
-                  className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+        <div className="relative" ref={notificationRef}>
+          <button
+            onClick={handleNotificationClick}
+            className="hover:scale-95 focus:outline-none relative p-2"
+            aria-label="Notifications">
+            <div className="hover:scale-95">
+              <img src={images.Bell || '/placeholder.svg'} alt="notifications" />
+            </div>
+            {notificationCount > 0 && (
+              <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                 {notificationCount}
-              </span>
-              )}
-            </button>
-            <NotificationModal isOpen={isModalOpen} messages={messages} />
-          </div>
-        {/*</Link>*/}
-        <Link to={'/account/settings'}>
+              </div>
+            )}
+          </button>
+          {isModalOpen && (
+            <NotificationModal
+              isOpen={isModalOpen}
+              notifications={notifications}
+              onClose={() => setIsModalOpen(false)}
+              onMarkAsRead={handleMarkAsRead}
+            />
+          )}
+        </div>
+
+        <Link to={'/'}>
           <div className="hover:scale-95">
             <img src={images.Settings} alt="customer_care" />
           </div>
