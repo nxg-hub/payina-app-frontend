@@ -140,7 +140,6 @@ export const StepThirteen = ({ next, email, initialValues }) => {
 
         // Extract the customerId from the response
         const customerId = data.customerId;
-        console.log('Customer ID:', customerId);
         return customerId;
       } else {
         const errorText = await response.text();

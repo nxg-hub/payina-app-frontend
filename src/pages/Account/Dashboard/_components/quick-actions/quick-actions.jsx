@@ -3,9 +3,9 @@ import { images } from '../../../../../constants';
 import { useSelector } from 'react-redux';
 
 const QuickAction = () => {
-  //getting the userDetails  from the store
   const userDetails = useSelector((state) => state.user.user);
   const userType = userDetails?.userType;
+
   return (
     <div className="md:px-[.7rem] pb-4 w-auto md:clear-right ml-5 md:ml-2 xl:ml-[19.5rem] mr-5 md:mr-3">
       <div className="opacity-70 font-bold text-lightBlue py-4 text-sm md:text-base">
@@ -18,7 +18,7 @@ const QuickAction = () => {
               <img src={images.SendMoney} className="md:w-[49px] w-[39px] p-2  bg-center" alt="" />
             </div>
             <Link
-              to="/sendMoney"
+              to={'/sendMoney'}
               className="hover:text-lightBlue transition-colors text-center opacity-75 text-sm md:text-base">
               Send Money
             </Link>
@@ -30,7 +30,7 @@ const QuickAction = () => {
               <img src={images.AddMoney} className="md:w-[49px] w-[39px] p-2  bg-center" alt="" />
             </div>
             <Link
-              to="/addMoney"
+              to={'/addMoney'}
               className="hover:text-lightBlue transition-colors text-center opacity-75 text-sm md:text-base">
               Add Money
             </Link>
@@ -56,7 +56,7 @@ const QuickAction = () => {
               <img src={images.Bills} className="md:w-[49px] w-[39px] p-2  bg-center" alt="" />
             </div>
             <Link
-              to="/account/billers"
+              to={'/account/billers'}
               className="hover:text-lightBlue transition-colors text-center opacity-75 text-sm md:text-base">
               Pay Bills
             </Link>

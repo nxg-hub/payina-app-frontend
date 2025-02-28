@@ -17,7 +17,7 @@ const Firstsection = () => {
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
 
-  const currentBalance = useSelector((state) => state.wallet.wallet);
+  const currentBalance = useSelector((state) => state.wallet?.wallet?.data?.balance?.amount);
   const { credits, debits } = useSelector((state) => state.transactions);
 
   // Define filter options based on table headers

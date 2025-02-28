@@ -227,7 +227,6 @@ import { RiFileSettingsLine, RiBillLine } from 'react-icons/ri';
 import { VscSignOut } from 'react-icons/vsc';
 import { MdVerified } from 'react-icons/md';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import images from '../../../../constants/images';
 import { useDispatch, useSelector } from 'react-redux';
 import { persistor } from '../../../../Redux/Store.jsx';
 import { reSetUserDetails } from '../../../../Redux/UserSlice.jsx';
@@ -239,17 +238,17 @@ import { resetState, resetToken } from '../../../../Redux/BusinessSignUpSlice.js
 import { clearState } from '../../../../Redux/ForgotPasswordSlice.jsx';
 import { reSetClientsDetails } from '../../../../Redux/GetClientsSlice.jsx';
 import { reSetWalletDetails } from '../../../../Redux/WalletSlice.jsx';
-import avatar from "../../../../assets/images/avatar.png"
+import avatar from '../../../../assets/images/avatar.png';
 import useLocalStorage from '../../../../hooks/useLocalStorage.js';
 import { resetTransactions } from '../../../../Redux/transactionsSlice.jsx';
+import { resetPayroll } from '../../../../Redux/payrollSlice.jsx';
 
-export const Sidebar = () => {
+export const Sidebar = ({ openModal }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const currentRoute = location.pathname;
   const [toggle, setToggle] = useState(false);
-  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [newAuthToken] = useLocalStorage('authToken', '');
 
@@ -258,31 +257,6 @@ export const Sidebar = () => {
   const profilePic = userDetails?.passportUrl;
   const userName = userDetails?.firstName;
   const userType = userDetails?.userType;
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch(import.meta.env.VITE_GET_USER, {
-          headers: {
-            Authorization: `Bearer ${newAuthToken}`, // Assuming token is stored in localStorage
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch user data');
-        }
-
-        const data = await response.json();
-        setUserData(data);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserData();
-  }, []);
 
   const handleToggle = () => {
     setToggle(!toggle);
@@ -302,6 +276,7 @@ export const Sidebar = () => {
     dispatch(reSetClientsDetails());
     dispatch(reSetWalletDetails());
     dispatch(resetTransactions());
+    dispatch(resetPayroll());
   };
 
   const renderSidebarContent = () => {
@@ -441,13 +416,14 @@ export const Sidebar = () => {
               <img src={avatar} alt="profile image" className="w-24 h-24 rounded-full" />
             )}
             <div className="font-semibold text-xl mt-2">{`Hi, ${userName}`}</div>
-            {!loading && userData && (!userData.bvn || userData.bvn === '') && (
-              <Link
-                to="/verify"
-                className="flex items-center space-x-1 text-red-500 mt-2 justify-center">
+            {(!userDetails?.bvn || userDetails?.bvn === '') && (
+              <div
+                onClick={openModal}
+                // to="/verify"
+                className="flex items-center space-x-1 text-red-500 mt-2 justify-center cursor-pointer">
                 <MdVerified size={16} />
                 <span className="text-sm">Verify Now</span>
-              </Link>
+              </div>
             )}
           </div>
           <div className="space-y-[52px] flex flex-col w-full">
@@ -459,6 +435,14 @@ export const Sidebar = () => {
               }`}>
               <TbSettings size={22} />
               <span className="hover:text-lightBlue ease transition-colors">Account Settings</span>
+            </Link>
+            <Link
+              to="/account/freinds"
+              className={`flex items-center space-x-6 ${
+                currentRoute === '/account/freinds' ? '!ml-3 font-bold text-lightBlue' : ''
+              }`}>
+              <TbUserDollar size={22} />
+              <span className="hover:text-lightBlue ease transition-colors">Freinds</span>
             </Link>
             <button
               onClick={handleLogout}

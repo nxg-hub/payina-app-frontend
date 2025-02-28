@@ -42,8 +42,8 @@ const BillOptions = () => {
   return (
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4">
-        <div className="mx-auto ml-[25%]">
-          <div className="flex justify-between items-center mt-28">
+        <div className="mx-auto md:ml-[25%]">
+          <div className="flex justify-between items-center mt-11 md:mt-28">
             <div>
               <h1 className="text-2xl font-bold">Pay Bills</h1>
             </div>
@@ -59,7 +59,7 @@ const BillOptions = () => {
         </div>
       </div>
       <div className="container mx-auto px-4">
-        <div className="max-w-md mx-auto ml-[25%] w-3/4">
+        <div className="max-w-md mx-auto md:ml-[25%] w-3/4">
           <div className="space-y-4 mt-20">
             <BillOption
               iconSrc={phoneIcon}

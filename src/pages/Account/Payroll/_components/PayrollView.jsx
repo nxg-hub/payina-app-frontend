@@ -38,7 +38,7 @@ const PayrollView = ({ onBackClick, onSetupClick }) => {
         }
 
         const result = await response.json();
-        console.log('Fetched user data:', result);
+        // console.log('Fetched user data:', result);
         setCustomerId(result.customerId);
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -93,35 +93,37 @@ const PayrollView = ({ onBackClick, onSetupClick }) => {
   // );
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <div className="flex flex-col justify-center items-start w-auto xl:ml-80 xl:pt-28 md:pt-10 mx-auto h-full">
-        <div className="flex flex-row justify-center items-left gap-[5rem]">
+        <div className=" md:flex md:flex-row justify-center items-left gap-[2rem] w-full">
           <div className="flex justify-center text-xl md:text-2xl text-lightBlue font-bold px-6 py-2 md:py-0">
             Employee Details
           </div>
 
           {/* <div className="text-xl md:text-3xl font-bold px-6 py-2 md:py-0">Payroll </div> */}
-          <div className="flex flex-row relative">
+          <div className="flex flex-row relative bottom-[0px] w-[90%]  md:w-[50%] left-[5%] md:right-[10%] md:bottom-[10px]">
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search Using Name or Company Role"
-              className="text-md text-black font-bold py-2 px-8 bg-white rounded shadow-md cursor-pointer w-[560px]"
+              className="text-md text-black font-bold py-2 px-8 bg-white rounded shadow-md cursor-pointer w-full"
             />
-            <FaSearch className="absolute right-0 mr-4 mt-3 text-lightBlue font-bold" />
+            <FaSearch className="absolute right-2  mt-3 text-lightBlue font-bold" />
           </div>
         </div>
 
         {loading ? (
-          <div className="text-center text-lg">Loading Employees Details...</div>
-        ) : payrollData && payrollData.length > 0 ? ( 
-          <div className="grid grid-cols-3 justify-center items-center gap-4 mt-[4rem] px-[5rem] py-2">
+          <div className="text-center text-lg mt-4 md:mt-11 m-auto">
+            Loading Employees Details...
+          </div>
+        ) : payrollData && payrollData.length > 0 ? (
+          <div className="grid md:grid-cols-3 justify-center items-center gap-4 mt-[1rem] px-[5rem] py-2 w-full">
             {filteredPayrollData.map((employee) => (
               <div
                 key={employee.id}
-                className="flex flex-col justify-center items-center gap-4 bg-white p-6 rounded shadow-lg">
-                <div className="flex flex-col items-start gap-2">
+                className="flex flex-col justify-center items-center gap-4 bg-white p-6 rounded m-auto shadow-lg w-[100%]">
+                <div className="flex flex-col items-start gap-2 w-full ">
                   <div className="text-sm font-bold">
                     Name: <span className="font-medium">{employee.employeeName}</span>
                   </div>

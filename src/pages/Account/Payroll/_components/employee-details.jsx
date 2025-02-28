@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 const EmployeeDetails = ({ onSave, accountName }) => {
   const [step, setStep] = useState(1);
   const [createLoading, setCreateLoading] = useState(false);
+  console.log(createLoading);
   const [nextLoading, setNextLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [startDate, setStartDate] = useState(null);
@@ -54,6 +55,7 @@ const EmployeeDetails = ({ onSave, accountName }) => {
   };
   const closeModal = () => {
     setModalOpen(false);
+    setErrorMessage('');
   };
 
   return (
@@ -138,8 +140,8 @@ const EmployeeDetails = ({ onSave, accountName }) => {
                         </label>
                         <hr className="border-none bg-lightBlue h-[1px] w-[39%] xl:mr-0 md:mr-14 mr-12 ml-8 " />
                       </div>
-                      <div className="flex flex-row gap-5">
-                        <div className="flex flex-col relative gap-2 w-[100%]">
+                      <div className="flex flex-row gap-5 md:gap-5">
+                        <div className="flex flex-col relative gap-2 w-[50%] md:w-[100%]">
                           <Field
                             name="employmentDetails.employmentDate"
                             type="text"
@@ -177,7 +179,7 @@ const EmployeeDetails = ({ onSave, accountName }) => {
                             />
                           )}
                         </div>
-                        <div className="flex flex-col relative gap-2 w-[100%]">
+                        <div className="flex flex-col relative gap-2 w-[45%] md:w-[100%] ">
                           <Field
                             name="employmentDetails.employeeId"
                             type="text"
@@ -403,7 +405,7 @@ const EmployeeDetails = ({ onSave, accountName }) => {
                           <img src={dropdown} alt="Dropdown" />
                         </div>
                         {dropdownOpen && (
-                          <div className="absolute bg-white border border-gray-300 rounded-md w-[20%] mt-1 z-10">
+                          <div className="absolute bg-white border border-gray-300 rounded-md w-[60%] md:w-[20%] mt-1 z-10">
                             {['MONTHLY', 'WEEKLY', 'DAILY'].map((option) => (
                               <div
                                 key={option}
@@ -516,7 +518,7 @@ const EmployeeDetails = ({ onSave, accountName }) => {
                   </>
                 )}
                 {isModalOpen && (
-                  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 overflow-y-auto p-4">
+                  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 overflow-y-auto z-50 p-4">
                     <div className="bg-white p-5 rounded shadow-lg w-[500px] max-h-[90%] overflow-y-auto">
                       <h1 className="text-xl pb-5 font-bold text-lightBlue">
                         Create Employee's Account
@@ -548,7 +550,7 @@ const EmployeeDetails = ({ onSave, accountName }) => {
                           className="border p-2 w-full rounded"
                         />
                       </div>
-                      <div className="flex center py-5 gap-8 w-full">
+                      <div className="flex center py-5 gap-4 w-full">
                         <button
                           className=" hover:bg-red-400 mt-4 bg-lightBlue text-white px-4 py-2 rounded"
                           onClick={closeModal}>
@@ -556,7 +558,7 @@ const EmployeeDetails = ({ onSave, accountName }) => {
                         </button>
                         <button
                           type="button"
-                          className=" hover:bg-[#82B5C6] mt-4 bg-lightBlue text-white px-4 py-2 rounded"
+                          className="mt-4 bg-lightBlue text-white px-4 py-2 rounded"
                           children={createLoading ? 'Loading...' : 'Create'}
                           disabled={createLoading}
                           onClick={() => {
@@ -582,11 +584,14 @@ const EmployeeDetails = ({ onSave, accountName }) => {
                               .then((data) => {
                                 console.log('Account Created:', data);
 
-                                if (data.nombaBankAccountNumber) {
+                                if (
+                                  data.message === 'Customer registered successfully' ||
+                                  data.status === '"ACCEPTED"'
+                                ) {
                                   setSuccessMessage('Done! Please click next.');
                                 } else {
-                                  const message = data.debugMessage || 'An error occurred.';
-                                  setErrorMessage(`Phone number already exists: ${message}`);
+                                  const message = data.debugMessage;
+                                  setErrorMessage(` ${message}`);
                                 }
                               })
                               .catch((error) => {
@@ -604,7 +609,7 @@ const EmployeeDetails = ({ onSave, accountName }) => {
                             setNextLoading(true);
 
                             fetch(
-                              `${import.meta.env.VITE_CHECK_IF_EMAIL_EXISTS}?email=${values.employeeEmailAddress}`
+                              `${import.meta.env.VITE_EMAIL_CHECK}?email=${values.employeeEmailAddress}`
                             )
                               .then((res) => res.json())
                               .then((data) => {

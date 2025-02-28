@@ -19,16 +19,26 @@ const currencies = [
 const AmountDetails = ({ nextStep }) => {
   const [error, setError] = useState('');
   const [isAmountGreater, setIsAmountGreater] = useState(false);
-  const currentBalance = useSelector((state) => state.wallet.wallet);
+  const userDetails = useSelector((state) => state.user.user);
+  const userBvn = userDetails?.bvn;
+  const wallet = useSelector((state) => state.wallet);
+  const currentBalance = wallet.wallet?.data?.balance?.amount;
+  const withdrawerLimit = wallet.wallet.data.dailyWithdrawal;
+
   const handleSubmit = (values) => {
+    if (!userBvn) {
+      if (values.amount > 10000) {
+        setError('Daily transfer Limit is ₦10,000. Verify your Identity to Increase Limit.');
+        return;
+      }
+      if (withdrawerLimit >= 10000) {
+        setError('Daily transfer Limit Exceeded. Verify Identity for more.');
+        return;
+      }
+    }
     if (values.amount > currentBalance) {
       setIsAmountGreater(true);
       setError('Amount Entered is Greater Than Current Balance');
-      return;
-    }
-    if (currentBalance - values.amount < 100) {
-      setIsAmountGreater(true);
-      setError('Account Minimum Balance is ₦100 ');
       return;
     }
     if (values.amount < 100) {
@@ -36,6 +46,12 @@ const AmountDetails = ({ nextStep }) => {
       setIsAmountGreater(false);
       return;
     }
+    if (currentBalance - values.amount < 100) {
+      setIsAmountGreater(true);
+      setError('Account Minimum Balance is ₦100 ');
+      return;
+    }
+
     nextStep({ amount: values.amount, purpose: values.purpose, currency: values.currency });
   };
   // Function to format a number to Naira currency
