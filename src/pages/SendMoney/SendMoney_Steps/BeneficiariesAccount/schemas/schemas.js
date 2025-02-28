@@ -7,4 +7,5 @@ export const RecieverSchema = Yup.object().shape({
 export const AmountSchema = Yup.object().shape({
   amount: Yup.string().required('Amount is required'),
   purpose: Yup.string().required('purpose is required'),
+  currency: Yup.string().required('currency is required'),
 });

@@ -23,7 +23,7 @@ const AmountDetails = ({ nextStep }) => {
   const userDetails = useSelector((state) => state.user.user);
   const userBvn = userDetails?.bvn;
   const currentBalance = wallet.wallet?.data?.balance?.amount;
-  const withdrawerLimit = wallet.wallet.data.dailyWithdrawal;
+  const withdrawerLimit = wallet.wallet?.data?.dailyWithdrawal;
 
   const handleSubmit = (values) => {
     if (!userBvn) {

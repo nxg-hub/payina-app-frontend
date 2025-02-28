@@ -169,6 +169,7 @@ const RecipientDetails = ({ nextStep }) => {
                   type="text"
                   name="bankName"
                   value={values.bankName}
+                  readOnly={bankLoader}
                   placeholder={bankLoader ? ' Loading...' : 'Type to search bank'}
                   onChange={(e) => {
                     setFieldValue('bankName', e.target.value);
