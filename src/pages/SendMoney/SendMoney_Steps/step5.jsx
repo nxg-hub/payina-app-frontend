@@ -3,7 +3,7 @@ import successImg from '../../../assets/images/Group-successful.png';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-const SuccessPage = () => {
+const SuccessPage = ({ sole }) => {
   //getting the userDetails  from the store
   const userDetails = useSelector((state) => state.user.user);
   const userType = userDetails.userType;
@@ -13,9 +13,16 @@ const SuccessPage = () => {
         <img src={successImg} alt="suceessImg"></img>
       </div>
       <div className="text-md md:text-xl font-medium">
-        {userType === 'CORPORATE'
-          ? 'Transfer request sent for approval to signatories'
-          : 'Transaction Successful'}
+        {userType === 'CORPORATE' && (
+          <>
+            {sole ? (
+              <p>Transfer initiated for sole signatory</p>
+            ) : (
+              <p>Transfer request sent for approval to signatories</p>
+            )}
+          </>
+        )}
+        {userType === 'PERSONAL' && <p>Transaction Successful</p>}
       </div>
       <Link to="/account/dashboard">
         <button

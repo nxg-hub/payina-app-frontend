@@ -7,12 +7,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setWalletBalance } from '../../../../../Redux/WalletSlice.jsx';
 
 const BalanceCard = () => {
-  const [balance, setBalance] = useState(0);
   const [hideIcon, setHideIcon] = useState(false);
   const [newAuthToken] = useLocalStorage('authToken', '');
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const currentBalance = useSelector((state) => state.wallet.wallet);
+  const currentBalance = useSelector((state) => state.wallet?.wallet?.data?.balance?.amount);
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -40,10 +39,9 @@ const BalanceCard = () => {
         const data = await response.json();
         const balance = data.data.balance.amount;
         if (balance !== currentBalance) {
-          dispatch(setWalletBalance(balance));
+          dispatch(setWalletBalance(data));
         }
         setLoading(false);
-        setBalance(balance);
       } catch (error) {
         console.error('Error fetching balance:', error);
       } finally {

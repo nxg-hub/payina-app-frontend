@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { images } from '../../../constants';
-import { Form, Formik } from 'formik';
+import { Field, Form, Formik } from 'formik';
 import { PhoneInput, defaultCountries, parseCountry } from 'react-international-phone';
 import 'react-international-phone/style.css';
 import CustomButton from '../../../components/button/button';
@@ -28,6 +28,7 @@ export const StepTwo = ({ next, initialValues }) => {
         confirmPassword: initialValues.confirmPassword,
         userType: 'personal',
         email: initialValues.email,
+        referralCode: values.promoCode,
       };
 
       const response = await fetch(import.meta.env.VITE_REGISTER_USER_ENDPOINT, {
@@ -126,65 +127,74 @@ export const StepTwo = ({ next, initialValues }) => {
         src={images.Vector6}
         alt="Background Design"
         className="absolute lg:top-[27rem] top-[0rem] left-[0rem] lg:left-[51rem] w-20 h-20"
-      /> 
-            <div className="relative z-10 flex flex-col justify-center items-center bg-white shadow-md xl:p-8 px-4 rounded-lg mx-auto sm:w-[300px] md:w-[400px] lg:w-[600px]">
-
-          <Formik
-        initialValues={{ phoneNumber: '' }}
-        onSubmit={(values, { setSubmitting }) => {
-          handleSubmit(values);
-          setSubmitting(false);
-        }}
-        enable
-        enableReinitialize>
-        {() => (
-          <Form>
-            <PhoneInput
-              defaultCountry="ng"
-              value={phone}
-              onChange={(phone) => setPhone(phone)}
-              countries={countries}
-              className="xl:w-[500px] !w-full xl:px-[1.95rem] px-[1.2rem] py-6 h-20 countryButton"
-              inputClassName="!w-[125%] xl:w-full !text-base xl:!text-xl"
-              style={{
-                ReactInternationalPhoneHeight: '500px',
-                '--react-international-phone-flag-width': '54px',
-                '--react-international-phone-border-radius': '5px',
-              }}
-              buttonClassName="!p-2"
-              countrySelectorStyleProps="p-2"
-              // charAfterDialCode=""
-              onFocus={() => {}}
-            />
-            {phone.length > 5 && !phone.match(phoneRegExp) && (
-              <span className="text-center text-[#db3a3a] flex justify-center mt-4">
-                Invalid Number
-              </span>
-            )}
-            {message && (
-              <div className="text-center text-[#db3a3a] flex justify-center mt-4">{message}</div>
-            )}
-            <div className=" flex gap-2">
-              <button
-                disabled={loading}
-                onClick={handlePrevious}
-                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-12">
-                Back
-              </button>
-
-              <CustomButton
-                padding="15px"
-                type="submit"
-                children={loading ? 'Loading...' : 'Next'}
-                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[87%] w-[90%] mx-auto my-10 !mb-12 xl:my-12 xl:mb-20"
+      />
+      <div className="relative z-10 flex flex-col justify-center items-center bg-white shadow-md xl:p-8 px-4 rounded-lg mx-auto sm:w-[300px] md:w-[400px] lg:w-[600px]">
+        <Formik
+          initialValues={{ phoneNumber: '', promoCode: '' }}
+          onSubmit={(values, { setSubmitting }) => {
+            handleSubmit(values);
+            setSubmitting(false);
+          }}
+          enable
+          enableReinitialize>
+          {() => (
+            <Form>
+              <PhoneInput
+                defaultCountry="ng"
+                value={phone}
+                onChange={(phone) => setPhone(phone)}
+                countries={countries}
+                className="xl:w-[500px] !w-full xl:px-[1.95rem] px-[1.2rem] py-6 h-20 countryButton"
+                inputClassName="!w-[125%] xl:w-full !text-base xl:!text-xl"
+                style={{
+                  ReactInternationalPhoneHeight: '500px',
+                  '--react-international-phone-flag-width': '54px',
+                  '--react-international-phone-border-radius': '5px',
+                }}
+                buttonClassName="!p-2"
+                countrySelectorStyleProps="p-2"
+                // charAfterDialCode=""
+                onFocus={() => {}}
               />
-            </div>
-          </Form>
-        )}
-      </Formik>
-      <style>{countryButton}</style>
-    </div>
-        </div>
+              {phone.length > 5 && !phone.match(phoneRegExp) && (
+                <span className="text-center text-[#db3a3a] flex justify-center mt-4">
+                  Invalid Number
+                </span>
+              )}
+              <div className=" flex flex-col space-y-1 ">
+                <label htmlFor="promoCode" className="text-sm font-normal ml-5 text-lightBlue">
+                  Promo Code
+                </label>
+                <Field
+                  name="promoCode"
+                  type={'text'}
+                  placeholder="Enter Promo code (If you have any)"
+                  className="w-[90%] m-auto h-[3.4rem] border border-[#9ca3af] outline-none font-light text-base text-gray rounded-[5px] py-2 px-[10px]"
+                />
+              </div>
+              {message && (
+                <div className="text-center text-[#db3a3a] flex justify-center mt-4">{message}</div>
+              )}
+              <div className=" flex gap-2">
+                <button
+                  disabled={loading}
+                  onClick={handlePrevious}
+                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-12">
+                  Back
+                </button>
 
+                <CustomButton
+                  padding="15px"
+                  type="submit"
+                  children={loading ? 'Loading...' : 'Next'}
+                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-[87%] w-[90%] mx-auto my-10 !mb-12 xl:my-12 xl:mb-20"
+                />
+              </div>
+            </Form>
+          )}
+        </Formik>
+        <style>{countryButton}</style>
+      </div>
+    </div>
   );
 };

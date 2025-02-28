@@ -103,7 +103,7 @@ import { MobileSidebar } from '../sidebar/mobile-sidebar';
 import useLocalStorage from '../../../../hooks/useLocalStorage.js';
 import { useSelector } from 'react-redux';
 
-export const Navbar = () => {
+export const Navbar = ({ openModal }) => {
   const navigate = useNavigate();
   const [toggleMenu, setToggleMenu] = useState(false);
   // const [customerUserName, setCustomerUserName] = useState('User');
@@ -272,7 +272,7 @@ export const Navbar = () => {
             fontSize={30}
             onClick={() => setToggleMenu(false)}
           />
-          <MobileSidebar />
+          <MobileSidebar openModal={openModal} />
         </div>
       )}
     </div>

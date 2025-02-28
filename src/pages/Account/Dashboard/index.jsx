@@ -94,8 +94,16 @@ const Dashboard = () => {
         </h2>
       ) : (
         <>
-          <Navbar />
-          <Sidebar />
+          <Navbar
+            openModal={() => {
+              setIsBvnModalOpen(true);
+            }}
+          />
+          <Sidebar
+            openModal={() => {
+              setIsBvnModalOpen(true);
+            }}
+          />
           <AccountCard />
           <BalanceCard />
           <QuickAction />

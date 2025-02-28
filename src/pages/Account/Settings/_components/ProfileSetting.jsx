@@ -276,7 +276,7 @@ const ProfileSetting = () => {
                       className="w-full text-gray h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                       type="text"
                       name="idNumber"
-                      value={userDetails.customerId}
+                      value={userDetails.bvn || userDetails?.nin}
                       readOnly
                     />
                     {/* <ErrorMessage className="text-red-500" name="idNumber" component="div" /> */}

@@ -15,7 +15,7 @@ export const BvnModal = ({ next, onClose }) => {
     const { idType, identificationNumber } = values;
     setApiError('');
     localStorage.setItem('bvn', values.identificationNumber);
-    // console.log('bvn', values.identificationNumber);
+    // console.log('bvn', identificationNumber.length);
 
     if (!idType) {
       setApiError('Select Identity');
@@ -24,6 +24,7 @@ export const BvnModal = ({ next, onClose }) => {
 
     if (identificationNumber.length !== 11) {
       setApiError('Identification number must be 11 digits!');
+
       return;
     }
 
@@ -164,7 +165,7 @@ export const BvnModal = ({ next, onClose }) => {
                   className="text-[#db3a3a] mt-2"
                 />
               </div>
-
+              {apiError && <h2 className="text-[#db3a3a]">{apiError}</h2>}
               <button
                 padding="15px"
                 type="submit"

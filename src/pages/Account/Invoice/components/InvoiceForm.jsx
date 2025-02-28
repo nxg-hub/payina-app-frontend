@@ -223,14 +223,8 @@ export const InvoiceForm = ({ next, lineItems }) => {
       values.invoice.invoiceNumber === '' ||
       values.invoice.dateOfIssue === '' ||
       values.invoice.due_date === '' ||
-      // values.invoice.name === '' ||
-      // values.invoice.quantity === '' ||
-      // values.invoice.amount === '' ||
       values.invoice.itemDescription === '' ||
       values.invoice.invoiceValidity === ''
-      // (!values.invoice.quantity && values.invoice.lineItems[0].quantity === '') ||
-      // (!values.invoice.amount && values.invoice.lineItems[0].amount === '') ||
-      // (!values.invoice.total && values.invoice.lineItems[0].total === '')
     ) {
       setEmptyInput(true);
       setTimeout(() => setEmptyInput(false), 10000);

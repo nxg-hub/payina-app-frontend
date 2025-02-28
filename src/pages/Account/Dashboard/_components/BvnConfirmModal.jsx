@@ -74,11 +74,7 @@ export const BvnConfirmModal = ({ next, bvnData, ninData, onClose }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center border-2 border-[#a0a0a0] bg-black bg-opacity-40 overflow-y-auto p-3">
-      <div className="bg-white p-11 rounded shadow-lg w-[500px] max-h-[90%] overflow-y-auto">
-        <button onClick={onClose} className="absolute top-2 right-2">
-          X
-        </button>
-
+      <div className="bg-white p-11 rounded shadow-lg w-[500px] md:w-[50%] max-h-[80%] overflow-y-auto">
         <div className="text-lightBlue text-start font-bold xl:text-[32px] text-nowrap text-xl mt-4 pt-[64px] leading-[40px]">
           Kindly Confirm Personal Details
         </div>
@@ -154,7 +150,7 @@ export const BvnConfirmModal = ({ next, bvnData, ninData, onClose }) => {
                   id="username"
                   name="username"
                   placeholder="Enter Your Username"
-                  className="w-full lg:w-[500px] h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
+                  className="w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
                 />
                 <ErrorMessage
                   name="username"
@@ -179,6 +175,11 @@ export const BvnConfirmModal = ({ next, bvnData, ninData, onClose }) => {
                   }`}
                   disabled={!(isValid && dirty) || loading}
                 />
+                <button
+                  onClick={onClose}
+                  className="w-[40%] rounded-md text-white py-2 h-[40px] mt-[34px] bg-red-500">
+                  Close
+                </button>
               </div>
             </Form>
           )}

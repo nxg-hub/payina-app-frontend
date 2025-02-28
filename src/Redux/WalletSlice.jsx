@@ -2,7 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  wallet: '',
+  wallet: [],
   vendPayload: [],
 };
 
@@ -11,8 +11,8 @@ const walletSlice = createSlice({
   initialState,
   reducers: {
     setWalletBalance(state, action) {
-      // state.wallet = action.payload; // Store fetched data in the state
-      state.wallet = Math.floor(Number(action.payload));
+      state.wallet = action.payload; // Store fetched data in the state
+      // state.wallet = Math.floor(Number(action.payload));
     },
     setVendPayload(state, action) {
       state.vendPayload = action.payload; // Store fetched data in the state

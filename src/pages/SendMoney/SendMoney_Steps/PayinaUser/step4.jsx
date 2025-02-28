@@ -24,6 +24,7 @@ const EnterPin = ({ data }) => {
   const [newAuthToken] = useLocalStorage('authToken', '');
   const [loading, setLoading] = useState(false);
   const [userLoader, setUserLoading] = useState(false);
+  const [soleMsg, setSoleMsg] = useState(false);
 
   //getting the userDetails  from the store
   const currentBalance = useSelector((state) => state.wallet.wallet);
@@ -193,12 +194,18 @@ const EnterPin = ({ data }) => {
             },
           }
         );
-
+        // console.log(transactionResponse)
+        //To determine if user is a sole signatory
+        if (transactionResponse.data?.httpStatusCode === '200 OK') {
+          setSoleMsg(true);
+        }
         // console.log('Full Transaction Response:', transactionResponse);
         const isSuccess =
           transactionResponse.data?.response === 'Transfer was successful' ||
           (transactionResponse.data?.httpStatusCode === '202 Accepted' &&
-            transactionResponse.data?.data === 'Approval emails have been sent.');
+            transactionResponse.data?.data === 'Approval emails have been sent.') ||
+          (transactionResponse.data?.httpStatusCode === '200 OK' &&
+            transactionResponse.data?.data === 'Transfer details sent successfully.');
 
         if (isSuccess) {
           //update wallet balance
@@ -213,7 +220,7 @@ const EnterPin = ({ data }) => {
           const data = await response.json();
           const balance = data.data.balance.amount;
           if (balance !== currentBalance) {
-            dispatch(setWalletBalance(balance));
+            dispatch(setWalletBalance(data));
           }
           setShowSuccess(true);
         } else {
@@ -252,14 +259,14 @@ const EnterPin = ({ data }) => {
     }
   };
 
-  if (showSuccess) return <SuccessMessage />;
+  if (showSuccess) return <SuccessMessage sole={soleMsg} />;
   if (showDecline)
     return (
       <DeclineMessage
         errorMessage={
           errorMessage ===
           'Cannot invoke "com.nxg.payina.external.customer.entity.Signatory.getEmail()" because the return value of "java.util.List.get(int)" is null'
-            ? 'No Signatories Found.'
+            ? 'No Signatories Found. Contact support.'
             : errorMessage
         }
       />
