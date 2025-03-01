@@ -66,6 +66,7 @@ import PayinaQRTransfer from './pages/Scan/payina_to_payina.jsx';
 import TransferSuccess from './pages/TransferSuccess/TransferSuccess.jsx';
 import TransferFailed from './pages/TransferFail/TransferFailed.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
+import ContactForm from './pages/contactus/contact.jsx';
 
 function App() {
   const location = useLocation();
@@ -103,7 +104,7 @@ function App() {
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
-            {/* <Route path="/contact-us" element={<ContactUs />} /> */}
+            <Route path="/account/contact-us" element={<ContactForm />} />
             <Route path="/support" element={<Support />} />
             <Route path="/onboarding/email_verification" element={<EmailVerification />} />
             <Route path="/account/onboarding" element={<Onboarding />} />

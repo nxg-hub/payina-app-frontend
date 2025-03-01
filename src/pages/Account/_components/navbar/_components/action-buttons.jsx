@@ -9,12 +9,14 @@ const ActionButtons = () => {
   const [notifications, setNotifications] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const notificationRef = useRef(null);
-  const customerId = useSelector((state) => state.user.user.customerId);
+  const user = useSelector((state) => state.user?.user);
+  const customerId = user?.customerId;
 
   const fetchNotifications = async () => {
     try {
+      // Only fetch if customerId exists
       if (!customerId) {
-        console.error('No customer ID found');
+        console.log('No customer ID found, skipping notification fetch');
         return;
       }
 
@@ -44,20 +46,24 @@ const ActionButtons = () => {
   };
 
   useEffect(() => {
-    console.log('ActionButtons component mounted, fetching notifications...');
-    fetchNotifications();
+    console.log('ActionButtons component mounted, customerId:', customerId);
 
-    // Set up polling to fetch notifications every 5 minutes
-    const intervalId = setInterval(
-      () => {
-        console.log('Polling for new notifications...');
-        fetchNotifications();
-      },
-      5 * 60 * 1000
-    );
+    // Only fetch if customerId exists
+    if (customerId) {
+      fetchNotifications();
 
-    return () => clearInterval(intervalId);
-  }, [customerId]);
+      // Set up polling to fetch notifications every 5 minutes
+      const intervalId = setInterval(
+        () => {
+          console.log('Polling for new notifications...');
+          fetchNotifications();
+        },
+        5 * 60 * 1000
+      );
+
+      return () => clearInterval(intervalId);
+    }
+  }, [customerId]); // This will re-run when customerId becomes available
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -70,9 +76,9 @@ const ActionButtons = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // New useEffect to mark all notifications as read when modal opens
+  // Mark all notifications as read when modal opens
   useEffect(() => {
-    if (isModalOpen && notifications.length > 0) {
+    if (isModalOpen && notifications.length > 0 && customerId) {
       const unreadNotifications = notifications.filter((notification) => !notification.read);
       if (unreadNotifications.length > 0) {
         // Mark all unread notifications as read
@@ -81,7 +87,7 @@ const ActionButtons = () => {
         });
       }
     }
-  }, [isModalOpen, notifications]);
+  }, [isModalOpen, notifications, customerId]);
 
   const handleNotificationClick = () => {
     console.log('Notification bell clicked, toggling modal...');
@@ -90,8 +96,9 @@ const ActionButtons = () => {
   };
 
   const handleMarkAsRead = async (notificationId) => {
+    if (!customerId) return;
+
     try {
-      // Fixed: using customerId instead of userEmail
       const apiUrl = `https://payina-be-6f08cdfb4414.herokuapp.com/api/v1/user-actions/${notificationId}/read?customerId=${encodeURIComponent(customerId)}`;
       console.log('Marking notification as read:', apiUrl);
 
@@ -121,8 +128,8 @@ const ActionButtons = () => {
   return (
     <div className="flex items-center md:justify-between md:space-x-6 sm:px-10">
       <div className="flex space-x-16 justify-center items-center">
-        <Link to={'/'} className="md:flex items-center hidden">
-          {/* Fixed: changed href to to since we're using react-router */}
+        <Link to={'/account/more'} className="md:flex items-center hidden">
+        {/*<Link to={'/account/contact-us'} className="md:flex items-center hidden">*/}
           <div className="hover:scale-95">
             <img src={images.Headphone} alt="customer_care" />
           </div>
@@ -152,7 +159,7 @@ const ActionButtons = () => {
           )}
         </div>
 
-        <Link to={'/'}>
+        <Link to={'/account/settings'}>
           <div className="hover:scale-95">
             <img src={images.Settings} alt="customer_care" />
           </div>
