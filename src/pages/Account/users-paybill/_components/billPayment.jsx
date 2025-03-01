@@ -176,16 +176,16 @@ const BillOptions = () => {
 
   // Array of custom bill icons
   const customIcons = [
-    tvIcon,           // PAY_TV
-    bettingIcon,      // BETTING_AND_LOTTERY
-    transportIcon,    // TRANSPORT_AND_TOLL_PAYMENT
-    collectionsIcon,  // COLLECTIONS
-    govIcon,          // GOVERNMENT_COLLECTIONS
-    intAirtimeIcon,   // INTERNATIONAL_AIRTIME
-    educationIcon,    // EDUCATION
-    entertainmentIcon,// ENTERTAINMENT_AND_LIFESTYLE
-    foodIcon,         // FOOD
-    paymentsIcon      // payments
+    tvIcon, // PAY_TV
+    bettingIcon, // BETTING_AND_LOTTERY
+    transportIcon, // TRANSPORT_AND_TOLL_PAYMENT
+    collectionsIcon, // COLLECTIONS
+    govIcon, // GOVERNMENT_COLLECTIONS
+    intAirtimeIcon, // INTERNATIONAL_AIRTIME
+    educationIcon, // EDUCATION
+    entertainmentIcon, // ENTERTAINMENT_AND_LIFESTYLE
+    foodIcon, // FOOD
+    paymentsIcon, // payments
   ];
 
   return (
@@ -215,16 +215,8 @@ const BillOptions = () => {
               label="Airtime"
               onClick={() => navigate('/account/airtime')}
             />
-            <BillOption
-              iconSrc={wifiIcon}
-              label="Data"
-              onClick={() => navigate('/account/data')}
-            />
-            <BillOption
-              iconSrc={zapIcon}
-              label="Electricity"
-              onClick={handleElectricityClick}
-            />
+            <BillOption iconSrc={wifiIcon} label="Data" onClick={() => navigate('/account/data')} />
+            <BillOption iconSrc={zapIcon} label="Electricity" onClick={handleElectricityClick} />
             <BillOption
               isCustom={true}
               customIcons={customIcons}

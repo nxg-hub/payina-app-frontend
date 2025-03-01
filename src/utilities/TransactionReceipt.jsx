@@ -139,7 +139,7 @@ const TransactionReceipt = ({ receiptData, onClose }) => {
           1: { cellWidth: 'auto' },
         },
         body: [
-          ['Date', formatDate(receiptData.transactionDate)],
+          ['Date', new Date(receiptData.transactionDate).toLocaleString()],
           ['Recipient', receiptData.beneficiaryName || 'N/A'],
           ['Sender', receiptData.email || 'N/A'],
           ['Description', receiptData.description || 'N/A'],
@@ -220,7 +220,9 @@ const TransactionReceipt = ({ receiptData, onClose }) => {
             {/*  {formatDate(receiptData.transactionDate)}*/}
             {/*</p>*/}
 
-            <p className="text-gray-500">{formatDate(receiptData.transactionDate)}</p>
+            <p className="text-gray-500">
+              {new Date(receiptData.transactionDate).toLocaleString()}
+            </p>
           </div>
         </div>
 

@@ -1,16 +1,16 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 // Async action to fetch employees & payroll, then merge them
 export const fetchPayrollData = createAsyncThunk(
-  "payroll/fetchPayrollData",
+  'payroll/fetchPayrollData',
   async (customerId, { rejectWithValue }) => {
     try {
       const employeesEndpoint = import.meta.env.VITE_GET_ALL_EMPLOYEE_ENDPOINT.replace(
-        "{customerId}",
+        '{customerId}',
         customerId
       );
       const payrollEndpoint = import.meta.env.VITE_GET_ALL_PAYROLL_ENDPOINT.replace(
-        "{customerId}",
+        '{customerId}',
         customerId
       );
 
@@ -21,7 +21,7 @@ export const fetchPayrollData = createAsyncThunk(
       ]);
 
       if (!employeeResponse.ok || !payrollResponse.ok) {
-        throw new Error("Failed to fetch data");
+        throw new Error('Failed to fetch data');
       }
 
       const [employeeData, payrollData] = await Promise.all([
@@ -34,8 +34,8 @@ export const fetchPayrollData = createAsyncThunk(
         const payrollDetails = payrollData.find((payroll) => employee.id === payroll.id);
         return {
           ...employee,
-          jobRoleTitle: payrollDetails?.jobRoleTitle || "",
-          basicSalary: payrollDetails?.basicSalary || "",
+          jobRoleTitle: payrollDetails?.jobRoleTitle || '',
+          basicSalary: payrollDetails?.basicSalary || '',
           allowances: payrollDetails?.allowances || [],
           deductions: payrollDetails?.deductions || [],
         };
@@ -49,13 +49,17 @@ export const fetchPayrollData = createAsyncThunk(
 );
 
 const payrollSlice = createSlice({
-  name: "payroll",
+  name: 'payroll',
   initialState: {
     payrollData: [],
     loading: true,
     error: null,
   },
-  reducers: {},
+  reducers: {
+    resetPayroll(state) {
+      state.payrollData = [];
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchPayrollData.pending, (state) => {
@@ -72,5 +76,5 @@ const payrollSlice = createSlice({
       });
   },
 });
-
+export const { resetPayroll } = payrollSlice.actions;
 export default payrollSlice.reducer;

@@ -46,13 +46,13 @@ const PayinaUser = ({ currentStep, totalSteps, handleNext, handlePrev, resetForm
 
   return (
     <div className="flex flex-col justify-center items-start lg:ml-80 lg:pt-28 pt-10 ml-[25px] mx-auto">
-      <div className="flex flex-row xl:justify-between items-left lg:gap-[45rem] gap-[5rem]">
-        <div className="text-xl lg:text-3xl font-medium">Send Money</div>
+      <div className="flex flex-row justify-between w-[95%] items-left lg:gap-[45rem] gap-[5rem]">
+        <div className="text-xl lg:text-3xl font-semibold">Send Money</div>
         <div
           className="flex flex-row gap-2 cancelAction-img cursor-pointer"
           onClick={backButtonClick}>
           <img src={backArrow} alt="cancelAction"></img>
-          <div className="text-md text-center mt-2">Back</div>
+          <h2 className="text-md text-center mt-1">Back</h2>
         </div>
       </div>
       <div className="item-center mt-5 mx-auto">
