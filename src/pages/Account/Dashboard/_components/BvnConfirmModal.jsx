@@ -170,7 +170,7 @@ export const BvnConfirmModal = ({ next, bvnData, ninData, onClose }) => {
                   padding="15px"
                   type="submit"
                   children={loading ? 'Saving...' : 'Save'}
-                  className={`hover:cursor-pointer flex justify-center items-center !text-white text-lg !border-none !bg-lightBlue font-extrabold duration-300 w-2/5 mx-auto py-2 rounded-md my-8 ${
+                  className={`hover:cursor-pointer flex justify-center items-center !text-white text-lg !border-none !bg-[#006181] font-extrabold duration-300 w-2/5 mx-auto py-2 rounded-md my-8 ${
                     !(isValid && dirty) ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
                   disabled={!(isValid && dirty) || loading}

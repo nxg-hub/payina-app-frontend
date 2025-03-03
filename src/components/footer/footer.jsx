@@ -49,7 +49,7 @@ const Footer = () => {
             {/*<Link>Superstore</Link>*/}
             <hr className="text-yellow w-[10%] py-2 xl:w-[20%]" />
             <Link to="/signup" onClick={scrollToTop}>
-              Coporate
+              Corporate
             </Link>
           </div>
         </div>

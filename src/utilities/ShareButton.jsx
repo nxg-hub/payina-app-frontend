@@ -73,7 +73,7 @@ const ShareButton = ({ promoCode }) => {
   return (
     <div className="relative inline-block">
       <button
-        className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-600 transition-all"
+        className="px-6 py-3 bg-[#00405A] text-white font-semibold rounded-lg shadow-lg hover:bg-[#468A9B] transition-all"
         onClick={() => setShowOptions(!showOptions)}>
         Share Promo Code
       </button>
