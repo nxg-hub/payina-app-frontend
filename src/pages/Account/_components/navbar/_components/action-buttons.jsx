@@ -63,7 +63,7 @@ const ActionButtons = () => {
 
       return () => clearInterval(intervalId);
     }
-  }, [customerId]); // This will re-run when customerId becomes available
+  }, [customerId]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {

@@ -127,7 +127,6 @@ const Scan = () => {
               <hr className="border-t border-lightBlue" />
               <br />
 
-              {/* Beautiful Toggle Switch */}
               <div className="flex items-center justify-center mb-6">
                 <div className="relative h-10 bg-gray-200 rounded-full flex items-center p-1 w-64 overflow-hidden shadow-inner">
                   <button
@@ -145,7 +144,6 @@ const Scan = () => {
                   >
                     Payina to Payina
                   </button>
-                  {/* Sliding background */}
                   <div className="absolute h-8 w-1/2 left-1 bg-lightBlue rounded-full transition-all duration-300"></div>
                 </div>
               </div>
