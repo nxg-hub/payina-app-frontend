@@ -42,6 +42,7 @@ const Invite = () => {
       <h2 className="mt-11 text-center font-bold md:text-2xl">Refer and Earn!</h2>
       <div className="mt-5 w-full flex flex-col items-center">
         <button
+          disabled={loading}
           onClick={generatePromoCode}
           className="px-4 py-2 bg-lightBlue font-bold text-white rounded-md mb-11">
           {loading ? 'loading...' : 'Get Promo Code'}

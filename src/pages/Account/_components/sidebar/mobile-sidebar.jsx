@@ -213,7 +213,7 @@ export const MobileSidebar = ({ openModal }) => {
                 currentRoute === '/account/freinds' ? '!ml-3 font-bold text-lightBlue' : ''
               }`}>
               <TbUserDollar size={22} />
-              <span className="hover:text-lightBlue ease transition-colors">Freinds</span>
+              <span className="hover:text-lightBlue ease transition-colors">Friends</span>
             </Link>
             <button
               onClick={handleLogout}

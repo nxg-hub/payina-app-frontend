@@ -1,7 +1,10 @@
+import axios from 'axios';
 import { useState } from 'react';
+import { FaWhatsapp, FaTelegram, FaFacebook, FaLinkedin, FaTwitter } from 'react-icons/fa';
 
 const ShareButton = ({ promoCode }) => {
   const [showOptions, setShowOptions] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Message for WhatsApp & Telegram
 
@@ -56,20 +59,43 @@ const ShareButton = ({ promoCode }) => {
       case 'twitter':
         return `https://twitter.com/intent/tweet?text=${encodedOtherPlatforms}`;
       case 'facebook':
-        return `https://www.facebook.com/sharer/sharer.php?u=${encodedURL}&quote=${encodedOtherPlatforms}`;
+        return `https://www.facebook.com/sharer/sharer.php?u=${encodedURL}&quote=${encodedWhatsAppTelegram}`;
       default:
         return '';
     }
   };
-  const shareContent = (platform) => {
+
+  const shareContent = async (platform) => {
     const shareLink = getShareLink(platform);
+
     if (shareLink) {
-      window.open(shareLink, '_blank');
+      setLoading(true);
+      try {
+        const response = await axios.post(
+          import.meta.env.VITE_USE_PROMOCODE, // API endpoint
+          { code: promoCode }, // Corrected payload
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          window.open(shareLink, '_blank');
+          setLoading(false);
+        }
+      } catch (err) {
+        console.error('API call failed:', err);
+      } finally {
+        setShowOptions(false); // Hide dropdown after selection
+        setLoading(false);
+      }
     } else {
       console.error('Unsupported platform');
     }
-    setShowOptions(false); // Hide dropdown after selection
   };
+
   return (
     <div className="relative inline-block">
       <button
@@ -84,29 +110,45 @@ const ShareButton = ({ promoCode }) => {
             <li
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
               onClick={() => shareContent('whatsapp')}>
-              WhatsApp
+              <span className="flex w-[80%] m-auto justify-between items-center">
+                WhatsApp
+                <FaWhatsapp />
+              </span>
             </li>
             <li
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              className="px-4 py-2 hover:bg-gray-100 cursor-pointer "
               onClick={() => shareContent('linkedin')}>
-              LinkedIn
+              <span className="flex w-[80%] m-auto justify-between items-center">
+                LinkedIn
+                <FaLinkedin />
+              </span>
             </li>
             <li
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
               onClick={() => shareContent('twitter')}>
-              Twitter
+              <span className="flex w-[80%] m-auto justify-between items-center">
+                Twitter
+                <FaTwitter />
+              </span>
             </li>
             <li
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
               onClick={() => shareContent('facebook')}>
-              Facebook
+              <span className="flex w-[80%] m-auto justify-between items-center">
+                Facebook
+                <FaFacebook className="items-center" />
+              </span>
             </li>
             <li
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
               onClick={() => shareContent('telegram')}>
-              Telegram
+              <span className="flex w-[80%] m-auto justify-between items-center">
+                Telegram
+                <FaTelegram />
+              </span>
             </li>
           </ul>
+          {loading && <h2 className="text-center mb-2">Loading...</h2>}
         </div>
       )}
     </div>
