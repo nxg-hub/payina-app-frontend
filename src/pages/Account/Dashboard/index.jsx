@@ -53,7 +53,7 @@ const Dashboard = () => {
         });
         const data = await response.json();
 
-        if (data.bvn === null) {
+        if (data.bvn === null || userBvn === '') {
           setIsBvnModalOpen(true);
         }
 
@@ -69,7 +69,7 @@ const Dashboard = () => {
 
     fetchLoginUserData();
 
-    if (userBvn === null) {
+    if (userBvn === null || userBvn === '') {
       setIsBvnModalOpen(true);
     }
   }, []);

@@ -26,7 +26,7 @@ const AmountDetails = ({ nextStep }) => {
   const withdrawerLimit = wallet.wallet?.data?.dailyWithdrawal;
 
   const handleSubmit = (values) => {
-    if (!userBvn) {
+    if (!userBvn || userBvn === '') {
       if (values.amount > 10000) {
         setError('Daily transfer Limit is ₦10,000. Verify your Identity to Increase Limit.');
         return;
