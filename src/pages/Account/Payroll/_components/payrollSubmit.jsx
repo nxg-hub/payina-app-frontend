@@ -17,10 +17,8 @@ const PayrollSubmit = ({ onSuccess }) => {
   const [accountName, setAccountName] = useState(null);
   // const dispatch = useDispatch();
 
-
   useEffect(() => {
     const fetchUserData = async () => {
-
       try {
         const response = await fetch(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
           method: 'GET',
@@ -36,7 +34,7 @@ const PayrollSubmit = ({ onSuccess }) => {
 
         const result = await response.json();
 
-        console.log('Fetched user data:', result.email, result.walletId, result.accountName);
+        // console.log('Fetched user data:', result.email, result.walletId, result.accountName);
 
         setCustomerId(result.customerId);
         setEmail(result.email);
@@ -44,7 +42,7 @@ const PayrollSubmit = ({ onSuccess }) => {
         setAccountName(result.accountName);
       } catch (error) {
         console.error('Error fetching user data:', error);
-      } 
+      }
     };
     fetchUserData();
   }, []);
@@ -68,8 +66,8 @@ const PayrollSubmit = ({ onSuccess }) => {
         },
         body: JSON.stringify({
           ...data,
-          employersEmailAddress, 
-        corporateCustomerWalletId, 
+          employersEmailAddress,
+          corporateCustomerWalletId,
         }),
       });
 
@@ -79,7 +77,6 @@ const PayrollSubmit = ({ onSuccess }) => {
       }
 
       const responseBody = await response.json();
-      
 
       if (responseBody) {
         console.log('Employee ID:', responseBody.id);
@@ -127,8 +124,8 @@ const PayrollSubmit = ({ onSuccess }) => {
       console.log('Payroll details saved successfully');
     } catch (error) {
       console.error('Error:', error);
-    // }finally {
-    //   dispatch(hideLoading()); // Hide Loader
+      // }finally {
+      //   dispatch(hideLoading()); // Hide Loader
     }
   };
 
@@ -136,12 +133,12 @@ const PayrollSubmit = ({ onSuccess }) => {
     <div className="container mx-auto">
       {step === 1 && (
         <EmployeeDetails
-        // customerId={customerId}
-        accountName={accountName}
-        onSave={(data) => {
-          setEmployeeDetails(data); 
-          handleEmployeeSave(data, email, walletId); 
-        }}
+          // customerId={customerId}
+          accountName={accountName}
+          onSave={(data) => {
+            setEmployeeDetails(data);
+            handleEmployeeSave(data, email, walletId);
+          }}
         />
       )}
       {step === 2 && employeeId && (

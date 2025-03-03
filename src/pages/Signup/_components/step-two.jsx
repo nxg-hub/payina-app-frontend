@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { images } from '../../../constants';
-import { Form, Formik } from 'formik';
+import { Field, Form, Formik } from 'formik';
 import { PhoneInput, defaultCountries, parseCountry } from 'react-international-phone';
 import 'react-international-phone/style.css';
 import CustomButton from '../../../components/button/button';
@@ -27,6 +27,7 @@ export const StepTwo = ({ next, initialValues }) => {
         confirmPassword: initialValues.confirmPassword,
         userType: 'corporate',
         email: initialValues.email,
+        referralCode: values.promoCode,
       };
 
       const response = await fetch(import.meta.env.VITE_REGISTER_USER_ENDPOINT, {
@@ -128,7 +129,7 @@ export const StepTwo = ({ next, initialValues }) => {
       />
       <div className="relative z-10 flex flex-col justify-center items-center bg-white shadow-md xl:p-8 px-4 rounded-lg mx-auto sm:w-[300px] md:w-[400px] lg:w-[600px]">
         <Formik
-          initialValues={{ phoneNumber: '' }}
+          initialValues={{ phoneNumber: '', promoCode: '' }}
           onSubmit={(values, { setSubmitting }) => {
             handleSubmit(values);
             setSubmitting(false);
@@ -173,6 +174,17 @@ export const StepTwo = ({ next, initialValues }) => {
                   Invalid Number
                 </span>
               )}
+              <div className=" flex flex-col space-y-1 ">
+                <label htmlFor="promoCode" className="text-sm font-normal ml-5 text-lightBlue">
+                  Promo Code
+                </label>
+                <Field
+                  name="promoCode"
+                  type={'text'}
+                  placeholder="Enter Promo code (If you have any)"
+                  className="w-[90%] m-auto h-[3.4rem] border border-[#9ca3af] outline-none font-light text-base text-gray rounded-[5px] py-2 px-[10px]"
+                />
+              </div>
               {message && (
                 <div className="text-center text-[#db3a3a] flex justify-center mt-4">{message}</div>
               )}

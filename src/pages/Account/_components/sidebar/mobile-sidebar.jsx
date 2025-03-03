@@ -19,8 +19,9 @@ import { reSetClientsDetails } from '../../../../Redux/GetClientsSlice.jsx';
 import { reSetWalletDetails } from '../../../../Redux/WalletSlice.jsx';
 import { resetTransactions } from '../../../../Redux/transactionsSlice.jsx';
 import avatar from '../../../../assets/images/avatar.png';
+import { resetPayroll } from '../../../../Redux/payrollSlice.jsx';
 
-export const MobileSidebar = () => {
+export const MobileSidebar = ({ openModal }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -52,6 +53,7 @@ export const MobileSidebar = () => {
     dispatch(reSetClientsDetails());
     dispatch(reSetWalletDetails());
     dispatch(resetTransactions());
+    dispatch(resetPayroll());
   };
 
   const renderSidebarContent = () => {
@@ -186,12 +188,13 @@ export const MobileSidebar = () => {
             )}
             <div className="font-semibold text-xl mt-2">{`Hi, ${userName}`}</div>
             {(!bvn || bvn === '') && (
-              <Link
-                to="/verify"
-                className="flex items-center space-x-1 text-red-500 mt-2 justify-center">
+              <div
+                onClick={openModal}
+                // to="/verify"
+                className="flex items-center cursor-pointer space-x-1 text-red-500 mt-2 justify-center">
                 <MdVerified size={16} />
                 <span className="text-sm">Verify Now</span>
-              </Link>
+              </div>
             )}
           </div>
           <div className="space-y-[52px] flex flex-col w-full">
@@ -203,6 +206,14 @@ export const MobileSidebar = () => {
               }`}>
               <TbSettings size={22} />
               <span className="hover:text-lightBlue ease transition-colors">Account Settings</span>
+            </Link>
+            <Link
+              to="/account/freinds"
+              className={`flex items-center space-x-6 ${
+                currentRoute === '/account/freinds' ? '!ml-3 font-bold text-lightBlue' : ''
+              }`}>
+              <TbUserDollar size={22} />
+              <span className="hover:text-lightBlue ease transition-colors">Freinds</span>
             </Link>
             <button
               onClick={handleLogout}

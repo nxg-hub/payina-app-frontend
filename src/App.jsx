@@ -65,6 +65,7 @@ import Vend from './pages/vend/Vend.jsx';
 import PayinaQRTransfer from './pages/Scan/payina_to_payina.jsx';
 import TransferSuccess from './pages/TransferSuccess/TransferSuccess.jsx';
 import TransferFailed from './pages/TransferFail/TransferFailed.jsx';
+import Freinds from './pages/Account/Freinds/Index.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import ContactForm from './pages/contactus/contact.jsx';
 
@@ -243,6 +244,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Settings />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/account/freinds"
+              element={
+                <ProtectedRoute>
+                  <Freinds />
                 </ProtectedRoute>
               }
             />

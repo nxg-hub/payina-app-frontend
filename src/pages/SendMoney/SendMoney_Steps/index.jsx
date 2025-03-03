@@ -148,10 +148,6 @@
 //
 // export default SendMoneySteps;
 
-
-
-
-
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
 import cancelImg from '../../../assets/images/CancelSendMoney.png';
@@ -256,9 +252,9 @@ const SendMoneySteps = () => {
         );
       default:
         return (
-          <div className="bg-white min-h-screen">
+          <div className="bg-white min-h-screen w-[90%] m-auto">
             <div className="container mx-auto px-4">
-              <div className="max-w-md mx-auto w-full">
+              <div className="max-w-md mx-auto w-[100%]">
                 <div className="flex justify-between items-center pt-8 md:pt-16 lg:pt-28">
                   <div>
                     <h1 className="text-xl md:text-3xl font-medium">Send Money</h1>
