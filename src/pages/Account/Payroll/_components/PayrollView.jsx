@@ -118,7 +118,7 @@ const PayrollView = ({ onBackClick, onSetupClick }) => {
             Loading Employees Details...
           </div>
         ) : payrollData && payrollData.length > 0 ? (
-          <div className="grid md:grid-cols-3 justify-center items-center gap-4 mt-[1rem] px-[5rem] py-2 w-full">
+          <div className="grid md:grid-cols-3 justify-center items-center gap-4 mt-[1rem] px-[5rem] py-2 w-full  ">
             {filteredPayrollData.map((employee) => (
               <div
                 key={employee.id}
