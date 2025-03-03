@@ -211,7 +211,7 @@ export const Navbar = ({ openModal }) => {
               <p className="mb-2 text-sm">Required documents:</p>
               <ul className="list-disc pl-4 space-y-1">
                 {requirements.documents.map((doc, index) => (
-                  <li key={index} className="text-sm text-gray-600">
+                  <li key={index} className="text-sm text-gray-600 ">
                     {doc}
                   </li>
                 ))}

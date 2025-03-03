@@ -186,7 +186,7 @@ export const MobileSidebar = ({ openModal }) => {
             ) : (
               <img src={avatar} alt="profile image" className="w-24 h-24 rounded-full" />
             )}
-            <div className="font-semibold text-xl mt-2">{`Hi, ${userName}`}</div>
+            <div className="font-semibold text-xl mt-2 ">{`Hi, ${userName}`}</div>
             {(!bvn || bvn === '') && (
               <div
                 onClick={openModal}

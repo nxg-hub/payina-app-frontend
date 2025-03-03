@@ -191,9 +191,9 @@ const BillOptions = () => {
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4">
         <div className="max-w-md mx-auto w-full">
-          <div className="flex justify-between items-center pt-8 md:pt-16 lg:pt-28">
+          <div className="flex  justify-between items-center pt-8 md:pt-16 lg:pt-28">
             <div>
-              <h1 className="text-xl md:text-2xl font-bold">Pay Bills</h1>
+              <h1 className="text-xl md:text-2xl font-bold ">Pay Bills</h1>
               <h2 className="text-sm md:text-base mt-1">What bills are you paying today?</h2>
             </div>
             <div>
