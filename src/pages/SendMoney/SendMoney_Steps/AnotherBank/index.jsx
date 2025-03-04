@@ -48,13 +48,12 @@ const AnotherBank = ({ currentStep, totalSteps, handleNext, handlePrev, resetFor
         return <RecipientDetails nextStep={handlePrev} />;
     }
   };
-
   return (
     <div className="flex flex-col justify-center items-start lg:ml-80 lg:pt-28 pt-10 ml-[25px] mx-auto">
       <div className="flex flex-row w-[95%] justify-between items-left lg:gap-[45rem] gap-[5rem]">
         <div className="text-xl md:text-3xl font-semibold">Send Money</div>
         <div
-          className="flex flex-row gap-2 cancelAction-img cursor-pointer"
+          className={`${'flex flex-row gap-2 cancelAction-img cursor-pointer'}`}
           onClick={backButtonClick}>
           <img src={backArrow} alt="cancelAction"></img>
           <div className="text-md text-center mt-1">Back</div>
