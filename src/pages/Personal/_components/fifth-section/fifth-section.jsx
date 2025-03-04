@@ -98,7 +98,7 @@ const FifthSection = () => {
               />
               <button
                 onClick={generatePromoCode}
-                className="bg-blue-700 text-white font-semibold px-4 py-2 rounded-md mt-2 block mb-2">
+                className="bg-[#00405A] text-white font-semibold px-4 py-2 rounded-md mt-4 block mb-4  hover:bg-[#468A9B] transition-all">
                 {loading ? 'loading...' : 'Submit'}
               </button>
               {error && <h2 className="text-red-500">{error}</h2>}
@@ -113,3 +113,4 @@ const FifthSection = () => {
 };
 
 export default FifthSection;
+// [#00516C]

@@ -170,7 +170,7 @@ export const BvnModal = ({ next, onClose }) => {
                 padding="15px"
                 type="submit"
                 children={loading ? 'Loading...' : 'Next'}
-                className={`hover:cursor-pointer flex justify-center items-center !text-white text-lg !border-none !bg-lightBlue font-extrabold duration-300 w-2/5 mx-auto my-8 py-2 rounded-md ${
+                className={`hover:cursor-pointer flex justify-center items-center !text-white text-lg !border-none !bg-[#006181] font-extrabold duration-300 w-2/5 mx-auto my-8 py-2 rounded-md ${
                   !(isValid && dirty) ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
                 disabled={!(isValid && dirty)}
