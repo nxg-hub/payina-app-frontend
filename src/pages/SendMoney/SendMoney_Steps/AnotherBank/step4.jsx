@@ -158,16 +158,12 @@ const EnterPin = ({ data }) => {
         setShowDecline(true);
       }
     } catch (error) {
-      error.response.data === 'Invalid Transaction PIN or PIN is Incorrect.'
-        ? setErrorMessage(error.response.data)
+      console.log(error);
+      error.response.data.message === 'Invalid Transaction PIN or PIN is Incorrect.'
+        ? setErrorMessage(error.response.data.message)
         : setErrorMessage('Transaction process failed. Please try again.');
       if (error.response) {
-        const backendMessage =
-          error.response?.data?.data ||
-          error.response?.data?.response ||
-          error.response?.data?.debugMessage ||
-          error.response?.data ||
-          'Invalid Transaction PIN or PIN is Incorrect.';
+        const backendMessage = error.response.data?.message;
         setErrorMessage(backendMessage);
       } else {
         setErrorMessage('Transaction process failed. Please try again.');
