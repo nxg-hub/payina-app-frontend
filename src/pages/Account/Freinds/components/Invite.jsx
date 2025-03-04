@@ -44,7 +44,7 @@ const Invite = () => {
         <button
           disabled={loading}
           onClick={generatePromoCode}
-          className="px-4 py-2 bg-lightBlue font-bold text-white rounded-md mb-11">
+          className="px-4 py-2 bg-[#468A9B] font-bold text-white rounded-md mb-11 hover:bg-[#006181] transition-all">
           {loading ? 'loading...' : 'Get Promo Code'}
         </button>
         {error && <h2 className="text-red-500">{error}</h2>}

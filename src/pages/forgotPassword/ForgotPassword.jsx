@@ -68,7 +68,7 @@ const ForgotPassword = () => {
                   className="w-full h-[50px] px-2 rounded-md border border-[#ddd] focus:outline-none"
                   type="text"
                   name="email"
-                  Placeholder="Enter youe email address"
+                  Placeholder="Enter your email address..."
                 />
                 <ErrorMessage className="text-red-500" name="email" component="div" />
                 {uploadStatus && (
