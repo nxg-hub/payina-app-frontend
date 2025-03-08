@@ -326,7 +326,7 @@ const BillerPlans = () => {
       CHURCH_COLLECTIONS: 'Pay church offerings here',
       TRANSPORT_AND_TOLL_PAYMENT: 'Transport and Toll payments',
       COLLECTIONS: 'COLLECTIONS',
-      EVENTS_AND_LIFESTYLE: 'EVENTS ANDLIFESTYLE',
+      EVENTS_AND_LIFESTYLE: 'EVENTS AND LIFESTYLE',
     };
     return titles[selectedBettingService] || 'Select Service Provider';
   };
