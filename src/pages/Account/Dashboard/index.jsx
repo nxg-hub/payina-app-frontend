@@ -7,7 +7,7 @@ import TransactionHistory from './_components/transaction-history/transaction-hi
 import { useEffect, useState } from 'react';
 import { fetchDataSuccess } from '../../../Redux/UserSlice';
 import useLocalStorage from '../../../hooks/useLocalStorage';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { showLoading, hideLoading } from '../../../Redux/loadingSlice';
 // import { bvnConfirm } from './_components/bvnConfirm';
 import Loader from '../../../assets/LoadingSpinner';
@@ -104,8 +104,10 @@ const Dashboard = () => {
               setIsBvnModalOpen(true);
             }}
           />
+
           <AccountCard />
           <BalanceCard />
+
           <QuickAction />
           <TransactionHistory />
         </>

@@ -1,13 +1,30 @@
 import { Link } from 'react-router-dom';
 import { images } from '../../../../../constants';
 import { useSelector } from 'react-redux';
+import { useState } from 'react';
 
 const QuickAction = () => {
+  const [isVisible, setIsVisible] = useState(true);
   const userDetails = useSelector((state) => state.user.user);
   const userType = userDetails?.userType;
 
   return (
     <div className="md:px-[.7rem] pb-4 w-auto md:clear-right ml-5 md:ml-2 xl:ml-[19.5rem] mr-5 md:mr-3">
+      {isVisible && (
+        <div className="p-4 bg-yellow-300 text-center text-lg font-bold shadow-md mt-2">
+          🚀 Get Extra Data & Airtime! Use Our Bills Service Now! 🎉
+          <span>
+            <button
+              className="ml-4 bg-red-500 text-white px-3 py-1 rounded"
+              onClick={() => setIsVisible(false)}>
+              Dismiss
+            </button>
+            <Link to={'/account/billers'}>
+              <button className="ml-4 bg-secondary text-white px-3 py-1 rounded">Pay Bills</button>
+            </Link>
+          </span>
+        </div>
+      )}
       <div className="opacity-70 font-bold text-lightBlue py-4 text-sm md:text-base">
         Quick Actions
       </div>

@@ -108,7 +108,7 @@ const VendInitiator = ({
 
     const parsedAmount = Number(amount);
     if (parsedAmount < 1) {
-    // if (parsedAmount < 70) {
+      // if (parsedAmount < 70) {
       setValidationError('Minimum airtime amount is ₦70');
       return false;
     }
@@ -149,7 +149,7 @@ const VendInitiator = ({
         customerId: phoneNumber || '',
         packageSlug: packageSlug,
         channel: 'web',
-        amount: amount >= 1000 ? amount - 100 : amount,
+        amount: amount >= 5000 ? amount - 50 : amount,
         billType: 'DATA',
         customerName: userData ? `${userData.firstName} ${userData.lastName}` : '',
         phoneNumber: phoneNumber,

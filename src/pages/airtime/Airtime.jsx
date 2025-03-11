@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/navbar/navbar';
 import Footer from '../../components/footer/footer';
 import EmailVerification from '../../components/EmailVerification';
@@ -115,8 +115,13 @@ const Airtime = () => {
         <form onSubmit={handleSubmit}>
           <button className="text-primary text-left p-10 border-none rounded-[5px] w-[64%] bg-neutral px-4 py-2">
             Want to enjoy discounts?
-            <span className="text-yellow"> Register</span> or{' '}
-            <span className="text-yellow">Login</span>
+            <Link className="px-2" to="/onboarding/email_verification">
+              <span className="text-yellow">Register</span>
+            </Link>
+            or
+            <Link className="px-2" to="/login">
+              <span className="text-yellow">Login</span>
+            </Link>
           </button>
           <div className="flex flex-col">
             <label className="py-4">Email</label>

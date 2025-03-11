@@ -83,8 +83,11 @@ const UserData = () => {
 
   const handlePlanSelect = async (event) => {
     const plan = plans.find((p) => p.slug === event.target.value);
-    setSelectedPlan(plan);
-
+    const updatedPlan = {
+      ...plan,
+      amount: plan.amount >= 5000 ? plan.amount + 50 : plan.amount,
+    };
+    setSelectedPlan(updatedPlan);
     if (plan) {
       await checkWalletBalance(plan.amount);
     }
@@ -297,7 +300,7 @@ const UserData = () => {
                         <option value="">Select a plan</option>
                         {plans.map((plan) => {
                           // Add ₦1 service charge if plan.amount >= 1000 FOR TESTING PURPOSE ONLY
-                          const totalAmount = plan.amount >= 1000 ? plan.amount + 100 : plan.amount;
+                          const totalAmount = plan.amount >= 5000 ? plan.amount + 50 : plan.amount;
 
                           return (
                             <option key={plan.slug} value={plan.slug}>
