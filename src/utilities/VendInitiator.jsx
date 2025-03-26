@@ -447,7 +447,7 @@ const VendInitiator = ({
         className={`w-full py-2 px-4 rounded-md text-white transition-colors ${
           isInsufficientBalance
             ? 'bg-green-600 hover:bg-green-700'
-            : 'bg-blue-600 hover:bg-blue-700'
+            : 'bg-lightBlue hover:bg-lightBlue'
         } disabled:bg-gray-400 disabled:cursor-not-allowed`}>
         {isProcessing ? 'Processing...' : isInsufficientBalance ? 'Fund Wallet' : 'Proceed'}
       </CustomButton>
