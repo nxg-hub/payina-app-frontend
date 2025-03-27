@@ -88,13 +88,6 @@ const Billers = () => {
   const validateForm = () => {
     console.log('Validating form values:', { formValues, localEmail });
     const newErrors = {};
-
-    // if (!formValues.phoneNumber) {
-    //   newErrors.phoneNumber = 'Phone number is required';
-    // } else if (!/^\d{10,11}$/.test(formValues.phoneNumber)) {
-    //   newErrors.phoneNumber = 'Phone number must be 10-11 digits';
-    // }
-
     if (!formValues.selectedBettingService) {
       newErrors.selectedBettingService = 'Service selection is required';
     }
@@ -103,18 +96,21 @@ const Billers = () => {
     return newErrors;
   };
 
-  const handleNavigation = useCallback((stateToPass) => {
-    console.log('Navigating with state:', stateToPass);
-    try {
-      navigate('/account/bills/plans', {
-        state: stateToPass,
-        replace: true // Prevents going back to form
-      });
-    } catch (err) {
-      console.error('Navigation error:', err);
-      setError('Navigation failed. Please try again.');
-    }
-  }, [navigate]);
+  const handleNavigation = useCallback(
+    (stateToPass) => {
+      console.log('Navigating with state:', stateToPass);
+      try {
+        navigate('/account/bills/plans', {
+          state: stateToPass,
+          replace: true,
+        });
+      } catch (err) {
+        console.error('Navigation error:', err);
+        setError('Navigation failed. Please try again.');
+      }
+    },
+    [navigate]
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -129,7 +125,6 @@ const Billers = () => {
     setError(null);
 
     try {
-      // Validate form
       const validationErrors = validateForm();
       if (Object.keys(validationErrors).length > 0) {
         console.log('Validation failed:', validationErrors);
@@ -137,7 +132,6 @@ const Billers = () => {
         return;
       }
 
-      // Find selected service
       const selectedService = bettingServices.find(
         (service) => service.slug === formValues.selectedBettingService
       );
@@ -164,9 +158,7 @@ const Billers = () => {
 
       console.log('Proceeding with form submission:', stateToPass);
 
-      // Navigate to plans page
       handleNavigation(stateToPass);
-
     } catch (err) {
       console.error('Form submission error:', err);
       setError(err.message || 'An error occurred while processing your request');
@@ -188,11 +180,8 @@ const Billers = () => {
               <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                 <CustomButton
                   type="button"
-                  className="w-full mb-6 text-center bg-blue-50 text-blue-600 p-4 rounded-lg hover:bg-blue-100 transition-colors duration-200"
-                >
+                  className="w-full mb-6 text-center bg-blue-50 text-blue-600 p-4 rounded-lg hover:bg-blue-100 transition-colors duration-200">
                   Paybills
-                  {/*<span className="font-semibold">Register</span> or{' '}*/}
-                  {/*<span className="font-semibold">Login</span>*/}
                 </CustomButton>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -208,8 +197,7 @@ const Billers = () => {
                           console.log('Service selected:', e.target.value);
                           updateFormValues({ selectedBettingService: e.target.value });
                         }}
-                        className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
+                        className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="">Select Service</option>
                         {bettingServices.map((service) => (
                           <option key={service.id} value={service.slug}>
@@ -246,8 +234,7 @@ const Billers = () => {
                   <CustomButton
                     type="submit"
                     className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={isSubmitting || isLoading}
-                  >
+                    disabled={isSubmitting || isLoading}>
                     {isSubmitting ? 'Processing...' : isLoading ? 'Loading...' : 'Proceed'}
                   </CustomButton>
                 </form>

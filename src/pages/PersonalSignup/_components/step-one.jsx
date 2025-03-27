@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export const StepOne = ({ next }) => {
-  const savedEmail = localStorage.getItem('userEmail') || ''; // Fallback to an empty string if no email is stored
+  const savedEmail = localStorage.getItem('userEmail') || '';
   const [showPassword, setShowPassword] = useState(false);
 
   const handleShowPassword = () => {
