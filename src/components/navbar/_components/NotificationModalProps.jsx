@@ -10,7 +10,6 @@ const NotificationModal = ({ isOpen, notifications = [], onClose, onMarkAsRead }
 
   useEffect(() => {
     if (isOpen && notifications && notifications.length > 0) {
-      // Mark all notifications as read when the modal is opened
       notifications.forEach((notification) => {
         if (!notification.read) {
           onMarkAsRead(notification.id);

@@ -85,7 +85,7 @@ const TransactionPinModal = ({
               maxLength="1"
               pattern="[0-9]*"
               inputMode="numeric"
-              className="w-12 h-12 text-center text-lg border-2 border-blue-300 rounded-full"
+              className="w-12 h-12 text-center text-lg border-2 border-lightBlue rounded-full"
               value={pin[i]}
               onChange={(e) => handlePinChange(e, i)}
             />
@@ -96,7 +96,7 @@ const TransactionPinModal = ({
           <button
             onClick={validatePin}
             disabled={loading}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50"
+            className="bg-lightBlue text-white px-4 py-2 rounded hover:bg-lightBlue-600 disabled:opacity-50"
           >
             {loading ? 'Validating...' : 'Submit'}
           </button>

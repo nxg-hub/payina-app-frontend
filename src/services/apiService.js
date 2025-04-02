@@ -58,8 +58,6 @@ const apiService = {
       }
       const paystackPublicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
 
-      // const userData = await apiService.getUserData();
-
       const response = await axios.post(
         import.meta.env.VITE_FUND_WALLET_API,
         {

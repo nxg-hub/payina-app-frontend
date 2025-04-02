@@ -95,7 +95,6 @@ const Bettwo = () => {
           setError(null);
         }
       } catch (error) {
-        // console.error('Error verifying user:', error);
         setVerificationResult({
           status: 'failed',
           narration: "An error occurred while validating the customer's identity.",
@@ -134,7 +133,6 @@ const Bettwo = () => {
     const selectedPlanId = e.target.value;
 
     if (!selectedPlanId) {
-      // console.warn('No plan selected');
       setSelectedPlan(null);
       setAmount('');
       setSelectedPlanSlug(null);
