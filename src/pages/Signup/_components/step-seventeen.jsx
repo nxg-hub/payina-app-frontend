@@ -7,7 +7,7 @@ import { resetState } from '../../../Redux/BusinessSignUpSlice';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 
 export const StepSeventeen = () => {
-  // const authToken = useSelector((state) => state.businessSignUp.token);
+  let manualEntry = useSelector((state) => state.businessSignUp.manualEntry);
   const [newAuthToken] = useLocalStorage('authToken', '');
   const [userData, setUserData] = useState(null);
   const userEmail = localStorage.getItem('userEmail');
@@ -164,12 +164,14 @@ export const StepSeventeen = () => {
                 className="w-[100px] md:w-[202px] rounded-[50%] absolute top-[-1rem] right-[-5rem] contrast-[3.5]"
                 alt=""
               />
-              <div className="w-full text-primary absolute top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%] flex flex-col md:space-y-4">
-                <span className="md:text-2xl text-xs font-medium">Business Owner Name</span>
-                <span className="md:text-3xl text-sm font-bold">
-                  {userData ? `${userData.firstName} ${userData.lastName}` : 'N/A'}
-                </span>
-              </div>
+              {!manualEntry && (
+                <div className="w-full text-primary absolute top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%] flex flex-col md:space-y-4">
+                  <span className="md:text-2xl text-xs font-medium">Business Owner Name</span>
+                  <span className="md:text-3xl text-sm font-bold">
+                    {userData ? `${userData.firstName} ${userData.lastName}` : 'N/A'}
+                  </span>
+                </div>
+              )}
             </div>
             <div className="w-full relative">
               <img
