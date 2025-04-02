@@ -79,7 +79,8 @@ export const BvnModal = ({ next, onClose }) => {
           next({ ...values, firstname, lastname, gender, dob });
         } else {
           // **Handle API Error Messages**
-          setApiError(verifyResult?.message || 'Verification failed. Please try again.');
+          // setApiError(verifyResult?.message || 'Verification failed. Please try again.');
+          setApiError('Verification failed. Please try again later.');
         }
       }
     } catch (error) {

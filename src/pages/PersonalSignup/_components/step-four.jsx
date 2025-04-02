@@ -85,11 +85,12 @@ export const StepFour = ({ next }) => {
 
           // Access the message
           const message = parsedResponse.message;
-          message !==
-          'No matching records found. Please ensure the information is accurate and try again.'
-            ? dispatch(setManualEntry(true))
-            : dispatch(setManualEntry(false));
-          setApiError(message || 'Verification failed. Please try again.');
+          // message !==
+          // 'No matching records found. Please ensure the information is accurate and try again.'
+          dispatch(setManualEntry(true));
+          // : dispatch(setManualEntry(false));
+          // setApiError(message || 'Verification failed. Please try again.');
+          setApiError('Verification failed. Please try again.');
         }
       }
     } catch (error) {

@@ -155,7 +155,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
                   Date of Birth
                 </label>
                 <Field
-                  type="text"
+                  type={manualEntry ? 'date' : 'text'}
                   id="dob"
                   name="dob"
                   value={bvnData.dob || ninData.dob}
