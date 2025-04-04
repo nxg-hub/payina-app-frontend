@@ -5,16 +5,12 @@ import { useState } from 'react';
 import { images } from '../../../constants';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 
-
 export const StepSixteen = ({ next, email }) => {
   const decodeJWT = (token) => JSON.parse(atob(token.split('.')[1]));
-
   const [loading, setLoading] = useState('');
   const [pinError, setPinError] = useState('');
   const [authToken, setAuthToken] = useLocalStorage('authToken', '');
   const [userDetails, setuserDetails] = useLocalStorage('userDetails', '');
-
-
 
   const handleSubmit = async (values) => {
     setLoading(true);
@@ -43,14 +39,14 @@ export const StepSixteen = ({ next, email }) => {
 
         if (response.ok && result.status !== 'BAD_REQUEST') {
           console.log('Pin set successfully:');
-        
-            const token = result.data;
-            setAuthToken(token);
-            localStorage.setItem('authToken', token);
-  
-            const decodedString = decodeJWT(token);
-            setuserDetails(decodedString);
-            next(result);
+
+          const token = result.data;
+          setAuthToken(token);
+          localStorage.setItem('authToken', token);
+
+          const decodedString = decodeJWT(token);
+          setuserDetails(decodedString);
+          next(result);
           localStorage.removeItem('phoneNumber');
           next(result);
         } else if (result.status === 'BAD_REQUEST') {

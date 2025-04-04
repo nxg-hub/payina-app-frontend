@@ -64,6 +64,7 @@ const ProfileSetting = () => {
           },
         });
         const data = await response.json();
+        // console.log(data);
 
         //storing the user details in the userSlice using the redux store
         dispatch(fetchDataSuccess(data));
