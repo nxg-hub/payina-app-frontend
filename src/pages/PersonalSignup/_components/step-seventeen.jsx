@@ -14,7 +14,6 @@ export const StepSeventeen = () => {
   const dispatch = useDispatch();
   const token = localStorage.getItem('authToken');
 
-
   useEffect(() => {
     const fetchUserData = async () => {
       if (!userEmail) {
@@ -23,7 +22,7 @@ export const StepSeventeen = () => {
         return;
       }
       try {
-        setIsLoading(true); 
+        setIsLoading(true);
         const response = await fetch(
           `${import.meta.env.VITE_GET_USER_BY_EMAIL_ENDPOINT}?email=${encodeURIComponent(userEmail)}`,
           {
@@ -63,30 +62,29 @@ export const StepSeventeen = () => {
   //     navigate('/login');
   //   }
   // }
-//   const token = localStorage.getItem('authToken');
-// console.log (token)
-//   const handleClick = (values, token) => {
-//       if (location.pathname.includes('/personal/signup')) {
-//         navigate('/personal/dashboard');
-//       }
-//       // next(values);
-//       dispatch(resetState());
-//     };
+  //   const token = localStorage.getItem('authToken');
+  // console.log (token)
+  //   const handleClick = (values, token) => {
+  //       if (location.pathname.includes('/personal/signup')) {
+  //         navigate('/personal/dashboard');
+  //       }
+  //       // next(values);
+  //       dispatch(resetState());
+  //     };
 
-// const handleClick = (values, token) => {
-//   if (!token) {
-//     console.error('No token found. Redirecting to login.');
-//     navigate('/login'); // Redirect to login if token is missing
-//     return;
-//   }
+  // const handleClick = (values, token) => {
+  //   if (!token) {
+  //     console.error('No token found. Redirecting to login.');
+  //     navigate('/login'); // Redirect to login if token is missing
+  //     return;
+  //   }
 
-//   if (location.pathname.includes('/personal/signup')) {
-//     navigate('/personal/dashboard'); // Navigate to the dashboard
-//   }
+  //   if (location.pathname.includes('/personal/signup')) {
+  //     navigate('/personal/dashboard'); // Navigate to the dashboard
+  //   }
 
-//   dispatch(resetState());
-// };
-
+  //   dispatch(resetState());
+  // };
 
   if (isLoading) {
     return <div className="text-center py-8">Loading...</div>;
@@ -187,17 +185,18 @@ export const StepSeventeen = () => {
               <div className="w-full text-primary absolute top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%] flex flex-col md:space-y-4">
                 <span className="md:text-2xl text-xs font-medium">Account Owner Name</span>
                 <span className="md:text-3xl text-sm font-bold">
-                  {userData ? `${userData.firstName} ${userData.lastName}` : 'N/A'}
+                  {userData
+                    ? `${userData.firstName} ${userData.lastName}`
+                    : `${userData.payinaUserName}`}
+                  {/* : 'N/A'}*/}
                 </span>
               </div>
             </div>
-          
           </div>
           <CustomButton
-  // onClick={() => handleClick({}, token)} 
-  onClick={handleClick}
-
-  padding="15px"
+            // onClick={() => handleClick({}, token)}
+            onClick={handleClick}
+            padding="15px"
             type="submit"
             children="Proceed to Log in"
             className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
