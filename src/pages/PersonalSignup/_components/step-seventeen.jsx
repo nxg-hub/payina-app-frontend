@@ -2,11 +2,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { resetState } from '../../../Redux/PersonalSignUpSlice';
 
 export const StepSeventeen = () => {
-  let manualEntry = useSelector((state) => state.personalSignUp.manualEntry);
   const [userData, setUserData] = useState(null);
   const userEmail = localStorage.getItem('userEmail');
   const [isLoading, setIsLoading] = useState(true);
@@ -167,33 +166,32 @@ export const StepSeventeen = () => {
                 </span>
               </div>
             </div>
-            {!manualEntry && (
-              <div className="w-full relative">
-                <img
-                  src={images.Rectangle}
-                  className="bg-black h-[70px] md:h-[166px] z-50 w-full"
-                  alt=""
-                />
-                <img
-                  src={images.CircleBlack}
-                  className="w-[100px] md:w-[202px] rounded-[50%] absolute top-[-1rem] left-[-5rem] contrast-[3.5]"
-                  alt=""
-                />
-                <img
-                  src={images.CircleBlack}
-                  className="w-[100px] md:w-[202px] rounded-[50%] absolute top-[-1rem] right-[-5rem] contrast-[3.5]"
-                  alt=""
-                />
-                (
-                <div className="w-full text-primary absolute top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%] flex flex-col md:space-y-4">
-                  <span className="md:text-2xl text-xs font-medium">Account Owner Name</span>
-                  <span className="md:text-3xl text-sm font-bold">
-                    {userData ? `${userData.firstName} ${userData.lastName}` : 'N/A'}
-                  </span>
-                </div>
-                )
+            <div className="w-full relative">
+              <img
+                src={images.Rectangle}
+                className="bg-black h-[70px] md:h-[166px] z-50 w-full"
+                alt=""
+              />
+              <img
+                src={images.CircleBlack}
+                className="w-[100px] md:w-[202px] rounded-[50%] absolute top-[-1rem] left-[-5rem] contrast-[3.5]"
+                alt=""
+              />
+              <img
+                src={images.CircleBlack}
+                className="w-[100px] md:w-[202px] rounded-[50%] absolute top-[-1rem] right-[-5rem] contrast-[3.5]"
+                alt=""
+              />
+              <div className="w-full text-primary absolute top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%] flex flex-col md:space-y-4">
+                <span className="md:text-2xl text-xs font-medium">Account Owner Name</span>
+                <span className="md:text-3xl text-sm font-bold">
+                  {userData
+                    ? `${userData.firstName} ${userData.lastName}`
+                    : `${userData.payinaUserName}`}
+                  {/* : 'N/A'}*/}
+                </span>
               </div>
-            )}
+            </div>
           </div>
           <CustomButton
             // onClick={() => handleClick({}, token)}

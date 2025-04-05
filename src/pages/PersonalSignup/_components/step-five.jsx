@@ -61,7 +61,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues, values 
           firstName: values.firstName || bvnData.firstname || ninData.firstname,
           lastName: values.lastName || bvnData.lastname || ninData.lastname,
           dob: values.dob || bvnData.dob || ninData.dob,
-          bvn: initialValues.identificationNumber,
+          bvn: initialValues.identificationNumber || values.dob,
           accountType: 'personal',
         }),
       });
