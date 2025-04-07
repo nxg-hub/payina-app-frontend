@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from '../../components/navbar/navbar';
 import Footer from '../../components/footer/footer.jsx';
+import { Link } from 'react-router-dom';
 
 const Onboarding = () => {
   return (
@@ -14,7 +15,7 @@ const Onboarding = () => {
         </div>
 
         <div className="space-y-4">
-          <a href="/personal/signup">
+          <Link to="/personal/signup">
             <div
               className="bg-white border rounded-lg p-4 hover:bg-gray-50 cursor-pointer transition-colors duration-200 flex items-center justify-between shadow-sm mb-10"
               role="button"
@@ -48,9 +49,9 @@ const Onboarding = () => {
                 <path d="M9 18l6-6-6-6" />
               </svg>
             </div>
-          </a>
+          </Link>
 
-          <a href="/signup">
+          <Link to="/signup">
             <div
               className="bg-white border rounded-lg p-4 hover:bg-gray-50 cursor-pointer transition-colors duration-200 flex items-center justify-between shadow-sm"
               role="button"
@@ -89,7 +90,7 @@ const Onboarding = () => {
                 <path d="M9 18l6-6-6-6" />
               </svg>
             </div>
-          </a>
+          </Link>
         </div>
 
         <div className="text-center text-white space-y-2 pt-8">

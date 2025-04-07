@@ -18,6 +18,7 @@ export const StepTwo = ({ next, initialValues }) => {
   };
 
   const handleSubmit = async (values) => {
+    const userEmail = localStorage.getItem('userEmail');
     localStorage.setItem('phoneNumber ', phone);
     setLoading(true);
     setMessage('');
@@ -27,7 +28,7 @@ export const StepTwo = ({ next, initialValues }) => {
         password: initialValues.password,
         confirmPassword: initialValues.confirmPassword,
         userType: 'personal',
-        email: initialValues.email,
+        email: userEmail,
         referralCode: values.promoCode,
       };
 

@@ -193,7 +193,7 @@ export const Sidebar = ({ openModal }) => {
             ) : (
               <img src={avatar} alt="profile image" className="w-24 h-24 rounded-full" />
             )}
-            <div className="font-semibold text-xl mt-2">{`Hi, ${userName}`}</div>
+            <div className="font-semibold text-xl mt-2">{`Hi, ${userName ? userName : ''}`}</div>
             {(!userDetails?.bvn || userDetails?.bvn === '') && (
               <div
                 onClick={openModal}

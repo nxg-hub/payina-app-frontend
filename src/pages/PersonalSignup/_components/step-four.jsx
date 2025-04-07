@@ -93,9 +93,18 @@ export const StepFour = ({ next }) => {
           // Access the message
           const message = parsedResponse.message;
 
+
           // Set manualEntry to true and automatically proceed instead of showing a button
+//           dispatch(setManualEntry(true));
+//           setApiError(message || 'Verification failed. Proceeding to manual entry...');
+
+          // message !==
+          // 'No matching records found. Please ensure the information is accurate and try again.'
           dispatch(setManualEntry(true));
-          setApiError(message || 'Verification failed. Proceeding to manual entry...');
+          // : dispatch(setManualEntry(false));
+          // setApiError(message || 'Verification failed. Please try again.');
+          setApiError('Verification failed. Please try again.');
+
         }
       }
     } catch (error) {
