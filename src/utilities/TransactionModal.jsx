@@ -8,7 +8,7 @@ const TransactionModal = ({
   message,
   details,
   reference,
-  buttons = ['back'],
+  buttons = ['Back'],
   onRegister,
   onLogin,
   onFundWallet,

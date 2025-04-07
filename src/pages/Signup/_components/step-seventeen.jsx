@@ -167,7 +167,8 @@ export const StepSeventeen = () => {
               <div className="w-full text-primary absolute top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%] flex flex-col md:space-y-4">
                 <span className="md:text-2xl text-xs font-medium">Business Owner Name</span>
                 <span className="md:text-3xl text-sm font-bold">
-                  {userData ? `${userData.firstName} ${userData.lastName}` : 'N/A'}
+                  {userData && (userData.firstName === null || userData.lastName === null) ? `${userData.payinaUserName}` : `${userData.firstname} ${userData.lastname}`}
+                  {/*{userData ? `${userData.firstName = null} ${userData.lastName=null}` : `${userData.payinaUserName}`}*/}
                 </span>
               </div>
             </div>
@@ -199,7 +200,7 @@ export const StepSeventeen = () => {
             onClick={handleClick}
             padding="15px"
             type="submit"
-            children="Proceed to Dashboard"
+            children="Proceed to Login"
             className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
           />
         </div>
