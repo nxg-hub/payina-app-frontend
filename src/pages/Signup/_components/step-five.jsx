@@ -19,7 +19,6 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
 
   const handlePrevious = () => {
     dispatch(previousStep());
-    console.log('hey');
   };
   const handleSubmit = async (values) => {
     setLoading(true);

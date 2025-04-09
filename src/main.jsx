@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store, { persistor } from './Redux/Store';
 import { PersistGate } from 'redux-persist/integration/react';
+import 'react-tooltip/dist/react-tooltip.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

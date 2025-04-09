@@ -548,11 +548,11 @@ const BillerPlans = () => {
         errorIcon={errorImage}
         buttons={
           modalStatus === 'success'
-            ? ['pullReceipt', 'back']
+            ? ['pullReceipt', 'Back']
             : modalStatus === 'error'
-              ? ['fundWallet', 'back']
+              ? ['fundWallet', 'Back']
               : modalStatus
-                ? ['back']
+                ? ['Back']
                 : []
         }
         onBack={() => setShowModal(false)}
