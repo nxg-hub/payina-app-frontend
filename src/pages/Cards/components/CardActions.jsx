@@ -96,7 +96,7 @@ export function CardActions({ cardId }) {
         status="success"
         title={getModalContent().title}
         message={getModalContent().message}
-        buttons={['back']}
+        buttons={['Back']}
       />
     </div>
   );

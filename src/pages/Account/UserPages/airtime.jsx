@@ -62,15 +62,15 @@ const UserAirtime = () => {
     setAmount(enteredAmount);
     setErrors((prev) => ({
       ...prev,
-      amount: Number(enteredAmount) < 70 ? 'Amount must be 10 Naira or above' : undefined,
+      amount: Number(enteredAmount) < 100 ? 'Amount must be 100 Naira or above' : undefined,
     }));
   };
 
   const handleVendInitiated = (response) => {
-    console.log('Vend initiated with response:', response);
+    // console.log('Vend initiated with response:', response);
 
     const paymentRef = response?.responseData?.paymentReference;
-    console.log('Extracted payment reference:', paymentRef);
+    // console.log('Extracted payment reference:', paymentRef);
 
     if (paymentRef) {
       setCurrentTransactionRef(paymentRef);
@@ -105,7 +105,7 @@ const UserAirtime = () => {
     if (!formValues.phoneNumber) newErrors.phoneNumber = 'Phone number is required';
     if (!formValues.selectedNetwork) newErrors.selectedNetwork = 'Network selection is required';
     if (!amount) newErrors.amount = 'Amount is required';
-    if (amount && Number(amount) < 70) newErrors.amount = 'Amount must be 70 Naira or above';
+    if (amount && Number(amount) < 100) newErrors.amount = 'Amount must be 100 Naira or above';
     if (!packageSlug) newErrors.packageSlug = 'Network plan not available';
     if (!userDetails.sub) newErrors.email = 'Email is required';
 
