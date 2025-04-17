@@ -239,63 +239,7 @@ export default function TransactionTable() {
       <div className="w-full">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl md:text-2xl font-bold">Recent Transactions</h2>
-          <div className="flex gap-4">
-            {/* <FilterMenu
-              showFilterMenu={showFilterMenu}
-              setShowFilterMenu={setShowFilterMenu}
-              filters={filters}
-              filterOptions={filterOptions}
-              handleFilterChange={handleFilter}
-              transactions={transactions}
-              clearAllFilters={clearAllFilters}
-              closeOtherMenus={() => {
-                setShowExportMenu(false);
-                setShowMoreMenu(false);
-              }}
-            /> */}
-
-            {/* <ExportMenu
-              showExportMenu={showExportMenu}
-              setShowExportMenu={setShowExportMenu}
-              transactions={filteredTransactions}
-              selectedRows={selectedRows}
-              showAllFields={showAllFields}
-              closeOtherMenus={() => {
-                setShowFilterMenu(false);
-                setShowMoreMenu(false);
-              }}
-              formatCurrency={formatCurrency}
-            /> */}
-
-            {/* More Menu */}
-            {/* <div className="relative">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowMoreMenu(() => !showMoreMenu);
-
-                  {
-                    closeOtherMenus();
-                  }
-                }}
-                className="p-2 hover:bg-gray-100 rounded-full">
-                <MoreHorizontal className="w-5 h-5 text-gray-600" />
-              </button> */}
-
-            {/* {showMoreMenu && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
-                  <button
-                    onClick={() => {
-                      toggleFields();
-                      setShowMoreMenu(false);
-                    }}
-                    className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">
-                    {showAllFields ? 'Hide Details' : 'Show More Fields'}
-                  </button>
-                </div>
-              )} */}
-            {/* </div> */}
-          </div>
+          <div className="flex gap-4"></div>
         </div>
       </div>
       {loading ? (

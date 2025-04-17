@@ -394,7 +394,7 @@ const VendInitiator = ({
       const errorMessage =
         'Error:' + err.response?.data?.debugMessage ||
         err.response?.data?.message ||
-        err.message ||
+        err.response.message ||
         'Vend process failed';
       onError(new Error(errorMessage));
     } finally {

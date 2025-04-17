@@ -355,11 +355,11 @@ const UserData = () => {
         errorIcon={errorImage}
         buttons={
           modalStatus === 'success'
-            ? ['pullReceipt', 'back']
+            ? ['pullReceipt', 'Back']
             : modalStatus === 'error' && walletBalance !== null && Number(amount) > walletBalance
-              ? ['fundWallet', 'back']
+              ? ['fundWallet', 'Back']
               : modalStatus
-                ? ['back']
+                ? ['Back']
                 : []
         }
         onFundWallet={handleFundWallet}
