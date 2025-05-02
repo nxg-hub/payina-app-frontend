@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 const ReviewTransaction = ({ data, nextStep }) => {
@@ -8,7 +8,9 @@ const ReviewTransaction = ({ data, nextStep }) => {
       <div className="flex flex-col items-left justify-between gap-4 bg-[#EBEBEB] rounded-md py-5 px-5 lg:py-10 lg:px-14 mt-5">
         <div className="flex flex-row justify-between lg:gap-[20rem] gap-[5px]">
           <div className="text-md font-medium">Receiver Name</div>
-          <div className="text-md font-medium">{data.payinaTag}</div>
+          <div className="text-md font-medium">
+            {`${data.firstName} ${data.lastName}`}
+          </div>
         </div>
 
         <div className="flex flex-row justify-between lg:gap-[20rem] gap-[5px]">
@@ -38,6 +40,8 @@ ReviewTransaction.propTypes = {
     payinaTag: PropTypes.string.isRequired,
     amount: PropTypes.string.isRequired,
     purpose: PropTypes.string.isRequired,
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
   }).isRequired,
   nextStep: PropTypes.func.isRequired,
   prevStep: PropTypes.func.isRequired,
