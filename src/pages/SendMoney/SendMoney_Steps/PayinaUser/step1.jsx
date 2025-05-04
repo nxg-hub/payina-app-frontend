@@ -97,7 +97,14 @@ const RecipientDetails = ({ nextStep }) => {
       setFieldError('payinaTag', 'Invalid PayinaTag or Account Number. Please try again.');
       return;
     }
-    nextStep({ payinaTag: values.payinaTag });
+    const nameParts = confirmationMessage.split(' ');
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '';
+    nextStep({
+      payinaTag: values.payinaTag,
+      firstName: firstName,
+      lastName: lastName,
+    });
   };
 
   return (
@@ -106,6 +113,8 @@ const RecipientDetails = ({ nextStep }) => {
       <Formik
         initialValues={{
           payinaTag: '',
+          firstName: '',
+          lastName: '',
         }}
         validationSchema={RecieverSchema}
         onSubmit={handleSubmit}>
