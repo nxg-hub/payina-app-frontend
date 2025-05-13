@@ -14,7 +14,7 @@ const ReviewTransaction = ({ data, nextStep }) => {
         </div>
 
         <div className="flex flex-row justify-between lg:gap-[20rem] gap-[5px]">
-          <div className="text-md font-medium">Trannsaction Amount</div>
+          <div className="text-md font-medium">Transaction Amount</div>
           <div className="text-md font-medium">{data.amount}</div>
         </div>
 
