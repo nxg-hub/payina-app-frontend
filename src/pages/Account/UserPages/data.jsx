@@ -47,7 +47,7 @@ const UserData = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(import.meta.env.VITE_GET_USER_ENDPOINT, {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_USER_ENDPOINT}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -168,7 +168,7 @@ const UserData = () => {
       setModalMessage('Please wait...');
 
       const response = await fetch(
-        `${import.meta.env.VITE_GET_TRANSACTION_RECIEPT}/${currentTransactionRef}`,
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_TRANSACTION_RECIEPT}/${currentTransactionRef}`,
         {
           method: 'GET',
           headers: {

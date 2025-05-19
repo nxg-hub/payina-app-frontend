@@ -22,7 +22,7 @@ export const BvnConfirmModal = ({ next, bvnData, ninData, onClose }) => {
     setApiError('');
 
     try {
-      const response = await fetch(import.meta.env.VITE_SAVE_EMPLOYEE_USERNAME_ENDPOINT, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_SAVE_EMPLOYEE_USERNAME_ENDPOINT}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ export const BvnConfirmModal = ({ next, bvnData, ninData, onClose }) => {
           onClose();
         }, 2000);
         // Fetch the updated user details
-        const response = await fetch(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT}`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${newAuthToken}`,

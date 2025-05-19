@@ -248,7 +248,7 @@ const VendInitiator = ({
   const fetchUserAndWalletData = useCallback(async () => {
     try {
       const [userResponse, walletResponse] = await Promise.all([
-        fetch(import.meta.env.VITE_GET_USER, {
+        fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_USER}`, {
           method: 'GET',
           headers: {
             accept: '*/*',
@@ -257,7 +257,7 @@ const VendInitiator = ({
             'Content-Type': 'application/json',
           },
         }),
-        fetch(import.meta.env.VITE_GET_WALLET_ENDPOINT, {
+        fetch(`${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_GET_WALLET_ENDPOINT}`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${newAuthToken}`,

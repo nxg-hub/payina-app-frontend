@@ -70,7 +70,7 @@ const Firstsection = ({
 
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_GET_CLIENTS_ENDPOINT}${corporateCustomerId}/get-clients`,
+          `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_CLIENTS_ENDPOINT}${corporateCustomerId}/get-clients`,
           {
             method: 'GET',
             headers: {
@@ -125,7 +125,7 @@ const Firstsection = ({
       dispatch(setFilterLoader(true));
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_FILTER_INVOICES_ENDPOINT}?corporateCustomerClientId=${selectedClientId}&startDateStr=${formattedBeginDate}&endDateStr=${formattedEndDate}&status=${status}&page=${currentPage}&size=${4}`,
+          `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_FILTER_INVOICES_ENDPOINT}?corporateCustomerClientId=${selectedClientId}&startDateStr=${formattedBeginDate}&endDateStr=${formattedEndDate}&status=${status}&page=${currentPage}&size=${4}`,
           {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },

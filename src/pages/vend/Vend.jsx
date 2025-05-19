@@ -42,7 +42,7 @@ const Vend = () => {
       dispatch(showLoading());
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_BILL_VERIFY}?transactionRef=${transactionalRefs}`,
+          `${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_BILL_VERIFY}?transactionRef=${transactionalRefs}`,
           {
             headers: {
               'Content-Type': 'application/json',

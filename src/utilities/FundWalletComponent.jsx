@@ -17,7 +17,7 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
     const fetchInitialData = async () => {
       try {
         // Fetch user data
-        const userResponse = await axios.get(import.meta.env.VITE_GET_USER, {
+        const userResponse = await axios.get(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_USER}`, {
           headers: {
             Accept: '*/*',
             apiKey: API_KEY,
@@ -29,7 +29,7 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
         setUserData(userResponse.data);
 
         // Fetch wallet data
-        const walletResponse = await axios.get(import.meta.env.VITE_GET_WALLET_ENDPOINT, {
+        const walletResponse = await axios.get(`${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_GET_WALLET_ENDPOINT}`, {
           headers: {
             Authorization: `Bearer ${newAuthToken}`,
             'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
 
     try {
       const response = await axios.post(
-        import.meta.env.VITE_FUND_WALLET_API,
+        `${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_FUND_WALLET_API}`,
         {
           email: userData?.email || formValues.email,
           amount: Number(amount),

@@ -6,7 +6,7 @@ export const fetchCredits = createAsyncThunk(
   async ({ authToken, page }, { rejectWithValue }) => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_TRANSACTION_HISTORY}?page=${0}&size=${page}`,
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_TRANSACTION_HISTORY}?page=${0}&size=${page}`,
         {
           method: 'POST',
           headers: {
@@ -37,7 +37,7 @@ export const fetchDebits = createAsyncThunk(
   async ({ authToken, page }, { rejectWithValue }) => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_TRANSACTION_HISTORY}?page=${0}&size=${page}`,
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_TRANSACTION_HISTORY}?page=${0}&size=${page}`,
         {
           method: 'POST',
           headers: {

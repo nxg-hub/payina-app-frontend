@@ -47,7 +47,7 @@ const ProfileSetting = () => {
       const formData = new FormData();
       formData.append('passport', files[0]);
       formData.append('email', userEmail);
-      const response = await fetch(import.meta.env.VITE_UPLOAD_IMAGE_ENDPOINT, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_UPLOAD_IMAGE_ENDPOINT}`, {
         method: 'POST',
         body: formData,
       });
@@ -57,7 +57,7 @@ const ProfileSetting = () => {
         setTimeout(() => setUploadStatus(''), 10000);
         setSuccess(true);
         // Fetch the updated user details
-        const response = await fetch(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT}`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${newAuthToken}`,

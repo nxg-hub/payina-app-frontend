@@ -34,7 +34,7 @@ const DocumentUploader = () => {
         formData.append('document', file);
         formData.append('email', userEmail);
 
-        return fetch(import.meta.env.VITE_UPLOAD_DOCUMENT_ENDPOINT, {
+        return fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_UPLOAD_DOCUMENT_ENDPOINT}`, {
           method: 'POST',
           body: formData,
         });

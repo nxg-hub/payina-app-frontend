@@ -35,7 +35,7 @@ const FifthSection = () => {
     setError('');
     try {
       const response = await axios.post(
-        import.meta.env.VITE_GENERATE_GUEST_PROMOCODE,
+       `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GENERATE_GUEST_PROMOCODE}`,
         {
           email: email,
         },

@@ -5,11 +5,11 @@ export const fetchPayrollData = createAsyncThunk(
   'payroll/fetchPayrollData',
   async (customerId, { rejectWithValue }) => {
     try {
-      const employeesEndpoint = import.meta.env.VITE_GET_ALL_EMPLOYEE_ENDPOINT.replace(
+      const employeesEndpoint = `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_ALL_EMPLOYEE_ENDPOINT}`.replace(
         '{customerId}',
         customerId
       );
-      const payrollEndpoint = import.meta.env.VITE_GET_ALL_PAYROLL_ENDPOINT.replace(
+      const payrollEndpoint = `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_ALL_PAYROLL_ENDPOINT}`.replace(
         '{customerId}',
         customerId
       );

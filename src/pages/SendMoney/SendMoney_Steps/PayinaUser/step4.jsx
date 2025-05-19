@@ -48,7 +48,7 @@ const EnterPin = ({ data }) => {
     const fetchUserData = async () => {
       setUserLoading(true);
       try {
-        const userResponse = await axios.get(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
+        const userResponse = await axios.get(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT}`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${newAuthToken}`,
@@ -71,9 +71,9 @@ const EnterPin = ({ data }) => {
       try {
         let endpoint;
         if (isNaN(payinaTag)) {
-          endpoint = import.meta.env.VITE_GET_PAYINA_TAG_ENDPOINT.replace('{username}', payinaTag);
+          endpoint = `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_PAYINA_TAG_ENDPOINT}`.replace('{username}', payinaTag);
         } else {
-          endpoint = `${import.meta.env.VITE_GET_ACCOUNT_NUMBER_ENDPOINT}?accountNumber=${payinaTag}`;
+          endpoint = `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_ACCOUNT_NUMBER_ENDPOINT}?accountNumber=${payinaTag}`;
         }
 
         const payinaResponse = await axios.get(endpoint, {
@@ -136,7 +136,7 @@ const EnterPin = ({ data }) => {
     setLoading(true);
     try {
       const pinResponse = await axios.post(
-        import.meta.env.VITE_VALIDATE_TRANSACTION_PIN_ENDPOINT,
+       `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_VALIDATE_TRANSACTION_PIN_ENDPOINT}`,
         null,
         {
           params: {
@@ -182,10 +182,10 @@ const EnterPin = ({ data }) => {
 
         const transactionResponse = await axios.post(
           //conditionally call the endpoints based on userType
-          userType === 'CORPORATE'
-            ? import.meta.env.VITE_INITIATE_INHOUSE_TRANSFER_REQUEST
-            : import.meta.env.VITE_IN_HOUSE_TRANSFER_ENDPOINT,
-          transactionPayload,
+         userType === 'CORPORATE'
+            ?`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_INITIATE_TRANSFER_REQUEST}`
+          : `${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_API_OTHER_BANK_SEND_MONEY_ENDPOINT}`,
+        transactionPayload,
           {
             headers: {
               apiKey: import.meta.env.VITE_API_KEY,

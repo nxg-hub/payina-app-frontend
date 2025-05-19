@@ -56,7 +56,7 @@ export const StepFourteen = ({ next }) => {
           ],
         };
 
-        const response = await fetch(import.meta.env.VITE_ADD_SOLE_SIGNATORY, {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_ADD_SOLE_SIGNATORY}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

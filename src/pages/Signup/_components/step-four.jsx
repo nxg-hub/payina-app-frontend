@@ -312,14 +312,20 @@ export const StepFour = ({ next }) => {
 
     setLoading(true);
 
+      const BASE_URL = import.meta.env.VITE_BASE_URL
+      const NIN_SEARCH = import.meta.env.VITE_NIN_SEARCH_EXISTING_PROFILE_ENDPOINT
+      const NIN_VERIFY = import.meta.env.VITE_NIN_VERIFY_NEW_PROFILE_ENDPOINT
+      const BVN_SEARCH = import.meta.env.VITE_NIN_SEARCH_EXISTING_PROFILE_ENDPOINT
+      const BVN_VERIFY = import.meta.env.VITE_NIN_SEARCH_EXISTING_PROFILE_ENDPOINT
+
     const endpoints = {
       NIN: {
-        search: import.meta.env.VITE_NIN_SEARCH_EXISTING_PROFILE_ENDPOINT,
-        verify: import.meta.env.VITE_NIN_VERIFY_NEW_PROFILE_ENDPOINT,
+        search: `${BASE_URL}${NIN_SEARCH}`,
+        verify:  `${BASE_URL}${NIN_VERIFY}`,
       },
       BVN: {
-        search: import.meta.env.VITE_BVN_SEARCH_EXISTING_PROFILE_ENDPOINT,
-        verify: import.meta.env.VITE_BVN_VERIFY_NEW_PROFILE_ENDPOINT,
+        search: `${BASE_URL}${BVN_SEARCH}`,
+        verify:  `${BASE_URL}${BVN_VERIFY}`,
       },
     };
     setApiError('');

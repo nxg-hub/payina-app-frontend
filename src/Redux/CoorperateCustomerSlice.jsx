@@ -13,7 +13,7 @@ export const fetchCoorperateCustomerDetails = createAsyncThunk(
   async (id) => {
     try {
       return await fetch(
-        import.meta.env.VITE_GET_CORPORATE_CUSTOMER_DETAILS.replace('{customerId}', id),
+       `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_CORPORATE_CUSTOMER_DETAILS}`.replace('{customerId}', id),
         {
           method: 'GET',
           headers: {

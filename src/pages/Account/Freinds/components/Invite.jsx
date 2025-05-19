@@ -16,7 +16,7 @@ const Invite = () => {
     setError('');
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_GENERATE_USER_PROMOCODE}/${id}`,
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GENERATE_USER_PROMOCODE}/${id}`,
 
         {
           headers: {

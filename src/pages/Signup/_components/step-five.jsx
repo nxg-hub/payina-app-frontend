@@ -17,15 +17,20 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
 
   const dispatch = useDispatch();
 
+
   const handlePrevious = () => {
     dispatch(previousStep());
   };
+  
+  const BASE_URL = import.meta.env.VITE_BASE_URL
+  const SAVE_USERNAME = import.meta.env.VITE_SAVE_USERNAME_ENDPOINT
+
   const handleSubmit = async (values) => {
     setLoading(true);
     setApiError('');
 
     try {
-      const response = await fetch(import.meta.env.VITE_SAVE_USERNAME_ENDPOINT, {
+      const response = await fetch(`${BASE_URL}${SAVE_USERNAME}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

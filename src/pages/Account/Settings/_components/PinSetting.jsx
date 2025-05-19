@@ -46,7 +46,7 @@ const PinSetting = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        import.meta.env.VITE_RESET_PIN,
+       `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_RESET_PIN}`,
         {
           oldPin: oldPinValue,
           newPin: newPinValue,

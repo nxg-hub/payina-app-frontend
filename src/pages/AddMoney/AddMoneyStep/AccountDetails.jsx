@@ -19,7 +19,7 @@ const AccountDetails = ({ goBack }) => {
       setLoading(true);
 
       try {
-        const response = await axios.get(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT}`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${newAuthToken}`,

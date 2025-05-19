@@ -36,7 +36,7 @@ const UpdateInventoryForm = ({ id }) => {
     setLoading(true);
     try {
       // Example of an API call to authenticate the user
-      const response = await fetch(import.meta.env.VITE_UPDATE_INVENTORY.replace('{id}', id), {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_UPDATE_INVENTORY}`.replace('{id}', id), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ const UpdateInventoryForm = ({ id }) => {
         setLoading(false);
         // Fetch the updated inventory
         const response = await fetch(
-          import.meta.env.VITE_GET_INVENTORY_BY_CUSTOMER_ID.replace('{customerId}', customerId),
+         `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_INVENTORY_BY_CUSTOMER_ID}`.replace('{customerId}', customerId),
           {
             headers: {
               'Content-Type': 'application/json',

@@ -10,7 +10,7 @@ const RecipientDetails = ({ nextStep }) => {
 
   const verifyPayinaUsername = async (payinaUsername) => {
     try {
-      const endpoint = import.meta.env.VITE_GET_PAYINA_TAG_ENDPOINT.replace(
+      const endpoint = `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_PAYINA_TAG_ENDPOINT}`.replace(
         '{username}',
         payinaUsername
       );
@@ -38,7 +38,7 @@ const RecipientDetails = ({ nextStep }) => {
 
   const verifyAccountNumber = async (accountNumber) => {
     try {
-      const endpoint = import.meta.env.VITE_GET_ACCOUNT_NUMBER_ENDPOINT;
+      const endpoint = `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_ACCOUNT_NUMBER_ENDPOINT}`;
       const response = await axios.get(`${endpoint}?accountNumber=${accountNumber}`);
       // console.log('API account number response:', response.data);
 

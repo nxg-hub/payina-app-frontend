@@ -16,6 +16,10 @@ export const StepTwo = ({ next, initialValues }) => {
   const handlePrevious = () => {
     dispatch(previousStep());
   };
+
+  const BASE_URL = import.meta.env.VITE_BASE_URL
+  const REGISTER_URL = import.meta.env.VITE_REGISTER_USER_ENDPOINT
+
   const handleSubmit = async (values) => {
     localStorage.setItem('phoneNumber ', phone);
     setLoading(true);
@@ -30,7 +34,7 @@ export const StepTwo = ({ next, initialValues }) => {
         referralCode: values.promoCode,
       };
 
-      const response = await fetch(import.meta.env.VITE_REGISTER_USER_ENDPOINT, {
+      const response = await fetch(`${BASE_URL}${REGISTER_URL}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
