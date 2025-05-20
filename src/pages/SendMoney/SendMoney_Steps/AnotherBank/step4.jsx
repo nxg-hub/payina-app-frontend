@@ -38,7 +38,7 @@ const EnterPin = ({ data }) => {
     dispatch(hideLoading());
   }
   const checkIfBeneficiaryExists = async () => {
-    const endpoint = import.meta.env.VITE_GET_SAVED_BENEFICIARIES_ENDPOINT.replace(
+    const endpoint = `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_SAVED_BENEFICIARIES_ENDPOINT}`.replace(
       '{customerId}',
       customerId
     );
@@ -73,7 +73,7 @@ const EnterPin = ({ data }) => {
       return;
     }
 
-    const endpoint = import.meta.env.VITE_API_SAVE_BENEFICIARIES_ENDPOINT.replace(
+    const endpoint = `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_SAVE_BENEFICIARIES_ENDPOINT}`.replace(
       '{customerId}',
       customerId
     );
@@ -137,7 +137,7 @@ const EnterPin = ({ data }) => {
     setLoading(true);
     try {
       const pinResponse = await axios.post(
-        import.meta.env.VITE_VALIDATE_TRANSACTION_PIN_ENDPOINT,
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_VALIDATE_TRANSACTION_PIN_ENDPOINT}`,
         null,
         {
           params: {
@@ -216,8 +216,8 @@ const EnterPin = ({ data }) => {
       const transactionResponse = await axios.post(
         //conditionally call the transfer and initiallize endpoint depending on userType
         userType === 'CORPORATE'
-          ? import.meta.env.VITE_INITIATE_TRANSFER_REQUEST
-          : import.meta.env.VITE_API_OTHER_BANK_SEND_MONEY_ENDPOINT,
+          ?`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_INITIATE_TRANSFER_REQUEST}`
+          : `${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_API_OTHER_BANK_SEND_MONEY_ENDPOINT}`,
         transactionPayload,
         {
           headers: {
@@ -242,7 +242,7 @@ const EnterPin = ({ data }) => {
           transactionResponse.data?.data === 'Transfer details sent successfully.');
       if (isSuccess) {
         //update wallet balance
-        const response = await fetch(import.meta.env.VITE_GET_WALLET_ENDPOINT, {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_WALLET_ENDPOINT}`, {
           headers: {
             accept: '*/*',
             Authorization: `Bearer ${newAuthToken}`,

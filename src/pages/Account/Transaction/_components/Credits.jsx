@@ -46,7 +46,7 @@ const Credits = ({ sortedCredits }) => {
       setModalMessage('Please wait...');
 
       const response = await fetch(
-        `${import.meta.env.VITE_GET_TRANSACTION_RECIEPT}/${currentTransactionRef}`,
+        `${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_GET_TRANSACTION_RECIEPT}/${currentTransactionRef}`,
         {
           method: 'GET',
           headers: {

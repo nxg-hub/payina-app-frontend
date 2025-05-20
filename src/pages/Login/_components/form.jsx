@@ -41,7 +41,7 @@ const LoginForm = () => {
     };
     setErrorMessage('');
     try {
-      const response = await fetch(import.meta.env.VITE_LOGIN_USER_ENDPOINT, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_LOGIN_USER_ENDPOINT}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

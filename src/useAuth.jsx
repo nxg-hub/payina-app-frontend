@@ -28,7 +28,7 @@ export function useAuth() {
       // Get user data and registration level in parallel
       const [userData, registrationResponse] = await Promise.all([
         apiService.getUser(),
-        axios.get(import.meta.env.VITE_REG_LEVEL_ENDPOINT, {
+        axios.get(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_REG_LEVEL_ENDPOINT}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

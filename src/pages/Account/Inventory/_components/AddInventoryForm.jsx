@@ -57,7 +57,7 @@ const AddInventoryForm = () => {
         setLoading(false);
         // Fetch the updated inventory
         const res = await fetch(
-          import.meta.env.VITE_GET_INVENTORY_BY_CUSTOMER_ID.replace('{customerId}', id),
+         `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_INVENTORY_BY_CUSTOMER_ID}`.replace('{customerId}', id),
           {
             headers: {
               'Content-Type': 'application/json',

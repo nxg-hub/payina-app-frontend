@@ -36,11 +36,14 @@ export const StepThree = ({ next, data }) => {
     }
   }, [timeLeft]); // Run
 
+    const BASE_URL = import.meta.env.VITE_BASE_URL
+    const VERIFY_OTP = import.meta.env.VITE_VALIDATE_OTP_ENDPOINT
+
   const handleSubmit = async (values) => {
     setLoading(true);
     setOtpError('');
     try {
-      const response = await fetch(import.meta.env.VITE_VALIDATE_OTP_ENDPOINT, {
+      const response = await fetch(`${BASE_URL}${VERIFY_OTP}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

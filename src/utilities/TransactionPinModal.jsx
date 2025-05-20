@@ -38,7 +38,7 @@ const TransactionPinModal = ({
 
     try {
       const response = await axios.post(
-        import.meta.env.VITE_VALIDATE_TRANSACTION_PIN_ENDPOINT,
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_VALIDATE_TRANSACTION_PIN_ENDPOINT}`,
         null,
         {
           params: {

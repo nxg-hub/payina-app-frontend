@@ -43,7 +43,7 @@ export default function TransactionTable() {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(import.meta.env.VITE_TRANSACTION_HISTORY, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_TRANSACTION_HISTORY}`, {
         method: 'POST',
         headers: {
           accept: 'application/json',

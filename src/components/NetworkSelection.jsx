@@ -24,7 +24,7 @@ const NetworkSelection = ({
       if (!authToken) return; // Skip if no auth token
 
       try {
-        const userResponse = await fetch(import.meta.env.VITE_GET_USER, {
+        const userResponse = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_USER}`, {
           method: 'GET',
           headers: {
             accept: '*/*',
@@ -60,7 +60,7 @@ const NetworkSelection = ({
       setError(null);
 
       try {
-        const response = await fetch(`${import.meta.env.VITE_FETCH_NETWORKS}`);
+        const response = await fetch(`${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_FETCH_NETWORKS}`);
 
         if (!response.ok) {
           throw new Error('Network response was not ok');

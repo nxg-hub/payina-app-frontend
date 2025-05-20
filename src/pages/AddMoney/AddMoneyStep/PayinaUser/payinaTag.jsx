@@ -24,7 +24,7 @@ const PayinaTag = () => {
       }
       console.log('Auth Token:', newAuthToken);
       try {
-        const endpoint = import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT;
+        const endpoint = `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT}`;
         const response = await axios.get(endpoint, {
           headers: { Authorization: `Bearer ${newAuthToken}` },
         });
@@ -46,7 +46,7 @@ const PayinaTag = () => {
   const verifyPayinaTag = async (payinaTag) => {
     try {
       if (isNaN(payinaTag)) {
-        const endpoint = import.meta.env.VITE_GET_PAYINA_TAG_ENDPOINT.replace(
+        const endpoint = `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_PAYINA_TAG_ENDPOINT}`.replace(
           '{username}',
           payinaTag
         );
@@ -61,7 +61,7 @@ const PayinaTag = () => {
         }
         return { isValid: false, message: 'PayinaTag not found.' };
       } else {
-        const endpoint = import.meta.env.VITE_GET_ACCOUNT_NUMBER_ENDPOINT;
+        const endpoint = `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_ACCOUNT_NUMBER_ENDPOINT}`;
         const response = await axios.get(`${endpoint}?accountNumber=${payinaTag}`);
         if (response.data && response.data.customerId != null) {
           return {
@@ -112,7 +112,7 @@ const PayinaTag = () => {
 
   const requestMoney = async (payload) => {
     try {
-      const endpoint = import.meta.env.VITE_REQUEST_MONEY_ENDPOINT;
+      const endpoint = `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_REQUEST_MONEY_ENDPOINT}`;
       const response = await axios.post(endpoint, payload, {
         headers: { Authorization: `Bearer ${newAuthToken}` },
       });

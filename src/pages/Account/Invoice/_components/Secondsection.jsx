@@ -18,7 +18,7 @@ const Secondsection = ({ next }) => {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_GET_CLIENTS_ENDPOINT}${corporateCustomerId}/get-clients`
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_CLIENTS_ENDPOINT}${corporateCustomerId}/get-clients`
       );
       if (response.ok) {
         const data = await response.json();
@@ -37,7 +37,7 @@ const Secondsection = ({ next }) => {
     setLoadingInvoices(true);
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_GET_CUSTOMERS_INVOICE_COUNT_ENDPOINT}?corporateCustomerId=${corporateCustomerId}`,
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_CUSTOMERS_INVOICE_COUNT_ENDPOINT}?corporateCustomerId=${corporateCustomerId}`,
         {
           method: 'GET',
           headers: {
@@ -63,7 +63,7 @@ const Secondsection = ({ next }) => {
     setLoadingPaymentStatus(true);
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_PAYMENT_STATUS_COUNT_ENDPOINT}?corporateCustomerId=${corporateCustomerId}`,
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_PAYMENT_STATUS_COUNT_ENDPOINT}?corporateCustomerId=${corporateCustomerId}`,
         {
           method: 'GET',
           headers: {

@@ -92,7 +92,7 @@ export const StepThirteen = ({ next, email, initialValues }) => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_CREATE_PROFILE_ENDPOINT}?customerId=${encodeURIComponent(customerId)}`,
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_CREATE_PROFILE_ENDPOINT}?customerId=${encodeURIComponent(customerId)}`,
         {
           method: 'POST',
           headers: {

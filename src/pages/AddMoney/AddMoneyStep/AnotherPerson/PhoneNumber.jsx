@@ -19,7 +19,7 @@ const PhoneNumber = () => {
       }
       console.log('Auth Token:', newAuthToken);
       try {
-        const response = await fetch(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT}`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${newAuthToken}`,
@@ -49,7 +49,7 @@ const PhoneNumber = () => {
     console.log('Request Data:', JSON.stringify(requestData, null, 2));
 
     try {
-      const response = await fetch(import.meta.env.VITE_EXTERNAL_REQUEST_MONEY_ENDPOINT, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_EXTERNAL_REQUEST_MONEY_ENDPOINT}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

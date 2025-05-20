@@ -33,7 +33,7 @@ const PasswordSetting = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        import.meta.env.VITE_INAPP_PASSWORD_UPDATE,
+      `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_INAPP_PASSWORD_UPDATE}`,
         {
           oldPassword: values.oldPassword,
           newPassword: values.newPassword,

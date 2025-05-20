@@ -9,7 +9,7 @@ const apiService = {
 
       const encodedEmail = encodeURIComponent(email);
       const response = await axios.get(
-        `${import.meta.env.VITE_EMAIL_CHECK}?email=${encodedEmail}`,
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_EMAIL_CHECK}?email=${encodedEmail}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ const apiService = {
       const paystackPublicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
 
       const response = await axios.post(
-        import.meta.env.VITE_FUND_WALLET_API,
+        `${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_FUND_WALLET_API}`,
         {
           email,
           amount,
@@ -87,7 +87,7 @@ const apiService = {
       if (!token) {
         throw new Error('No authentication token found');
       }
-      const response = await axios.get(import.meta.env.VITE_GET_USER, {
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_USER}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -103,7 +103,7 @@ const apiService = {
   fetchDataPlans: async (networkSlug) => {
     try {
       const formattedUrl = networkSlug.replace(' ', '_');
-      const response = await axios.get(`${import.meta.env.VITE_FETCH_DATA_PLANS}/${formattedUrl}`);
+      const response = await axios.get(`${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_FETCH_DATA_PLANS}/${formattedUrl}`);
       return response.data.responseData;
     } catch (error) {
       console.error('Error fetching data plans:', error);
@@ -113,7 +113,7 @@ const apiService = {
 
   initializePayment: async (customerEmail, amount) => {
     try {
-      const response = await axios.post(import.meta.env.VITE_INITIALIZE_PAYMENT, {
+      const response = await axios.post(`${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_INITIALIZE_PAYMENT}`, {
         order: {
           customerEmail,
           amount,
@@ -132,7 +132,7 @@ const apiService = {
 
   vendValue: async (reference, payload) => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_VEND_VALUE}/${reference}`, payload);
+      const response = await axios.post(`${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_VEND_VALUE}/${reference}`, payload);
       return response.data;
     } catch (error) {
       console.error('Error vending value:', error);
@@ -142,7 +142,7 @@ const apiService = {
 
   fetchServices: async () => {
     try {
-      const response = await axios.get(import.meta.env.VITE_FETCH_SERVICES);
+      const response = await axios.get(`${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_FETCH_SERVICES}`);
       return response.data.responseData;
     } catch (error) {
       console.error('Error fetching services:', error);
@@ -152,7 +152,7 @@ const apiService = {
 
   fetchBettingServices: async () => {
     try {
-      const response = await axios.get(import.meta.env.VITE_FETCH_BILLER_GROUPS);
+      const response = await axios.get(`${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_FETCH_BILLER_GROUPS}`);
       if (!response.data || !Array.isArray(response.data.responseData)) {
         throw new Error('Invalid response format: responseData not found or not an array');
       }
@@ -166,7 +166,7 @@ const apiService = {
   fetchBillerBySlug: async (billerGroupSlug) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_FETCH_BILLER_SLUG}/${billerGroupSlug}`
+        `${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_FETCH_BILLER_SLUG}/${billerGroupSlug}`
       );
       return response.data.responseData;
     } catch (error) {
@@ -177,7 +177,7 @@ const apiService = {
 
   fetchBillerPlans: async (billerSlug) => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_FETCH_BILLER_PLANS}/${billerSlug}`);
+      const response = await axios.get(`${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_FETCH_BILLER_PLANS}/${billerSlug}`);
       return response.data.responseData;
     } catch (error) {
       console.error('Error fetching biller plans:', error);
@@ -187,7 +187,7 @@ const apiService = {
 
   verifyCustomer: async (payload) => {
     try {
-      const response = await axios.post(import.meta.env.VITE_CUSTOMER_ENQUIRY, payload);
+      const response = await axios.post(`${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_CUSTOMER_ENQUIRY}`, payload);
       return response.data;
     } catch (error) {
       console.error('Error verifying customer:', error);
@@ -198,7 +198,7 @@ const apiService = {
   signout: async () => {
     try {
       const response = await axios.post(
-        import.meta.env.VITE_SIGNOUT,
+      `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_SIGNOUT}`,
         {},
         {
           headers: {

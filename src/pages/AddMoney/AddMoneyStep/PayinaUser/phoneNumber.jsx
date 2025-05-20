@@ -26,7 +26,7 @@ const PhoneNumber = () => {
       }
       console.log('Auth Token:', newAuthToken);
       try {
-        const response = await fetch(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT}`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${newAuthToken}`,
@@ -51,7 +51,7 @@ const PhoneNumber = () => {
     console.log(formattedPhoneNumber);
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_VERIFY_PHONENUMBER_ENDPOINT}?phoneNumber=${encodeURIComponent(formattedPhoneNumber)}`,
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_VERIFY_PHONENUMBER_ENDPOINT}?phoneNumber=${encodeURIComponent(formattedPhoneNumber)}`,
         {
           method: 'GET',
           headers: {
@@ -136,7 +136,7 @@ const PhoneNumber = () => {
     };
 
     try {
-      const response = await fetch(import.meta.env.VITE_REQUEST_MONEY_ENDPOINT, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_REQUEST_MONEY_ENDPOINT}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
