@@ -242,7 +242,7 @@ const EnterPin = ({ data }) => {
           transactionResponse.data?.data === 'Transfer details sent successfully.');
       if (isSuccess) {
         //update wallet balance
-        const response = await fetch(import.meta.env.VITE_GET_WALLET_ENDPOINT, {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_WALLET_ENDPOINT}`, {
           headers: {
             accept: '*/*',
             Authorization: `Bearer ${newAuthToken}`,

@@ -48,7 +48,7 @@ const VendInitiator = ({
             'Content-Type': 'application/json',
           },
         }),
-          fetch(`${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_GET_WALLET_ENDPOINT}`, {
+          fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_WALLET_ENDPOINT}`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${newAuthToken}`,

@@ -22,7 +22,7 @@ const BalanceCard = () => {
           return;
         }
 
-        const response = await fetch(import.meta.env.VITE_GET_WALLET_ENDPOINT, {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_WALLET_ENDPOINT}`, {
           headers: {
             accept: '*/*',
             // apiKey: import.meta.env.VITE_API_KEY,

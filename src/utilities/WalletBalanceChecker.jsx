@@ -353,7 +353,7 @@ const WalletBalanceChecker = forwardRef(
         setLoading(true);
         setError(null);
 
-        const response = await fetch(`${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_GET_WALLET_ENDPOINT}`, {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_WALLET_ENDPOINT}`, {
           method: 'GET',
           headers: {
             accept: '*/*',
