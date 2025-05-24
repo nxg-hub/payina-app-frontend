@@ -17,8 +17,8 @@ export const StepTwo = ({ next, initialValues }) => {
     dispatch(previousStep());
   };
 
-  const BASE_URL = import.meta.env.VITE_BASE_URL
-  const REGISTER_URL = import.meta.env.VITE_REGISTER_USER_ENDPOINT
+  const BASE_URL = import.meta.env.VITE_BASE_URL.replace(/\/$/, '');
+  const REGISTER_URL = import.meta.env.VITE_REGISTER_USER_ENDPOINT.replace(/^\/?/, '/');
 
   const handleSubmit = async (values) => {
     localStorage.setItem('phoneNumber ', phone);
