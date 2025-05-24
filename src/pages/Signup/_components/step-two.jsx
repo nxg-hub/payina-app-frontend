@@ -19,6 +19,7 @@ export const StepTwo = ({ next, initialValues }) => {
 
   const BASE_URL = import.meta.env.VITE_BASE_URL.replace(/\/$/, '');
   const REGISTER_URL = import.meta.env.VITE_REGISTER_USER_ENDPOINT.replace(/^\/?/, '/');
+  console.log(BASE_URL, ':', REGISTER_URL);
 
   const handleSubmit = async (values) => {
     localStorage.setItem('phoneNumber ', phone);
@@ -34,7 +35,7 @@ export const StepTwo = ({ next, initialValues }) => {
         referralCode: values.promoCode,
       };
 
-      const response = await fetch(`${BASE_URL}${REGISTER_URL}`, {
+      const response = await fetch(`${BASE_URL}/${REGISTER_URL}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
