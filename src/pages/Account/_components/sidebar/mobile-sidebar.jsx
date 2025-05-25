@@ -76,14 +76,14 @@ export const MobileSidebar = ({ openModal }) => {
             <RiBillLine size={22} />
             <span className="hover:text-lightBlue ease transition-colors">Bills</span>
           </Link>
-          <Link
-            to="/personal/cards"
-            className={`flex items-center space-x-6 ${
-              currentRoute === '/personal/cards' ? '!ml-3 font-bold text-lightBlue' : ''
-            }`}>
-            <TbCards size={22} />
-            <span className="hover:text-lightBlue ease transition-colors">Cards</span>
-          </Link>
+          {/*<Link*/}
+          {/*  to="/personal/cards"*/}
+          {/*  className={`flex items-center space-x-6 ${*/}
+          {/*    currentRoute === '/personal/cards' ? '!ml-3 font-bold text-lightBlue' : ''*/}
+          {/*  }`}>*/}
+          {/*  <TbCards size={22} />*/}
+          {/*  <span className="hover:text-lightBlue ease transition-colors">Cards</span>*/}
+          {/*</Link>*/}
           <Link
             to="/account/transaction"
             className={`flex items-center space-x-6 ${
