@@ -43,7 +43,7 @@ export const StepThree = ({ next, data }) => {
     setLoading(true);
     setOtpError('');
     try {
-      const response = await fetch(`${BASE_URL}${VERIFY_OTP}`, {
+      const response = await fetch(`${VERIFY_OTP}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

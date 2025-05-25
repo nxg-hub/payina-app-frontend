@@ -36,7 +36,7 @@ export const StepTwo = ({ next, initialValues }) => {
         referralCode: values.promoCode,
       };
 
-      const response = await fetch(`${BASE_URL}${REGISTER_URL}`, {
+      const response = await fetch(`${REGISTER_URL}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
