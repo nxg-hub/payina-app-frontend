@@ -33,7 +33,7 @@ const EmailVerification = ({}) => {
       //if email exists call get user by email endpoint
       if (isRegistered) {
         const response = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_USER_BY_EMAIL_ENDPOINT}?email=${encodeURIComponent(email)}`
+          `${import.meta.env.VITE_GET_USER_BY_EMAIL_ENDPOINT}?email=${encodeURIComponent(email)}`
         );
         if (response.status === 200) {
           const regLevel = response.data.registrationLevel;

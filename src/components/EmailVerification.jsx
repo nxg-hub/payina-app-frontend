@@ -3,13 +3,13 @@ import apiService from '../services/apiService';
 import InputStyle from '../utilities/InputStyle';
 
 const EmailVerification = ({
-                             onUserVerified,
-                             value,
-                             onChange,
-                             type = 'email',
-                             placeholder = 'Enter Email address',
-                             className = 'border-2 rounded-[5px] px-5 py-2 border-primary bg-black text-slate-600'
-                           }) => {
+  onUserVerified,
+  value,
+  onChange,
+  type = 'email',
+  placeholder = 'Enter Email address',
+  className = 'border-2 rounded-[5px] px-5 py-2 border-primary bg-black text-slate-600',
+}) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
