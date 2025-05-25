@@ -83,7 +83,7 @@ const Scan = () => {
         tokenizeCard: true,
       };
 
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_INITIALIZE_PAYMENT}`, {
+      const response = await fetch(`${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_INITIALIZE_PAYMENT}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
