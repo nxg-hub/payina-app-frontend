@@ -49,7 +49,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues, values 
     setApiError('');
 
     try {
-      const response = await fetch(import.meta.env.VITE_SAVE_USERNAME_ENDPOINT, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_SAVE_USERNAME_ENDPOINT}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

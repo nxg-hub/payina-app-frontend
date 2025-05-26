@@ -32,12 +32,12 @@ export const StepFour = ({ next }) => {
 
     const endpoints = {
       NIN: {
-        search: import.meta.env.VITE_NIN_SEARCH_EXISTING_PROFILE_ENDPOINT,
-        verify: import.meta.env.VITE_NIN_VERIFY_NEW_PROFILE_ENDPOINT,
+        search: `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_NIN_SEARCH_EXISTING_PROFILE_ENDPOINT}`,
+        verify: `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_NIN_VERIFY_NEW_PROFILE_ENDPOINT}`,
       },
       BVN: {
-        search: import.meta.env.VITE_BVN_SEARCH_EXISTING_PROFILE_ENDPOINT,
-        verify: import.meta.env.VITE_BVN_VERIFY_NEW_PROFILE_ENDPOINT,
+        search: `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BVN_SEARCH_EXISTING_PROFILE_ENDPOINT}`,
+        verify: `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BVN_VERIFY_NEW_PROFILE_ENDPOINT}`,
       },
     };
     setApiError('');

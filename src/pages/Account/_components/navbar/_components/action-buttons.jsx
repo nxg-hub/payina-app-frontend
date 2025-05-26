@@ -20,7 +20,7 @@ const ActionButtons = () => {
         return;
       }
 
-      const apiUrl = `https://payina-be-6f08cdfb4414.herokuapp.com/api/v1/user-actions?customerId=${encodeURIComponent(customerId)}&page=0&size=20`;
+      const apiUrl = `${import.meta.env.VITE_BASE_URL}/api/v1/user-actions?customerId=${encodeURIComponent(customerId)}&page=0&size=20`;
       console.log('Fetching notifications from:', apiUrl);
 
       const response = await fetch(apiUrl);
@@ -99,7 +99,7 @@ const ActionButtons = () => {
     if (!customerId) return;
 
     try {
-      const apiUrl = `https://payina-be-6f08cdfb4414.herokuapp.com/api/v1/user-actions/${notificationId}/read?customerId=${encodeURIComponent(customerId)}`;
+      const apiUrl = `${import.meta.env.VITE_BASE_URL}/api/v1/user-actions/${notificationId}/read?customerId=${encodeURIComponent(customerId)}`;
       console.log('Marking notification as read:', apiUrl);
 
       const response = await fetch(apiUrl, {

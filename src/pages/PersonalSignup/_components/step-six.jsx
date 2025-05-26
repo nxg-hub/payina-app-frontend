@@ -9,7 +9,7 @@ const uploadImage = async (imageFile, email) => {
     formData.append('passport', imageFile);
     formData.append('email', email);
 
-    const response = await fetch(import.meta.env.VITE_UPLOAD_IMAGE_ENDPOINT, {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_UPLOAD_IMAGE_ENDPOINT}`, {
       method: 'POST',
       body: formData,
     });
