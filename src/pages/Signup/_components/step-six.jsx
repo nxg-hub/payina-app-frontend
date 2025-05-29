@@ -13,7 +13,7 @@ const uploadImage = async (imageFile, email) => {
     formData.append('passport', imageFile);
     formData.append('email', email);
 
-    const response = await fetch(`${BASE_URL}${UPLOAD_IMAGE}`, {
+    const response = await fetch(`${UPLOAD_IMAGE}`, {
       method: 'POST',
       body: formData,
     });

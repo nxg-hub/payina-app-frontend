@@ -30,7 +30,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
     setApiError('');
 
     try {
-      const response = await fetch(`${BASE_URL}${SAVE_USERNAME}`, {
+      const response = await fetch(`${SAVE_USERNAME}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

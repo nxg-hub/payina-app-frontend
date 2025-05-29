@@ -20,7 +20,10 @@ const ActionButtons = () => {
         return;
       }
 
+
       const apiUrl = `${import.meta.env.VITE_BASE_URL}/api/v1/user-actions?customerId=${encodeURIComponent(customerId)}&page=0&size=20`;
+
+
       console.log('Fetching notifications from:', apiUrl);
 
       const response = await fetch(apiUrl);

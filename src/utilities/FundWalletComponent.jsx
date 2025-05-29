@@ -57,7 +57,6 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
         {
           email: userData?.email || formValues.email,
           amount: Number(amount),
-          channels: ['card'],
           walletId: walletData?.walletId || userData?.walletId,
         },
         {
