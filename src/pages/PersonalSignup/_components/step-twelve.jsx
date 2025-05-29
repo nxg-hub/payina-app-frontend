@@ -12,7 +12,7 @@ const uploadDocument = async (documentFile, email) => {
     formData.append('document', documentFile);
     formData.append('email', email);
 
-    const response = await fetch(import.meta.env.VITE_UPLOAD_DOCUMENT_ENDPOINT, {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_UPLOAD_DOCUMENT_ENDPOINT}`, {
       method: 'POST',
       body: formData
     });

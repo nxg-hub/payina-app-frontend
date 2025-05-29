@@ -24,7 +24,7 @@ export const StepSeventeen = () => {
       try {
         setIsLoading(true);
         const response = await fetch(
-          `${import.meta.env.VITE_GET_USER_BY_EMAIL_ENDPOINT}?email=${encodeURIComponent(userEmail)}`,
+          `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_USER_BY_EMAIL_ENDPOINT}?email=${encodeURIComponent(userEmail)}`,
           {
             method: 'GET',
             headers: {
