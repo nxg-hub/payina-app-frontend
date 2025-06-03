@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom';
 import { images } from '../../../../../constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
-import { BsBank } from 'react-icons/bs';
-import { PiPiggyBankFill } from 'react-icons/pi';
-import { openModal } from '../../../../../Redux/modalSlice';
+// import { BsBank } from 'react-icons/bs';
+// import { PiPiggyBankFill } from 'react-icons/pi';
+// import { openModal } from '../../../../../Redux/modalSlice';
 
 const QuickAction = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [isVisible, setIsVisible] = useState(true);
   const userDetails = useSelector((state) => state.user.user);
   const userType = userDetails?.userType;
