@@ -56,7 +56,7 @@ export const StepFourteen = ({ next }) => {
           ],
         };
 
-        const response = await fetch(import.meta.env.VITE_ADD_SOLE_SIGNATORY, {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_ADD_SOLE_SIGNATORY}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -222,7 +222,7 @@ export const StepFourteen = ({ next }) => {
                 <button
                   onClick={handlePrevious}
                   className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8">
-                  back
+                  Back
                 </button>
                 <CustomButton
                   padding="15px"

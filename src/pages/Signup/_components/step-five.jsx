@@ -17,16 +17,20 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
 
   const dispatch = useDispatch();
 
+
   const handlePrevious = () => {
     dispatch(previousStep());
-    console.log('hey');
   };
+  
+  const BASE_URL = import.meta.env.VITE_BASE_URL
+  const SAVE_USERNAME = import.meta.env.VITE_SAVE_USERNAME_ENDPOINT
+
   const handleSubmit = async (values) => {
     setLoading(true);
     setApiError('');
 
     try {
-      const response = await fetch(import.meta.env.VITE_SAVE_USERNAME_ENDPOINT, {
+      const response = await fetch(`${SAVE_USERNAME}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -188,7 +192,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
                   disabled={loading}
                   onClick={handlePrevious}
                   className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8">
-                  back
+                  Back
                 </button>
                 <CustomButton
                   padding="15px"

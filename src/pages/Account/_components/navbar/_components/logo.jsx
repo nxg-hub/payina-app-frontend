@@ -4,7 +4,7 @@ import { images } from '../../../../../constants';
 const Logo = () => {
   return (
     <div>
-      <Link to={'/'}>
+      <Link to={'/account/dashboard'}>
         <img src={images.logo} alt="logo" className="w-60" />
       </Link>
     </div>

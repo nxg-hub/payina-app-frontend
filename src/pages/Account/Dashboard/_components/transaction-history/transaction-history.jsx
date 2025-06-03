@@ -57,7 +57,7 @@ export default function TransactionTable() {
 
       // Fetch all transactions directly without filtering by type
       const response = await fetch(
-        `${import.meta.env.VITE_TRANSACTION_HISTORY}?page=${page - 1}&size=${pageSize}`,
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_TRANSACTION_HISTORY}?page=${page - 1}&size=${pageSize}`,
         {
           method: 'POST',
           headers: {
@@ -143,7 +143,7 @@ export default function TransactionTable() {
       setModalMessage('Please wait...');
 
       const response = await fetch(
-        `${import.meta.env.VITE_GET_TRANSACTION_RECIEPT}/${currentTransactionRef}`,
+        `${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_GET_TRANSACTION_RECIEPT}/${currentTransactionRef}`,
         {
           method: 'GET',
           headers: {

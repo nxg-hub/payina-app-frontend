@@ -24,7 +24,7 @@ const ForgotPassword = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        import.meta.env.VITE_PASSWORD_RESET_VIA_EMAIL.replace('{email}', values.email)
+       `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_PASSWORD_RESET_VIA_EMAIL}`.replace('{email}', values.email)
       );
       if (response.status === 200) {
         navigate('/validate-otp');

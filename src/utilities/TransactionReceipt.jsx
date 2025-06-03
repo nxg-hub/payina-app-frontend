@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Download } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
-import logo from '../assets/images/payina_real-logo-crop.jpg';
+import logo from '../assets/images/payina-pure-logo.png';
 
 const TransactionReceipt = ({ receiptData, onClose }) => {
   const [logoBase64, setLogoBase64] = useState('');
@@ -141,7 +141,7 @@ const TransactionReceipt = ({ receiptData, onClose }) => {
         body: [
           ['Date', new Date(receiptData.transactionDate).toLocaleString()],
           ['Recipient', receiptData.beneficiaryName || 'N/A'],
-          ['Sender', receiptData.email || 'N/A'],
+          ['Sender', receiptData.senderName || 'N/A'],
           ['Description', receiptData.description || 'N/A'],
           ['Reference', receiptData.transactionRef || 'N/A'],
         ],
@@ -171,7 +171,7 @@ const TransactionReceipt = ({ receiptData, onClose }) => {
   // Receipt data field definitions
   const receiptFields = [
     { label: 'Recipient', key: 'beneficiaryName' },
-    { label: 'Sender', key: 'email' },
+    { label: 'Sender', key: 'senderName' },
     { label: 'Description', key: 'description' },
     { label: 'Reference', key: 'transactionRef' },
   ];
@@ -207,7 +207,7 @@ const TransactionReceipt = ({ receiptData, onClose }) => {
         <div className="flex justify-between items-center border-b pb-4">
           {logo && (
             <div className="flex-shrink-0">
-              <img src={logo} alt="Payina Logo" className="h-12 w-auto" />
+              <img src={logo} alt="Payina Logo" className="h-40 w-auto" />
             </div>
           )}
 

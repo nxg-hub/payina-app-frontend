@@ -47,7 +47,7 @@ const UserData = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(import.meta.env.VITE_GET_USER_ENDPOINT, {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_USER}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -168,7 +168,7 @@ const UserData = () => {
       setModalMessage('Please wait...');
 
       const response = await fetch(
-        `${import.meta.env.VITE_GET_TRANSACTION_RECIEPT}/${currentTransactionRef}`,
+        `${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_GET_TRANSACTION_RECIEPT}/${currentTransactionRef}`,
         {
           method: 'GET',
           headers: {
@@ -355,11 +355,11 @@ const UserData = () => {
         errorIcon={errorImage}
         buttons={
           modalStatus === 'success'
-            ? ['pullReceipt', 'back']
+            ? ['pullReceipt', 'Back']
             : modalStatus === 'error' && walletBalance !== null && Number(amount) > walletBalance
-              ? ['fundWallet', 'back']
+              ? ['fundWallet', 'Back']
               : modalStatus
-                ? ['back']
+                ? ['Back']
                 : []
         }
         onFundWallet={handleFundWallet}

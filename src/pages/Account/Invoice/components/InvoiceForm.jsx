@@ -78,7 +78,7 @@ export const InvoiceForm = ({ next, lineItems }) => {
         phone: values.customer.contact,
       };
       const response = await fetch(
-        `${import.meta.env.VITE_ADD_CLIENTS_ENDPOINT}${corporateCustomerId}/add-clients`,
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_ADD_CLIENTS_ENDPOINT}${corporateCustomerId}/add-clients`,
         {
           method: 'POST',
           headers: {
@@ -99,7 +99,7 @@ export const InvoiceForm = ({ next, lineItems }) => {
       if (response.ok) {
         //if client has been added successfully call the get clients endpoint and update it in the store
         const response = await fetch(
-          `${import.meta.env.VITE_GET_CLIENTS_ENDPOINT}${corporateCustomerId}/get-clients`,
+          `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_CLIENTS_ENDPOINT}${corporateCustomerId}/get-clients`,
           {
             method: 'GET',
             headers: {
@@ -323,7 +323,7 @@ export const InvoiceForm = ({ next, lineItems }) => {
         return;
       }
       const invoiceResponse = await fetch(
-        `${import.meta.env.VITE_CREATE_INVOICE_ENDPOINT}${clientId}/create-invoice`,
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_CREATE_INVOICE_ENDPOINT}${clientId}/create-invoice`,
         {
           method: 'POST',
           headers: {
@@ -399,7 +399,7 @@ export const InvoiceForm = ({ next, lineItems }) => {
         recipientEmail,
       };
       const sendInvoiceResponse = await fetch(
-        `${import.meta.env.VITE_SEND_INVOICE_ENDPOINT}${invoiceId}/send-invoice?recipientEmail=${encodeURIComponent(requestBody.recipientEmail)}`,
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_SEND_INVOICE_ENDPOINT}${invoiceId}/send-invoice?recipientEmail=${encodeURIComponent(requestBody.recipientEmail)}`,
         {
           method: 'POST',
           headers: {
@@ -458,7 +458,7 @@ export const InvoiceForm = ({ next, lineItems }) => {
   const authenticateEmail = async (email) => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_GET_USER_BY_EMAIL_ENDPOINT}?email=${encodeURIComponent(email)}`
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_USER_BY_EMAIL_ENDPOINT}?email=${encodeURIComponent(email)}`
       );
       if (response.ok) {
         const data = await response.json();

@@ -438,7 +438,7 @@ export const StepTen = ({ next, initialValues }) => {
                   <button
                     onClick={handlePrevious}
                     className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8">
-                    back
+                    Back
                   </button>
                   <CustomButton
                     padding="10px 15px"

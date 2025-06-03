@@ -25,7 +25,7 @@ const PayrollView = ({ onBackClick, onSetupClick }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT}`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${newAuthToken}`,

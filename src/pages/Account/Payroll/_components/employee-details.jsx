@@ -275,13 +275,13 @@ const EmployeeDetails = ({ onSave, accountName }) => {
                             if (stepOneErrors.length === 0) {
                               const email = values.employeeEmailAddress;
 
-                              fetch(`${import.meta.env.VITE_EMAIL_CHECK}?email=${email}`)
+                              fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_EMAIL_CHECK}?email=${email}`)
                                 .then((res) => res.json())
                                 .then((data) => {
                                   if (data.exists) {
                                     // Email exists, fetch user details
                                     fetch(
-                                      `${import.meta.env.VITE_GET_USER_BY_EMAIL_ENDPOINT}?email=${email}`
+                                      `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_USER_BY_EMAIL_ENDPOINT}?email=${email}`
                                     )
                                       .then((res) => res.json())
                                       .then((userData) => {
@@ -573,7 +573,7 @@ const EmployeeDetails = ({ onSave, accountName }) => {
                             setErrorMessage('');
                             setSuccessMessage('');
 
-                            fetch(import.meta.env.VITE_CREATE_VIRTUAL_ACCOUNT, {
+                            fetch(`${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_CREATE_VIRTUAL_ACCOUNT}`, {
                               method: 'POST',
                               headers: {
                                 'Content-Type': 'application/json',

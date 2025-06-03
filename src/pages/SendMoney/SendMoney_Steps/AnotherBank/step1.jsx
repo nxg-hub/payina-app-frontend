@@ -17,7 +17,7 @@ const RecipientDetails = ({ nextStep }) => {
 
   useEffect(() => {
     if (selectedCountry) {
-      const endpoint = import.meta.env.VITE_GET_BANKS_NAME_ENDPOINT.replace(
+      const endpoint = `${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_GET_BANKS_NAME_ENDPOINT}`.replace(
         '{country}',
         selectedCountry
       );
@@ -52,7 +52,7 @@ const RecipientDetails = ({ nextStep }) => {
       try {
         setIsVerifying(true);
         const response = await axios.post(
-          import.meta.env.VITE_API_CONFIRM_OTHER_BANK_RECEIVER_DETAILS,
+          `${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_API_CONFIRM_OTHER_BANK_RECEIVER_DETAILS}`,
           {
             accountNumber,
             accountBankCode,

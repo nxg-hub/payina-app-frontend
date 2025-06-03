@@ -16,7 +16,7 @@
 //     setIsLoading(true);
 //
 //     try {
-//       const response = await fetch(`https://payina-be-6f08cdfb4414.herokuapp.com/api/virtual-cards/create-virtual-card/${user.customerId}`, {
+//       const response = await fetch(`https://payina-be.onrender.com/api/virtual-cards/create-virtual-card/${user.customerId}`, {
 //         method: 'POST',
 //           headers: {
 //             'Content-Type': 'application/json',
@@ -146,7 +146,7 @@ export function CreateCardForm({ onSuccess, user }) {
 
     try {
       const response = await fetch(
-        `https://payina-be-6f08cdfb4414.herokuapp.com/api/virtual-cards/create-virtual-card/${user.customerId}`,
+        `${import.meta.env.VITE_BASE_URL}/api/virtual-cards/create-virtual-card/${user.customerId}`,
         {
           method: 'POST',
           headers: {

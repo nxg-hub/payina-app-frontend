@@ -92,7 +92,7 @@ export const StepThirteen = ({ next, email, initialValues }) => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_CREATE_PROFILE_ENDPOINT}?customerId=${encodeURIComponent(customerId)}`,
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_CREATE_PROFILE_ENDPOINT}?customerId=${encodeURIComponent(customerId)}`,
         {
           method: 'POST',
           headers: {
@@ -281,7 +281,7 @@ export const StepThirteen = ({ next, email, initialValues }) => {
                   disabled={loading}
                   onClick={handlePrevious}
                   className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8">
-                  back
+                  Back
                 </button>
                 <CustomButton
                   padding="15px"

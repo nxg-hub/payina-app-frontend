@@ -7,7 +7,7 @@ import { resetState } from '../../../Redux/BusinessSignUpSlice';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 
 export const StepSeventeen = () => {
-  let manualEntry = useSelector((state) => state.businessSignUp.manualEntry);
+  // const authToken = useSelector((state) => state.businessSignUp.token);
   const [newAuthToken] = useLocalStorage('authToken', '');
   const [userData, setUserData] = useState(null);
   const userEmail = localStorage.getItem('userEmail');
@@ -164,14 +164,13 @@ export const StepSeventeen = () => {
                 className="w-[100px] md:w-[202px] rounded-[50%] absolute top-[-1rem] right-[-5rem] contrast-[3.5]"
                 alt=""
               />
-              {!manualEntry && (
-                <div className="w-full text-primary absolute top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%] flex flex-col md:space-y-4">
-                  <span className="md:text-2xl text-xs font-medium">Business Owner Name</span>
-                  <span className="md:text-3xl text-sm font-bold">
-                    {userData ? `${userData.firstName} ${userData.lastName}` : 'N/A'}
-                  </span>
-                </div>
-              )}
+              <div className="w-full text-primary absolute top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%] flex flex-col md:space-y-4">
+                <span className="md:text-2xl text-xs font-medium">Business Owner Name</span>
+                <span className="md:text-3xl text-sm font-bold">
+                  {userData && (userData.firstName === null || userData.lastName === null) ? `${userData.payinaUserName}` : `${userData.firstname} ${userData.lastname}`}
+                  {/*{userData ? `${userData.firstName = null} ${userData.lastName=null}` : `${userData.payinaUserName}`}*/}
+                </span>
+              </div>
             </div>
             <div className="w-full relative">
               <img
@@ -201,7 +200,7 @@ export const StepSeventeen = () => {
             onClick={handleClick}
             padding="15px"
             type="submit"
-            children="Proceed to Dashboard"
+            children="Proceed to Login"
             className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
           />
         </div>

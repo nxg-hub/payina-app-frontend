@@ -150,7 +150,7 @@ const BillerPlans = () => {
       setModalMessage('Please wait...');
 
       const response = await fetch(
-        `${import.meta.env.VITE_GET_TRANSACTION_RECIEPT}/${currentTransactionRef}`,
+        `${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_GET_TRANSACTION_RECIEPT}/${currentTransactionRef}`,
         {
           method: 'GET',
           headers: {
@@ -548,11 +548,11 @@ const BillerPlans = () => {
         errorIcon={errorImage}
         buttons={
           modalStatus === 'success'
-            ? ['pullReceipt', 'back']
+            ? ['pullReceipt', 'Back']
             : modalStatus === 'error'
-              ? ['fundWallet', 'back']
+              ? ['fundWallet', 'Back']
               : modalStatus
-                ? ['back']
+                ? ['Back']
                 : []
         }
         onBack={() => setShowModal(false)}

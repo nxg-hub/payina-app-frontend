@@ -44,7 +44,7 @@ const AccountCard = () => {
       }
 
       try {
-        const response = await fetch(import.meta.env.VITE_ACCOUNT_DETAILS, {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_ACCOUNT_DETAILS}`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,

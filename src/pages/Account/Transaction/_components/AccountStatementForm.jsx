@@ -35,7 +35,7 @@ const AccountStatementForm = () => {
 
       // Fetch all transactions directly without filtering by type
       const response = await fetch(
-        `${import.meta.env.VITE_TRANSACTION_HISTORY}?page=${0}&size=${1000}`,
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_TRANSACTION_HISTORY}?page=${0}&size=${1000}`,
         {
           method: 'POST',
           headers: {

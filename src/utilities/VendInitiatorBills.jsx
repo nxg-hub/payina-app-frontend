@@ -50,7 +50,7 @@ const VendInitiator = ({
     }
 
     try {
-      const response = await fetch(import.meta.env.VITE_GET_WALLET_ENDPOINT, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_WALLET_ENDPOINT}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${newAuthToken}`,
@@ -95,7 +95,7 @@ const VendInitiator = ({
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        const userResponse = await fetch(import.meta.env.VITE_GET_USER, {
+        const userResponse = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_USER}`, {
           method: 'GET',
           headers: {
             accept: '*/*',
@@ -148,7 +148,7 @@ const VendInitiator = ({
         merchantId: walletDetailsRef.current.businessId,
       };
 
-      const vendValueResponse = await axios.post(import.meta.env.VITE_VEND_VALUE_PAYINA, vendData, {
+      const vendValueResponse = await axios.post(`${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_VEND_VALUE_PAYINA}`, vendData, {
         headers: {
           'Content-Type': 'application/json',
           Accept: '*/*',

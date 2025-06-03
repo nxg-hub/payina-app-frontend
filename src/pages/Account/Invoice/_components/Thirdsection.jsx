@@ -34,7 +34,7 @@ const Thirdsection = ({
         if (clientId) {
           // Fetch invoices for a specific client
           response = await fetch(
-            `${import.meta.env.VITE_GET_CLIENTS_INVOICES_ENDPOINT}${clientId}/get-invoices?page=${currentInvoicePage}&size=${pageSize}`,
+            `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_CLIENTS_INVOICES_ENDPOINT}${clientId}/get-invoices?page=${currentInvoicePage}&size=${pageSize}`,
             {
               method: 'GET',
               headers: {
@@ -56,7 +56,7 @@ const Thirdsection = ({
         } else if (corporateCustomerId) {
           // Fetch recent invoices for a corporate customer
           response = await fetch(
-            `${import.meta.env.VITE_GET_CUSTOMERS_INVOICES_ENDPOINT}${corporateCustomerId}?page=0&size=4`,
+            `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_CUSTOMERS_INVOICES_ENDPOINT}${corporateCustomerId}?page=0&size=4`,
             {
               method: 'GET',
               headers: {
@@ -107,7 +107,7 @@ const Thirdsection = ({
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_MARK_AS_PAID_ENDPOINT}${invoiceId}/mark-as-paid`,
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_MARK_AS_PAID_ENDPOINT}${invoiceId}/mark-as-paid`,
         {
           method: 'PUT',
           headers: {

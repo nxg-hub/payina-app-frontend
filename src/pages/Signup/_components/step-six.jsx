@@ -4,12 +4,16 @@ import CustomButton from '../../../components/button/button';
 import { images } from '../../../constants';
 
 const uploadImage = async (imageFile, email) => {
+
+  const BASE_URL = import.meta.env.VITE_BASE_URL
+  const UPLOAD_IMAGE = import.meta.env.VITE_UPLOAD_IMAGE_ENDPOINT
+
   try {
     const formData = new FormData();
     formData.append('passport', imageFile);
     formData.append('email', email);
 
-    const response = await fetch(import.meta.env.VITE_UPLOAD_IMAGE_ENDPOINT, {
+    const response = await fetch(`${UPLOAD_IMAGE}`, {
       method: 'POST',
       body: formData,
     });

@@ -15,14 +15,13 @@ import { resetPayroll } from '../Redux/payrollSlice';
 const InactivityInterceptor = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // Use useRef instead of useState for values that shouldn't trigger re-renders
   const modalRef = useRef(false);
   const countdownRef = useRef(300);
   const inactivityTimerRef = useRef(null);
   const countdownTimerRef = useRef(null);
   const [, forceUpdate] = React.useState({});
 
-  const INACTIVITY_TIMEOUT = 300; // 5 minutes in seconds
+  const INACTIVITY_TIMEOUT = 30; // 5 minutes in seconds
 
   const startCountdown = useCallback(() => {
     if (countdownTimerRef.current) {
@@ -54,7 +53,7 @@ const InactivityInterceptor = () => {
 
     // Reset states
     modalRef.current = false;
-    countdownRef.current = 300;
+    countdownRef.current = 30;
 
     // Start new inactivity timer
     inactivityTimerRef.current = setTimeout(() => {
@@ -112,7 +111,7 @@ const InactivityInterceptor = () => {
 
     // Set up event listeners
     events.forEach((event) => {
-      document.addEventListener(event, handleUserActivity);
+      window.addEventListener(event, handleUserActivity);
     });
 
     // Initial timer setup
@@ -127,7 +126,7 @@ const InactivityInterceptor = () => {
         clearInterval(countdownTimerRef.current);
       }
       events.forEach((event) => {
-        document.removeEventListener(event, handleUserActivity);
+        window.removeEventListener(event, handleUserActivity);
       });
     };
   }, [resetInactivityTimer]);

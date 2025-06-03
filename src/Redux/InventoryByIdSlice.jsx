@@ -11,7 +11,7 @@ export const fetchInventoryById = createAsyncThunk(
 
   async (id, { rejectWithValue }) => {
     try {
-      const response = await fetch(import.meta.env.VITE_GET_INVENTORY_BY_ID.replace('{id}', id), {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_INVENTORY_BY_ID}`.replace('{id}', id), {
         headers: {
           'Content-Type': 'application/json',
         },

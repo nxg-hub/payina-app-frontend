@@ -1,7 +1,7 @@
 import { Form, Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import CustomButton from '../../../components/button/button';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { images } from '../../../constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { setManualEntry } from '../../../Redux/PersonalSignUpSlice';
@@ -11,6 +11,13 @@ export const StepFour = ({ next }) => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const manualEntry = useSelector((state) => state.personalSignUp.manualEntry);
+
+  // This effect will automatically proceed to manual entry when manualEntry is set to true
+  useEffect(() => {
+    if (manualEntry) {
+      handleManualEntry();
+    }
+  }, [manualEntry]);
 
   const handleIDVerification = async (values) => {
     const idType = values.idType;
@@ -85,17 +92,25 @@ export const StepFour = ({ next }) => {
 
           // Access the message
           const message = parsedResponse.message;
+
+
+          // Set manualEntry to true and automatically proceed instead of showing a button
+//           dispatch(setManualEntry(true));
+//           setApiError(message || 'Verification failed. Proceeding to manual entry...');
+
           // message !==
           // 'No matching records found. Please ensure the information is accurate and try again.'
           dispatch(setManualEntry(true));
           // : dispatch(setManualEntry(false));
           // setApiError(message || 'Verification failed. Please try again.');
           setApiError('Verification failed. Please try again.');
+
         }
       }
     } catch (error) {
       // Handle network or unexpected errors
-      setApiError('An error occurred. Please try again.');
+      setApiError('An error occurred. Proceeding to manual entry...');
+      dispatch(setManualEntry(true));
     } finally {
       setLoading(false);
     }
@@ -214,25 +229,15 @@ export const StepFour = ({ next }) => {
 
               {apiError && <div className="text-red-500 mb-4">{apiError}</div>}
 
-              {manualEntry ? (
-                <CustomButton
-                  padding="15px"
-                  type="button"
-                  onClick={handleManualEntry}
-                  children="Proceed to Manual Entry"
-                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6"
-                />
-              ) : (
-                <CustomButton
-                  padding="15px"
-                  type="submit"
-                  children={loading ? 'Loading...' : 'Next'}
-                  className={`hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6 ${
-                    !(isValid && dirty) ? 'opacity-50 cursor-not-allowed' : ''
-                  }`}
-                  disabled={!(isValid && dirty)}
-                />
-              )}
+              <CustomButton
+                padding="15px"
+                type="submit"
+                children={loading ? 'Loading...' : 'Next'}
+                className={`hover:cursor-pointer flex justify-center items-center !text-lightBlue xl:text-[19px] !border-none !bg-yellow font-extrabold duration-300 xl:w-full w-[90%] mx-auto my-10 !mb-12 xl:mt-12 xl:!mb-6 ${
+                  !(isValid && dirty) ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+                disabled={!(isValid && dirty)}
+              />
             </Form>
           )}
         </Formik>

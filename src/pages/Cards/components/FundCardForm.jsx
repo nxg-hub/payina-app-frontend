@@ -87,7 +87,7 @@ export function FundCardForm({ cardId }) {
         status="success"
         title="Card Funded Successfully!"
         message={`Successfully funded card with $${amount}`}
-        buttons={['back']}
+        buttons={['Back']}
       />
     </div>
   );

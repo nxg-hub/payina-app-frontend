@@ -32,7 +32,7 @@ const EditProfileForm = () => {
     setUploadStatus('');
     try {
       const response = await fetch(
-        import.meta.env.VITE_UPDATE_PROFILE.replace('{customerId}', customerId),
+       `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_UPDATE_PROFILE}`.replace('{customerId}', customerId),
         {
           method: 'PUT',
           headers: {
@@ -48,7 +48,7 @@ const EditProfileForm = () => {
         setSuccess(true);
         // Fetch the updated profile
         const response = await fetch(
-          import.meta.env.VITE_GET_CORPORATE_CUSTOMER_DETAILS.replace('{customerId}', customerId),
+          `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_CORPORATE_CUSTOMER_DETAILS}`.replace('{customerId}', customerId),
           {
             headers: {
               'Content-Type': 'application/json',

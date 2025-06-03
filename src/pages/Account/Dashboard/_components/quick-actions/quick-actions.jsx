@@ -59,7 +59,7 @@ const QuickAction = () => {
             </Link>
           </div>
         </div>
-        <div
+        {/* <div
           onClick={() => {
             dispatch(openModal());
           }}
@@ -74,8 +74,8 @@ const QuickAction = () => {
               Loan
             </Link>
           </div>
-        </div>
-        <div className="flex font-bold bg-[#F3F3F3] flex-1  h-[88px] p-8 rounded-[10px] shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px] hover:scale-105 transition-transform hover:cursor-pointer">
+        </div> */}
+        {/* <div className="flex font-bold bg-[#F3F3F3] flex-1  h-[88px] p-8 rounded-[10px] shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px] hover:scale-105 transition-transform hover:cursor-pointer">
           <div className="flex justify-start items-center gap-8 xl:gap-16">
             <div className="bg-primary p-2 rounded-full">
               <PiPiggyBankFill className="text-blue-800" size={24} />
@@ -86,7 +86,7 @@ const QuickAction = () => {
               Savings
             </Link>
           </div>
-        </div>
+        </div> */}
         {userType === 'PERSONAL' && (
           <div className="flex font-bold bg-[#F3F3F3] h-[88px] p-8 rounded-[10px] shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px] hover:scale-105 transition-transform hover:cursor-pointer">
             <div className="flex justify-start items-center gap-4">

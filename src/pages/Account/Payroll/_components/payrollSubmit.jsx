@@ -20,7 +20,7 @@ const PayrollSubmit = ({ onSuccess }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT}`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${newAuthToken}`,
@@ -54,7 +54,7 @@ const PayrollSubmit = ({ onSuccess }) => {
         return;
       }
 
-      const endpoint = import.meta.env.VITE_ADD_EMPLOYEE_ENDPOINT.replace(
+      const endpoint = `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_ADD_EMPLOYEE_ENDPOINT}`.replace(
         '{customerId}',
         customerId
       );
@@ -99,7 +99,7 @@ const PayrollSubmit = ({ onSuccess }) => {
         return;
       }
 
-      const endpoint = import.meta.env.VITE_ADD_PAYROLL_ENDPOINT.replace(
+      const endpoint = `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_ADD_PAYROLL_ENDPOINT}`.replace(
         '{employeeId}',
         employeeId
       );

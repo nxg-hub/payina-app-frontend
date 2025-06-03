@@ -48,7 +48,7 @@ export const StepFifteen = ({ next, email }) => {
         })),
       };
 
-      const response = await fetch(import.meta.env.VITE_ADD_SIGNATORIES_ENDPOINT, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_ADD_SIGNATORIES_ENDPOINT}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -72,7 +72,7 @@ const ShareButton = ({ promoCode, type }) => {
       setLoading(true);
       try {
         const response = await axios.post(
-          import.meta.env.VITE_USE_PROMOCODE, // API endpoint
+          `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_USE_PROMOCODE}`, // API endpoint
           { code: promoCode }, // Corrected payload
           {
             headers: {

@@ -41,7 +41,7 @@ const PersonalDashboard = () => {
         // setLoading(true);
         dispatch(showLoading()); // Show Loader
 
-        const response = await fetch(import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT, {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT}`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${newAuthToken}`,

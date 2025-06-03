@@ -53,11 +53,11 @@ const UpdateModal = ({ isOpen, onClose, employee, type, customerId }) => {
     try {
       const endpoint =
         type === 'employee'
-          ? import.meta.env.VITE_UPDATE_EMPLOYEE_DETAILS.replace(
+          ?`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_UPDATE_EMPLOYEE_DETAILS}`.replace(
               '{customerId}',
               customerId
             ).replace('{employee.id}', employee.id)
-          : import.meta.env.VITE_UPDATE_PAYROLL_DETAILS.replace('{employee.id}', employee.id);
+          : `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_UPDATE_PAYROLL_DETAILS}`.replace('{employee.id}', employee.id);
       const payload =
         type === 'employee'
           ? {

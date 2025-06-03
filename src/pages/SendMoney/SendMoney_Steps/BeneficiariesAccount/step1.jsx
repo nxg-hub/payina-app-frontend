@@ -15,7 +15,7 @@ const RecipientDetails = ({ nextStep }) => {
     const fetchBeneficiaries = async () => {
       if (!customerId) return;
 
-      const endpoint = import.meta.env.VITE_GET_SAVED_BENEFICIARIES_ENDPOINT.replace(
+      const endpoint = `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_SAVED_BENEFICIARIES_ENDPOINT}`.replace(
         '{customerId}',
         customerId
       );

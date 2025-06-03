@@ -146,7 +146,7 @@ const PayinaQRTransfer = () => {
 
     try {
       const pinResponse = await axios.post(
-        `${import.meta.env.VITE_VALIDATE_TRANSACTION_PIN_ENDPOINT}?email=${userDetails.email}&transactionPin=${pin.join('')}`
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_VALIDATE_TRANSACTION_PIN_ENDPOINT}?email=${userDetails.email}&transactionPin=${pin.join('')}`
       );
 
       if (pinResponse.data.message === 'Transaction PIN is valid.') {
@@ -164,7 +164,7 @@ const PayinaQRTransfer = () => {
           };
 
           const transferResponse = await axios.post(
-            import.meta.env.VITE_IN_HOUSE_TRANSFER_ENDPOINT,
+            `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_IN_HOUSE_TRANSFER_ENDPOINT}`,
             payload,
             {
               headers: {

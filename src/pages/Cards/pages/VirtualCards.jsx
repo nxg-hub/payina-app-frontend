@@ -224,7 +224,7 @@ export function VirtualCards() {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await fetch(import.meta.env.VITE_GET_USER, {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_USER}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
