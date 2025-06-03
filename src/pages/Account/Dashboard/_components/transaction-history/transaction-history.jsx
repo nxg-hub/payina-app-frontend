@@ -14,9 +14,6 @@ export default function TransactionTable() {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [showFilterMenu, setShowFilterMenu] = useState(false);
-  const [showExportMenu, setShowExportMenu] = useState(false);
-  const [showMoreMenu, setShowMoreMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalStatus, setModalStatus] = useState('error');
   const [modalTitle, setModalTitle] = useState('');
@@ -89,8 +86,8 @@ export default function TransactionTable() {
 
       // Sort transactions by creation date in descending order
       allTransactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      setTransactions(allTransactions);
-      // setTotalPages(Math.ceil(allTransactions.length / pageSize) || 1);
+      const updatedTransactions = updateTransactionStatuses(allTransactions);
+      setTransactions(updatedTransactions);
     } catch (err) {
       const serverError = JSON.parse(err.message);
       setError(serverError.response || 'An error occurred while fetching transactions.');
@@ -98,7 +95,18 @@ export default function TransactionTable() {
       setLoading(false);
     }
   };
+  function updateTransactionStatuses(transactions) {
+    return transactions?.map((tx) => {
+      const createdAt = new Date(tx.createdAt);
+      const now = new Date();
+      const diffInDays = (now - createdAt) / (1000 * 60 * 60 * 24);
 
+      if (tx.status === 'PENDING' && diffInDays > 7) {
+        return { ...tx, status: 'FAILED' };
+      }
+      return tx;
+    });
+  }
   useEffect(() => {
     if (authToken) {
       fetchAllTransactions();
@@ -111,29 +119,6 @@ export default function TransactionTable() {
     return `₦${amount.toLocaleString()}`;
   };
 
-  const handleFilter = (key, value) => {
-    setFilters((prev) => {
-      const newFilters = { ...prev };
-      if (value === '') {
-        delete newFilters[key];
-      } else {
-        newFilters[key] = value;
-      }
-      return newFilters;
-    });
-    setPage(1);
-  };
-
-  const toggleFields = () => {
-    setShowAllFields((prev) => !prev);
-  };
-
-  const closeOtherMenus = () => {
-    setShowFilterMenu(false);
-    setShowExportMenu(false);
-    setShowMoreMenu(false);
-  };
-
   const filteredTransactions = transactions.filter((transaction) =>
     Object.entries(filters).every(([key, value]) => {
       if (!value) return true;
@@ -141,23 +126,8 @@ export default function TransactionTable() {
     })
   );
 
-  // const paginatedTransactions = filteredTransactions.slice((page - 1) * pageSize, page * pageSize);
   const paginatedTransactions = filteredTransactions;
 
-  // Add click outside handler
-  useEffect(() => {
-    const handleClickOutside = () => {
-      closeOtherMenus();
-    };
-
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
-
-  const clearAllFilters = () => {
-    setFilters({});
-    setPage(1);
-  };
   const handlePullReceipt = async (currentTransactionRef) => {
     if (!currentTransactionRef) {
       setModalStatus('error');
@@ -239,63 +209,7 @@ export default function TransactionTable() {
       <div className="w-full">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl md:text-2xl font-bold">Recent Transactions</h2>
-          <div className="flex gap-4">
-            {/* <FilterMenu
-              showFilterMenu={showFilterMenu}
-              setShowFilterMenu={setShowFilterMenu}
-              filters={filters}
-              filterOptions={filterOptions}
-              handleFilterChange={handleFilter}
-              transactions={transactions}
-              clearAllFilters={clearAllFilters}
-              closeOtherMenus={() => {
-                setShowExportMenu(false);
-                setShowMoreMenu(false);
-              }}
-            /> */}
-
-            {/* <ExportMenu
-              showExportMenu={showExportMenu}
-              setShowExportMenu={setShowExportMenu}
-              transactions={filteredTransactions}
-              selectedRows={selectedRows}
-              showAllFields={showAllFields}
-              closeOtherMenus={() => {
-                setShowFilterMenu(false);
-                setShowMoreMenu(false);
-              }}
-              formatCurrency={formatCurrency}
-            /> */}
-
-            {/* More Menu */}
-            {/* <div className="relative">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowMoreMenu(() => !showMoreMenu);
-
-                  {
-                    closeOtherMenus();
-                  }
-                }}
-                className="p-2 hover:bg-gray-100 rounded-full">
-                <MoreHorizontal className="w-5 h-5 text-gray-600" />
-              </button> */}
-
-            {/* {showMoreMenu && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
-                  <button
-                    onClick={() => {
-                      toggleFields();
-                      setShowMoreMenu(false);
-                    }}
-                    className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">
-                    {showAllFields ? 'Hide Details' : 'Show More Fields'}
-                  </button>
-                </div>
-              )} */}
-            {/* </div> */}
-          </div>
+          <div className="flex gap-4"></div>
         </div>
       </div>
       {loading ? (
@@ -340,7 +254,7 @@ export default function TransactionTable() {
             </thead>
             <tbody>
               {paginatedTransactions.length > 0 ? (
-                paginatedTransactions.map((transaction) => (
+                paginatedTransactions?.map((transaction) => (
                   <>
                     <tr key={transaction.id} className="border-b border-gray-200">
                       <td className="p-2">
@@ -359,15 +273,38 @@ export default function TransactionTable() {
                       </td>
                       <td className="p-2">
                         <div className="w-[32px] h-[32px] md:w-[42px] md:h-[42px]">
-                          {transaction.type.toLowerCase() === 'credit' ? (
+                          {transaction.type.toLowerCase() === 'credit' &&
+                          transaction.status.toLowerCase() === 'completed' ? (
                             <svg
                               width="42"
                               height="42"
                               viewBox="0 0 42 42"
                               fill="none"
                               xmlns="http://www.w3.org/2000/svg">
-                              <circle cx="21" cy="21" r="21" fill="#00D222" />
-                              <path d="M20.5 32L11.4067 16.25H29.5933L20.5 32Z" fill="white" />
+                              <circle cx="21" cy="21" r="21" fill="#00d222" />
+                              <path d="M21 29L13 17H29L21 29Z" fill="white" />
+                            </svg>
+                          ) : transaction.status.toLowerCase() === 'pending' &&
+                            transaction.type.toLowerCase() === 'credit' ? (
+                            <svg
+                              width="42"
+                              height="42"
+                              viewBox="0 0 42 42"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="21" cy="21" r="21" fill="#fff000" />
+                              <path d="M21 29L13 17H29L21 29Z" fill="white" />
+                            </svg>
+                          ) : transaction.status.toLowerCase() === 'failed' &&
+                            transaction.type.toLowerCase() === 'credit' ? (
+                            <svg
+                              width="42"
+                              height="42"
+                              viewBox="0 0 42 42"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="21" cy="21" r="21" fill="#FF0000" />
+                              <path d="M21 29L13 17H29L21 29Z" fill="white" />
                             </svg>
                           ) : (
                             <svg
@@ -377,7 +314,7 @@ export default function TransactionTable() {
                               fill="none"
                               xmlns="http://www.w3.org/2000/svg">
                               <circle cx="21" cy="21" r="21" fill="#E80516" />
-                              <path d="M20.5 32L11.4067 16.25H29.5933L20.5 32Z" fill="white" />
+                              <path d="M21 13L13 25H29L21 13Z" fill="white" />
                             </svg>
                           )}
                         </div>
@@ -389,11 +326,13 @@ export default function TransactionTable() {
                       <td className="p-2">
                         <div
                           className={`inline-flex px-2 py-1 rounded-full text-sm ${
-                            transaction.status === 'PROCESSING'
-                              ? 'bg-yellow-50 text-yellow-800'
+                            transaction.status === 'PENDING'
+                              ? 'bg-red-50 text-yellow'
                               : transaction.status === 'COMPLETED'
                                 ? 'bg-green-50 text-green-800'
-                                : 'bg-gray-50 text-gray-800'
+                                : transaction.status === 'FAILED'
+                                  ? 'bg-red-100 text-red-800'
+                                  : ''
                           }`}>
                           {transaction.status}
                         </div>

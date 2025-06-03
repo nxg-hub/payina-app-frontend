@@ -150,17 +150,39 @@ const Credits = ({ sortedCredits }) => {
                 sortedCredits.map((transaction, index) => (
                   <tr key={transaction.id || index} className="border-b border-[#d9d9d9]">
                     <td className="p-2">
-                      <div className="w-[32px] h-[32px] md:w-[42px] md:h-[42px]">
+                      {transaction.type.toLowerCase() === 'credit' &&
+                      transaction.status.toLowerCase() === 'completed' ? (
                         <svg
                           width="42"
                           height="42"
                           viewBox="0 0 42 42"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg">
-                          <circle cx="21" cy="21" r="21" fill="#00D222" />
+                          <circle cx="21" cy="21" r="21" fill="#00d222" />
+                          <path d="M21 29L13 17H29L21 29Z" fill="white" />
+                        </svg>
+                      ) : transaction.type.toLowerCase() === 'credit' &&
+                        transaction.status.toLowerCase() === 'failed' ? (
+                        <svg
+                          width="42"
+                          height="42"
+                          viewBox="0 0 42 42"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="21" cy="21" r="21" fill="#E80516" />
                           <path d="M20.5 32L11.4067 16.25H29.5933L20.5 32Z" fill="white" />
                         </svg>
-                      </div>
+                      ) : (
+                        <svg
+                          width="42"
+                          height="42"
+                          viewBox="0 0 42 42"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="21" cy="21" r="21" fill="#fff000" />
+                          <path d="M21 29L13 17H29L21 29Z" fill="white" />
+                        </svg>
+                      )}
                     </td>
                     <td className="p-2 font-manrope text-xs md:text-base font-semibold leading-5 text-[#1a1d1f]">
                       {transaction.description}
@@ -171,11 +193,13 @@ const Credits = ({ sortedCredits }) => {
                     <td className="p-2">
                       <div
                         className={`flex justify-center items-center gap-2 p-1 md:p-2.5 border rounded text-xs md:text-base ${
-                          transaction.status === 'PROCESSING'
-                            ? 'border-yellow-400 bg-yellow-50'
+                          transaction.status === 'PENDING'
+                            ? 'border-yellow bg-[#fff000]'
                             : transaction.status === 'COMPLETED'
                               ? 'border-green-400 bg-green-50'
-                              : 'border-gray-400 bg-gray-50'
+                              : transaction.status === 'FAILED'
+                                ? 'border-red-400 bg-red-50'
+                                : ''
                         }`}>
                         <span className="font-manrope font-normal leading-5 text-[#1a1d1f]">
                           {transaction.status}

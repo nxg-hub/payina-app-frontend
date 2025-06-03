@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { FaWhatsapp, FaTelegram, FaFacebook, FaLinkedin, FaTwitter } from 'react-icons/fa';
 
-const ShareButton = ({ promoCode }) => {
+const ShareButton = ({ promoCode, type }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -99,16 +99,17 @@ const ShareButton = ({ promoCode }) => {
   return (
     <div className="relative inline-block">
       <button
-        className="px-6 py-3 bg-[#00405A] text-white  font-semibold rounded-lg shadow-lg hover:bg-[#468A9B] transition-all"
+        className={`px-6 py-3 ${type === 'dash' ? 'bg-gradient-to-br from-white via-blue-100 to-blue-300 font-bold text-black ' : 'bg-[#00405A] hover:bg-[#468A9B] text-white '}    font-semibold rounded-lg shadow-lg hover:bg-[#468A9B] transition-all`}
         onClick={() => setShowOptions(!showOptions)}>
         Share Promo Code
       </button>
 
       {showOptions && (
-        <div className="absolute left-0 mt-2 w-40 bg-white border border-gray-300 rounded-lg shadow-lg">
-          <ul className="text-gray-800">
+        <div
+          className={`absolute left-0 mt-2 w-40 ${type === 'dash' ? 'bg-[#005978]' : 'bg-white'}  border border-gray-300 rounded-lg shadow-lg`}>
+          <ul className={`${type === 'dash' ? 'text-white' : 'text-black'}`}>
             <li
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              className={`px-4 py-2  ${type === 'dash' ? 'hover:bg-gradient-to-br from-white via-blue-100 to-blue-300 hover:text-black ' : 'hover:bg-gray-100 '}  cursor-pointer`}
               onClick={() => shareContent('whatsapp')}>
               <span className="flex w-[80%] m-auto justify-between items-center">
                 WhatsApp
@@ -116,7 +117,7 @@ const ShareButton = ({ promoCode }) => {
               </span>
             </li>
             <li
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer "
+              className={`px-4 py-2  ${type === 'dash' ? 'hover:bg-gradient-to-br from-white via-blue-100 to-blue-300 hover:text-black ' : 'hover:bg-gray-100'} cursor-pointer`}
               onClick={() => shareContent('linkedin')}>
               <span className="flex w-[80%] m-auto justify-between items-center">
                 LinkedIn
@@ -124,7 +125,7 @@ const ShareButton = ({ promoCode }) => {
               </span>
             </li>
             <li
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              className={`px-4 py-2  ${type === 'dash' ? 'hover:bg-gradient-to-br from-white via-blue-100 to-blue-300 hover:text-black ' : 'hover:bg-gray-100'} cursor-pointer`}
               onClick={() => shareContent('twitter')}>
               <span className="flex w-[80%] m-auto justify-between items-center">
                 Twitter
@@ -132,7 +133,7 @@ const ShareButton = ({ promoCode }) => {
               </span>
             </li>
             <li
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              className={`px-4 py-2  ${type === 'dash' ? 'hover:bg-gradient-to-br from-white via-blue-100 to-blue-300 hover:text-black ' : 'hover:bg-gray-100'} cursor-pointer`}
               onClick={() => shareContent('facebook')}>
               <span className="flex w-[80%] m-auto justify-between items-center">
                 Facebook
@@ -140,7 +141,7 @@ const ShareButton = ({ promoCode }) => {
               </span>
             </li>
             <li
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              className={`px-4 py-2  ${type === 'dash' ? 'hover:bg-gradient-to-br from-white via-blue-100 to-blue-300 hover:text-black ' : 'hover:bg-gray-100'} cursor-pointer`}
               onClick={() => shareContent('telegram')}>
               <span className="flex w-[80%] m-auto justify-between items-center">
                 Telegram

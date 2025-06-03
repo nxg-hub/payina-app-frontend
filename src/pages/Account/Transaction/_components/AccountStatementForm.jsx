@@ -175,8 +175,8 @@ const AccountStatementForm = () => {
                             viewBox="0 0 42 42"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="21" cy="21" r="21" fill="#00D222" />
-                            <path d="M20.5 32L11.4067 16.25H29.5933L20.5 32Z" fill="white" />
+                            <circle cx="21" cy="21" r="21" fill="#00d222" />
+                            <path d="M21 29L13 17H29L21 29Z" fill="white" />
                           </svg>
                         ) : (
                           <svg
@@ -186,7 +186,7 @@ const AccountStatementForm = () => {
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <circle cx="21" cy="21" r="21" fill="#E80516" />
-                            <path d="M20.5 32L11.4067 16.25H29.5933L20.5 32Z" fill="white" />
+                            <path d="M21 13L13 25H29L21 13Z" fill="white" />
                           </svg>
                         )}
                       </div>

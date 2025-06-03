@@ -24,8 +24,8 @@ export const fetchCredits = createAsyncThunk(
 
       if (!response.ok) throw new Error('Failed to fetch credit transactions');
       const data = await response.json();
-
-      return data.data; // Store only the transactions
+      const updatedTransaction = updateTransactionStatuses(data.data.content);
+      return updatedTransaction; // Store only the transactions
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -54,13 +54,25 @@ export const fetchDebits = createAsyncThunk(
 
       if (!response.ok) throw new Error('Failed to fetch debit transactions');
       const data = await response.json();
-      return data.data; // Store only the transactions
+      const updatedTransaction = updateTransactionStatuses(data.data.content);
+      return updatedTransaction; // Store only the transactions
     } catch (error) {
       return rejectWithValue(error.message);
     }
   }
 );
+function updateTransactionStatuses(transactions) {
+  return transactions?.map((tx) => {
+    const createdAt = new Date(tx.createdAt);
+    const now = new Date();
+    const diffInDays = (now - createdAt) / (1000 * 60 * 60 * 24);
 
+    if (tx.status === 'PENDING' && diffInDays > 7) {
+      return { ...tx, status: 'FAILED' };
+    }
+    return tx;
+  });
+}
 const transactionsSlice = createSlice({
   name: 'transactions',
   initialState: {
@@ -92,11 +104,11 @@ const transactionsSlice = createSlice({
       .addCase(fetchCredits.fulfilled, (state, action) => {
         state.loading = false;
         // Deduplicate Credit Transactions
-        const newCredits = action.payload.content.filter(
+        const newCredits = action.payload.filter(
           (newTxn) => !state.credits.some((txn) => txn.id === newTxn.id)
         );
         state.credits = [...state.credits, ...newCredits];
-        if (action.payload.last || action.payload.content.length === 50) {
+        if (action.payload.last || action.payload.length === 50) {
           state.hasMoreCredit = false; // No more data if fewer than 10 items are returned
         }
       })
@@ -110,12 +122,12 @@ const transactionsSlice = createSlice({
       .addCase(fetchDebits.fulfilled, (state, action) => {
         state.loading = false;
         // Deduplicate debit Transactions
-        const newDebits = action.payload.content.filter(
+        const newDebits = action.payload.filter(
           (newTxn) => !state.debits.some((txn) => txn.id === newTxn.id)
         );
         state.debits = [...state.debits, ...newDebits];
         // state.debits = [...state.debits, ...action.payload.content];
-        if (action.payload.last || action.payload.content.length === 50) {
+        if (action.payload.last || action.payload.length === 50) {
           state.hasMoreDebit = false; // No more data if fewer than 10 items are returned
         }
       })

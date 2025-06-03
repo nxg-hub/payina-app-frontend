@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import ShareButton from '../../../../utilities/ShareButton';
+import { useSelector, useDispatch } from 'react-redux';
+import { hideModal } from '../Redux/modalSlice';
 import { CiGift } from 'react-icons/ci';
+import ShareButton from '../utilities/ShareButton';
 import axios from 'axios';
 
-const Invite = () => {
+const InviteModal = () => {
+  const showModal = useSelector((state) => state.modal.showModal);
+  const dispatch = useDispatch();
   const [success, setSuccess] = useState('');
   const [promoCode, setPromoCode] = useState('');
   const [error, setError] = useState('');
@@ -38,12 +41,15 @@ const Invite = () => {
     }
   };
 
+  if (!showModal) return null;
+
   return (
-    <div className=" px-4 py-4 mx-auto w-auto ml-0 xl:ml-[19rem] xl:pt-28 clear-none xl:clear-right">
-      <div className=" rounded-lg shadow-lg p-6 w-[90%] md:w-96 text-black m-auto mt-11">
+    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+      <div className="bg-[#005978] rounded-lg shadow-lg p-6 w-[90%] md:w-96 text-white">
         <CiGift className="m-auto" size={40} />
-        <h2 className="mt- text-center font-bold md:text-2xl">Refer and Earn!</h2>
-        <h2 className=" font-bold mb-4 text-center mt-2">Get paid referring other business.</h2>
+        <h2 className=" font-bold mb-4 text-center text-blue-100  mt-2">
+          Get paid referring other business!
+        </h2>
         <p className="mb-4 text-gray-700 text-center">
           Earn up to ₦10,000 monthly when you invite your friends to signup, complete registration
           and make transactions.
@@ -52,16 +58,21 @@ const Invite = () => {
           <button
             disabled={loading}
             onClick={generatePromoCode}
-            className="px-4 py-2 bg-[#468A9B] font-bold text-white rounded-md mb-11 hover:bg-[#006181] transition-all">
+            className="px-4 py-2 bg-gradient-to-br from-white via-blue-100 to-blue-300 font-bold text-black rounded-md mb-11 hover:bg-purple-600 transition-all">
             {loading ? 'loading...' : 'Get Promo Code'}
           </button>
           {error && <h2 className="text-red-500">{error}</h2>}
           {success && <h2 className="text-green-500">{success}</h2>}
-          {promoCode && <ShareButton promoCode={promoCode} />}
+          {promoCode && <ShareButton promoCode={promoCode} type={'dash'} />}
         </div>
+        <button
+          onClick={() => dispatch(hideModal())}
+          className="mt-4 m-auto bg-gradient-to-br from-white via-blue-100 to-blue-300 text-black font-bold px-4 py-2 rounded ">
+          Got it!
+        </button>
       </div>
     </div>
   );
 };
 
-export default Invite;
+export default InviteModal;
