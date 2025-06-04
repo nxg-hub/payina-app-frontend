@@ -13,6 +13,7 @@ import { showLoading, hideLoading } from '../../../Redux/loadingSlice';
 import Loader from '../../../assets/LoadingSpinner';
 import { BvnModal } from './_components/BvnModal';
 import { BvnConfirmModal } from './_components/BvnConfirmModal';
+// import InviteModal from '../../../components/InviteModal';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -45,12 +46,15 @@ const Dashboard = () => {
       try {
         dispatch(showLoading()); // Show Loader
 
-        const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT}`, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${newAuthToken}`,
-          },
-        });
+        const response = await fetch(
+          `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${newAuthToken}`,
+            },
+          }
+        );
         const data = await response.json();
 
         if (data.bvn === null || userBvn === '') {
@@ -110,6 +114,7 @@ const Dashboard = () => {
 
           <QuickAction />
           <TransactionHistory />
+          {/* <InviteModal /> */}
         </>
       )}
       <div>

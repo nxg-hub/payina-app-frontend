@@ -41,9 +41,10 @@ export const Sidebar = ({ openModal }) => {
   };
 
   const handleLogout = () => {
-    localStorage.clear();
     navigate('/login');
     localStorage.removeItem('userEmail');
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userDetails');
     persistor.purge();
     dispatch(reSetUserDetails());
     dispatch(resetCorporate());
