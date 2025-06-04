@@ -190,7 +190,7 @@ const EnterPin = ({ data }) => {
         const transactionResponse = await axios.post(
           //conditionally call the endpoints based on userType
           userType === 'CORPORATE'
-            ? `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_INITIATE_TRANSFER_REQUEST}`
+            ? `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_INITIATE_INHOUSE_TRANSFER_REQUEST}`
             : `${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_IN_HOUSE_TRANSFER_ENDPOINT}`,
           transactionPayload,
           {
