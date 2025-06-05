@@ -103,6 +103,7 @@ const EnterPin = ({ data }) => {
                 amount: data.amount,
                 name: data.selectedBeneficiaryName,
                 account_number: data.accountNumber,
+                recipient: data.selectedBeneficiaryName,
                 bank_code: data.bankCode,
                 customerEmail: userEmail,
                 walletId: walletId,
@@ -115,9 +116,9 @@ const EnterPin = ({ data }) => {
         const transactionResponse = await axios.post(
           //conditionally call the transfer and initiallize endpoint depending on userType
           userType === 'CORPORATE'
-            ?`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_INITIATE_TRANSFER_REQUEST}`
-          : `${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_API_OTHER_BANK_SEND_MONEY_ENDPOINT}`,
-        transactionPayload,
+            ? `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_INITIATE_TRANSFER_REQUEST}`
+            : `${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_API_OTHER_BANK_SEND_MONEY_ENDPOINT}`,
+          transactionPayload,
           {
             headers: {
               apiKey: import.meta.env.VITE_API_KEY,
@@ -141,13 +142,16 @@ const EnterPin = ({ data }) => {
 
         if (isSuccess) {
           //update wallet balance
-          const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_WALLET_ENDPOINT}`, {
-            headers: {
-              accept: '*/*',
-              Authorization: `Bearer ${newAuthToken}`,
-              'Content-Type': 'application/json',
-            },
-          });
+          const response = await fetch(
+            `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_WALLET_ENDPOINT}`,
+            {
+              headers: {
+                accept: '*/*',
+                Authorization: `Bearer ${newAuthToken}`,
+                'Content-Type': 'application/json',
+              },
+            }
+          );
 
           const data = await response.json();
           const balance = data.data.balance.amount;

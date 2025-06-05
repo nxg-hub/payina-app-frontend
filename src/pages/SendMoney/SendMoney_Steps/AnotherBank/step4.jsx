@@ -38,10 +38,11 @@ const EnterPin = ({ data }) => {
     dispatch(hideLoading());
   }
   const checkIfBeneficiaryExists = async () => {
-    const endpoint = `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_SAVED_BENEFICIARIES_ENDPOINT}`.replace(
-      '{customerId}',
-      customerId
-    );
+    const endpoint =
+      `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_SAVED_BENEFICIARIES_ENDPOINT}`.replace(
+        '{customerId}',
+        customerId
+      );
     try {
       const response = await axios.get(endpoint, {
         headers: {
@@ -73,10 +74,11 @@ const EnterPin = ({ data }) => {
       return;
     }
 
-    const endpoint = `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_SAVE_BENEFICIARIES_ENDPOINT}`.replace(
-      '{customerId}',
-      customerId
-    );
+    const endpoint =
+      `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_SAVE_BENEFICIARIES_ENDPOINT}`.replace(
+        '{customerId}',
+        customerId
+      );
     try {
       const response = await axios.post(
         endpoint,
@@ -205,6 +207,7 @@ const EnterPin = ({ data }) => {
               name: data.accountName,
               account_number: data.accountNumber,
               bank_code: data.accountBankCode,
+              recipient: data.accountName,
               customerEmail: userEmail,
               walletId: walletId,
               description: data.purpose,
@@ -216,7 +219,7 @@ const EnterPin = ({ data }) => {
       const transactionResponse = await axios.post(
         //conditionally call the transfer and initiallize endpoint depending on userType
         userType === 'CORPORATE'
-          ?`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_INITIATE_TRANSFER_REQUEST}`
+          ? `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_INITIATE_TRANSFER_REQUEST}`
           : `${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_API_OTHER_BANK_SEND_MONEY_ENDPOINT}`,
         transactionPayload,
         {
@@ -242,13 +245,16 @@ const EnterPin = ({ data }) => {
           transactionResponse.data?.data === 'Transfer details sent successfully.');
       if (isSuccess) {
         //update wallet balance
-        const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_WALLET_ENDPOINT}`, {
-          headers: {
-            accept: '*/*',
-            Authorization: `Bearer ${newAuthToken}`,
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await fetch(
+          `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_WALLET_ENDPOINT}`,
+          {
+            headers: {
+              accept: '*/*',
+              Authorization: `Bearer ${newAuthToken}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
 
         if (!response.ok) {
           console.error('Error fetching balance:', response.status);
