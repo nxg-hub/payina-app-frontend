@@ -204,7 +204,7 @@ const EnterPin = ({ data }) => {
             }
           : {
               amount: data.amount,
-              name: data.accountName,
+              name: userDetails.accountName,
               account_number: data.accountNumber,
               bank_code: data.accountBankCode,
               recipient: data.accountName,
