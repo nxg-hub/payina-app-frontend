@@ -99,7 +99,7 @@ const ActionButtons = () => {
     if (!customerId) return;
 
     try {
-      const apiUrl = `https://payina-be-esnt.onrender.com/api/v1/user-actions/${notificationId}/read?customerId=${encodeURIComponent(customerId)}`;
+      const apiUrl = `https://payina-be.onrender.com/api/v1/user-actions/${notificationId}/read?customerId=${encodeURIComponent(customerId)}`;
       console.log('Marking notification as read:', apiUrl);
 
       const response = await fetch(apiUrl, {
