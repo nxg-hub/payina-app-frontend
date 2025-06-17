@@ -20,7 +20,7 @@ const ActionButtons = () => {
         return;
       }
 
-      const apiUrl = `https://payina-be-esnt.onrender.com/api/v1/user-actions?customerId=${encodeURIComponent(customerId)}&page=0&size=20`;
+      const apiUrl = `https://payina-be.onrender.com/api/v1/user-actions?customerId=${encodeURIComponent(customerId)}&page=0&size=20`;
       console.log('Fetching notifications from:', apiUrl);
 
       const response = await fetch(apiUrl);
