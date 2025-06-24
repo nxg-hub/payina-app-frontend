@@ -20,7 +20,7 @@ const ActionButtons = () => {
         return;
       }
 
-      const apiUrl = `https://payina-be.onrender.com/api/v1/user-actions?customerId=${encodeURIComponent(customerId)}&page=0&size=20`;
+      const apiUrl = `https://payina-be-6n2o.onrender.com/api/v1/user-actions?customerId=${encodeURIComponent(customerId)}&page=0&size=20`;
       console.log('Fetching notifications from:', apiUrl);
 
       const response = await fetch(apiUrl);
@@ -99,7 +99,7 @@ const ActionButtons = () => {
     if (!customerId) return;
 
     try {
-      const apiUrl = `https://payina-be.onrender.com/api/v1/user-actions/${notificationId}/read?customerId=${encodeURIComponent(customerId)}`;
+      const apiUrl = `https://payina-be-6n2o.onrender.com/api/v1/user-actions/${notificationId}/read?customerId=${encodeURIComponent(customerId)}`;
       console.log('Marking notification as read:', apiUrl);
 
       const response = await fetch(apiUrl, {
