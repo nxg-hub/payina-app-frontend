@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SavingsTypeSelector from './SavingsTypeSelector';
 import PersonalStep1 from './steps/PersonalStep1';
 import PersonalStep2 from './steps/PersonalStep2';
@@ -11,32 +11,37 @@ import { useNavigate } from 'react-router-dom';
 import PersonalStep3 from './steps/PersonalStep3';
 import PersonalStep4 from './steps/PersonalStep4';
 import SuccessSavingsModal from './_components/SuccessSavingsModal';
+import { hideLoading, showLoading } from '../../Redux/loadingSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Save = () => {
   const [savingsType, setSavingsType] = useState(null);
   const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => state.savings.loading);
   const [personalFormData, setPersonalFormData] = useState({
     goalName: '',
     goalAmount: '',
     fundAmount: '',
     fundFrequency: '',
     autoStartDate: '',
+    maturityDate: '',
   });
 
   let steps = [];
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setPersonalFormData((prev) => ({ ...prev, [name]: value }));
-  };
 
+  const handleChange = (name, value) => {
+    setPersonalFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
       setCurrentStep((prev) => prev + 1);
     }
   };
-  const nextStep = () => setCurrentStep((prev) => prev + 1);
-  const prevStep = () => setCurrentStep((prev) => prev - 1);
   const handleBack = () => {
     if (currentStep === 0) {
       setSavingsType(null);
@@ -83,6 +88,14 @@ const Save = () => {
   const backButtonClick = () => {
     navigate('/account/dashboard');
   };
+
+  useEffect(() => {
+    if (loading) {
+      dispatch(showLoading());
+    } else {
+      dispatch(hideLoading());
+    }
+  }, []);
   return (
     <div className="p-4 max-w-xl mx-auto">
       <div className=" w-[95%] md:w-[90%] m-auto flex justify-between md:mt-[100px]">

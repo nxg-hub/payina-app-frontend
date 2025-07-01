@@ -1,17 +1,28 @@
 import { Link } from 'react-router-dom';
 import { images } from '../../../../../constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
-// import { BsBank } from 'react-icons/bs';
-// import { PiPiggyBankFill } from 'react-icons/pi';
-// import { openModal } from '../../../../../Redux/modalSlice';
+import { useEffect, useState } from 'react';
+import { BsBank } from 'react-icons/bs';
+import { PiPiggyBankFill } from 'react-icons/pi';
+import { openModal } from '../../../../../Redux/modalSlice';
+import { fetchSavings } from '../../../../../Redux/savingsSlice';
+import useLocalStorage from '../../../../../hooks/useLocalStorage';
 
 const QuickAction = () => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [isVisible, setIsVisible] = useState(true);
   const userDetails = useSelector((state) => state.user.user);
   const userType = userDetails?.userType;
+  const [newAuthToken] = useLocalStorage('authToken', '');
+  const mysavings = useSelector((state) => state.savings.savings);
 
+  const success = useSelector((state) => state.savings.success);
+  useEffect(() => {
+    if (success) {
+      return;
+    }
+    dispatch(fetchSavings(newAuthToken));
+  }, []);
   return (
     <div className="md:px-[.7rem] pb-4 w-auto md:clear-right ml-5 md:ml-2 xl:ml-[19.5rem] mr-5 md:mr-3">
       {isVisible && (
@@ -59,7 +70,7 @@ const QuickAction = () => {
             </Link>
           </div>
         </div>
-        {/* <div
+        <div
           onClick={() => {
             dispatch(openModal());
           }}
@@ -74,19 +85,19 @@ const QuickAction = () => {
               Loan
             </Link>
           </div>
-        </div> */}
-        {/* <div className="flex font-bold bg-[#F3F3F3] flex-1  h-[88px] p-8 rounded-[10px] shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px] hover:scale-105 transition-transform hover:cursor-pointer">
+        </div>
+        <div className="flex font-bold bg-[#F3F3F3] flex-1  h-[88px] p-8 rounded-[10px] shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px] hover:scale-105 transition-transform hover:cursor-pointer">
           <div className="flex justify-start items-center gap-8 xl:gap-16">
             <div className="bg-primary p-2 rounded-full">
               <PiPiggyBankFill className="text-blue-800" size={24} />
             </div>
             <Link
-              to={'/savings'}
+              to={mysavings.length === 0 ? '/savings' : '/mysavings'}
               className="hover:text-lightBlue transition-colors text-center opacity-75 text-sm md:text-base">
               Savings
             </Link>
           </div>
-        </div> */}
+        </div>
         {userType === 'PERSONAL' && (
           <div className="flex font-bold bg-[#F3F3F3] h-[88px] p-8 rounded-[10px] shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px] hover:scale-105 transition-transform hover:cursor-pointer">
             <div className="flex justify-start items-center gap-4">

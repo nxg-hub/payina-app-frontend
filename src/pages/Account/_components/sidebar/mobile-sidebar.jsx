@@ -20,6 +20,9 @@ import { reSetWalletDetails } from '../../../../Redux/WalletSlice.jsx';
 import { resetTransactions } from '../../../../Redux/transactionsSlice.jsx';
 import avatar from '../../../../assets/images/avatar.png';
 import { resetPayroll } from '../../../../Redux/payrollSlice.jsx';
+import { resetsavings } from '../../../../Redux/savingsSlice.jsx';
+import { resetSavingStatement } from '../../../../Redux/savingsStatementSlice.jsx';
+import { resetLoan } from '../../../../Redux/loanSlice.jsx';
 
 export const MobileSidebar = ({ openModal }) => {
   const location = useLocation();
@@ -55,6 +58,9 @@ export const MobileSidebar = ({ openModal }) => {
     dispatch(reSetWalletDetails());
     dispatch(resetTransactions());
     dispatch(resetPayroll());
+    dispatch(resetsavings());
+    dispatch(resetSavingStatement())
+    dispatch(resetLoan())
   };
 
   const renderSidebarContent = () => {

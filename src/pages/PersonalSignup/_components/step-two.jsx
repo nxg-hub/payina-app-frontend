@@ -32,7 +32,7 @@ export const StepTwo = ({ next, initialValues }) => {
         referralCode: values.promoCode,
       };
 
-      const response = await fetch(import.meta.env.VITE_REGISTER_USER_ENDPOINT, {
+      const response = await fetch(`${import.meta.env.VITE_REGISTER_USER_ENDPOINT}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

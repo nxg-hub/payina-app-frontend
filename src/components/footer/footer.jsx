@@ -28,8 +28,11 @@ const Footer = () => {
             <Link to="/support" onClick={scrollToTop}>
               Support
             </Link>
-            {/*<hr className="text-yellow w-[10%] py-2  xl:w-[20%]" />*/}
-            {/*<Link to="/team">Team</Link>*/}
+
+            <hr className="text-yellow w-[10%] py-2  xl:w-[20%]" />
+            <Link to="/refer" onClick={scrollToTop}>
+              Refer
+            </Link>
             <hr className="text-yellow w-[10%] py-2 xl:w-[20%]" />
             <Link to="/terms-of-service" onClick={scrollToTop}>
               Terms of Service

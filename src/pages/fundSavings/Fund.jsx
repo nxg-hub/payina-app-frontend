@@ -3,25 +3,84 @@ import backArrow from '../../assets/images/Group-backArrow.png';
 import { BsBank } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import SuccessSavingsModal from '../savings/_components/SuccessSavingsModal';
+import useLocalStorage from '../../hooks/useLocalStorage';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchSavings } from '../../Redux/savingsSlice';
 const Fund = () => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [value, setValue] = useState('');
+  const dispatch = useDispatch();
+  const savingsId = useSelector((state) => state.savings.savingsId);
+  const goalName = useSelector((state) => state.savings.savingsName);
+  const currentBalance = useSelector((state) => state.wallet?.wallet?.data?.balance?.amount);
+  const [loading, setLoading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState('');
   const navigate = useNavigate();
+  const [newAuthToken] = useLocalStorage('authToken', '');
   const [formData, setFormData] = useState({
-    amount: '',
+    fundAmount: '',
+    savingsId: savingsId,
   });
+
+  const formatCurrency = (amount) => {
+    const number = parseFloat(amount.replace(/[^0-9]/g, ''));
+    if (isNaN(number)) return '';
+    return new Intl.NumberFormat('en-NG', {
+      style: 'currency',
+      currency: 'NGN',
+      minimumFractionDigits: 0,
+    }).format(number);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const rawValue = value.replace(/[^0-9]/g, '');
+    const numericValue = rawValue ? parseInt(rawValue, 10) : '';
+    const formatted = rawValue ? formatCurrency(rawValue) : '';
+
+    setValue(formatted);
+
+    setFormData((prev) => ({ ...prev, [name]: numericValue }));
   };
   const backButtonClick = () => {
-    navigate('/account/dashboard');
+    navigate('/mysavings');
   };
   const nextStep = () => setCurrentStep((prev) => prev + 1);
 
-  const fundPlan = () => {
-    nextStep();
-    console.log(formData);
+  const fundPlan = async () => {
+    if (formData.fundAmount > currentBalance) {
+      setUploadStatus(`Fund Amount is greater than available balance. Balance:₦${currentBalance}`);
+      return;
+    }
+    if (formData.fundAmount === '') {
+      setUploadStatus('required');
+      return;
+    }
+    setLoading(true);
+    setUploadStatus('');
+    try {
+      // Example of an API call to authenticate the user
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_FUND_SAVINGS}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${newAuthToken}`,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+      if (response.ok) {
+        dispatch(fetchSavings(newAuthToken));
+        nextStep();
+      }
+    } catch (error) {
+      console.log(error);
+      setUploadStatus('Something went wrong!');
+    } finally {
+      setLoading(false);
+    }
   };
   const prevStep = () => setCurrentStep((prev) => prev - 1);
   return (
@@ -36,7 +95,7 @@ const Fund = () => {
       {currentStep === 0 && (
         <>
           <div className="max-w-md mx-auto mt-28 p-8 bg-gradient-to-br from-white via-blue-50 to-blue-100 shadow-2xl rounded-2xl text-center space-y-6">
-            <h2 className="text-2xl font-extrabold text-gray-800"> Fund Savings</h2>
+            <h2 className="text-2xl font-extrabold text-gray-800"> Fund {goalName} Savings</h2>
             <p className="text-gray-600 text-sm">Fund your savings goal with</p>
 
             <button
@@ -52,19 +111,21 @@ const Fund = () => {
         </>
       )}
       {currentStep === 1 && (
-        <div className="max-w-md mx-auto mt-28 p-8 bg-gradient-to-br from-white via-blue-50 to-blue-100 shadow-2xl rounded-2xl text-center space-y-6">
+        <div className="max-w-md mx-auto mt-28 p-8 bg-gradient-to-br from-white via-blue-50 to-blue-100 shadow-2xl rounded-2xl text-center space-y-4">
           <label className="block font-bold">Fund Amount</label>
           <input
-            type="number"
-            name="amount"
-            value={formData?.amount}
+            type="text"
+            name="fundAmount"
+            value={value || formData?.fundAmount}
             onChange={handleChange}
             placeholder="Enter Amount"
             className="w-full px-4 py-3 rounded-xl border border-gray-300 bg-[#EAF3F6] focus:ring-2 focus:ring-[#006181] focus:outline-none transition"
             required
           />
 
-          {/* {errors.amount && <p className="text-red-500 text-sm mt-1">{errors.amount}</p>} */}
+          {uploadStatus && (
+            <p className="text-red-500 text-sm text-justify !mt-[-1px]">{uploadStatus}</p>
+          )}
           <div className="flex justify-between">
             <button
               onClick={prevStep}
@@ -74,7 +135,7 @@ const Fund = () => {
             <button
               onClick={fundPlan}
               className="px-6 py-2 bg-[#006181] hover:bg-[#004e65] text-white rounded-xl text-sm shadow-sm transition">
-              Fund Plan
+              {loading ? 'loading...' : 'Fund Plan'}
             </button>
           </div>
         </div>

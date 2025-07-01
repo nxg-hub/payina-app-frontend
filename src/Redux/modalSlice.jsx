@@ -5,7 +5,7 @@ const daysSince = lastSeen ? (Date.now() - new Date(lastSeen)) / (1000 * 60 * 60
 
 const initialState = {
   showModal: daysSince >= 7, // Show if 14 days have passed or never shown
-  modalOpen: false,
+  modalOpen: true,
 };
 
 const modalSlice = createSlice({

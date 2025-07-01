@@ -10,7 +10,6 @@ const InitialStep = ({ onNext }) => {
   const dispatch = useDispatch;
   const showModal = useSelector((state) => state.modal.modalOpen);
   const [isChecked, setIsChecked] = useState(false);
-
   const handleCheckboxChange = (event) => {
     setIsChecked(event.target.checked);
   };
@@ -66,14 +65,14 @@ const InitialStep = ({ onNext }) => {
               <LuDot size={30} />
               First-time loan offers range from N10,000.00 to N240,000.00
             </p>
-            <p className="flex text-sm">
+            {/* <p className="flex text-sm">
               <LuDot size={30} />A non-refundable fee of N500.00 is charged to process your loan
               application.
-            </p>
+            </p> */}
           </div>
         </article>
         <p className="mt-2 text-sm font-normal text-stone-950">
-          Repayment periods range from 61 days to 365 days with Annual Percentage Rates (APRs) from
+          Repayment periods range from 31 days to 365 days with Annual Percentage Rates (APRs) from
           5% - 36%. Late repayment fees apply.
         </p>
         <div className="mt-5 w-full flex gap-3 items-center text-stone-950">

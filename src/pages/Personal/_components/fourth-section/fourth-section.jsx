@@ -1,4 +1,5 @@
-import polygon from './../../../../assets/images/polygongroup.png';
+// import polygon from './../../../../assets/images/polygongroup.png';
+import EmblaCarousel from './EmblaCarousel';
 
 const FourthSection = () => {
   return (
@@ -13,9 +14,10 @@ const FourthSection = () => {
       </div>
 
       <hr className="border-none bg-yellow h-1 mt-4 mb-4  w-[87%] mx-auto" />
-      <div className="xl:py-20 py-20 grid place-content-center">
+      {/* <div className="xl:py-20 py-20 grid place-content-center">
         <img src={polygon} className="" alt="" />
-      </div>
+      </div> */}
+      <EmblaCarousel />
     </div>
   );
 };

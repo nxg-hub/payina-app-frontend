@@ -73,6 +73,9 @@ import MySavings from './pages/savings/MySavings.jsx';
 import SavingsHistory from './pages/savingshistory/index.jsx';
 import FundSavings from './pages/fundSavings/index.jsx';
 import Loans from './pages/Loans/index.jsx';
+import Refer from './pages/refer/Refer.jsx';
+import LoanBalanceCard from './pages/Loans/_components/LoanBalanceCard.jsx';
+import LoanHistory from './pages/LoanHistory/index.jsx';
 
 function App() {
   const location = useLocation();
@@ -109,6 +112,7 @@ function App() {
             <Route path="/validate-otp" element={<PasswordOtpValidate />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/refer" element={<Refer />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/account/contact-us" element={<ContactForm />} />
             <Route path="/support" element={<Support />} />
@@ -190,6 +194,22 @@ function App() {
             />
             <Route
               path="/loan"
+              element={
+                <ProtectedRoute>
+                  <LoanBalanceCard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/loanHistory"
+              element={
+                <ProtectedRoute>
+                  <LoanHistory />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/applyLoan"
               element={
                 <ProtectedRoute>
                   <Loans />
