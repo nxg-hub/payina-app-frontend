@@ -10,7 +10,7 @@ const StepFiveValidationSchema = Yup.object().shape({
   username: Yup.string().required('Username is required'),
 });
 
-export const StepFive = ({ next, bvnData, ninData, email, initialValues, values }) => {
+export const StepFive = ({ next, bvnData, ninData, datas, initialValues, values }) => {
   const userEmail = localStorage.getItem('userEmail');
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -49,7 +49,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues, values 
     setApiError('');
 
     try {
-      const response = await fetch(import.meta.env.VITE_SAVE_USERNAME_ENDPOINT, {
+      const response = await fetch(`${import.meta.env.VITE_SAVE_USERNAME_ENDPOINT}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -61,7 +61,8 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues, values 
           firstName: values.firstName || bvnData.firstname || ninData.firstname,
           lastName: values.lastName || bvnData.lastname || ninData.lastname,
           dob: values.dob || bvnData.dob || ninData.dob,
-          bvn: initialValues.identificationNumber || values.dob,
+          bvn: datas?.bvnData.bvn,
+          nin: datas?.ninData.nin,
           accountType: 'personal',
         }),
       });
@@ -75,6 +76,7 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues, values 
       }
     } catch (error) {
       setApiError('An error occurred. Please try again.');
+      console.log(error);
     } finally {
       setLoading(false);
     }

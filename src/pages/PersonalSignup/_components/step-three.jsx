@@ -33,7 +33,7 @@ export const StepThree = ({ next, data }) => {
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
-      const response = await fetch(import.meta.env.VITE_VALIDATE_OTP_ENDPOINT, {
+      const response = await fetch(` ${import.meta.env.VITE_VALIDATE_OTP_ENDPOINT}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,6 +51,7 @@ export const StepThree = ({ next, data }) => {
       }
     } catch (error) {
       setOtpError('An error occurred. Please try again.');
+      console.log(error);
     } finally {
       setLoading(false);
     }

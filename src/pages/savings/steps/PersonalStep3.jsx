@@ -1,11 +1,30 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DateModal from '../../../utilities/DateModal';
 
 export default function PersonalStep3({ data, onChange, onNext, onBack }) {
-  const [activeTab, setActiveTab] = useState('10 days');
+  const [activeTab, setActiveTab] = useState('30 days');
   const [showModal, setShowModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
-  console.log(data);
+
+  function getDateAfterDays(daysInput) {
+    // Handle both string format "10 days" and number format 10
+    let days;
+    if (typeof daysInput === 'string') {
+      days = parseInt(daysInput.split(' ')[0]); // Extract number from "10 days"
+    } else {
+      days = daysInput; // Already a number
+    }
+
+    const today = new Date();
+    today.setDate(today.getDate() + days);
+
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
   function parseDurationAndCalculateDate(input) {
     const date = new Date();
 
@@ -43,13 +62,19 @@ export default function PersonalStep3({ data, onChange, onNext, onBack }) {
   };
 
   const date = [
-    { id: 0, value: '10 days' },
     { id: 1, value: '30 days' },
     { id: 2, value: '60 days' },
     { id: 3, value: '90 days' },
     { id: 4, value: 'Pick my date' },
   ];
 
+  useEffect(() => {
+    const date = getDateAfterDays(activeTab);
+
+    if (activeTab !== 'Pick my date') {
+      onChange('maturityDate', date);
+    }
+  }, []);
   function formatPrettyDate(dateString) {
     const date = new Date(dateString);
 
@@ -90,9 +115,14 @@ export default function PersonalStep3({ data, onChange, onNext, onBack }) {
     return `${day}${getOrdinal(day)} ${month} ${year}`;
   }
 
-  const today = new Date().toISOString().split('T')[0];
-
   const handleSelect = (value) => {
+    const date = getDateAfterDays(value);
+    // console.log(value, date);
+    if (value !== 'Pick my date') {
+      onChange('maturityDate', date);
+    } else {
+      onChange('maturityDate', selectedDate);
+    }
     setActiveTab(value);
 
     if (value === 'Pick my date') {
@@ -105,15 +135,15 @@ export default function PersonalStep3({ data, onChange, onNext, onBack }) {
   };
   return (
     <div className="space-y-6 bg-white p-6 rounded-2xl shadow-md">
-      <p className="text-sm font-semibold">How long do you want to save for?</p>
-      <div className="w-full grid grid-cols-4 gap-2">
+      <p className="text-md font-semibold">How long do you want to save for?</p>
+      <div className="w-full grid grid-cols-2 md:grid-cols-4  gap-2">
         {date.map((date) => {
           return (
             <div
               onClick={() => {
                 handleSelect(date.value);
               }}
-              className={`${activeTab === date.value ? 'bg-[#006181] text-white' : ''} cursor-pointer rounded-2xl text-center p-1`}
+              className={`${activeTab === date.value ? 'bg-[#006181] text-white' : ''} cursor-pointer  rounded-2xl text-center p-1`}
               key={date.id}>
               {date.value}
             </div>
@@ -141,24 +171,19 @@ export default function PersonalStep3({ data, onChange, onNext, onBack }) {
               ? parseDurationAndCalculateDate(selectedDate)
               : 'Pick a date'}
         </p>
-        <p className="flex justify-between">
-          <strong>Withdrawal possible by</strong>{' '}
-          {activeTab !== 'Pick my date'
-            ? parseDurationAndCalculateDate(activeTab)
-            : selectedDate
-              ? parseDurationAndCalculateDate(selectedDate)
-              : 'Pick a date'}
-        </p>
-        <p className="flex justify-between">
+
+        {/* <p className="flex justify-between">
           <strong> Withdrawal Tax</strong>
-        </p>
+        </p> */}
       </div>
       <DateModal
         isOpen={showModal}
+        selectedDate={selectedDate}
         onClose={() => setShowModal(false)}
         onSelectDate={(date) => {
           setSelectedDate(date);
           setShowModal(false);
+          onChange('maturityDate', date);
         }}
       />
       <div className="mt-4 flex justify-between">

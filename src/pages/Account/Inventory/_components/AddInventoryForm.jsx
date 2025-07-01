@@ -37,14 +37,17 @@ const AddInventoryForm = () => {
     setUploadStatus('');
     try {
       // Example of an API call to authenticate the user
-      const response = await fetch(import.meta.env.VITE_ADD_INVENTORY, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${newAuthToken}`,
-        },
-        body: JSON.stringify(values),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_ADD_INVENTORY}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${newAuthToken}`,
+          },
+          body: JSON.stringify(values),
+        }
+      );
 
       if (!response.ok) {
         setUploadStatus('Something went wrong!');
@@ -57,7 +60,10 @@ const AddInventoryForm = () => {
         setLoading(false);
         // Fetch the updated inventory
         const res = await fetch(
-         `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_INVENTORY_BY_CUSTOMER_ID}`.replace('{customerId}', id),
+          `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_INVENTORY_BY_CUSTOMER_ID}`.replace(
+            '{customerId}',
+            id
+          ),
           {
             headers: {
               'Content-Type': 'application/json',

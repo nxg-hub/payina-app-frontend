@@ -59,11 +59,12 @@ export default function SignUpForm() {
     <StepOne next={handleNextStep} />,
     <StepTwo next={handleNextStep} initialValues={data} />,
     <StepThree next={handleNextStep} data={data} />,
-    <StepFour next={handleNextStep} />,
+    <StepFour next={handleNextStep} data={data} />,
     <StepFive
       next={handleNextStep}
       bvnData={data}
       ninData={data}
+      datas={data}
       initialValues={data}
       email={data.email}
     />,

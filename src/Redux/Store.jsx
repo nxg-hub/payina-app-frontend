@@ -15,6 +15,9 @@ import loadingReducer from './loadingSlice';
 import payrollReducer from './payrollSlice';
 import transactionsReducer from './transactionsSlice';
 import modalReducer from './modalSlice';
+import savingsReducer from './savingsSlice';
+import savingsStatementReducer from './savingsStatementSlice';
+import loanReducer from './loanSlice';
 
 // Configuration for redux-persist
 const persistConfig = {
@@ -47,6 +50,9 @@ const rootReducer = combineReducers({
   payroll: payrollReducer,
   transactions: transactionsReducer,
   modal: modalReducer,
+  savings: savingsReducer,
+  savingsStatement: savingsStatementReducer,
+  loan: loanReducer,
 });
 
 // Create persisted reducer

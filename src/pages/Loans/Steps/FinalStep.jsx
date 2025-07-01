@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { IoMdClose } from 'react-icons/io';
 import { closeModal } from '../../../Redux/modalSlice';
 
-const FinalStep = () => {
+const FinalStep = ({ onBack }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch;
   const showModal = useSelector((state) => state.modal.modalOpen);
@@ -48,12 +48,12 @@ const FinalStep = () => {
           <p className="mb-2 flex items-center gap-2">
             <AiOutlineMail className="text-blue-600 w-5 h-5" />
             <a href="mailto:support@yourcompany.com" className="text-blue-600 hover:underline">
-              support@yourcompany.com
+              support@payina.com.ng
             </a>
           </p>
           <p className="flex items-center gap-2">
             <AiOutlinePhone className="text-blue-600 w-5 h-5" />
-            <span>0800-XXX-XXXX</span>
+            <span>08138563840</span>
           </p>
         </section>
 

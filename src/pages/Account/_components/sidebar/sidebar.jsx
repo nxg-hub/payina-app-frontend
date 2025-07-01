@@ -20,6 +20,9 @@ import avatar from '../../../../assets/images/avatar.png';
 import useLocalStorage from '../../../../hooks/useLocalStorage.js';
 import { resetTransactions } from '../../../../Redux/transactionsSlice.jsx';
 import { resetPayroll } from '../../../../Redux/payrollSlice.jsx';
+import { resetsavings } from '../../../../Redux/savingsSlice.jsx';
+import { resetSavingStatement } from '../../../../Redux/savingsStatementSlice.jsx';
+import { resetLoan } from '../../../../Redux/loanSlice.jsx';
 
 export const Sidebar = ({ openModal }) => {
   const location = useLocation();
@@ -56,6 +59,9 @@ export const Sidebar = ({ openModal }) => {
     dispatch(reSetWalletDetails());
     dispatch(resetTransactions());
     dispatch(resetPayroll());
+    dispatch(resetsavings());
+    dispatch(resetSavingStatement());
+    dispatch(resetLoan());
   };
 
   const renderSidebarContent = () => {

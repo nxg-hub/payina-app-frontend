@@ -1,97 +1,73 @@
-import { duration } from '@mui/material';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-const Step3 = ({ data, onBack, onNext }) => {
-  function parseDurationAndCalculateDate(durationString) {
-    const [numberStr, unit] = durationString.split(' ');
-    const number = parseInt(numberStr, 10);
-    const durationInMonths = unit.toLowerCase().includes('year') ? number * 12 : number;
+const Step3 = ({ data, onBack, onChange, onNext }) => {
+  const [currentGuarantor, setCurrentGuarantor] = useState({
+    name: '',
+    phoneNumber: '',
+  });
 
-    const date = new Date();
-    date.setMonth(date.getMonth() + durationInMonths);
-    return formatPrettyDate(date); // Reuse your date formatting function
-  }
+  const loanAmount = Number(data.loanAmount);
+  const requiredGuarantors = loanAmount > 500000 ? 2 : 1;
+  const hasEnoughGuarantors = data.guarantors.length >= requiredGuarantors;
 
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-US', {
-      currency: 'NGN',
-    }).format(amount);
+  const handleAddGuarantor = () => {
+    if (!currentGuarantor.name || !currentGuarantor.phoneNumber) return;
+    const updatedGuarantors = [...data.guarantors, currentGuarantor];
+    onChange('guarantors', updatedGuarantors);
+    setCurrentGuarantor({ name: '', phoneNumber: '' });
   };
 
-  function formatPrettyDate(dateString) {
-    const date = new Date(dateString);
-
-    const day = date.getDate();
-    const year = date.getFullYear();
-
-    const monthNames = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    const month = monthNames[date.getMonth()];
-
-    // Get ordinal suffix
-    const getOrdinal = (n) => {
-      if (n > 3 && n < 21) return 'th';
-      switch (n % 10) {
-        case 1:
-          return 'st';
-        case 2:
-          return 'nd';
-        case 3:
-          return 'rd';
-        default:
-          return 'th';
-      }
-    };
-
-    return `${day}${getOrdinal(day)} ${month} ${year}`;
-  }
-
-  const today = new Date().toISOString().split('T')[0];
+  const handleRemoveGuarantor = (index) => {
+    const updated = [...data.guarantors];
+    updated.splice(index, 1);
+    onChange('guarantors', updated);
+  };
 
   return (
-    <div className="space-y-6 bg-white p-6 rounded-2xl shadow-md mt-[100px] m-auto md:w-[40%] ">
-      <div className="space-y-6">
-        <h2 className="text-xl font-bold mb-3">Confirm Your Details</h2>
-        <p className="flex justify-between">
-          <strong>Loan Purpose:</strong> {data?.purpose}
-        </p>
+    <div className="space-y-6 bg-white p-6 rounded-2xl shadow-md mt-[100px] m-auto md:w-[50%]">
+      <h2 className="text-lg font-semibold">Add Guarantors</h2>
 
-        <p className="flex justify-between">
-          <strong>Loan Amount:</strong> ₦{formatCurrency(data?.amount)}
-        </p>
-
-        <p className="flex justify-between">
-          <strong>Interest Rate:</strong>10% Per Annum
-        </p>
-        <p className="flex justify-between">
-          <strong>Estimated Interest:</strong>₦{formatCurrency(0.1 * data?.amount)}
-        </p>
-        <p className="flex justify-between">
-          <strong>Total:</strong> ₦
-          {formatCurrency(0.1 * Number(data?.amount) + Number(data?.amount))}
-        </p>
-        <p className="flex justify-between">
-          <strong> Duration:</strong> {data?.duration}
-        </p>
-        <p className="flex justify-between">
-          <strong> Loan Date:</strong> {formatPrettyDate(today)}
-        </p>
-        <p className="flex justify-between">
-          <strong> Repayment Date:</strong> {parseDurationAndCalculateDate(data?.duration)}
-        </p>
+      <div className="flex flex-col sm:flex-row gap-2">
+        <input
+          type="text"
+          placeholder="Guarantor Name"
+          value={currentGuarantor.name}
+          onChange={(e) => setCurrentGuarantor({ ...currentGuarantor, name: e.target.value })}
+          className="w-full px-4 py-3 rounded-xl border border-gray-300 bg-[#EAF3F6] focus:ring-2 focus:ring-[#006181] focus:outline-none transition"
+        />
+        <input
+          type="tel"
+          placeholder="phone Number"
+          value={currentGuarantor.phoneNumber}
+          onChange={(e) =>
+            setCurrentGuarantor({ ...currentGuarantor, phoneNumber: e.target.value })
+          }
+          className="w-full px-4 py-3 rounded-xl border border-gray-300 bg-[#EAF3F6] focus:ring-2 focus:ring-[#006181] focus:outline-none transition"
+        />
+        <button
+          onClick={handleAddGuarantor}
+          type="button"
+          className="px-3 py-1 bg-[#006181] hover:bg-[#004e65] text-white rounded-xl text-sm shadow-sm transition">
+          Add
+        </button>
       </div>
+
+      <ul className="space-y-2">
+        {data.guarantors?.map((g, index) => (
+          <li
+            key={index}
+            className="flex items-center justify-between  p-2  w-full px-4 py-3 rounded-xl border border-gray-300 bg-[#EAF3F6] focus:ring-2 focus:ring-[#006181] focus:outline-none transition">
+            <div>
+              <p className="font-medium">{g.name}</p>
+              <p className="text-sm text-gray-500">{g.phoneNumber}</p>
+            </div>
+            <button type="button" onClick={() => handleRemoveGuarantor(index)}>
+              Remove
+            </button>
+          </li>
+        ))}
+      </ul>
+
       <div className="flex justify-between">
         <button
           onClick={onBack}
@@ -99,11 +75,19 @@ const Step3 = ({ data, onBack, onNext }) => {
           ← Back
         </button>
         <button
+          className="px-6 py-2 bg-[#006181] hover:bg-[#004e65] text-white rounded-xl text-sm shadow-sm transition"
           onClick={onNext}
-          className="px-6 py-2 bg-[#006181] hover:bg-[#004e65] text-white rounded-xl text-sm shadow-sm transition">
-          Submit
+          disabled={!hasEnoughGuarantors}>
+          Continue
         </button>
       </div>
+
+      {!hasEnoughGuarantors && (
+        <p className="text-red-500 text-sm">
+          Please add at least {requiredGuarantors} guarantor
+          {requiredGuarantors > 1 ? 's' : ''} to proceed.
+        </p>
+      )}
     </div>
   );
 };
