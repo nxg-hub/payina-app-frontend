@@ -43,7 +43,7 @@ const Myhistory = () => {
 
   return (
     <div className="min-h-screen p-4 sm:p-6">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl relative md:left-[300px]">
         <div
           className={`${'flex flex-row gap-2 items-center md:mt-16 justify-between cancelAction-img max-w-4xl m-auto cursor-pointer'}`}
           onClick={handleBack}>
