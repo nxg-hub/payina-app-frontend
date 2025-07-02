@@ -117,6 +117,13 @@ const loanSlice = createSlice({
       state.success = false;
       state.loanSchedule = [];
       state.loanId = '';
+      state.scheduleSuccess = false;
+      state.loanSchedule = [];
+      state.scheduleLoading = false;
+      state.loanId = '';
+      state.loanName = '';
+      state.loanHistory = [];
+      state.loanHistoryLoading = false;
     },
     getLoanId(state, action) {
       const { id, loanName } = action.payload;

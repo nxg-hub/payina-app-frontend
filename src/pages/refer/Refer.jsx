@@ -43,7 +43,7 @@ const Refer = () => {
   };
 
   return (
-    <section className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-4 py-10">
+    <section className="min-h-screen overflow-scroll bg-black text-white flex flex-col items-center justify-center px-4 py-10">
       <div className=" relative bottom-9 ">
         <img className="md:w-[350px]" src={logo} alt="" />
       </div>
@@ -78,7 +78,7 @@ const Refer = () => {
           )}
           {error && <h2 className="text-red-500">{error}</h2>}
           {success && <h2 className="text-green-500">{success}</h2>}
-          {promoCode && <ShareButton promoCode={promoCode} />}
+          <div className="posi">{promoCode && <ShareButton promoCode={promoCode} />}</div>
         </motion.div>
       </div>
     </section>
