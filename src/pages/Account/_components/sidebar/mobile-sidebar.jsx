@@ -20,7 +20,7 @@ import { reSetWalletDetails } from '../../../../Redux/WalletSlice.jsx';
 import { resetTransactions } from '../../../../Redux/transactionsSlice.jsx';
 import avatar from '../../../../assets/images/avatar.png';
 import { resetPayroll } from '../../../../Redux/payrollSlice.jsx';
-
+//
 export const MobileSidebar = ({ openModal }) => {
   const location = useLocation();
   const navigate = useNavigate();

@@ -35,37 +35,20 @@ const ContactForm = ({ goBack }) => {
     });
 
     try {
-      // For Netlify forms in SPA applications, we need the right format
-      const formData = encode({
-        'form-name': 'contact',
+      const requestData = {
+        'customerId': 'string',
+        'category': 'user-logged',
+        'priority': 'low-risk',
+        'subject': 'user-logged',
         ...values
-      });
+      };
 
-      // Check if we're in development mode
-      const isDevelopment = window.location.hostname === 'localhost' ||
-        window.location.hostname === '127.0.0.1';
-
-      if (isDevelopment) {
-        // In development, just log the form data and simulate success
-        console.log('Development mode: Form data would be submitted to Netlify:', values);
-
-        // Simulate a delay to mimic network request
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        resetForm();
-        setScreenshot(null);
-        setSubmissionStatus({
-          isSubmitting: false,
-          isSuccess: true,
-          isError: false,
-          message: 'DEV MODE: Form data logged to console. This would be submitted in production.'
-        });
-      } else {
-        // In production, submit to Netlify
-        const response = await fetch('/', {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/support/tickets/users`, {
           method: 'POST',
-          body: formData,
-        });
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestData),        });
 
         if (response.ok) {
           resetForm();
@@ -79,10 +62,9 @@ const ContactForm = ({ goBack }) => {
         } else {
           console.error('Form submission response:', response.status, response.statusText);
           throw new Error(`Form submission failed: ${response.status} ${response.statusText}`);
-        }
+        
       }
 
-      // Reset success message after 5 seconds
       setTimeout(() => {
         setSubmissionStatus(prev => ({...prev, isSuccess: false, message: ''}));
       }, 5000);
@@ -99,7 +81,6 @@ const ContactForm = ({ goBack }) => {
     }
   };
 
-  // Function to close the success modal
   const closeSuccessModal = () => {
     setSubmissionStatus(prev => ({...prev, isSuccess: false, message: ''}));
   };
@@ -147,10 +128,10 @@ const ContactForm = ({ goBack }) => {
         <div className="flex flex-col gap-3 justify-between p-3 lg:p-5 items-base">
           <Formik
             initialValues={{
-              fullName: '',
-              email: '',
+              customerName: '',
+              customerEmail: '',
               phoneNumber: '',
-              complaint: '',
+              description: '',
               screenshot: null,
               hiddenField: '', // for honeypot (spam protection)
             }}
@@ -166,34 +147,34 @@ const ContactForm = ({ goBack }) => {
                 </p>
 
                 <div className="flex flex-col w-full gap-2">
-                  <label htmlFor="fullName" className="text-left font-md text-md text-white">
+                  <label htmlFor="customerName" className="text-left font-md text-md text-white">
                     Full Name
                   </label>
                   <Field
-                    name="fullName"
+                    name="customerName"
                     type="text"
                     placeholder="Your full name"
                     className="lg:w-[500px] w-[250px] border border-yellow outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                   />
                   <ErrorMessage
-                    name="fullName"
+                    name="customerName"
                     component="span"
                     className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                   />
                 </div>
 
                 <div className="flex flex-col w-full gap-2 py-2">
-                  <label htmlFor="email" className="text-left font-md text-md text-white">
+                  <label htmlFor="customerEmail" className="text-left font-md text-md text-white">
                     Email Address
                   </label>
                   <Field
-                    name="email"
+                    name="customerEmail"
                     type="email"
                     placeholder="Your Email Address"
                     className="lg:w-[500px] w-[250px] border border-yellow outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                   />
                   <ErrorMessage
-                    name="email"
+                    name="customerEmail"
                     component="span"
                     className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                   />
@@ -218,7 +199,7 @@ const ContactForm = ({ goBack }) => {
 
                 <div className="flex flex-col w-full gap-2 py-2">
                   <label htmlFor="screenshot" className="text-left font-md text-md text-white">
-                    Upload Complaint Reference (Screenshot)
+                    Upload Complaint Reference (Screenshot), if applicable
                   </label>
                   <input
                     type="file"
@@ -249,18 +230,18 @@ const ContactForm = ({ goBack }) => {
                 </div>
 
                 <div className="flex flex-col w-full gap-2 py-2">
-                  <label htmlFor="complaint" className="text-left font-md text-md text-white">
+                  <label htmlFor="description" className="text-left font-md text-md text-white">
                     Write Your Complaint Here
                   </label>
                   <Field
                     as="textarea"
-                    name="complaint"
+                    name="description"
                     rows={10}
                     placeholder="Write your complaint here"
                     className="lg:w-[500px] w-[250px] border border-yellow outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                   />
                   <ErrorMessage
-                    name="complaint"
+                    name="description"
                     component="span"
                     className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                   />
