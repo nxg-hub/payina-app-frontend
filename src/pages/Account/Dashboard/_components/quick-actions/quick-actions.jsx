@@ -77,7 +77,7 @@ const QuickAction = () => {
           className="flex font-bold bg-[#F3F3F3] flex-1  h-[88px] p-8 rounded-[10px] shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px] hover:scale-105 transition-transform hover:cursor-pointer">
           <div className="flex justify-start items-center gap-8 xl:gap-16">
             <div className="bg-primary p-2 rounded-full">
-              <BsBank size={24} className="text-blue-800" />
+              <BsBank size={24} className="text-secondary" />
             </div>
             <Link
               to={'/loan'}
@@ -89,7 +89,7 @@ const QuickAction = () => {
         <div className="flex font-bold bg-[#F3F3F3] flex-1  h-[88px] p-8 rounded-[10px] shadow-[rgba(50,_50,_105,_0.4)_0px_2px_5px_1px,_rgba(0,_0,_0,_0.03)_0px_1px_1px_0px] hover:scale-105 transition-transform hover:cursor-pointer">
           <div className="flex justify-start items-center gap-8 xl:gap-16">
             <div className="bg-primary p-2 rounded-full">
-              <PiPiggyBankFill className="text-blue-800" size={24} />
+              <PiPiggyBankFill className="text-secondary" size={24} />
             </div>
             <Link
               to={mysavings.length === 0 ? '/savings' : '/mysavings'}
