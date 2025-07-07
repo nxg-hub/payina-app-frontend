@@ -26,7 +26,10 @@ const LoanBalanceCard = () => {
   const approvedLoan = loan?.filter((loan) => loan.status === 'APPROVED');
 
   const onlyRepaidOrRejected = loan?.every(
-    (loan) => loan.status === 'REPAID' || loan.status === 'REJECTED'
+    (loan) =>
+      loan.status === 'REPAID' ||
+      loan.status === 'REJECTED' ||
+      loan.status === 'USER_REJECTED_OFFER'
   );
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -107,7 +110,7 @@ const LoanBalanceCard = () => {
             </div>
           </div>
         </div>
-        {loan.map((item) => (
+        {loan?.map((item) => (
           <div
             key={item.id}
             className="bg-gradient-to-br from-white via-blue-50 to-blue-100 rounded-xl  shadow-md p-4 my-4  hover:shadow-lg transition">

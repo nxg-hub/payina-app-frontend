@@ -6,10 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import Step2 from './Steps/Step2';
 import InitialStep from './Steps/InitialStep';
 import FinalStep from './Steps/FinalStep';
-import LoanBalanceCard from './_components/LoanBalanceCard';
-import { useDispatch } from 'react-redux';
-import { fetchLoan } from '../../Redux/loanSlice';
-import useLocalStorage from '../../hooks/useLocalStorage';
 import Step4 from './Steps/Step4';
 
 const Loan = () => {
