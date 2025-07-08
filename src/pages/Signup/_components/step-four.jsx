@@ -264,8 +264,6 @@
 //   );
 // };
 
-
-
 import { Form, Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import CustomButton from '../../../components/button/button';
@@ -284,9 +282,11 @@ const StepFourValidationSchema = Yup.object().shape({
   // }),
 });
 
-export const StepFour = ({ next }) => {
+export const StepFour = ({ next, data }) => {
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [idNumber, setIdNumber] = useState('');
+  const [iDtype, setIdType] = useState('');
   const dispatch = useDispatch();
   const manualEntry = useSelector((state) => state.businessSignUp.manualEntry);
 
@@ -299,8 +299,10 @@ export const StepFour = ({ next }) => {
 
   const handleIDVerification = async (values) => {
     const idType = values.idType;
+    setIdType(idType);
     // Example: 'NIN' or 'BVN'
     const identificationNumber = values.identificationNumber; // Example: NIN or BVN entered by the user
+    setIdNumber(identificationNumber);
     setApiError('');
     if (idType === '') {
       setApiError('Select Identity');
@@ -312,20 +314,20 @@ export const StepFour = ({ next }) => {
 
     setLoading(true);
 
-      const BASE_URL = import.meta.env.VITE_BASE_URL
-      const NIN_SEARCH = import.meta.env.VITE_NIN_SEARCH_EXISTING_PROFILE_ENDPOINT
-      const NIN_VERIFY = import.meta.env.VITE_NIN_VERIFY_NEW_PROFILE_ENDPOINT
-      const BVN_SEARCH = import.meta.env.VITE_NIN_SEARCH_EXISTING_PROFILE_ENDPOINT
-      const BVN_VERIFY = import.meta.env.VITE_NIN_SEARCH_EXISTING_PROFILE_ENDPOINT
+    const BASE_URL = import.meta.env.VITE_BASE_URL;
+    const NIN_SEARCH = import.meta.env.VITE_NIN_SEARCH_EXISTING_PROFILE_ENDPOINT;
+    const NIN_VERIFY = import.meta.env.VITE_NIN_VERIFY_NEW_PROFILE_ENDPOINT;
+    const BVN_SEARCH = import.meta.env.VITE_NIN_SEARCH_EXISTING_PROFILE_ENDPOINT;
+    const BVN_VERIFY = import.meta.env.VITE_NIN_SEARCH_EXISTING_PROFILE_ENDPOINT;
 
     const endpoints = {
       NIN: {
         search: `${BASE_URL}${NIN_SEARCH}`,
-        verify:  `${BASE_URL}${NIN_VERIFY}`,
+        verify: `${BASE_URL}${NIN_VERIFY}`,
       },
       BVN: {
         search: `${BASE_URL}${BVN_SEARCH}`,
-        verify:  `${BASE_URL}${BVN_VERIFY}`,
+        verify: `${BASE_URL}${BVN_VERIFY}`,
       },
     };
     setApiError('');
@@ -402,10 +404,9 @@ export const StepFour = ({ next }) => {
 
   const handleManualEntry = () => {
     next({
-      ...{
-        idType: '',
-        identificationNumber: '',
-      },
+      ...data,
+      bvnData: iDtype === 'BVN' ? { bvn: idNumber } : { bvn: '' },
+      ninData: iDtype === 'NIN' ? { nin: idNumber } : { nin: '' },
     });
   };
 

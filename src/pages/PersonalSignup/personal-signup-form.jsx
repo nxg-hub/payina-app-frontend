@@ -41,12 +41,12 @@ export default function PersonalSignupForm() {
     <StepOne next={handleNextStep} />,
     <StepTwo next={handleNextStep} initialValues={data} />,
     <StepThree next={handleNextStep} data={data} />,
-    <StepFour next={handleNextStep} />,
+    <StepFour next={handleNextStep} data={data} />,
     <StepFive
       next={handleNextStep}
       bvnData={data}
       ninData={data}
-      initialValues={data}
+      datas={data}
       email={data.email}
     />,
     <StepSix next={handleNextStep} email={data.email} />,

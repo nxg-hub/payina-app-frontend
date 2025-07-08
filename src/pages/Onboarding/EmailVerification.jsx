@@ -27,7 +27,9 @@ const EmailVerification = ({}) => {
     setError('');
     const encodedEmail = encodeURIComponent(email);
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_EMAIL_CHECK}?email=${encodedEmail}`);
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_EMAIL_CHECK}?email=${encodedEmail}`
+      );
       //check if email exists in db
       const isRegistered = response.data.exists;
       //if email exists call get user by email endpoint

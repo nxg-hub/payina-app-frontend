@@ -48,12 +48,15 @@ const EnterPin = ({ data }) => {
     const fetchUserData = async () => {
       setUserLoading(true);
       try {
-        const userResponse = await axios.get(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT}`, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${newAuthToken}`,
-          },
-        });
+        const userResponse = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_LOGIN_USER_ENDPOINT}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${newAuthToken}`,
+            },
+          }
+        );
         // console.log('User data fetched successfully:', userResponse.data);
         // setUserEmail(userResponse.data.email);
         // setSenderName(userResponse.data.accountName);
@@ -71,7 +74,11 @@ const EnterPin = ({ data }) => {
       try {
         let endpoint;
         if (isNaN(payinaTag)) {
-          endpoint = `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_PAYINA_TAG_ENDPOINT}`.replace('{username}', payinaTag);
+          endpoint =
+            `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_PAYINA_TAG_ENDPOINT}`.replace(
+              '{username}',
+              payinaTag
+            );
         } else {
           endpoint = `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_ACCOUNT_NUMBER_ENDPOINT}?accountNumber=${payinaTag}`;
         }
@@ -136,7 +143,7 @@ const EnterPin = ({ data }) => {
     setLoading(true);
     try {
       const pinResponse = await axios.post(
-       `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_VALIDATE_TRANSACTION_PIN_ENDPOINT}`,
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_VALIDATE_TRANSACTION_PIN_ENDPOINT}`,
         null,
         {
           params: {
@@ -182,10 +189,10 @@ const EnterPin = ({ data }) => {
 
         const transactionResponse = await axios.post(
           //conditionally call the endpoints based on userType
-         userType === 'CORPORATE'
-            ?`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_INITIATE_TRANSFER_REQUEST}`
-          : `${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_API_OTHER_BANK_SEND_MONEY_ENDPOINT}`,
-        transactionPayload,
+          userType === 'CORPORATE'
+            ? `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_INITIATE_INHOUSE_TRANSFER_REQUEST}`
+            : `${import.meta.env.VITE_WALLET_BASE_URL}${import.meta.env.VITE_IN_HOUSE_TRANSFER_ENDPOINT}`,
+          transactionPayload,
           {
             headers: {
               apiKey: import.meta.env.VITE_API_KEY,
@@ -209,13 +216,16 @@ const EnterPin = ({ data }) => {
 
         if (isSuccess) {
           //update wallet balance
-          const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_WALLET_ENDPOINT}`, {
-            headers: {
-              accept: '*/*',
-              Authorization: `Bearer ${newAuthToken}`,
-              'Content-Type': 'application/json',
-            },
-          });
+          const response = await fetch(
+            `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_WALLET_ENDPOINT}`,
+            {
+              headers: {
+                accept: '*/*',
+                Authorization: `Bearer ${newAuthToken}`,
+                'Content-Type': 'application/json',
+              },
+            }
+          );
 
           const data = await response.json();
           const balance = data.data.balance.amount;

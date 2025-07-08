@@ -20,7 +20,10 @@ import { reSetWalletDetails } from '../../../../Redux/WalletSlice.jsx';
 import { resetTransactions } from '../../../../Redux/transactionsSlice.jsx';
 import avatar from '../../../../assets/images/avatar.png';
 import { resetPayroll } from '../../../../Redux/payrollSlice.jsx';
-//
+import { resetsavings } from '../../../../Redux/savingsSlice.jsx';
+import { resetSavingStatement } from '../../../../Redux/savingsStatementSlice.jsx';
+import { resetLoan } from '../../../../Redux/loanSlice.jsx';
+
 export const MobileSidebar = ({ openModal }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -40,9 +43,10 @@ export const MobileSidebar = ({ openModal }) => {
   };
 
   const handleLogout = () => {
-    localStorage.clear();
     navigate('/login');
     localStorage.removeItem('userEmail');
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userDetails');
     persistor.purge();
     dispatch(reSetUserDetails());
     dispatch(resetCorporate());
@@ -54,6 +58,9 @@ export const MobileSidebar = ({ openModal }) => {
     dispatch(reSetWalletDetails());
     dispatch(resetTransactions());
     dispatch(resetPayroll());
+    dispatch(resetsavings());
+    dispatch(resetSavingStatement())
+    dispatch(resetLoan())
   };
 
   const renderSidebarContent = () => {
@@ -76,14 +83,14 @@ export const MobileSidebar = ({ openModal }) => {
             <RiBillLine size={22} />
             <span className="hover:text-lightBlue ease transition-colors">Bills</span>
           </Link>
-          <Link
-            to="/personal/cards"
-            className={`flex items-center space-x-6 ${
-              currentRoute === '/personal/cards' ? '!ml-3 font-bold text-lightBlue' : ''
-            }`}>
-            <TbCards size={22} />
-            <span className="hover:text-lightBlue ease transition-colors">Cards</span>
-          </Link>
+          {/*<Link*/}
+          {/*  to="/personal/cards"*/}
+          {/*  className={`flex items-center space-x-6 ${*/}
+          {/*    currentRoute === '/personal/cards' ? '!ml-3 font-bold text-lightBlue' : ''*/}
+          {/*  }`}>*/}
+          {/*  <TbCards size={22} />*/}
+          {/*  <span className="hover:text-lightBlue ease transition-colors">Cards</span>*/}
+          {/*</Link>*/}
           <Link
             to="/account/transaction"
             className={`flex items-center space-x-6 ${

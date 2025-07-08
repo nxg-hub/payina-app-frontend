@@ -17,25 +17,31 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
     const fetchInitialData = async () => {
       try {
         // Fetch user data
-        const userResponse = await axios.get(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_USER}`, {
-          headers: {
-            Accept: '*/*',
-            apiKey: API_KEY,
-            Authorization: `Bearer ${newAuthToken}`,
-            'Content-Type': 'application/json',
-          },
-        });
+        const userResponse = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_USER}`,
+          {
+            headers: {
+              Accept: '*/*',
+              apiKey: API_KEY,
+              Authorization: `Bearer ${newAuthToken}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
 
         setUserData(userResponse.data);
 
         // Fetch wallet data
-        const walletResponse = await axios.get(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_WALLET_ENDPOINT}`, {
-          headers: {
-            Authorization: `Bearer ${newAuthToken}`,
-            'Content-Type': 'application/json',
-            apiKey: API_KEY,
-          },
-        });
+        const walletResponse = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_WALLET_ENDPOINT}`,
+          {
+            headers: {
+              Authorization: `Bearer ${newAuthToken}`,
+              'Content-Type': 'application/json',
+              apiKey: API_KEY,
+            },
+          }
+        );
 
         setWalletData(walletResponse.data);
       } catch (error) {
@@ -57,7 +63,7 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
         {
           email: userData?.email || formValues.email,
           amount: Number(amount),
-          channels: ['card'],
+          // channels: ['card'],
           walletId: walletData?.walletId || userData?.walletId,
         },
         {
@@ -106,8 +112,7 @@ const FundWalletComponent = ({ amount, onFundingInitiated, onError, formValues =
       <button
         onClick={handleProceedToFund}
         disabled={isProcessing}
-        className="w-full bg-lightBlue text-white py-2 px-4 rounded disabled:opacity-50"
-      >
+        className="w-full bg-lightBlue text-white py-2 px-4 rounded disabled:opacity-50">
         {isProcessing ? 'Processing...' : 'Proceed to Fund'}
       </button>
     </div>

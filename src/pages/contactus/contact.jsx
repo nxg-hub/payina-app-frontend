@@ -4,7 +4,7 @@ import { Field, Formik, Form, ErrorMessage } from 'formik';
 import { FormSchemas } from './FormSchemas';
 
 const ContactForm = ({ goBack }) => {
-  const [screenshot, setScreenshot] = useState(null);
+  const [screenshot_url, setScreenshot] = useState(null);
   const [submissionStatus, setSubmissionStatus] = useState({
     isSubmitting: false,
     isSuccess: false,
@@ -16,9 +16,9 @@ const ContactForm = ({ goBack }) => {
     const formData = new FormData();
 
     for (const key in data) {
-      if (key === 'screenshot' && data[key]) {
+      if (key === 'screenshot_url' && data[key]) {
         formData.append(key, data[key]);
-      } else if (data[key] !== null && key !== 'screenshot') {
+      } else if (data[key] !== null && key !== 'screenshot_url') {
         formData.append(key, data[key]);
       }
     }
@@ -26,60 +26,83 @@ const ContactForm = ({ goBack }) => {
     return formData;
   };
 
+  const uploadScreenshot = async (file, values) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  const email = encodeURIComponent(values.customerEmail);
+
+
+  const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/auth/upload-to-cloudinary?email=${email}`, {
+    method: 'POST',
+    body: formData,
+  });
+
+ const url = await response.text();
+
+if (!response.ok) {
+  throw new Error('Screenshot upload failed');
+}
+
+return url;
+  }
+
   const handleSubmit = async (values, { resetForm, setSubmitting }) => {
-    setSubmissionStatus({
-      isSubmitting: true,
-      isSuccess: false,
-      isError: false,
-      message: 'Submitting your form...'
+  setSubmissionStatus({
+    isSubmitting: true,
+    isSuccess: false,
+    isError: false,
+    message: 'Submitting your form...',
+  });
+
+  try {
+    let screenshotUrl = null;
+
+    // Upload the screenshot to your backend Cloudinary endpoint
+    if (values.screenshot_url) {
+      screenshotUrl = await uploadScreenshot(values.screenshot_url, values);
+    }
+
+    const requestData = {
+      customerId: 'string',
+      category: 'user-logged',
+      priority: 'low-risk',
+      subject: 'user-logged',
+      ...values,
+      screenshot_url: screenshotUrl, // replace file with URL
+    };
+
+    // delete requestData.screenshotFile; // clean up if necessary
+
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/support/tickets/users`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestData),
     });
 
-    try {
-      const requestData = {
-        'customerId': 'string',
-        'category': 'user-logged',
-        'priority': 'low-risk',
-        'subject': 'user-logged',
-        ...values
-      };
+    if (!response.ok) throw new Error('Form submission failed');
 
-        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/support/tickets/users`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestData),        });
+    setSubmissionStatus({
+      isSubmitting: false,
+      isSuccess: true,
+      isError: false,
+      message: 'Thank you! Your form has been submitted successfully.'
+    });
 
-        if (response.ok) {
-          resetForm();
-          setScreenshot(null);
-          setSubmissionStatus({
-            isSubmitting: false,
-            isSuccess: true,
-            isError: false,
-            message: 'Thank you! Your form has been submitted successfully.'
-          });
-        } else {
-          console.error('Form submission response:', response.status, response.statusText);
-          throw new Error(`Form submission failed: ${response.status} ${response.statusText}`);
-        
-      }
+    resetForm();
+  } catch (error) {
+    setSubmissionStatus({
+      isSubmitting: false,
+      isSuccess: false,
+      isError: true,
+      message: error.message || 'Something went wrong',
+    });
+  } finally {
+    setSubmitting(false);
+  }
+};
 
-      setTimeout(() => {
-        setSubmissionStatus(prev => ({...prev, isSuccess: false, message: ''}));
-      }, 5000);
-    } catch (error) {
-      console.error('Form submission error:', error);
-      setSubmissionStatus({
-        isSubmitting: false,
-        isSuccess: false,
-        isError: true,
-        message: 'There was a problem submitting your form. Please try again.'
-      });
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   const closeSuccessModal = () => {
     setSubmissionStatus(prev => ({...prev, isSuccess: false, message: ''}));
@@ -132,7 +155,7 @@ const ContactForm = ({ goBack }) => {
               customerEmail: '',
               phoneNumber: '',
               description: '',
-              screenshot: null,
+              screenshot_url: null,
               hiddenField: '', // for honeypot (spam protection)
             }}
             validationSchema={FormSchemas}
@@ -198,32 +221,32 @@ const ContactForm = ({ goBack }) => {
                 </div>
 
                 <div className="flex flex-col w-full gap-2 py-2">
-                  <label htmlFor="screenshot" className="text-left font-md text-md text-white">
+                  <label htmlFor="screenshot_url" className="text-left font-md text-md text-white">
                     Upload Complaint Reference (Screenshot), if applicable
                   </label>
                   <input
                     type="file"
-                    id="screenshot"
-                    name="screenshot"
+                    id="screenshot_url"
+                    name="screenshot_url"
                     accept="image/*"
                     onChange={(event) => {
                       const file = event.currentTarget.files[0];
                       if (file) {
-                        setFieldValue('screenshot', file);
+                        setFieldValue('screenshot_url', file);
                         setScreenshot(URL.createObjectURL(file));
                       }
                     }}
                     className="lg:w-[500px] w-[250px] border border-yellow outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm bg-white"
                   />
-                  {screenshot && (
+                  {screenshot_url && (
                     <img
-                      src={screenshot}
+                      src={screenshot_url}
                       alt="Complaint Screenshot"
                       className="mt-2 rounded-md w-[100px] h-[100px] object-cover"
                     />
                   )}
                   <ErrorMessage
-                    name="screenshot"
+                    name="screenshot_url"
                     component="span"
                     className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                   />

@@ -9,7 +9,7 @@ import { previousStep } from '../../../Redux/BusinessSignUpSlice';
 const StepFiveValidationSchema = Yup.object().shape({
   username: Yup.string().required('Username is required'),
 });
-export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
+export const StepFive = ({ next, bvnData, ninData, datas, initialValues }) => {
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
   const userEmail = localStorage.getItem('userEmail');
@@ -17,20 +17,19 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
 
   const dispatch = useDispatch();
 
-
   const handlePrevious = () => {
     dispatch(previousStep());
   };
-  
-  const BASE_URL = import.meta.env.VITE_BASE_URL
-  const SAVE_USERNAME = import.meta.env.VITE_SAVE_USERNAME_ENDPOINT
+
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+  const SAVE_USERNAME = import.meta.env.VITE_SAVE_USERNAME_ENDPOINT;
 
   const handleSubmit = async (values) => {
     setLoading(true);
     setApiError('');
 
     try {
-      const response = await fetch(`${BASE_URL}${SAVE_USERNAME}`, {
+      const response = await fetch(`${SAVE_USERNAME}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,7 +41,8 @@ export const StepFive = ({ next, bvnData, ninData, email, initialValues }) => {
           firstName: bvnData.firstname || ninData.firstname,
           lastName: bvnData.lastname || ninData.lastname,
           dob: bvnData.dob || ninData.dob,
-          bvn: initialValues.identificationNumber,
+          bvn: datas?.bvnData.bvn,
+          nin: datas?.ninData.nin,
           accountType: 'corporate',
           bvnverificationStatus: 'VERIFIED',
         }),

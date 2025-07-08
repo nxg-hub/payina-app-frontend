@@ -68,6 +68,14 @@ import TransferFailed from './pages/TransferFail/TransferFailed.jsx';
 import Freinds from './pages/Account/Freinds/Index.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import ContactForm from './pages/contactus/contact.jsx';
+import Savings from './pages/savings/index.jsx';
+import MySavings from './pages/savings/MySavings.jsx';
+import SavingsHistory from './pages/savingshistory/index.jsx';
+import FundSavings from './pages/fundSavings/index.jsx';
+import Loans from './pages/Loans/index.jsx';
+import Refer from './pages/refer/Refer.jsx';
+import LoanBalanceCard from './pages/Loans/_components/LoanBalanceCard.jsx';
+import LoanHistory from './pages/LoanHistory/index.jsx';
 
 function App() {
   const location = useLocation();
@@ -104,6 +112,7 @@ function App() {
             <Route path="/validate-otp" element={<PasswordOtpValidate />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/refer" element={<Refer />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/account/contact-us" element={<ContactForm />} />
             <Route path="/support" element={<Support />} />
@@ -180,6 +189,62 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/loan"
+              element={
+                <ProtectedRoute>
+                  <LoanBalanceCard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/loanHistory"
+              element={
+                <ProtectedRoute>
+                  <LoanHistory />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/applyLoan"
+              element={
+                <ProtectedRoute>
+                  <Loans />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/savings"
+              element={
+                <ProtectedRoute>
+                  <Savings />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/mysavings"
+              element={
+                <ProtectedRoute>
+                  <MySavings />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/savingshistory"
+              element={
+                <ProtectedRoute>
+                  <SavingsHistory />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/fund"
+              element={
+                <ProtectedRoute>
+                  <FundSavings />
                 </ProtectedRoute>
               }
             />

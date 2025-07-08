@@ -4,106 +4,110 @@ import { Field, Formik, Form, ErrorMessage } from 'formik';
 import { FormSchemas } from './FormSchemas';
 
 const ContactForm = ({ goBack }) => {
-  const [screenshot, setScreenshot] = useState(null);
-  const [submissionStatus, setSubmissionStatus] = useState({
-    isSubmitting: false,
-    isSuccess: false,
-    isError: false,
-    message: ''
-  });
-
-  const encode = (data) => {
-    const formData = new FormData();
-
-    for (const key in data) {
-      if (key === 'screenshot' && data[key]) {
-        formData.append(key, data[key]);
-      } else if (data[key] !== null && key !== 'screenshot') {
-        formData.append(key, data[key]);
+    const [screenshot_url, setScreenshot] = useState(null);
+    const [submissionStatus, setSubmissionStatus] = useState({
+      isSubmitting: false,
+      isSuccess: false,
+      isError: false,
+      message: ''
+    });
+  
+    const encode = (data) => {
+      const formData = new FormData();
+  
+      for (const key in data) {
+        if (key === 'screenshot_url' && data[key]) {
+          formData.append(key, data[key]);
+        } else if (data[key] !== null && key !== 'screenshot_url') {
+          formData.append(key, data[key]);
+        }
       }
+  
+      return formData;
+    };
+  
+    const uploadScreenshot = async (file, values) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const email = encodeURIComponent(values.customerEmail);
+  
+  
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/auth/upload-to-cloudinary?email=${email}`, {
+      method: 'POST',
+      body: formData,
+    });
+  
+   const url = await response.text();
+  
+  if (!response.ok) {
+    throw new Error('Screenshot upload failed');
+  }
+  
+  return url;
     }
-
-    return formData;
-  };
-
-  const handleSubmit = async (values, { resetForm, setSubmitting }) => {
+  
+    const handleSubmit = async (values, { resetForm, setSubmitting }) => {
     setSubmissionStatus({
       isSubmitting: true,
       isSuccess: false,
       isError: false,
-      message: 'Submitting your form...'
+      message: 'Submitting your form...',
     });
-
+  
     try {
-      // For Netlify forms in SPA applications, we need the right format
-      const formData = encode({
-        'form-name': 'contact',
-        ...values
-      });
-
-      // Check if we're in development mode
-      const isDevelopment = window.location.hostname === 'localhost' ||
-        window.location.hostname === '127.0.0.1';
-
-      if (isDevelopment) {
-        // In development, just log the form data and simulate success
-        console.log('Development mode: Form data would be submitted to Netlify:', values);
-
-        // Simulate a delay to mimic network request
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        resetForm();
-        setScreenshot(null);
-        setSubmissionStatus({
-          isSubmitting: false,
-          isSuccess: true,
-          isError: false,
-          message: 'DEV MODE: Form data logged to console. This would be submitted in production.'
-        });
-      } else {
-        // In production, submit to Netlify
-        const response = await fetch('/', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (response.ok) {
-          resetForm();
-          setScreenshot(null);
-          setSubmissionStatus({
-            isSubmitting: false,
-            isSuccess: true,
-            isError: false,
-            message: 'Thank you! Your form has been submitted successfully.'
-          });
-        } else {
-          console.error('Form submission response:', response.status, response.statusText);
-          throw new Error(`Form submission failed: ${response.status} ${response.statusText}`);
-        }
+      let screenshotUrl = null;
+  
+      // Upload the screenshot to your backend Cloudinary endpoint
+      if (values.screenshot_url) {
+        screenshotUrl = await uploadScreenshot(values.screenshot_url, values);
       }
-
-      // Reset success message after 5 seconds
-      setTimeout(() => {
-        setSubmissionStatus(prev => ({...prev, isSuccess: false, message: ''}));
-      }, 5000);
+  
+      const requestData = {
+        customerId: 'string',
+        category: 'user-logged',
+        priority: 'low-risk',
+        subject: 'user-logged',
+        ...values,
+        screenshot_url: screenshotUrl, // replace file with URL
+      };
+  
+      // delete requestData.screenshotFile; // clean up if necessary
+  
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/support/tickets/users`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+      });
+  
+      if (!response.ok) throw new Error('Form submission failed');
+  
+      setSubmissionStatus({
+        isSubmitting: false,
+        isSuccess: true,
+        isError: false,
+        message: 'Thank you! Your form has been submitted successfully.'
+      });
+  
+      resetForm();
     } catch (error) {
-      console.error('Form submission error:', error);
       setSubmissionStatus({
         isSubmitting: false,
         isSuccess: false,
         isError: true,
-        message: 'There was a problem submitting your form. Please try again.'
+        message: error.message || 'Something went wrong',
       });
     } finally {
       setSubmitting(false);
     }
   };
-
-  // Function to close the success modal
-  const closeSuccessModal = () => {
-    setSubmissionStatus(prev => ({...prev, isSuccess: false, message: ''}));
-  };
-
+  
+  
+    const closeSuccessModal = () => {
+      setSubmissionStatus(prev => ({...prev, isSuccess: false, message: ''}));
+    };
+  
   return (
     <div className="flex flex-col justify-between items-center lg:ml-50 pt-5 ml-0 lg:mx-auto">
       <div className="flex flex-row justify-between items-left gap-[5rem] lg:gap-[55rem] pb-7">
@@ -144,139 +148,139 @@ const ContactForm = ({ goBack }) => {
           <p className="text-[17px] font-medium mt-2 text-white">Email: support@payina.com.ng</p>
         </div>
 
-        <div className="flex flex-col gap-3 justify-between p-3 lg:p-5 items-base">
-          <Formik
-            initialValues={{
-              fullName: '',
-              email: '',
-              phoneNumber: '',
-              complaint: '',
-              screenshot: null,
-              hiddenField: '', // for honeypot (spam protection)
-            }}
-            validationSchema={FormSchemas}
-            onSubmit={handleSubmit}>
-            {({ setFieldValue, isSubmitting }) => (
-              <Form name="contact" data-netlify="true" netlify-honeypot="bot-field">
-                <input type="hidden" name="form-name" value="contact" />
-                <p hidden>
-                  <label>
-                    Don't fill this out if you're human: <input name="bot-field" />
-                  </label>
-                </p>
-
-                <div className="flex flex-col w-full gap-2">
-                  <label htmlFor="fullName" className="text-left font-md text-md text-white">
-                    Full Name
-                  </label>
-                  <Field
-                    name="fullName"
-                    type="text"
-                    placeholder="Your full name"
-                    className="lg:w-[500px] w-[250px] border border-yellow outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
-                  />
-                  <ErrorMessage
-                    name="fullName"
-                    component="span"
-                    className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
-                  />
-                </div>
-
-                <div className="flex flex-col w-full gap-2 py-2">
-                  <label htmlFor="email" className="text-left font-md text-md text-white">
-                    Email Address
-                  </label>
-                  <Field
-                    name="email"
-                    type="email"
-                    placeholder="Your Email Address"
-                    className="lg:w-[500px] w-[250px] border border-yellow outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
-                  />
-                  <ErrorMessage
-                    name="email"
-                    component="span"
-                    className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
-                  />
-                </div>
-
-                <div className="flex flex-col w-full gap-2 py-2">
-                  <label htmlFor="phoneNumber" className="text-left font-md text-md text-white">
-                    Phone Number
-                  </label>
-                  <Field
-                    name="phoneNumber"
-                    type="tel"
-                    placeholder="Enter your phone number"
-                    className="lg:w-[500px] w-[250px] border border-yellow outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
-                  />
-                  <ErrorMessage
-                    name="phoneNumber"
-                    component="span"
-                    className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
-                  />
-                </div>
-
-                <div className="flex flex-col w-full gap-2 py-2">
-                  <label htmlFor="screenshot" className="text-left font-md text-md text-white">
-                    Upload Complaint Reference (Screenshot)
-                  </label>
-                  <input
-                    type="file"
-                    id="screenshot"
-                    name="screenshot"
-                    accept="image/*"
-                    onChange={(event) => {
-                      const file = event.currentTarget.files[0];
-                      if (file) {
-                        setFieldValue('screenshot', file);
-                        setScreenshot(URL.createObjectURL(file));
-                      }
-                    }}
-                    className="lg:w-[500px] w-[250px] border border-yellow outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm bg-white"
-                  />
-                  {screenshot && (
-                    <img
-                      src={screenshot}
-                      alt="Complaint Screenshot"
-                      className="mt-2 rounded-md w-[100px] h-[100px] object-cover"
-                    />
-                  )}
-                  <ErrorMessage
-                    name="screenshot"
-                    component="span"
-                    className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
-                  />
-                </div>
-
-                <div className="flex flex-col w-full gap-2 py-2">
-                  <label htmlFor="complaint" className="text-left font-md text-md text-white">
-                    Write Your Complaint Here
-                  </label>
-                  <Field
-                    as="textarea"
-                    name="complaint"
-                    rows={10}
-                    placeholder="Write your complaint here"
-                    className="lg:w-[500px] w-[250px] border border-yellow outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
-                  />
-                  <ErrorMessage
-                    name="complaint"
-                    component="span"
-                    className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
-                  />
-                </div>
-
-                <div className="mt-4">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className={`rounded-full text-xs md:text-base py-[10px] px-[30px] border border-lightBlue 
-                      ${isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-yellow hover:bg-[#FFb950] hover:bg-yellow-400 transform hover:scale-105 hover:animate-bounce'} 
-                      text-black transition-all`}>
-                    {isSubmitting ? 'Submitting...' : 'Submit'}
-                  </button>
-                </div>
-              </Form>
+       <div className="flex flex-col gap-3 justify-between p-3 lg:p-5 items-base">
+                 <Formik
+                   initialValues={{
+                     customerName: '',
+                     customerEmail: '',
+                     phoneNumber: '',
+                     description: '',
+                     screenshot_url: null,
+                     hiddenField: '', // for honeypot (spam protection)
+                   }}
+                   validationSchema={FormSchemas}
+                   onSubmit={handleSubmit}>
+                   {({ setFieldValue, isSubmitting }) => (
+                     <Form name="contact" data-netlify="true" netlify-honeypot="bot-field">
+                       <input type="hidden" name="form-name" value="contact" />
+                       <p hidden>
+                         <label>
+                           Don't fill this out if you're human: <input name="bot-field" />
+                         </label>
+                       </p>
+       
+                       <div className="flex flex-col w-full gap-2">
+                         <label htmlFor="customerName" className="text-left font-md text-md text-white">
+                           Full Name
+                         </label>
+                         <Field
+                           name="customerName"
+                           type="text"
+                           placeholder="Your full name"
+                           className="lg:w-[500px] w-[250px] border border-yellow outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                         />
+                         <ErrorMessage
+                           name="customerName"
+                           component="span"
+                           className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
+                         />
+                       </div>
+       
+                       <div className="flex flex-col w-full gap-2 py-2">
+                         <label htmlFor="customerEmail" className="text-left font-md text-md text-white">
+                           Email Address
+                         </label>
+                         <Field
+                           name="customerEmail"
+                           type="email"
+                           placeholder="Your Email Address"
+                           className="lg:w-[500px] w-[250px] border border-yellow outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                         />
+                         <ErrorMessage
+                           name="customerEmail"
+                           component="span"
+                           className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
+                         />
+                       </div>
+       
+                       <div className="flex flex-col w-full gap-2 py-2">
+                         <label htmlFor="phoneNumber" className="text-left font-md text-md text-white">
+                           Phone Number
+                         </label>
+                         <Field
+                           name="phoneNumber"
+                           type="tel"
+                           placeholder="Enter your phone number"
+                           className="lg:w-[500px] w-[250px] border border-yellow outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                         />
+                         <ErrorMessage
+                           name="phoneNumber"
+                           component="span"
+                           className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
+                         />
+                       </div>
+       
+                       <div className="flex flex-col w-full gap-2 py-2">
+                         <label htmlFor="screenshot_url" className="text-left font-md text-md text-white">
+                           Upload Complaint Reference (Screenshot), if applicable
+                         </label>
+                         <input
+                           type="file"
+                           id="screenshot_url"
+                           name="screenshot_url"
+                           accept="image/*"
+                           onChange={(event) => {
+                             const file = event.currentTarget.files[0];
+                             if (file) {
+                               setFieldValue('screenshot_url', file);
+                               setScreenshot(URL.createObjectURL(file));
+                             }
+                           }}
+                           className="lg:w-[500px] w-[250px] border border-yellow outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm bg-white"
+                         />
+                         {screenshot_url && (
+                           <img
+                             src={screenshot_url}
+                             alt="Complaint Screenshot"
+                             className="mt-2 rounded-md w-[100px] h-[100px] object-cover"
+                           />
+                         )}
+                         <ErrorMessage
+                           name="screenshot_url"
+                           component="span"
+                           className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
+                         />
+                       </div>
+       
+                       <div className="flex flex-col w-full gap-2 py-2">
+                         <label htmlFor="description" className="text-left font-md text-md text-white">
+                           Write Your Complaint Here
+                         </label>
+                         <Field
+                           as="textarea"
+                           name="description"
+                           rows={10}
+                           placeholder="Write your complaint here"
+                           className="lg:w-[500px] w-[250px] border border-yellow outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
+                         />
+                         <ErrorMessage
+                           name="description"
+                           component="span"
+                           className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
+                         />
+                       </div>
+       
+                       <div className="mt-4">
+                         <button
+                           type="submit"
+                           disabled={isSubmitting}
+                           className={`rounded-full text-xs md:text-base py-[10px] px-[30px] border border-lightBlue 
+                             ${isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-yellow hover:bg-[#FFb950] hover:bg-yellow-400 transform hover:scale-105 hover:animate-bounce'} 
+                             text-black transition-all`}>
+                           {isSubmitting ? 'Submitting...' : 'Submit'}
+                         </button>
+                       </div>
+                     </Form>
             )}
           </Formik>
         </div>

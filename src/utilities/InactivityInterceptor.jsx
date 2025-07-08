@@ -11,6 +11,7 @@ import { persistor } from '../Redux/Store';
 import { useNavigate } from 'react-router-dom';
 import { resetTransactions } from '../Redux/transactionsSlice';
 import { resetPayroll } from '../Redux/payrollSlice';
+import { resetsavings } from '../Redux/savingsSlice';
 
 const InactivityInterceptor = () => {
   const dispatch = useDispatch();
@@ -86,6 +87,7 @@ const InactivityInterceptor = () => {
     dispatch(reSetWalletDetails());
     dispatch(resetTransactions());
     dispatch(resetPayroll());
+    dispatch(resetsavings());
 
     // Redirect to login
     navigate('/login');

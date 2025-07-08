@@ -6,10 +6,12 @@ import { images } from '../../../constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { setManualEntry } from '../../../Redux/PersonalSignUpSlice';
 
-export const StepFour = ({ next }) => {
+export const StepFour = ({ next, data }) => {
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const [idNumber, setIdNumber] = useState('');
+  const [iDtype, setIdType] = useState('');
   const manualEntry = useSelector((state) => state.personalSignUp.manualEntry);
 
   // This effect will automatically proceed to manual entry when manualEntry is set to true
@@ -21,7 +23,9 @@ export const StepFour = ({ next }) => {
 
   const handleIDVerification = async (values) => {
     const idType = values.idType;
+    setIdType(idType);
     const identificationNumber = values.identificationNumber;
+    setIdNumber(identificationNumber);
     setApiError('');
     if (identificationNumber.length !== 11) {
       setApiError('Identification number must be 11 digits!');
@@ -93,10 +97,9 @@ export const StepFour = ({ next }) => {
           // Access the message
           const message = parsedResponse.message;
 
-
           // Set manualEntry to true and automatically proceed instead of showing a button
-//           dispatch(setManualEntry(true));
-//           setApiError(message || 'Verification failed. Proceeding to manual entry...');
+          //           dispatch(setManualEntry(true));
+          //           setApiError(message || 'Verification failed. Proceeding to manual entry...');
 
           // message !==
           // 'No matching records found. Please ensure the information is accurate and try again.'
@@ -104,7 +107,6 @@ export const StepFour = ({ next }) => {
           // : dispatch(setManualEntry(false));
           // setApiError(message || 'Verification failed. Please try again.');
           setApiError('Verification failed. Please try again.');
-
         }
       }
     } catch (error) {
@@ -115,13 +117,11 @@ export const StepFour = ({ next }) => {
       setLoading(false);
     }
   };
-
   const handleManualEntry = () => {
     next({
-      ...{
-        idType: '',
-        identificationNumber: '',
-      },
+      ...data,
+      bvnData: iDtype === 'BVN' ? { bvn: idNumber } : { bvn: '' },
+      ninData: iDtype === 'NIN' ? { nin: idNumber } : { nin: '' },
     });
   };
   localStorage.setItem('currentStep', 4);

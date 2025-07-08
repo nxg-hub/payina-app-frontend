@@ -9,7 +9,7 @@ const uploadImage = async (imageFile, email) => {
     formData.append('passport', imageFile);
     formData.append('email', email);
 
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_UPLOAD_IMAGE_ENDPOINT}`, {
+    const response = await fetch(`${import.meta.env.VITE_UPLOAD_IMAGE_ENDPOINT}`, {
       method: 'POST',
       body: formData,
     });
@@ -53,7 +53,7 @@ export const StepSix = ({ next, email }) => {
   };
 
   const handleNext = () => {
-    next ();
+    next();
   };
   localStorage.setItem('currentStep', 6);
 
@@ -127,23 +127,21 @@ export const StepSix = ({ next, email }) => {
               </div>
 
               {apiError && <div className="text-red-500 mb-4">{apiError}</div>}
- <div className="flex gap-2">
- <CustomButton
-                padding="15px"
-                type="submit"
-                children={loading ? 'Uploading...' : 'Upload'}
-                className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
-                disabled={isSubmitting || loading}
-              />
+              <div className="flex gap-2">
+                <CustomButton
+                  padding="15px"
+                  type="submit"
+                  children={loading ? 'Uploading...' : 'Upload'}
+                  className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8"
+                  disabled={isSubmitting || loading}
+                />
                 <button
                   onClick={handleNext}
                   className="hover:cursor-pointer flex justify-center items-center !text-lightBlue text-lg !border-none !bg-yellow font-extrabold duration-300 w-4/5 mx-auto my-8">
-                  Upload later? <br/>
-                   Next
+                  Upload later? <br />
+                  Next
                 </button>
-                
-              </div> 
-            
+              </div>
             </Form>
           )}
         </Formik>

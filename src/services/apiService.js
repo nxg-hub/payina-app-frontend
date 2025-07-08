@@ -63,7 +63,6 @@ const apiService = {
         {
           email,
           amount,
-          channels: ['card'],
           walletId: userData.walletId,
         },
         {
