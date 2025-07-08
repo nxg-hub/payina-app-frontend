@@ -4,7 +4,7 @@ import { Field, Formik, Form, ErrorMessage } from 'formik';
 import { FormSchemas } from './FormSchemas';
 
 const ContactForm = ({ goBack }) => {
-  const [screenshot, setScreenshot] = useState(null);
+  const [screenshot_url, setScreenshot] = useState(null);
   const [submissionStatus, setSubmissionStatus] = useState({
     isSubmitting: false,
     isSuccess: false,
@@ -16,9 +16,9 @@ const ContactForm = ({ goBack }) => {
     const formData = new FormData();
 
     for (const key in data) {
-      if (key === 'screenshot' && data[key]) {
+      if (key === 'screenshot_url' && data[key]) {
         formData.append(key, data[key]);
-      } else if (data[key] !== null && key !== 'screenshot') {
+      } else if (data[key] !== null && key !== 'screenshot_url') {
         formData.append(key, data[key]);
       }
     }
@@ -26,80 +26,84 @@ const ContactForm = ({ goBack }) => {
     return formData;
   };
 
+  const uploadScreenshot = async (file, values) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  const email = encodeURIComponent(values.customerEmail);
+
+
+  const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/auth/upload-to-cloudinary?email=${email}`, {
+    method: 'POST',
+    body: formData,
+  });
+
+ const url = await response.text();
+
+if (!response.ok) {
+  throw new Error('Screenshot upload failed');
+}
+
+return url;
+  }
+
   const handleSubmit = async (values, { resetForm, setSubmitting }) => {
-    setSubmissionStatus({
-      isSubmitting: true,
-      isSuccess: false,
-      isError: false,
-      message: 'Submitting your form...'
+  setSubmissionStatus({
+    isSubmitting: true,
+    isSuccess: false,
+    isError: false,
+    message: 'Submitting your form...',
+  });
+
+  try {
+    let screenshotUrl = null;
+
+    // Upload the screenshot to your backend Cloudinary endpoint
+    if (values.screenshot_url) {
+      screenshotUrl = await uploadScreenshot(values.screenshot_url, values);
+    }
+
+    const requestData = {
+      customerId: 'string',
+      category: 'user-logged',
+      priority: 'low-risk',
+      subject: 'user-logged',
+      ...values,
+      screenshot_url: screenshotUrl, // replace file with URL
+    };
+
+    // delete requestData.screenshotFile; // clean up if necessary
+
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/support/tickets/users`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestData),
     });
 
-    try {
-      // For Netlify forms in SPA applications, we need the right format
-      const formData = encode({
-        'form-name': 'contact',
-        ...values
-      });
+    if (!response.ok) throw new Error('Form submission failed');
 
-      // Check if we're in development mode
-      const isDevelopment = window.location.hostname === 'localhost' ||
-        window.location.hostname === '127.0.0.1';
+    setSubmissionStatus({
+      isSubmitting: false,
+      isSuccess: true,
+      isError: false,
+      message: 'Thank you! Your form has been submitted successfully.'
+    });
 
-      if (isDevelopment) {
-        // In development, just log the form data and simulate success
-        console.log('Development mode: Form data would be submitted to Netlify:', values);
+    resetForm();
+  } catch (error) {
+    setSubmissionStatus({
+      isSubmitting: false,
+      isSuccess: false,
+      isError: true,
+      message: error.message || 'Something went wrong',
+    });
+  } finally {
+    setSubmitting(false);
+  }
+};
 
-        // Simulate a delay to mimic network request
-        await new Promise(resolve => setTimeout(resolve, 1000));
 
-        resetForm();
-        setScreenshot(null);
-        setSubmissionStatus({
-          isSubmitting: false,
-          isSuccess: true,
-          isError: false,
-          message: 'DEV MODE: Form data logged to console. This would be submitted in production.'
-        });
-      } else {
-        // In production, submit to Netlify
-        const response = await fetch('/', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (response.ok) {
-          resetForm();
-          setScreenshot(null);
-          setSubmissionStatus({
-            isSubmitting: false,
-            isSuccess: true,
-            isError: false,
-            message: 'Thank you! Your form has been submitted successfully.'
-          });
-        } else {
-          console.error('Form submission response:', response.status, response.statusText);
-          throw new Error(`Form submission failed: ${response.status} ${response.statusText}`);
-        }
-      }
-
-      // Reset success message after 5 seconds
-      setTimeout(() => {
-        setSubmissionStatus(prev => ({...prev, isSuccess: false, message: ''}));
-      }, 5000);
-    } catch (error) {
-      console.error('Form submission error:', error);
-      setSubmissionStatus({
-        isSubmitting: false,
-        isSuccess: false,
-        isError: true,
-        message: 'There was a problem submitting your form. Please try again.'
-      });
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  // Function to close the success modal
   const closeSuccessModal = () => {
     setSubmissionStatus(prev => ({...prev, isSuccess: false, message: ''}));
   };
@@ -147,11 +151,11 @@ const ContactForm = ({ goBack }) => {
         <div className="flex flex-col gap-3 justify-between p-3 lg:p-5 items-base">
           <Formik
             initialValues={{
-              fullName: '',
-              email: '',
+              customerName: '',
+              customerEmail: '',
               phoneNumber: '',
-              complaint: '',
-              screenshot: null,
+              description: '',
+              screenshot_url: null,
               hiddenField: '', // for honeypot (spam protection)
             }}
             validationSchema={FormSchemas}
@@ -166,34 +170,34 @@ const ContactForm = ({ goBack }) => {
                 </p>
 
                 <div className="flex flex-col w-full gap-2">
-                  <label htmlFor="fullName" className="text-left font-md text-md text-white">
+                  <label htmlFor="customerName" className="text-left font-md text-md text-white">
                     Full Name
                   </label>
                   <Field
-                    name="fullName"
+                    name="customerName"
                     type="text"
                     placeholder="Your full name"
                     className="lg:w-[500px] w-[250px] border border-yellow outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                   />
                   <ErrorMessage
-                    name="fullName"
+                    name="customerName"
                     component="span"
                     className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                   />
                 </div>
 
                 <div className="flex flex-col w-full gap-2 py-2">
-                  <label htmlFor="email" className="text-left font-md text-md text-white">
+                  <label htmlFor="customerEmail" className="text-left font-md text-md text-white">
                     Email Address
                   </label>
                   <Field
-                    name="email"
+                    name="customerEmail"
                     type="email"
                     placeholder="Your Email Address"
                     className="lg:w-[500px] w-[250px] border border-yellow outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                   />
                   <ErrorMessage
-                    name="email"
+                    name="customerEmail"
                     component="span"
                     className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                   />
@@ -217,50 +221,50 @@ const ContactForm = ({ goBack }) => {
                 </div>
 
                 <div className="flex flex-col w-full gap-2 py-2">
-                  <label htmlFor="screenshot" className="text-left font-md text-md text-white">
-                    Upload Complaint Reference (Screenshot)
+                  <label htmlFor="screenshot_url" className="text-left font-md text-md text-white">
+                    Upload Complaint Reference (Screenshot), if applicable
                   </label>
                   <input
                     type="file"
-                    id="screenshot"
-                    name="screenshot"
+                    id="screenshot_url"
+                    name="screenshot_url"
                     accept="image/*"
                     onChange={(event) => {
                       const file = event.currentTarget.files[0];
                       if (file) {
-                        setFieldValue('screenshot', file);
+                        setFieldValue('screenshot_url', file);
                         setScreenshot(URL.createObjectURL(file));
                       }
                     }}
                     className="lg:w-[500px] w-[250px] border border-yellow outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm bg-white"
                   />
-                  {screenshot && (
+                  {screenshot_url && (
                     <img
-                      src={screenshot}
+                      src={screenshot_url}
                       alt="Complaint Screenshot"
                       className="mt-2 rounded-md w-[100px] h-[100px] object-cover"
                     />
                   )}
                   <ErrorMessage
-                    name="screenshot"
+                    name="screenshot_url"
                     component="span"
                     className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                   />
                 </div>
 
                 <div className="flex flex-col w-full gap-2 py-2">
-                  <label htmlFor="complaint" className="text-left font-md text-md text-white">
+                  <label htmlFor="description" className="text-left font-md text-md text-white">
                     Write Your Complaint Here
                   </label>
                   <Field
                     as="textarea"
-                    name="complaint"
+                    name="description"
                     rows={10}
                     placeholder="Write your complaint here"
                     className="lg:w-[500px] w-[250px] border border-yellow outline-none rounded-[5px] p-2 font-light opacity-70 text-xs md:text-sm"
                   />
                   <ErrorMessage
-                    name="complaint"
+                    name="description"
                     component="span"
                     className="text-[#db3a3a] text-xs !mt-[2px] md:text-base"
                   />
