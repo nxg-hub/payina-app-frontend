@@ -91,7 +91,7 @@ export const StepFourteen = ({ next }) => {
   const authenticateEmail = async (email) => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_GET_USER_BY_EMAIL_ENDPOINT}?email=${encodeURIComponent(email)}`
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_GET_USER_BY_EMAIL_ENDPOINT}?email=${encodeURIComponent(email)}`
       );
       if (response.ok) {
         const data = await response.json();
