@@ -117,7 +117,7 @@ export const StepSeventeen = () => {
         <div className="flex flex-col xl:w-[50%] text-center mx-auto space-y-2">
           <span className="text-[24px] lg:text-[32px] font-bold">Congrats Champ!</span>
           <span className="lg:text-2xl text-center text-yellow font-bold">
-            You have successfully set up your Payina Business account.
+            You have successfully set up your Payina Business Account.
           </span>
           <span className="lg:text-2xl text-center text-yellow font-bold">
             Here are your details
@@ -167,7 +167,10 @@ export const StepSeventeen = () => {
               <div className="w-full text-primary absolute top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%] flex flex-col md:space-y-4">
                 <span className="md:text-2xl text-xs font-medium">Business Owner Name</span>
                 <span className="md:text-3xl text-sm font-bold">
-                  {userData && (userData.firstName === null || userData.lastName === null) ? `${userData.payinaUserName}` : `${userData.firstname} ${userData.lastname}`}
+                  {userData && userData.firstName && userData.lastName
+                    ? `${userData.firstName} ${userData.lastName}`
+                    : userData?.payinaUserName || 'N/A'}
+                  {/*{userData && (userData.firstName === null || userData.lastName === null) ? `${userData.payinaUserName}` : `${userData.firstName} ${userData.lastName}`}*/}
                   {/*{userData ? `${userData.firstName = null} ${userData.lastName=null}` : `${userData.payinaUserName}`}*/}
                 </span>
               </div>
