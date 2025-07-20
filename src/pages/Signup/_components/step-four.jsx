@@ -290,12 +290,30 @@ export const StepFour = ({ next, data }) => {
   const dispatch = useDispatch();
   const manualEntry = useSelector((state) => state.businessSignUp.manualEntry);
 
-  // Add useEffect to automatically proceed to manual entry when manualEntry is true
+
+  const [initialized, setInitialized] = useState(false);
+
+// First reset manualEntry from Redux
   useEffect(() => {
+    dispatch(setManualEntry(false));
+    setInitialized(true);
+  }, [dispatch]);
+
+// Only run this AFTER we've reset manualEntry
+  useEffect(() => {
+    if (!initialized) return;
     if (manualEntry) {
       handleManualEntry();
     }
-  }, [manualEntry]);
+  }, [manualEntry, initialized]);
+
+
+  // // Add useEffect to automatically proceed to manual entry when manualEntry is true
+  // useEffect(() => {
+  //   if (manualEntry) {
+  //     handleManualEntry();
+  //   }
+  // }, [manualEntry]);
 
   const handleIDVerification = async (values) => {
     const idType = values.idType;
