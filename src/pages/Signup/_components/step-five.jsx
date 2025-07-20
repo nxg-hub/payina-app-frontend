@@ -123,10 +123,10 @@ export const StepFive = ({ next, bvnData, ninData, datas, initialValues }) => {
         <Formik
           initialValues={{
             username: '',
-            firstName: extractedData.firstName,
-            lastName: extractedData.lastName,
-            gender: extractedData.gender,
-            dob: extractedData.dob,
+            firstName: extractedData.firstName || '',
+            lastName: extractedData.lastName || '' ,
+            gender: extractedData.gender || '',
+            dob: extractedData.dob || '',
           }}
           validationSchema={StepFiveValidationSchema}
           onSubmit={(values) => handleSubmit(values)}>
@@ -139,8 +139,7 @@ export const StepFive = ({ next, bvnData, ninData, datas, initialValues }) => {
                 <Field
                   type="text"
                   id="firstname"
-                  name="firstname"
-                  value={bvnData.firstname || ninData.firstName}
+                  name="firstName"
                   readOnly={manualEntry ? false : true}
                   className=" w-full h-[3.4rem] border border-[#9ca3af] outline-none text-start text-gray rounded-[5px] py-2 px-[10px]"
                 />
@@ -153,8 +152,7 @@ export const StepFive = ({ next, bvnData, ninData, datas, initialValues }) => {
                 <Field
                   type="text"
                   id="lastname"
-                  name="lastname"
-                  value={bvnData.lastName || ninData.lastName}
+                  name="lastName"
                   readOnly={manualEntry ? false : true}
                   className="w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
                 />
