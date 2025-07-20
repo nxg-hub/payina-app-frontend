@@ -24,6 +24,15 @@ export const StepFive = ({ next, bvnData, ninData, datas, initialValues }) => {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const SAVE_USERNAME = import.meta.env.VITE_SAVE_USERNAME_ENDPOINT;
 
+  const extractData = () => {
+    return {
+      gender: bvnData?.gender || ninData?.gender || initialValues?.gender,
+      firstName: ninData?.firstname || bvnData?.firstname || initialValues?.firstname,
+      lastName: bvnData?.lastname || ninData?.lastname || initialValues?.lastname,
+      dob: bvnData?.dob || ninData?.dob || initialValues?.dob,
+    };
+  };
+
   const handleSubmit = async (values) => {
     setLoading(true);
     setApiError('');
@@ -67,6 +76,8 @@ export const StepFive = ({ next, bvnData, ninData, datas, initialValues }) => {
     }
   };
   localStorage.setItem('currentStep', 5);
+
+  const extractedData = extractData();
 
   return (
     <div className="relative bg-black min-h-screen flex items-center justify-center">
@@ -112,6 +123,10 @@ export const StepFive = ({ next, bvnData, ninData, datas, initialValues }) => {
         <Formik
           initialValues={{
             username: '',
+            firstName: extractedData.firstName,
+            lastName: extractedData.lastName,
+            gender: extractedData.gender,
+            dob: extractedData.dob,
           }}
           validationSchema={StepFiveValidationSchema}
           onSubmit={(values) => handleSubmit(values)}>
@@ -125,7 +140,7 @@ export const StepFive = ({ next, bvnData, ninData, datas, initialValues }) => {
                   type="text"
                   id="firstname"
                   name="firstname"
-                  value={bvnData.firstname || ninData.firstname}
+                  value={bvnData.firstname || ninData.firstName}
                   readOnly={manualEntry ? false : true}
                   className=" w-full h-[3.4rem] border border-[#9ca3af] outline-none text-start text-gray rounded-[5px] py-2 px-[10px]"
                 />
@@ -139,7 +154,7 @@ export const StepFive = ({ next, bvnData, ninData, datas, initialValues }) => {
                   type="text"
                   id="lastname"
                   name="lastname"
-                  value={bvnData.lastName || ninData.lastname}
+                  value={bvnData.lastName || ninData.lastName}
                   readOnly={manualEntry ? false : true}
                   className="w-full h-[3.4rem] border border-[#9ca3af] outline-none text-gray rounded-[5px] py-2 px-[10px]"
                 />
