@@ -18,13 +18,13 @@ import { BvnConfirmModal } from './_components/BvnConfirmModal';
 const Dashboard = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.loading.isLoading); // Global loading state
-  const userDetails = useSelector((state) => state.user.user);
+  // const userDetails = useSelector((state) => state.user.user);
   const [newAuthToken] = useLocalStorage('authToken', '');
   const [error, setError] = useState(false);
   const [isBvnModalOpen, setIsBvnModalOpen] = useState(false);
   const [isBvnConfirmModalOpen, setIsBvnConfirmModalOpen] = useState(false);
-  const userBvn = userDetails?.bvn;
-  const userNin = userDetails?.nin;
+  // const userBvn = userDetails?.bvn;
+  // const userNin = userDetails?.nin;
 
   const [data, setData] = useState({
     bvnData: {},
@@ -62,7 +62,7 @@ const Dashboard = () => {
         //   setIsBvnModalOpen(true);
         // }
 
-        if (!data?.bvn && !userBvn && !data?.nin && !userNin) {
+        if (!data?.bvn && !data?.nin) {
           setIsBvnModalOpen(true);
         }
 
