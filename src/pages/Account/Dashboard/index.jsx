@@ -79,9 +79,13 @@ const Dashboard = () => {
 
     fetchLoginUserData();
 
-    if (userBvn === null || userBvn === '') {
+    // if (userBvn === null || userBvn === '') {
+    //   setIsBvnModalOpen(true);
+    // }
+    if (!userBvn && !userNin) {
       setIsBvnModalOpen(true);
     }
+
   }, []);
 
   const handleNext = (bvnData, ninData) => {

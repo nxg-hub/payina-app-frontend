@@ -54,7 +54,11 @@ const PersonalDashboard = () => {
         dispatch(fetchDataSuccess(data));
         console.log('BVN Data:', data.bvn);
 
-        if (data.bvn === null) {
+        // if (data.bvn === null ) {
+        //   setIsBvnModalOpen(true);
+        // }
+
+        if (!data?.bvn && !data?.nin) {
           setIsBvnModalOpen(true);
         }
       } catch (error) {
