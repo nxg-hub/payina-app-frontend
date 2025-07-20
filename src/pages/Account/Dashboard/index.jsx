@@ -24,6 +24,7 @@ const Dashboard = () => {
   const [isBvnModalOpen, setIsBvnModalOpen] = useState(false);
   const [isBvnConfirmModalOpen, setIsBvnConfirmModalOpen] = useState(false);
   const userBvn = userDetails?.bvn;
+  const userNin = userDetails?.nin;
 
   const [data, setData] = useState({
     bvnData: {},
@@ -57,9 +58,14 @@ const Dashboard = () => {
         );
         const data = await response.json();
 
-        if (data.bvn === null || userBvn === '') {
+        // if (data.bvn === null || data.nin === null || userBvn === '' || userNin) {
+        //   setIsBvnModalOpen(true);
+        // }
+
+        if (!data?.bvn && !userBvn && !data?.nin && !userNin) {
           setIsBvnModalOpen(true);
         }
+
 
         //storing the user details in the userSlice using the redux store
         dispatch(fetchDataSuccess(data));
