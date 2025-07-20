@@ -82,9 +82,6 @@ const Dashboard = () => {
     // if (userBvn === null || userBvn === '') {
     //   setIsBvnModalOpen(true);
     // }
-    if (!userBvn && !userNin) {
-      setIsBvnModalOpen(true);
-    }
 
   }, []);
 
