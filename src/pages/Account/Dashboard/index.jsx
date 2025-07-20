@@ -58,13 +58,15 @@ const Dashboard = () => {
         );
         const data = await response.json();
 
+        console.log(data);
+
         // if (data.bvn === null || data.nin === null || userBvn === '' || userNin) {
         //   setIsBvnModalOpen(true);
         // }
 
-        if (!data?.bvn && !data?.nin) {
-          setIsBvnModalOpen(true);
-        }
+        // if (!data?.bvn && !data?.nin) {
+        //   setIsBvnModalOpen(true);
+        // }
 
 
         //storing the user details in the userSlice using the redux store
