@@ -40,7 +40,7 @@ const PasswordOtpValidate = () => {
     setLoading(true);
     setUploadStatus('');
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_VALIDATE_OTP_ENDPOINT}`, {
+      const response = await axios.post(`${import.meta.env.VITE_VALIDATE_OTP_ENDPOINT}`, {
         otp: values.otp,
       });
       const data = response.data;
@@ -67,7 +67,7 @@ const PasswordOtpValidate = () => {
     setUploadStatus('');
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_SEND_TOKEN}`, {
+      const response = await axios.post(`${import.meta.env.VITE_SEND_TOKEN}`, {
         email: userEmail,
         phoneNumber: values.phoneNumber,
       });
